@@ -2,14 +2,16 @@
  * compress_context MCP tool handler — PRD §11.2
  *
  * Full compress-context pipeline:
- *   1. Validate inputs (scopeId, content, contentType).
- *   2. Route through the Safety Layer (size limit → chunking → timeout → failOpen).
- *   3. Persist the CompressedContextRecord.
- *   4. Optionally save original content.
- *   5. Record a receipt.
- *   6. Return the CompressionOutput to the caller.
+ *   1. Validate inputs (scopeId ← auto-resolve, content, contentType).
+ *   2. Auto-detect content type via ContentRouter (with fallback).
+ *   3. Route through the Safety Layer (size limit → chunking → timeout → failOpen).
+ *   4. Persist the CompressedContextRecord.
+ *   5. Optionally save original content.
+ *   6. Record a receipt.
+ *   7. Return the CompressionOutput to the caller.
  *
  * All failure paths return the original content (failOpen principle).
+ * SQLite failures do NOT block the main flow (warnings are attached).
  */
 
 import type { CallToolResult } from "@modelcontextprotocol/sdk/types.js";
@@ -17,12 +19,13 @@ import { compressSafely, type SafetyCompressResult } from "../../safety/safetyLa
 import type { ServerContext } from "../server.js";
 import { CompressedStore, type ContentType } from "../../compressed/compressedStore.js";
 import { OriginalStore } from "../../originals/originalStore.js";
-import { countTokens } from "../../utils/tokenCount.js";
 import { contentHash } from "../../utils/hash.js";
 import { detectContentType } from "../../router/contentRouter.js";
+import { resolveScope, toScopeRecord } from "../../scope/resolveScope.js";
+import { runStmt } from "../../storage/db.js";
 
 // ---------------------------------------------------------------------------
-// Handler
+// Constants
 // ---------------------------------------------------------------------------
 
 const VALID_CONTENT_TYPES = new Set<string>([
@@ -41,6 +44,33 @@ const VALID_CONTENT_TYPES = new Set<string>([
 
 const VALID_STRATEGIES = new Set(["auto", "conservative"]);
 
+/** Internal metadata keys that should not be stored in the CCR / original. */
+const INTERNAL_META_KEYS = new Set([
+  "_chunkIndex",
+  "_chunkTotal",
+  "_chunkByteOffset",
+]);
+
+// ---------------------------------------------------------------------------
+// Helpers
+// ---------------------------------------------------------------------------
+
+/** Strip internal metadata keys so they don't pollute stored records. */
+function cleanMetadata(meta: Record<string, unknown> | undefined): Record<string, unknown> | undefined {
+  if (!meta) return undefined;
+  const cleaned: Record<string, unknown> = {};
+  for (const [key, value] of Object.entries(meta)) {
+    if (!INTERNAL_META_KEYS.has(key)) {
+      cleaned[key] = value;
+    }
+  }
+  return Object.keys(cleaned).length > 0 ? cleaned : undefined;
+}
+
+// ---------------------------------------------------------------------------
+// Handler
+// ---------------------------------------------------------------------------
+
 export async function handleCompressContext(
   ctx: ServerContext,
   args: Record<string, unknown>,
@@ -48,17 +78,41 @@ export async function handleCompressContext(
   const { db, receipts } = ctx;
   const compressedStore = new CompressedStore(db);
   const originalStore = new OriginalStore(db);
+  const warnings: string[] = [];
 
   // ---- Validate inputs ----
 
-  const scopeId = typeof args.scopeId === "string" ? args.scopeId : "";
+  // 12.1.1: Auto-resolve scopeId when not provided
+  let scopeId = typeof args.scopeId === "string" ? args.scopeId.trim() : "";
+  let scopeAutoResolved = false;
   if (!scopeId) {
-    return {
-      content: [{ type: "text", text: "Error: scopeId is required." }],
-      isError: true,
-    };
+    const scope = resolveScope();
+    scopeId = scope.scopeId;
+    scopeAutoResolved = true;
+    // Persist the auto-resolved scope record (non-blocking)
+    try {
+      const record = toScopeRecord(scope);
+      runStmt(
+        db,
+        `INSERT OR IGNORE INTO scopes (scope_id, git_root, remote, branch, cwd, scope_strategy, created_at, updated_at)
+         VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
+        [
+          record.scope_id,
+          record.git_root,
+          record.remote,
+          record.branch,
+          record.cwd,
+          record.scope_strategy,
+          record.created_at,
+          record.updated_at,
+        ],
+      );
+    } catch {
+      // Scope persistence is best-effort — never blocks compression
+    }
   }
 
+  // 12.1.2: Validate content
   const content = typeof args.content === "string" ? args.content : "";
   if (!content) {
     return {
@@ -67,17 +121,34 @@ export async function handleCompressContext(
     };
   }
 
+  // 12.1.3: Auto-detect content type via ContentRouter (with try/catch fallback)
   const contentTypeRaw = typeof args.contentType === "string"
     ? args.contentType
     : "unknown";
 
-  // Auto-detect content type when not explicitly provided or "unknown"
   let contentType: ContentType;
   let detectedBy: "user" | "auto" = "user";
+  let detectionConfidence = 1.0;
+
   if (contentTypeRaw === "unknown" || !args.contentType) {
-    const detection = detectContentType(content);
-    contentType = detection.contentType;
-    detectedBy = "auto";
+    // Wrap ContentRouter in try/catch for fail-safe operation
+    try {
+      const detection = detectContentType(content);
+      contentType = detection.contentType;
+      detectionConfidence = detection.confidence;
+      detectedBy = "auto";
+      if (detection.confidence < 0.5 && detection.contentType !== "unknown") {
+        warnings.push(
+          `Low-confidence content type detection: "${detection.contentType}" (confidence: ${detection.confidence.toFixed(2)})`,
+        );
+      }
+    } catch (_routerErr) {
+      // ContentRouter failed — fall back to unknown / plain_text
+      contentType = "unknown";
+      detectedBy = "auto";
+      detectionConfidence = 0;
+      warnings.push("ContentRouter failed — falling back to unknown/plain_text compression.");
+    }
   } else {
     if (!VALID_CONTENT_TYPES.has(contentTypeRaw)) {
       return {
@@ -93,6 +164,7 @@ export async function handleCompressContext(
     contentType = contentTypeRaw as ContentType;
   }
 
+  // 12.1.4: Select compression strategy
   const strategy = typeof args.strategy === "string" ? args.strategy : "conservative";
   if (!VALID_STRATEGIES.has(strategy)) {
     return {
@@ -115,9 +187,17 @@ export async function handleCompressContext(
     typeof args.metadata === "object" && args.metadata !== null
       ? (args.metadata as Record<string, unknown>)
       : {};
-  const metadata = {
-    ...userMetadata,
-    ...(detectedBy === "auto" ? { autoDetectedContentType: contentType } : {}),
+
+  // Build cleaned metadata for storage
+  const metadata: Record<string, unknown> = {
+    ...cleanMetadata(userMetadata),
+    ...(detectedBy === "auto"
+      ? {
+          autoDetectedContentType: contentType,
+          autoDetectionConfidence: detectionConfidence,
+        }
+      : {}),
+    ...(scopeAutoResolved ? { scopeAutoResolved: true } : {}),
   };
 
   // ---- Build compression input ----
@@ -133,7 +213,7 @@ export async function handleCompressContext(
     metadata,
   };
 
-  // ---- Compress via Safety Layer ----
+  // ---- 12.1.5-6: Compress via Safety Layer (which calls Compression Engine) ----
 
   const safetyResult: SafetyCompressResult = await compressSafely(input, {
     sizeLimit: { maxInputBytes, failOpen: true },
@@ -142,7 +222,13 @@ export async function handleCompressContext(
 
   const output = safetyResult.output;
 
-  // ---- Persist compressed record ----
+  // Fold in safety warnings
+  for (const w of safetyResult.safetyWarnings) {
+    warnings.push(w);
+  }
+
+  // ---- 12.2.2: Persist compressed record (CompressedContextRecord) ----
+  // SQLite failure does NOT block the main flow (§12.3.5)
 
   let savedRecord = null;
   try {
@@ -154,11 +240,11 @@ export async function handleCompressContext(
       summary: output.summary,
       originalRef: output.originalRef,
       sourceRef: userMetadata.source as string | undefined,
-      metadata: {
-        ...(metadata ?? {}),
+      metadata: cleanMetadata({
+        ...metadata,
         safetyWarnings: safetyResult.safetyWarnings,
         safetyActions: safetyResult.safetyActions,
-      },
+      }),
       tokensBefore: output.tokensBefore,
       tokensAfter: output.tokensAfter,
       tokensSaved: output.tokensSaved,
@@ -168,37 +254,46 @@ export async function handleCompressContext(
       errorReason: output.errorReason,
     });
   } catch (dbErr) {
-    // Database write failure — still return result, add warning
+    // §12.3.5: SQLite failure — still return result, add warning (non-blocking)
     const dbMessage = dbErr instanceof Error ? dbErr.message : String(dbErr);
-    output.warnings.push(`Database write warning: unable to persist CCR — ${dbMessage}`);
+    warnings.push(`Database write warning: unable to persist CCR — ${dbMessage}`);
   }
 
-  // ---- Save original content ----
+  // ---- 12.2.1: Save original content (OriginalContentRecord) ----
+  // §12.3.3: Original save failure → warning, non-blocking
 
+  let originalSaved = false;
   if (keepOriginal && savedRecord) {
     try {
-      originalStore.save({
-        scopeId,
-        ccrId: savedRecord.id,
-        contentType,
-        content,
-        metadata: {
-          ...(metadata ?? {}),
-          safetyWarnings: safetyResult.safetyWarnings,
-        },
-      });
+      const originalId = output.originalRef;
+      if (originalId) {
+        originalStore.save({
+          id: originalId,
+          scopeId,
+          ccrId: savedRecord.id,
+          contentType,
+          content,
+          metadata: cleanMetadata({
+            ...metadata,
+            safetyWarnings: safetyResult.safetyWarnings,
+          }),
+        });
+        originalSaved = true;
+      }
     } catch (origErr) {
       const origMessage = origErr instanceof Error ? origErr.message : String(origErr);
-      output.warnings.push(`Warning: unable to save original content — ${origMessage}`);
+      warnings.push(`Warning: unable to save original content — ${origMessage}`);
     }
   }
 
-  // ---- Record receipt ----
+  // ---- 12.2.3: Create compression receipt ----
+  // §12.3.4: Receipt write failure → warning, non-blocking
 
+  let receiptId = output.receiptId;
   try {
     const inputHash = contentHash(content);
 
-    receipts.create({
+    const receipt = receipts.create({
       operation: "compress",
       scopeId,
       inputHash,
@@ -213,14 +308,15 @@ export async function handleCompressContext(
       failed: output.failed ?? false,
       errorReason: output.errorReason,
     });
+    receiptId = receipt.id;
   } catch (receiptErr) {
     const receiptMessage = receiptErr instanceof Error ? receiptErr.message : String(receiptErr);
-    output.warnings.push(`Warning: unable to record receipt — ${receiptMessage}`);
+    warnings.push(`Warning: unable to record receipt — ${receiptMessage}`);
   }
 
-  // ---- Build response ----
+  // ---- 12.2.4-8: Build response ----
 
-  const result = {
+  const result: Record<string, unknown> = {
     ccrId: savedRecord?.id ?? output.ccrId,
     compressed: output.compressed,
     scopeId: output.scopeId,
@@ -234,13 +330,23 @@ export async function handleCompressContext(
     tokensSaved: output.tokensSaved,
     compressionRatio: output.compressionRatio,
     canRetrieveOriginal: output.canRetrieveOriginal,
-    receiptId: output.receiptId,
-    warnings: output.warnings,
-    ...(output.failed ? { failed: true, errorReason: output.errorReason } : {}),
-    ...(safetyResult.safetyTriggered
-      ? { safetyActions: safetyResult.safetyActions }
-      : {}),
+    receiptId,
+    warnings: [...warnings, ...output.warnings],
+    detection: detectedBy === "auto"
+      ? { method: "auto", detectedAs: contentType, confidence: detectionConfidence }
+      : { method: "user", specifiedType: contentTypeRaw },
   };
+
+  // Include failure info when compression failed
+  if (output.failed) {
+    result.failed = true;
+    result.errorReason = output.errorReason;
+  }
+
+  // Include safety actions when triggered
+  if (safetyResult.safetyTriggered) {
+    result.safetyActions = safetyResult.safetyActions;
+  }
 
   return {
     content: [{ type: "text", text: JSON.stringify(result, null, 2) }],

@@ -150,7 +150,8 @@ CREATE INDEX IF NOT EXISTS idx_pf_layer ON profile_facts(layer);
 CREATE TABLE IF NOT EXISTS receipts (
     id                  TEXT PRIMARY KEY,
     operation           TEXT NOT NULL CHECK (operation IN (
-                            'compress', 'retrieve_original', 'remember',
+                            'compress', 'retrieve_original', 'delete_original',
+                            'cleanup_originals', 'remember',
                             'recall', 'forget', 'list'
                         )),
     scope_id            TEXT NOT NULL,
