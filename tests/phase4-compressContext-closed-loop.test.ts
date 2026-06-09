@@ -844,7 +844,9 @@ describe("12.4.8 originalRef 取回 (full cycle)", () => {
     expect(retResult.isError).toBe(true);
     const retJson = parseToolText(retResult);
     expect(retJson.found).toBe(false);
-    expect(retJson.error).toBe("original_not_found");
+    // §13.3: cross-scope access returns scope_mismatch, not original_not_found
+    expect(retJson.error).toBe("scope_mismatch");
+    expect(retJson.actualScopeId).toBe(SCOPE_ID);
   });
 });
 

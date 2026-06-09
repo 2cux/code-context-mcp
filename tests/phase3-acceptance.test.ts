@@ -320,7 +320,7 @@ describe("Criterion 3: 原文可取回 (retrieve original end-to-end)", () => {
     expect((json as any).totalChars).toBe(ORIGINAL_TEXT.length);
   });
 
-  it("retrieve_original fails for wrong scope", async () => {
+  it("retrieve_original fails for wrong scope with scope_mismatch error", async () => {
     expect(originalRef).toBeTruthy();
 
     const result = await handleRetrieveOriginal(ctx, {
@@ -333,7 +333,13 @@ describe("Criterion 3: 原文可取回 (retrieve original end-to-end)", () => {
 
     const json = parseToolText(result);
     expect(json.found).toBe(false);
-    expect(json.error).toBe("original_not_found");
+    // §13.3: cross-scope access returns scope_mismatch, not original_not_found
+    expect(json.error).toBe("scope_mismatch");
+    expect(json.hint).toBeDefined();
+    // Should include the actual scope the original belongs to
+    expect(json.actualScopeId).toBe(SCOPE_ID);
+    // Receipt must still be generated for auditability
+    expect(json.receiptId).toBeTruthy();
   });
 
   it("retrieve_original fails for non-existent ref", async () => {
@@ -347,6 +353,153 @@ describe("Criterion 3: 原文可取回 (retrieve original end-to-end)", () => {
     const json = parseToolText(result);
     expect(json.found).toBe(false);
     expect(json.error).toBe("original_not_found");
+  });
+
+  // ------------------------------------------------------------------
+  // §13.4.5: Retrieve receipt generation
+  // ------------------------------------------------------------------
+  it("retrieve receipt is generated with correct operation type and fields", async () => {
+    expect(originalRef).toBeTruthy();
+
+    const result = await handleRetrieveOriginal(ctx, {
+      scopeId: SCOPE_ID,
+      originalRef,
+    });
+
+    const json = parseToolText(result);
+    const receiptId = json.receiptId as string;
+
+    expect(receiptId).toBeTruthy();
+    expect(receiptId).toMatch(/^rcp_/);
+
+    // Verify the receipt exists in the database
+    const receipt = ctx.receipts.get(receiptId);
+    expect(receipt).not.toBeNull();
+    expect(receipt!.operation).toBe("retrieve_original");
+    expect(receipt!.scopeId).toBe(SCOPE_ID);
+    expect(receipt!.retrievedOriginal).toBe(true);
+    expect(receipt!.failed).toBe(false);
+    expect(receipt!.originalRefs).toContain(originalRef);
+  });
+
+  // ------------------------------------------------------------------
+  // §13.4.5: Error receipts also generated
+  // ------------------------------------------------------------------
+  it("error receipt is generated for not-found retrievals", async () => {
+    const result = await handleRetrieveOriginal(ctx, {
+      scopeId: SCOPE_ID,
+      originalRef: "orig_definitely_does_not_exist_12345",
+    });
+
+    expect(result.isError).toBe(true);
+    const json = parseToolText(result);
+    expect(json.error).toBe("original_not_found");
+    expect(json.receiptId).toBeTruthy();
+
+    const receipt = ctx.receipts.get(json.receiptId as string);
+    expect(receipt).not.toBeNull();
+    expect(receipt!.operation).toBe("retrieve_original");
+    expect(receipt!.failed).toBe(true);
+    expect(receipt!.errorReason).toBe("original_not_found");
+  });
+
+  // ------------------------------------------------------------------
+  // §13.4.5: Scope mismatch receipt
+  // ------------------------------------------------------------------
+  it("error receipt is generated for scope_mismatch retrievals", async () => {
+    expect(originalRef).toBeTruthy();
+
+    const result = await handleRetrieveOriginal(ctx, {
+      scopeId: "repo_wrong_scope",
+      originalRef,
+    });
+
+    expect(result.isError).toBe(true);
+    const json = parseToolText(result);
+    expect(json.error).toBe("scope_mismatch");
+    expect(json.receiptId).toBeTruthy();
+
+    const receipt = ctx.receipts.get(json.receiptId as string);
+    expect(receipt).not.toBeNull();
+    expect(receipt!.operation).toBe("retrieve_original");
+    expect(receipt!.failed).toBe(true);
+    expect(receipt!.errorReason).toBe("scope_mismatch");
+  });
+
+  // ------------------------------------------------------------------
+  // §13.4.4: Retrieve after delete returns original_deleted
+  // ------------------------------------------------------------------
+  it("retrieve after explicit delete returns original_deleted error", async () => {
+    // Create a fresh original to delete
+    const compResult = await handleCompressContext(ctx, {
+      scopeId: SCOPE_ID,
+      content: "Content that will be deleted and then we check for original_deleted.",
+      contentType: "plain_text",
+      keepOriginal: true,
+    });
+    const compJson = parseToolText(compResult);
+    const refToDelete = compJson.originalRef as string;
+    expect(refToDelete).toBeTruthy();
+
+    // Verify retrievable first
+    const beforeResult = await handleRetrieveOriginal(ctx, {
+      scopeId: SCOPE_ID,
+      originalRef: refToDelete,
+    });
+    const beforeJson = parseToolText(beforeResult);
+    expect(beforeJson.content).toBeTruthy();
+
+    // Explicitly delete via delete_original
+    const delResult = await handleDeleteOriginal(ctx, {
+      scopeId: SCOPE_ID,
+      originalRef: refToDelete,
+    });
+    const delJson = parseToolText(delResult);
+    expect(delJson.deleted).toBe(true);
+
+    // Now retrieve should return original_deleted
+    const afterResult = await handleRetrieveOriginal(ctx, {
+      scopeId: SCOPE_ID,
+      originalRef: refToDelete,
+    });
+
+    expect(afterResult.isError).toBe(true);
+    const afterJson = parseToolText(afterResult);
+    expect(afterJson.found).toBe(false);
+    expect(afterJson.error).toBe("original_deleted");
+    expect(afterJson.hint).toContain("delete_original");
+    expect(afterJson.receiptId).toBeTruthy();
+
+    // Verify the error receipt
+    const receipt = ctx.receipts.get(afterJson.receiptId as string);
+    expect(receipt).not.toBeNull();
+    expect(receipt!.errorReason).toBe("original_deleted");
+  });
+
+  // ------------------------------------------------------------------
+  // §13.4.3: Cross-scope blocking with correct error type
+  // ------------------------------------------------------------------
+  it("cross-scope retrieve is blocked with scope_mismatch (not original_not_found)", async () => {
+    expect(originalRef).toBeTruthy();
+
+    const result = await handleRetrieveOriginal(ctx, {
+      scopeId: "repo_wrong_scope",
+      originalRef,
+    });
+
+    expect(result.isError).toBe(true);
+    const json = parseToolText(result);
+    // Must be scope_mismatch, NOT original_not_found
+    expect(json.error).toBe("scope_mismatch");
+    expect(json.actualScopeId).toBe(SCOPE_ID);
+
+    // The original should still be retrievable with correct scope
+    const okResult = await handleRetrieveOriginal(ctx, {
+      scopeId: SCOPE_ID,
+      originalRef,
+    });
+    const okJson = parseToolText(okResult);
+    expect(okJson.content).toBe(ORIGINAL_TEXT);
   });
 });
 
