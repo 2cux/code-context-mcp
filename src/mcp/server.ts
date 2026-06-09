@@ -10,6 +10,7 @@ import { initAndMigrate } from "../storage/migrations.js";
 import { getDb, persistDb } from "../storage/db.js";
 import { ReceiptService } from "../receipts/receiptService.js";
 import { handleCurrentScope } from "./tools/currentScope.js";
+import { handleListCompressions } from "./tools/listCompressions.js";
 
 export interface ServerContext {
   db: Database;
@@ -44,6 +45,7 @@ export async function startServer(): Promise<void> {
     (args: Record<string, unknown>) => Promise<CallToolResult>
   > = {
     current_scope: (args) => handleCurrentScope(ctx, args),
+    list_compressions: (args) => handleListCompressions(ctx, args),
   };
 
   server.setRequestHandler(ListToolsRequestSchema, async () => ({
@@ -65,6 +67,44 @@ export async function startServer(): Promise<void> {
                 "Override the current working directory. Defaults to process.cwd().",
             },
           },
+        },
+      },
+      {
+        name: "list_compressions",
+        description:
+          "List compressed context records for a project scope. " +
+          "Returns paginated results with summaries and aggregate statistics. " +
+          "Supports optional filtering by contentType. " +
+          "Use this to browse what has been compressed and review token savings.",
+        inputSchema: {
+          type: "object",
+          properties: {
+            scopeId: {
+              type: "string",
+              description:
+                "The scopeId to list compressions for (required). " +
+                "Use current_scope to obtain the current project's scopeId.",
+            },
+            contentType: {
+              type: "string",
+              description:
+                "Optional filter by content type. " +
+                "Valid values: test_output, log, command_output, code, json, " +
+                "markdown, plain_text, rag_chunk, file_summary, " +
+                "conversation_history, unknown.",
+            },
+            limit: {
+              type: "number",
+              description:
+                "Maximum number of records to return (1-100, default 20).",
+            },
+            offset: {
+              type: "number",
+              description:
+                "Number of records to skip for pagination (default 0).",
+            },
+          },
+          required: ["scopeId"],
         },
       },
     ],

@@ -55,7 +55,8 @@ export function getDb(): Database {
 }
 
 export function persistDb(): void {
-  if (!_db || !_dbPath) return;
+  // :memory: databases cannot and should not be persisted to disk
+  if (!_db || !_dbPath || _dbPath === ":memory:") return;
   const data = _db.export();
   writeFileSync(_dbPath, Buffer.from(data));
 }
