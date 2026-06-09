@@ -10,7 +10,11 @@ import { initAndMigrate } from "../storage/migrations.js";
 import { getDb, persistDb } from "../storage/db.js";
 import { ReceiptService } from "../receipts/receiptService.js";
 import { handleCurrentScope } from "./tools/currentScope.js";
+import { handleCompressContext } from "./tools/compressContext.js";
 import { handleListCompressions } from "./tools/listCompressions.js";
+import { handleRetrieveOriginal } from "./tools/retrieveOriginal.js";
+import { handleDeleteOriginal } from "./tools/deleteOriginal.js";
+import { handleCleanupOriginals } from "./tools/cleanupOriginals.js";
 
 export interface ServerContext {
   db: Database;
@@ -45,11 +49,82 @@ export async function startServer(): Promise<void> {
     (args: Record<string, unknown>) => Promise<CallToolResult>
   > = {
     current_scope: (args) => handleCurrentScope(ctx, args),
+    compress_context: (args) => handleCompressContext(ctx, args),
+    retrieve_original: (args) => handleRetrieveOriginal(ctx, args),
+    delete_original: (args) => handleDeleteOriginal(ctx, args),
+    cleanup_originals: (args) => handleCleanupOriginals(ctx, args),
     list_compressions: (args) => handleListCompressions(ctx, args),
   };
 
   server.setRequestHandler(ListToolsRequestSchema, async () => ({
     tools: [
+      {
+        name: "compress_context",
+        description:
+          "Compress long context to reduce token consumption. " +
+          "Automatically detects content type, applies type-specific " +
+          "compression strategies, and handles oversized inputs via " +
+          "chunking. Returns compressed content with token statistics, " +
+          "originalRef for later retrieval, and a receipt for audit. " +
+          "On failure, returns original content (fail-open).",
+        inputSchema: {
+          type: "object",
+          properties: {
+            scopeId: {
+              type: "string",
+              description:
+                "The scopeId from current_scope (required). " +
+                "Used for scope isolation and persistence.",
+            },
+            content: {
+              type: "string",
+              description:
+                "The raw content to compress (required). " +
+                "Can be any size; the safety layer handles oversized inputs.",
+            },
+            contentType: {
+              type: "string",
+              description:
+                "Content type hint. Defaults to 'unknown'. " +
+                "Valid values: test_output, log, command_output, code, " +
+                "json, markdown, plain_text, rag_chunk, file_summary, " +
+                "conversation_history, unknown.",
+            },
+            strategy: {
+              type: "string",
+              description:
+                "Compression strategy mode: 'conservative' (default) or 'auto'.",
+            },
+            keepOriginal: {
+              type: "boolean",
+              description:
+                "Whether to save original content for later retrieval. " +
+                "Default: true.",
+            },
+            maxTokens: {
+              type: "number",
+              description:
+                "Target max output tokens (default 2000).",
+            },
+            timeoutMs: {
+              type: "number",
+              description:
+                "Compression timeout in milliseconds (default 5000).",
+            },
+            maxInputBytes: {
+              type: "number",
+              description:
+                "Maximum input size in bytes before chunking (default 1MB).",
+            },
+            metadata: {
+              type: "object",
+              description:
+                "Optional metadata (source, command, filePath, etc.).",
+            },
+          },
+          required: ["scopeId", "content"],
+        },
+      },
       {
         name: "current_scope",
         description:
@@ -67,6 +142,92 @@ export async function startServer(): Promise<void> {
                 "Override the current working directory. Defaults to process.cwd().",
             },
           },
+        },
+      },
+      {
+        name: "retrieve_original",
+        description:
+          "Retrieve original (uncompressed) content by originalRef. " +
+          "Returns the full original content that was saved during " +
+          "compress_context. Supports offset/limit for paginating " +
+          "large originals. Scope-isolated — only retrieves content " +
+          "belonging to the given scopeId. " +
+          "Increments retrieveCount on the associated CCR and " +
+          "generates a retrieval receipt.",
+        inputSchema: {
+          type: "object",
+          properties: {
+            scopeId: {
+              type: "string",
+              description:
+                "The scopeId from current_scope (required). " +
+                "Only originals within this scope can be retrieved.",
+            },
+            originalRef: {
+              type: "string",
+              description:
+                "The originalRef returned by compress_context (required). " +
+                "Identifies the original content to retrieve.",
+            },
+            offset: {
+              type: "number",
+              description:
+                "Character offset for paginating large originals (default 0).",
+            },
+            limit: {
+              type: "number",
+              description:
+                "Max characters to return (default 10000). " +
+                "Use with offset for pagination.",
+            },
+          },
+          required: ["scopeId", "originalRef"],
+        },
+      },
+      {
+        name: "delete_original",
+        description:
+          "Delete a single original content record by originalRef. " +
+          "Updates the associated CCR to reflect that the original " +
+          "is no longer retrievable. Scope-isolated — only deletes " +
+          "within the given scopeId. " +
+          "Use this to remove sensitive or unneeded cached originals.",
+        inputSchema: {
+          type: "object",
+          properties: {
+            scopeId: {
+              type: "string",
+              description:
+                "The scopeId from current_scope (required).",
+            },
+            originalRef: {
+              type: "string",
+              description:
+                "The originalRef to delete (required).",
+            },
+          },
+          required: ["scopeId", "originalRef"],
+        },
+      },
+      {
+        name: "cleanup_originals",
+        description:
+          "Remove all expired original content records for a project scope. " +
+          "For each affected CCR that no longer has any originals, " +
+          "sets canRetrieveOriginal = 0. " +
+          "Use this for routine maintenance to free storage and ensure " +
+          "expired originals are properly cleaned up.",
+        inputSchema: {
+          type: "object",
+          properties: {
+            scopeId: {
+              type: "string",
+              description:
+                "The scopeId from current_scope (required). " +
+                "Only expired originals within this scope are cleaned up.",
+            },
+          },
+          required: ["scopeId"],
         },
       },
       {
