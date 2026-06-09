@@ -1,0 +1,32 @@
+2026-06-09T10:00:00.123Z INFO  [main] Server starting on port 8080
+2026-06-09T10:00:00.456Z INFO  [main] Database connection pool initialized (max: 20)
+2026-06-09T10:00:00.789Z INFO  [main] Loading routes from /app/routes
+2026-06-09T10:00:01.012Z INFO  [main] Routes loaded: 42 endpoints registered
+2026-06-09T10:00:01.234Z INFO  [main] Middleware pipeline configured
+2026-06-09T10:00:01.456Z INFO  [main] Server ready — listening on :8080
+2026-06-09T10:00:05.001Z INFO  [req-abc123] GET /api/users — 200 OK (12ms)
+2026-06-09T10:00:05.123Z INFO  [req-def456] GET /api/health — 200 OK (2ms)
+2026-06-09T10:00:05.234Z INFO  [req-ghi789] POST /api/auth/login — 200 OK (45ms)
+2026-06-09T10:00:06.001Z WARN  [req-jkl012] GET /api/products — slow query detected (1523ms) trace_id=trc_8f3a
+2026-06-09T10:00:06.234Z INFO  [req-mno345] GET /api/cart — 200 OK (8ms)
+2026-06-09T10:00:07.001Z INFO  [req-pqr678] POST /api/orders — 201 Created (234ms)
+2026-06-09T10:00:07.456Z ERROR [req-stu901] POST /api/payment — TypeError: Cannot read properties of undefined (reading 'token')
+    at PaymentService.process (src/services/payment.ts:42:15)
+    at PaymentController.handle (src/controllers/payment.ts:18:10)
+    at Router.dispatch (src/router/index.ts:56:22)
+    at handleRequest (src/server.ts:34:8)
+2026-06-09T10:00:07.789Z ERROR [req-stu901] Payment failed for order ORD-8821 — trace_id=trc_9b2c code=PAYMENT_ERROR
+2026-06-09T10:00:08.001Z WARN  [req-vwx234] GET /api/search — degraded response (elasticsearch timeout, using cache) trace_id=trc_1d5e
+2026-06-09T10:00:08.234Z INFO  [req-yza567] GET /api/inventory — 200 OK (45ms)
+2026-06-09T10:00:09.001Z ERROR [req-bcd890] Unhandled exception in GET /api/reports — trace_id=trc_4f7g
+Error: Connection refused — database unreachable
+    at DatabasePool.acquire (src/db/pool.ts:28:11)
+    at ReportService.generate (src/services/reports.ts:67:22)
+    at ReportController.monthly (src/controllers/reports.ts:34:14)
+    at Router.dispatch (src/router/index.ts:56:22)
+    at handleRequest (src/server.ts:34:8)
+Caused by: Error: connect ECONNREFUSED 127.0.0.1:5432
+    at Socket._onConnect (node:net:1537:18)
+2026-06-09T10:00:09.234Z FATAL [main] Database connection lost — initiating graceful shutdown
+2026-06-09T10:00:09.456Z WARN  [main] 3 active requests will be drained before shutdown
+2026-06-09T10:00:10.001Z INFO  [main] Server shutdown complete

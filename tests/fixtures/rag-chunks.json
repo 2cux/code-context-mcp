@@ -1,0 +1,73 @@
+[
+  {
+    "source": "docs/api-reference.md",
+    "documentTitle": "API Reference — v2 Endpoints",
+    "chunkId": "chk_001",
+    "score": 0.92,
+    "content": "The /api/v2/auth endpoint supports JWT-based authentication. Tokens are issued with RS256 algorithm and expire after 24 hours. Refresh tokens are valid for 30 days and can be used to obtain new access tokens without re-authentication.",
+    "metadata": {
+      "section": "Authentication",
+      "version": "v2.3.0",
+      "lastUpdated": "2026-05-15"
+    }
+  },
+  {
+    "source": "docs/api-reference.md",
+    "documentTitle": "API Reference — v2 Endpoints",
+    "chunkId": "chk_002",
+    "score": 0.87,
+    "content": "POST /api/v2/auth/login accepts { email: string, password: string } and returns { accessToken: string, refreshToken: string, user: User }. The endpoint rate-limits to 5 attempts per minute per IP address.",
+    "metadata": {
+      "section": "Authentication — Login",
+      "version": "v2.3.0",
+      "lastUpdated": "2026-05-15"
+    }
+  },
+  {
+    "source": "docs/api-reference.md",
+    "documentTitle": "API Reference — v2 Endpoints",
+    "chunkId": "chk_003",
+    "score": 0.81,
+    "content": "GET /api/v2/users returns a paginated list of users. Supports query parameters: page (default 1), limit (default 20, max 100), sort (name, email, createdAt), and filter (role, status).",
+    "metadata": {
+      "section": "Users",
+      "version": "v2.3.0",
+      "lastUpdated": "2026-05-10"
+    }
+  },
+  {
+    "source": "docs/deployment.md",
+    "documentTitle": "Deployment Guide",
+    "chunkId": "chk_004",
+    "score": 0.65,
+    "content": "For production deployment, set NODE_ENV=production and ensure DATABASE_URL points to your PostgreSQL instance. The application requires Node.js >= 18.0.0 and at least 512MB RAM.",
+    "metadata": {
+      "section": "Production Setup",
+      "version": "v2.1.0",
+      "lastUpdated": "2026-04-22"
+    }
+  },
+  {
+    "source": "docs/deployment.md",
+    "documentTitle": "Deployment Guide",
+    "chunkId": "chk_005",
+    "score": 0.45,
+    "content": "Docker images are available at ghcr.io/org/app. Use tag 'latest' for the most recent stable release or pin to a specific version like 'v2.3.0'.",
+    "metadata": {
+      "section": "Docker",
+      "version": "v2.1.0",
+      "lastUpdated": "2026-04-20"
+    }
+  },
+  {
+    "source": "docs/faq.md",
+    "documentTitle": "Frequently Asked Questions",
+    "chunkId": "chk_006",
+    "score": 0.32,
+    "content": "Q: How do I reset my password? A: Use the /api/v2/auth/reset-password endpoint. You'll receive an email with a reset link valid for 1 hour.",
+    "metadata": {
+      "section": "Password Reset",
+      "version": "v2.2.0"
+    }
+  }
+]

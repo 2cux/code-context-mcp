@@ -1,0 +1,17 @@
+$ pnpm build
+
+> code-context-mcp@0.1.0 build D:\project\CodeContext
+> tsc --noEmit && esbuild src/index.ts --bundle --platform=node --outfile=dist/index.js
+
+src/compression/strategies/testOutput.ts(45,22): error TS2304: Cannot find name 'extractFailedTests'.
+src/compression/strategies/testOutput.ts(67,10): error TS2554: Expected 2 arguments, but got 1.
+src/compression/strategies/log.ts(89,5): error TS2322: Type 'string[]' is not assignable to type 'string'.
+src/compression/strategies/code.ts(123,15): error TS2345: Argument of type 'RegExp' is not assignable to parameter of type 'string'.
+src/compression/strategies/code.ts(156,8): error TS2304: Cannot find name 'foldFunctionBody'.
+src/compression/strategies/json.ts(34,12): error TS18046: 'data' is of type 'unknown'.
+src/compression/strategies/json.ts(56,20): error TS2532: Object is possibly 'undefined'.
+src/storage/migrations.ts(18,10): error TS2345: Argument of type 'null' is not assignable to parameter of type 'string'.
+
+Found 8 errors.
+
+Build failed with exit code 2

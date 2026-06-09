@@ -1,0 +1,67 @@
+
+RUN  vitest v2.1.9
+
+ ✓ src/utils/__tests__/hash.test.ts (12 tests) 45ms
+ ✓ src/utils/__tests__/time.test.ts (5 tests) 12ms
+ ✓ src/scope/__tests__/git.test.ts (3 tests) 8ms
+ ❯ src/auth/__tests__/session.test.ts (8 tests | 2 failed) 234ms
+   ✓ should create session 15ms
+   ✓ should set refresh token cookie 22ms
+   × should clear cookie on logout 87ms
+     → expected 'refresh_token=abc123' to be undefined
+   ✓ should refresh token 18ms
+   × should handle expired refresh token 56ms
+     → Expected: "Token refreshed"
+     Received: "Error: Token expired"
+   ✓ should revoke all sessions 12ms
+   ✓ should validate session expiry 14ms
+   ✓ should handle concurrent sessions 10ms
+ ✓ src/api/__tests__/routes.test.ts (15 tests) 67ms
+ ❯ src/db/__tests__/connection.test.ts (6 tests | 1 failed) 189ms
+   ✓ should connect to database 22ms
+   ✓ should execute query 31ms
+   × should timeout on slow query 102ms
+     → AssertionError: expected promise to reject with TimeoutError
+   ✓ should close connection 14ms
+   ✓ should reconnect after failure 12ms
+   ✓ should handle connection pool exhaustion 8ms
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯ Failed Tests 3 ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/auth/__tests__/session.test.ts > should clear cookie on logout
+AssertionError: expected 'refresh_token=abc123' to be undefined
+ ❯ src/auth/session.ts:45:22
+     43| export function logout(): void {
+     44|   clearCookie('refresh_token')
+     45|   expect(getCookie('refresh_token')).toBeUndefined()
+       |                                      ^
+     46| }
+ ❯ src/auth/__tests__/session.test.ts:34:5
+
+ FAIL  src/auth/__tests__/session.test.ts > should handle expired refresh token
+Error: Token expired
+ ❯ src/auth/session.ts:78:11
+     76|   } catch (err) {
+     77|     // Should refresh automatically
+     78|     throw new Error('Token expired')
+       |           ^
+     79|   }
+ ❯ src/auth/__tests__/session.test.ts:56:3
+
+ FAIL  src/db/__tests__/connection.test.ts > should timeout on slow query
+AssertionError: expected promise to reject with TimeoutError
+ ❯ src/db/connection.ts:112:20
+     110|   const result = await db.query('SELECT pg_sleep(10)')
+     111|   // Expected: promise rejects with TimeoutError
+     112|   expect(result).toThrow(TimeoutError)
+       |                    ^
+     113| }
+ ❯ src/db/__tests__/connection.test.ts:67:5
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+
+ Test Files  2 failed | 3 passed (5)
+      Tests  3 failed | 43 passed (46)
+   Duration  567ms
+
+ ELIFECYCLE  Test failed with exit code 1

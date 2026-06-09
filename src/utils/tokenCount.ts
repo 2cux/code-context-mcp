@@ -45,3 +45,32 @@ export function tokenDiff(before: number, after: number): {
   const ratio = before > 0 ? saved / before : 0;
   return { saved, ratio };
 }
+
+/**
+ * Truncate content to fit within maxTokens using binary search.
+ *
+ * Used by all compression strategies as a last-resort trimming step
+ * when structured compression doesn't reduce tokens enough.
+ *
+ * UTF-8 safe: splits on character boundaries, verifies with tiktoken.
+ */
+export function tokenAwareTruncate(
+  content: string,
+  maxTokens: number,
+): string {
+  if (countTokens(content) <= maxTokens) return content;
+  let lo = 0;
+  let hi = content.length;
+  let best = "";
+  while (lo < hi) {
+    const mid = Math.ceil((lo + hi) / 2);
+    const candidate = content.slice(0, mid);
+    if (countTokens(candidate) <= maxTokens) {
+      best = candidate;
+      lo = mid;
+    } else {
+      hi = mid - 1;
+    }
+  }
+  return best;
+}

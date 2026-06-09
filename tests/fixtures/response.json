@@ -1,0 +1,55 @@
+{
+  "status": "error",
+  "code": "VALIDATION_ERROR",
+  "message": "Request body validation failed for 3 fields",
+  "requestId": "req_8f3a91c2b4d5",
+  "timestamp": "2026-06-09T10:00:00.000Z",
+  "errors": [
+    {
+      "field": "email",
+      "code": "INVALID_FORMAT",
+      "message": "Must be a valid email address",
+      "received": "not-an-email"
+    },
+    {
+      "field": "password",
+      "code": "TOO_SHORT",
+      "message": "Password must be at least 8 characters",
+      "received": "123"
+    },
+    {
+      "field": "age",
+      "code": "OUT_OF_RANGE",
+      "message": "Age must be between 0 and 150",
+      "received": -5
+    }
+  ],
+  "data": null,
+  "meta": {
+    "apiVersion": "v2",
+    "processingTimeMs": 12,
+    "serverId": "node-4"
+  },
+  "users": [
+    { "id": 1, "name": "Alice", "role": "admin", "email": "alice@example.com" },
+    { "id": 2, "name": "Bob", "role": "user", "email": "bob@example.com" },
+    { "id": 3, "name": "Charlie", "role": "user", "email": "charlie@example.com" },
+    { "id": 4, "name": "Diana", "role": "moderator", "email": "diana@example.com" },
+    { "id": 5, "name": "Eve", "role": "user", "email": "eve@example.com" },
+    { "id": 6, "name": "Frank", "role": "user", "email": "frank@example.com" },
+    { "id": 7, "name": "Grace", "role": "user", "email": "grace@example.com" },
+    { "id": 8, "name": "Henry", "role": "user", "email": "henry@example.com" },
+    { "id": 9, "name": "Ivy", "role": "user", "email": "ivy@example.com" },
+    { "id": 10, "name": "Jack", "role": "user", "email": "jack@example.com" }
+  ],
+  "config": {
+    "maxRetries": 3,
+    "timeout": 5000,
+    "endpoints": ["/api/v2/users", "/api/v2/auth", "/api/v2/orders", "/api/v2/products"],
+    "featureFlags": {
+      "newCheckout": true,
+      "darkMode": false,
+      "betaSearch": true
+    }
+  }
+}
