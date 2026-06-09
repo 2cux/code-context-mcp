@@ -1,8 +1,8 @@
 /**
- * Log Detector — Phase 2
+ * Command Output Detector — Phase 2
  *
- * Detects structured/application logs.
- * Signals: ERROR, WARN, INFO, Exception, Traceback, timestamp patterns.
+ * Detects shell / terminal command output.
+ * Signals: stdout, stderr, exit code, shell prompt, build output.
  */
 
 import type { DetectionResult } from "../contentRouter.js";
@@ -13,24 +13,22 @@ import { computeConfidence, matchSignals } from "../contentRouter.js";
 // ---------------------------------------------------------------------------
 
 const SIGNALS: Record<string, RegExp> = {
-  ERROR: /\bERROR\b/,
-  WARN: /\bWARN(?:ING)?\b/,
-  INFO: /\bINFO\b/,
-  Exception: /\bexception\b/i,
-  Traceback: /\btraceback\b/i,
-  "stack trace": /stack\s*trace/i,
-  timestamp: /\b\d{4}[-/]\d{2}[-/]\d{2}(?:[T ]\d{2}:\d{2})?/,
-  "request id": /request[_\-\s]?id/i,
-  DEBUG: /\bDEBUG\b/,
-  "error class": /\b[A-Z]\w*(?:Error|Exception)\b/,
-  "traceback file": /File\s+".+",\s+line\s+\d+/i,
+  stdout: /\bstdout\b/i,
+  stderr: /\bstderr\b/i,
+  "exit code": /exit\s*(?:code|status)[:\s]*\d+/i,
+  command: /\bcommand\b/i,
+  "command prompt": /^[$#>]\s/m,
+  "build failed": /build\s*(?:failed|failure)/i,
+  "shell output": /shell\s*output/i,
+  "path prompt": /^[A-Z]:[\\\/].*?>/m,
+  "error level": /error\s*level/i,
 };
 
 // ---------------------------------------------------------------------------
 // Detector
 // ---------------------------------------------------------------------------
 
-export function detectLog(content: string): DetectionResult | null {
+export function detectCommandOutput(content: string): DetectionResult | null {
   const signals = matchSignals(content, SIGNALS);
   if (signals.length === 0) return null;
 
@@ -41,7 +39,7 @@ export function detectLog(content: string): DetectionResult | null {
   if (confidence < 0.2) return null;
 
   return {
-    contentType: "log",
+    contentType: "command_output",
     confidence,
     signals,
   };

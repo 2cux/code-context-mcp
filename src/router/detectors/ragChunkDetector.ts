@@ -6,9 +6,42 @@
  */
 
 import type { DetectionResult } from "../contentRouter.js";
+import { computeConfidence, matchSignals } from "../contentRouter.js";
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
+// ---------------------------------------------------------------------------
+// Signal patterns
+// ---------------------------------------------------------------------------
+
+const SIGNALS: Record<string, RegExp> = {
+  // Use (?:_|\b) suffix so "chunk" matches "chunk_id" but NOT "chunky"
+  source: /\bsource(?:_|\b)/i,
+  chunk: /\bchunk(?:_|\b)/i,
+  document: /\bdocument(?:_|\b)/i,
+  metadata: /\bmetadata(?:_|\b)/i,
+  score: /\bscore(?:_|\b)/i,
+  chunk_id: /\bchunk[_\s]?id\b/i,
+  document_id: /\bdocument[_\s]?id\b/i,
+  excerpt: /\bexcerpt\b/i,
+  relevance: /\brelevance\b/i,
+};
+
+// ---------------------------------------------------------------------------
+// Detector
+// ---------------------------------------------------------------------------
+
 export function detectRagChunk(content: string): DetectionResult | null {
-  // TODO: Phase 2
-  return null;
+  const signals = matchSignals(content, SIGNALS);
+  if (signals.length === 0) return null;
+
+  const confidence = computeConfidence(signals.length, Object.keys(SIGNALS).length, {
+    minMatches: 2,
+  });
+
+  if (confidence < 0.2) return null;
+
+  return {
+    contentType: "rag_chunk",
+    confidence,
+    signals,
+  };
 }

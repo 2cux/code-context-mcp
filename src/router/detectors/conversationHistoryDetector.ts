@@ -1,8 +1,9 @@
 /**
- * Log Detector — Phase 2
+ * Conversation History Detector — Phase 2
  *
- * Detects structured/application logs.
- * Signals: ERROR, WARN, INFO, Exception, Traceback, timestamp patterns.
+ * Detects LLM / chat conversation history.
+ * Signals: role-based message markers (JSON chat format, Human/Assistant prefixes,
+ * User/AI turn markers, system messages).
  */
 
 import type { DetectionResult } from "../contentRouter.js";
@@ -13,27 +14,26 @@ import { computeConfidence, matchSignals } from "../contentRouter.js";
 // ---------------------------------------------------------------------------
 
 const SIGNALS: Record<string, RegExp> = {
-  ERROR: /\bERROR\b/,
-  WARN: /\bWARN(?:ING)?\b/,
-  INFO: /\bINFO\b/,
-  Exception: /\bexception\b/i,
-  Traceback: /\btraceback\b/i,
-  "stack trace": /stack\s*trace/i,
-  timestamp: /\b\d{4}[-/]\d{2}[-/]\d{2}(?:[T ]\d{2}:\d{2})?/,
-  "request id": /request[_\-\s]?id/i,
-  DEBUG: /\bDEBUG\b/,
-  "error class": /\b[A-Z]\w*(?:Error|Exception)\b/,
-  "traceback file": /File\s+".+",\s+line\s+\d+/i,
+  "role field": /"role"\s*:/,
+  "content field": /"content"\s*:/,
+  "user:": /(?:^|\n)user\s*:/im,
+  "assistant:": /(?:^|\n)(?:assistant|ai|bot)\s*:/im,
+  "system:": /(?:^|\n)system\s*:/im,
+  "human:": /(?:^|\n)human\s*:/im,
+  "messages array": /"messages"\s*:/,
+  conversation: /\bconversation\b/i,
+  "turn marker": /^={3,}\s*(?:turn|step|message|round)/im,
 };
 
 // ---------------------------------------------------------------------------
 // Detector
 // ---------------------------------------------------------------------------
 
-export function detectLog(content: string): DetectionResult | null {
+export function detectConversationHistory(content: string): DetectionResult | null {
   const signals = matchSignals(content, SIGNALS);
   if (signals.length === 0) return null;
 
+  // Conversation history needs at least 2 signals to be plausible
   const confidence = computeConfidence(signals.length, Object.keys(SIGNALS).length, {
     minMatches: 2,
   });
@@ -41,7 +41,7 @@ export function detectLog(content: string): DetectionResult | null {
   if (confidence < 0.2) return null;
 
   return {
-    contentType: "log",
+    contentType: "conversation_history",
     confidence,
     signals,
   };
