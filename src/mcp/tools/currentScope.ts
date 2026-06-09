@@ -3,11 +3,23 @@ import type { ServerContext } from "../server.js";
 import { resolveScope, toScopeRecord } from "../../scope/resolveScope.js";
 import { runStmt } from "../../storage/db.js";
 
+function validateCwd(raw: unknown): string | undefined {
+  if (typeof raw !== "string") return undefined;
+  // Reject empty, relative, or path-traversal patterns
+  if (!raw.trim() || !raw.startsWith("/") && !/^[A-Z]:\\/i.test(raw)) {
+    return undefined; // fall back to process.cwd(), don't fail
+  }
+  if (raw.includes("..")) {
+    return undefined; // silently reject traversal
+  }
+  return raw;
+}
+
 export async function handleCurrentScope(
   ctx: ServerContext,
   args: Record<string, unknown>,
 ): Promise<CallToolResult> {
-  const cwd = typeof args["cwd"] === "string" ? args["cwd"] : undefined;
+  const cwd = validateCwd(args["cwd"]);
   const scope = resolveScope(cwd);
   const record = toScopeRecord(scope);
 

@@ -3,7 +3,13 @@
  *
  * Enforces maxInputBytes. If content exceeds the limit, it's either
  * rejected or truncated depending on failOpen setting.
+ *
+ * Truncation is UTF-8 safe: uses TextEncoder/TextDecoder with the
+ * { stream: true } option to avoid splitting multi-byte characters.
  */
+
+const encoder = new TextEncoder();
+const decoder = new TextDecoder();
 
 export interface SizeLimitConfig {
   maxInputBytes: number;
@@ -22,17 +28,19 @@ export function checkSizeLimit(
   content: string,
   config: SizeLimitConfig,
 ): SizeCheckResult {
-  const bytes = Buffer.byteLength(content, "utf-8");
+  const encoded = encoder.encode(content);
+  const bytes = encoded.byteLength;
 
   if (bytes <= config.maxInputBytes) {
     return { ok: true, content, truncated: false, originalBytes: bytes };
   }
 
   if (config.failOpen) {
-    // Truncate to maxInputBytes and add a warning marker
-    const truncated = Buffer.from(content, "utf-8")
-      .subarray(0, config.maxInputBytes)
-      .toString("utf-8");
+    // UTF-8-safe truncation: slice the Uint8Array at the byte boundary,
+    // then use TextDecoder with { stream: true } so a trailing partial
+    // multi-byte sequence is replaced with U+FFFD instead of throwing.
+    const truncatedBytes = encoded.subarray(0, config.maxInputBytes);
+    const truncated = decoder.decode(truncatedBytes, { stream: true });
 
     return {
       ok: true,

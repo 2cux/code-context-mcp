@@ -20,6 +20,7 @@ export async function startServer(): Promise<void> {
   // Initialize SQLite
   await initAndMigrate();
   const db = getDb();
+  persistDb(); // Persist schema immediately after migration
   const receipts = new ReceiptService(db);
 
   const ctx: ServerContext = { db, receipts };
@@ -87,7 +88,8 @@ export async function startServer(): Promise<void> {
 
     try {
       const result = await handler((args ?? {}) as Record<string, unknown>);
-      // Persist after each mutation (for safety)
+      // Persist after mutation (current_scope writes a scope record)
+      // In the future: skip for pure-read tools like get_receipt, list_context.
       persistDb();
       return result;
     } catch (err) {

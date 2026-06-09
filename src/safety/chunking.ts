@@ -3,10 +3,17 @@
  *
  * Splits content into manageable chunks that can be compressed
  * independently, then recombined.
+ *
+ * NOTE: Chunk sizing is byte-based (UTF-8) to match the token-counter
+ * estimate. The 4 bytes/token ratio is conservative for English-heavy
+ * text but will overestimate for CJK. A more accurate approach in
+ * Phase 3 would use tiktoken directly to measure each chunk.
  */
 
+const encoder = new TextEncoder();
+
 export interface ChunkOptions {
-  /** Max tokens per chunk (approximate, using char/4 estimate). */
+  /** Max tokens per chunk (approximate, using 4 bytes/token). */
   maxTokensPerChunk: number;
   /** Separator to split on. Default: double newline. */
   separator?: string;
@@ -18,17 +25,18 @@ export interface ChunkResult {
 }
 
 const DEFAULT_MAX_TOKENS = 4000;
-const CHARS_PER_TOKEN_ESTIMATE = 4;
+const BYTES_PER_TOKEN_ESTIMATE = 4;
 
 export function chunkContent(
   content: string,
   opts?: Partial<ChunkOptions>,
 ): ChunkResult {
   const maxTokens = opts?.maxTokensPerChunk ?? DEFAULT_MAX_TOKENS;
-  const maxChars = maxTokens * CHARS_PER_TOKEN_ESTIMATE;
+  const maxBytes = maxTokens * BYTES_PER_TOKEN_ESTIMATE;
   const sep = opts?.separator ?? "\n\n";
 
-  if (content.length <= maxChars) {
+  const totalBytes = encoder.encode(content).byteLength;
+  if (totalBytes <= maxBytes) {
     return { chunks: [content], totalChunks: 1 };
   }
 
@@ -37,11 +45,14 @@ export function chunkContent(
   let current = "";
 
   for (const section of sections) {
-    if (current.length + section.length + sep.length > maxChars && current) {
+    const candidate = current ? current + sep + section : section;
+    const candidateBytes = encoder.encode(candidate).byteLength;
+
+    if (candidateBytes > maxBytes && current) {
       chunks.push(current);
       current = section;
     } else {
-      current = current ? current + sep + section : section;
+      current = candidate;
     }
   }
 
@@ -49,14 +60,22 @@ export function chunkContent(
     chunks.push(current);
   }
 
-  // If any single chunk is still too big, force-split by character count
+  // If any single chunk is still too big, force-split by byte boundary.
+  // Use TextEncoder/TextDecoder for UTF-8-safe slicing.
+  const decoder = new TextDecoder();
   const final: string[] = [];
   for (const chunk of chunks) {
-    if (chunk.length <= maxChars) {
+    const chunkBytes = encoder.encode(chunk);
+    if (chunkBytes.byteLength <= maxBytes) {
       final.push(chunk);
     } else {
-      for (let i = 0; i < chunk.length; i += maxChars) {
-        final.push(chunk.slice(i, i + maxChars));
+      // Byte-by-byte safe split: scan forward, decode with stream:true
+      let offset = 0;
+      while (offset < chunkBytes.byteLength) {
+        const end = Math.min(offset + maxBytes, chunkBytes.byteLength);
+        const slice = chunkBytes.subarray(offset, end);
+        final.push(decoder.decode(slice, { stream: true }));
+        offset = end;
       }
     }
   }

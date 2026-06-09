@@ -14,13 +14,12 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
  *   2. src/storage/schema.sql   (development, relative to __dirname)
  */
 function findSchemaPath(): string {
-  // When running from dist/, __dirname = .../dist/storage
-  // When running via tsx/vitest, __dirname = .../src/storage
-  // Try sibling schema.sql first, then project-relative paths.
+  // __dirname is .../src/storage (dev) or .../dist/storage (production).
+  // Try sibling first, then walk up to src/.
   const candidates = [
-    join(__dirname, "schema.sql"), // same directory (works when run from src/)
-    join(__dirname, "..", "..", "src", "storage", "schema.sql"), // from dist/storage -> project/src/storage
-    join(__dirname, "..", "storage", "schema.sql"), // from dist/cli -> project/src/storage/schema.sql... actually no
+    join(__dirname, "schema.sql"),
+    // From dist/storage -> project root -> src/storage/schema.sql
+    join(__dirname, "..", "..", "src", "storage", "schema.sql"),
   ];
 
   for (const path of candidates) {
