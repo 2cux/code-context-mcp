@@ -4,172 +4,307 @@
  * CodeContext MCP — CLI
  *
  * Usage:
- *   code-context scope                Show current scope
- *   code-context stats                Show token/stats summary
- *   code-context receipt <id>         Show a receipt
- *   code-context compress <file>      Compress a file (Phase 2)
- *   code-context retrieve <ref>       Retrieve original content (Phase 3)
- *   code-context remember ...         Save memory (Phase 5)
- *   code-context recall <query>       Recall memories (Phase 5)
- *   code-context forget <id>          Forget a memory (Phase 5)
- *   code-context list-context         List memories (Phase 5)
- *   code-context cleanup --originals  Clean up old originals (Phase 3)
+ *   code-context scope                   Show current repo scope
+ *   code-context stats                   Show token/stats summary
+ *   code-context receipt <id>            Show a receipt by ID
+ *   code-context compress <file>         Compress file content
+ *   code-context retrieve <ref>          Retrieve original content
+ *   code-context list-compressions       List compressed context records
+ *   code-context cleanup                 Clean up expired originals
+ *
+ * Global flags:
+ *   --help, -h      Show help
+ *   --version, -v   Show version
+ *   --json          Output compact JSON (default: pretty-printed)
  */
 
-import { initAndMigrate } from "../storage/migrations.js";
-import { getDb, closeDb } from "../storage/db.js";
-import { ReceiptService } from "../receipts/receiptService.js";
-import { CompressedStore } from "../compressed/compressedStore.js";
-import { getTokenStats } from "../stats/tokenStats.js";
-import { resolveScope } from "../scope/resolveScope.js";
+import {
+  runScope,
+  runStats,
+  runListCompressions,
+  runReceipt,
+  runCompress,
+  runRetrieve,
+  runCleanup,
+} from "./commands.js";
+import type { CliResult } from "./commands.js";
 
-const args = process.argv.slice(2);
-const command = args[0];
+// ---------------------------------------------------------------------------
+// Constants
+// ---------------------------------------------------------------------------
 
-async function main(): Promise<void> {
-  // Initialize DB
-  await initAndMigrate();
-  const db = getDb();
-  const receipts = new ReceiptService(db);
+const VERSION = "0.1.0";
 
-  switch (command) {
-    case "scope": {
-      const cwd = args[1] ?? process.cwd();
-      const scope = resolveScope(cwd);
-      console.log(JSON.stringify(scope, null, 2));
-      break;
-    }
-
-    case "stats": {
-      const scope = resolveScope();
-      const store = new CompressedStore(db);
-      const receiptStats = getTokenStats(db, scope.scopeId);
-      const ccrCount = store.count(scope.scopeId);
-      console.log(
-        JSON.stringify({ ...receiptStats, totalCCRs: ccrCount }, null, 2),
-      );
-      break;
-    }
-
-    case "list-compressions": {
-      const scope = resolveScope();
-      const store = new CompressedStore(db);
-
-      // Parse optional flags: --type <contentType> --limit <n> --offset <n>
-      const typeIdx = args.indexOf("--type");
-      const limitIdx = args.indexOf("--limit");
-      const offsetIdx = args.indexOf("--offset");
-
-      const contentType =
-        typeIdx !== -1 && typeIdx + 1 < args.length
-          ? args[typeIdx + 1]
-          : undefined;
-
-      let limit = 20;
-      if (limitIdx !== -1 && limitIdx + 1 < args.length) {
-        const parsed = parseInt(args[limitIdx + 1]!, 10);
-        if (!Number.isNaN(parsed)) {
-          limit = Math.max(1, Math.min(parsed, 100));
-        }
-      }
-
-      let offsetVal = 0;
-      if (offsetIdx !== -1 && offsetIdx + 1 < args.length) {
-        const parsed = parseInt(args[offsetIdx + 1]!, 10);
-        if (!Number.isNaN(parsed)) {
-          offsetVal = Math.max(0, parsed);
-        }
-      }
-
-      const result = store.list({
-        scopeId: scope.scopeId,
-        contentType: contentType as
-          | "test_output"
-          | "log"
-          | "command_output"
-          | "code"
-          | "json"
-          | "markdown"
-          | "plain_text"
-          | "rag_chunk"
-          | "file_summary"
-          | "conversation_history"
-          | "unknown"
-          | undefined,
-        limit,
-        offset: offsetVal,
-      });
-
-      // Generate receipt
-      receipts.create({
-        operation: "list",
-        scopeId: scope.scopeId,
-        resultIds: result.items.map((i) => i.ccrId),
-        query: contentType ? `contentType:${contentType}` : undefined,
-      });
-
-      console.log(JSON.stringify(result, null, 2));
-      break;
-    }
-
-    case "receipt": {
-      const receiptId = args[1];
-      if (!receiptId) {
-        console.error("Usage: code-context receipt <receiptId>");
-        closeDb();
-        process.exit(1);
-      }
-      const receipt = receipts.get(receiptId);
-      if (!receipt) {
-        console.error(`Receipt not found: ${receiptId}`);
-        closeDb();
-        process.exit(1);
-      }
-      console.log(JSON.stringify(receipt, null, 2));
-      break;
-    }
-
-    case "compress":
-    case "retrieve":
-    case "remember":
-    case "recall":
-    case "forget":
-    case "list-context":
-    case "cleanup": {
-      console.log(
-        `Command "${command}" is not yet implemented (coming in a future phase).`,
-      );
-      break;
-    }
-
-    default: {
-      console.log(`CodeContext MCP CLI v0.1.0
+const HELP_TEXT = `CodeContext MCP CLI v${VERSION}
 
 Usage:
-  code-context scope                      Show current repo scope
-  code-context stats                      Show token and operation stats
-  code-context receipt <id>               Show a receipt by ID
-  code-context list-compressions          List compressed context records
-      --type <contentType>                Filter by content type
-      --limit <n>                         Max records (default 20)
-      --offset <n>                        Pagination offset
+  code-context <command> [options]
 
-Coming soon:
-  code-context compress <file>            Compress context
-  code-context retrieve <ref>             Retrieve original content
-  code-context remember ...               Save project memory
-  code-context recall <query>             Recall project memories
-  code-context forget <id>                Forget a memory
-  code-context list-context               List all memories
-  code-context cleanup --originals        Clean up expired originals`);
-      break;
+Commands:
+  scope [cwd]                          Show current repo scope
+  stats                                Show token and operation stats
+  receipt <receiptId>                  Show a receipt by ID
+  compress <file>                      Compress file content
+      --type <contentType>             Content type hint
+      --strategy conservative|auto    Compression strategy (default: conservative)
+      --no-keep-original               Don't save original content
+      --max-tokens <n>                 Max output tokens (default: 2000)
+      --timeout <ms>                   Timeout in ms (default: 5000)
+  retrieve <originalRef>               Retrieve original content
+      --offset <n>                     Character offset (default: 0)
+      --limit <n>                      Max chars to return (default: 10000)
+  list-compressions                    List compressed context records
+      --type <contentType>             Filter by content type
+      --limit <n>                      Max records (default: 20)
+      --offset <n>                     Pagination offset
+  cleanup --originals                  Clean up expired originals
+
+Global flags:
+  --help, -h                           Show this help
+  --version, -v                        Show version
+  --json                               Output compact JSON
+
+Examples:
+  code-context scope
+  code-context compress ./test-output.log --type test_output
+  code-context retrieve orig_abc123
+  code-context list-compressions --type test_output --limit 10
+  code-context receipt rcp_abc123
+  code-context stats --json
+  code-context cleanup --originals`;
+
+// ---------------------------------------------------------------------------
+// Arg parsing helpers
+// ---------------------------------------------------------------------------
+
+/** Split args into (global flags, command name, command args). */
+function parseArgs(
+  raw: string[],
+): { help: boolean; version: boolean; compactJson: boolean; command: string; cmdArgs: string[] } {
+  let help = false;
+  let version = false;
+  let compactJson = false;
+  const remaining: string[] = [];
+
+  for (const arg of raw) {
+    if (arg === "--help" || arg === "-h") {
+      help = true;
+    } else if (arg === "--version" || arg === "-v") {
+      version = true;
+    } else if (arg === "--json") {
+      compactJson = true;
+    } else {
+      remaining.push(arg);
     }
   }
 
-  closeDb();
+  const command = remaining[0] ?? "";
+  const cmdArgs = remaining.slice(1);
+
+  return { help, version, compactJson, command, cmdArgs };
+}
+
+/** Get a named option value: --key value or --key=value. Returns undefined if not found. */
+function getOpt(args: string[], key: string): string | undefined {
+  const flag = `--${key}`;
+  const eqPrefix = `--${key}=`;
+
+  for (let i = 0; i < args.length; i++) {
+    const arg = args[i]!;
+    if (arg === flag && i + 1 < args.length) {
+      const next = args[i + 1]!;
+      // Don't consume the next arg if it looks like another flag
+      if (next.startsWith("--")) return undefined;
+      return next;
+    }
+    if (arg.startsWith(eqPrefix)) {
+      return arg.slice(eqPrefix.length);
+    }
+  }
+  return undefined;
+}
+
+/** Check if a boolean flag is present (e.g. --no-keep-original). */
+function hasFlag(args: string[], flag: string): boolean {
+  return args.includes(`--${flag}`);
+}
+
+// ---------------------------------------------------------------------------
+// Output helpers
+// ---------------------------------------------------------------------------
+
+function outputResult(result: CliResult, compactJson: boolean): void {
+  const indent = compactJson ? 0 : 2;
+  console.log(JSON.stringify(result.data, null, indent));
+}
+
+function outputError(message: string): void {
+  console.error(JSON.stringify({ error: message }));
+}
+
+// ---------------------------------------------------------------------------
+// Main
+// ---------------------------------------------------------------------------
+
+async function main(): Promise<void> {
+  const rawArgs = process.argv.slice(2);
+  const { help, version, compactJson, command, cmdArgs } = parseArgs(rawArgs);
+
+  // --help / --version take priority
+  if (help) {
+    console.log(HELP_TEXT);
+    process.exit(0);
+  }
+
+  if (version) {
+    console.log(VERSION);
+    process.exit(0);
+  }
+
+  let result: CliResult;
+
+  switch (command) {
+    // ------------------------------------------------------------------
+    // scope
+    // ------------------------------------------------------------------
+    case "scope": {
+      const cwd = cmdArgs[0];
+      result = runScope(cwd || undefined);
+      break;
+    }
+
+    // ------------------------------------------------------------------
+    // stats
+    // ------------------------------------------------------------------
+    case "stats": {
+      result = await runStats();
+      break;
+    }
+
+    // ------------------------------------------------------------------
+    // list-compressions
+    // ------------------------------------------------------------------
+    case "list-compressions": {
+      const typeStr = getOpt(cmdArgs, "type");
+      const limitStr = getOpt(cmdArgs, "limit");
+      const offsetStr = getOpt(cmdArgs, "offset");
+
+      const limit = limitStr ? parseInt(limitStr, 10) : undefined;
+      const offset = offsetStr ? parseInt(offsetStr, 10) : undefined;
+
+      result = await runListCompressions({
+        type: typeStr,
+        limit: limit && !Number.isNaN(limit) ? Math.max(1, Math.min(limit, 100)) : undefined,
+        offset: offset && !Number.isNaN(offset) ? Math.max(0, offset) : undefined,
+      });
+      break;
+    }
+
+    // ------------------------------------------------------------------
+    // receipt
+    // ------------------------------------------------------------------
+    case "receipt": {
+      const receiptId = cmdArgs[0];
+      if (!receiptId) {
+        outputError("Usage: code-context receipt <receiptId>");
+        process.exit(1);
+      }
+      result = await runReceipt(receiptId);
+      break;
+    }
+
+    // ------------------------------------------------------------------
+    // compress
+    // ------------------------------------------------------------------
+    case "compress": {
+      const filePath = cmdArgs[0];
+      if (!filePath) {
+        outputError("Usage: code-context compress <file> [options]");
+        process.exit(1);
+      }
+
+      const typeStr = getOpt(cmdArgs, "type");
+      const strategy = getOpt(cmdArgs, "strategy");
+      const maxTokensStr = getOpt(cmdArgs, "max-tokens");
+      const timeoutStr = getOpt(cmdArgs, "timeout");
+      const noKeepOriginal = hasFlag(cmdArgs, "no-keep-original");
+
+      const maxTokens = maxTokensStr ? parseInt(maxTokensStr, 10) : undefined;
+      const timeoutMs = timeoutStr ? parseInt(timeoutStr, 10) : undefined;
+
+      result = await runCompress(filePath, {
+        type: typeStr,
+        strategy: strategy ?? "conservative",
+        keepOriginal: !noKeepOriginal,
+        maxTokens: maxTokens && !Number.isNaN(maxTokens) ? maxTokens : undefined,
+        timeoutMs: timeoutMs && !Number.isNaN(timeoutMs) ? timeoutMs : undefined,
+      });
+      break;
+    }
+
+    // ------------------------------------------------------------------
+    // retrieve
+    // ------------------------------------------------------------------
+    case "retrieve": {
+      const originalRef = cmdArgs[0];
+      if (!originalRef) {
+        outputError("Usage: code-context retrieve <originalRef> [options]");
+        process.exit(1);
+      }
+
+      const offsetStr = getOpt(cmdArgs, "offset");
+      const limitStr = getOpt(cmdArgs, "limit");
+
+      const offset = offsetStr ? parseInt(offsetStr, 10) : undefined;
+      const limit = limitStr ? parseInt(limitStr, 10) : undefined;
+
+      result = await runRetrieve(originalRef, {
+        offset: offset && !Number.isNaN(offset) ? Math.max(0, offset) : undefined,
+        limit: limit && !Number.isNaN(limit) ? limit : undefined,
+      });
+      break;
+    }
+
+    // ------------------------------------------------------------------
+    // cleanup
+    // ------------------------------------------------------------------
+    case "cleanup": {
+      if (!hasFlag(cmdArgs, "originals")) {
+        outputError(
+          'Usage: code-context cleanup --originals\n' +
+            '  --originals  Clean up expired original content records.',
+        );
+        process.exit(1);
+      }
+      result = await runCleanup();
+      break;
+    }
+
+    // ------------------------------------------------------------------
+    // unknown / empty
+    // ------------------------------------------------------------------
+    case "":
+    default: {
+      if (command) {
+        outputError(`Unknown command: ${command}\nRun "code-context --help" for usage.`);
+      } else {
+        outputError(`No command provided.\nRun "code-context --help" for usage.`);
+      }
+      process.exit(1);
+    }
+  }
+
+  // Output
+  if (result.status === "ok") {
+    outputResult(result, compactJson);
+    process.exit(0);
+  } else {
+    outputError(result.error ?? "Unknown error");
+    process.exit(1);
+  }
 }
 
 main().catch((err) => {
-  console.error("CLI error:", err);
+  outputError(err instanceof Error ? err.message : String(err));
   process.exit(1);
 });
