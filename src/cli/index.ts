@@ -26,6 +26,7 @@ import {
   runCompress,
   runRetrieve,
   runCleanup,
+  runRemember,
 } from "./commands.js";
 import type { CliResult } from "./commands.js";
 
@@ -58,6 +59,16 @@ Commands:
       --limit <n>                      Max records (default: 20)
       --offset <n>                     Pagination offset
   cleanup --originals                  Clean up expired originals
+  remember                              Save a project memory
+      --type <memoryType>               Memory type (required)
+      --content <text>                  Memory content
+      --file <path>                     Read content from file
+      --summary <text>                  Short summary
+      --source-ref <text>               Source reference
+      --confidence <number>             Confidence 0–1 (default: 0.8)
+      --profile-target static|dynamic   Profile target layer
+      --expires-at <ISO>                Expiration date
+      --tags <tag1,tag2,...>            Comma-separated tags
 
 Global flags:
   --help, -h                           Show this help
@@ -71,7 +82,9 @@ Examples:
   code-context list-compressions --type test_output --limit 10
   code-context receipt rcp_abc123
   code-context stats --json
-  code-context cleanup --originals`;
+  code-context cleanup --originals
+  code-context remember --type project_rule --content "Use pnpm" --profile-target static
+  code-context remember --type current_task --file ./task.md --profile-target dynamic`;
 
 // ---------------------------------------------------------------------------
 // Arg parsing helpers
@@ -277,6 +290,57 @@ async function main(): Promise<void> {
         process.exit(1);
       }
       result = await runCleanup();
+      break;
+    }
+
+    // ------------------------------------------------------------------
+    // remember
+    // ------------------------------------------------------------------
+    case "remember": {
+      const typeStr = getOpt(cmdArgs, "type");
+      if (!typeStr) {
+        outputError(
+          'Usage: code-context remember --type <type> [--content <text> | --file <path>]\n' +
+            '  --type <type>            Memory type (required): decision, bug, command,\n' +
+            '                           file_summary, project_rule, user_preference,\n' +
+            '                           current_task, test_failure, api_contract, dependency.\n' +
+            '  --content <text>         Memory content as a string.\n' +
+            '  --file <path>            Read content from a file.\n' +
+            '  --summary <text>         Optional short summary.\n' +
+            '  --source-ref <text>      Optional source reference.\n' +
+            '  --confidence <number>    Confidence 0–1 (default 0.8).\n' +
+            '  --profile-target <t>     "static" or "dynamic".\n' +
+            '  --expires-at <ISO>       Expiration date (ISO 8601).\n' +
+            '  --tags <tag1,tag2,...>   Comma-separated tags.',
+        );
+        process.exit(1);
+      }
+
+      const contentStr = getOpt(cmdArgs, "content");
+      const fileStr = getOpt(cmdArgs, "file");
+      const summaryStr = getOpt(cmdArgs, "summary");
+      const sourceRefStr = getOpt(cmdArgs, "source-ref");
+      const confidenceStr = getOpt(cmdArgs, "confidence");
+      const profileTargetStr = getOpt(cmdArgs, "profile-target");
+      const expiresAtStr = getOpt(cmdArgs, "expires-at");
+      const tagsStr = getOpt(cmdArgs, "tags");
+
+      const confidence = confidenceStr !== undefined ? parseFloat(confidenceStr) : undefined;
+      const tags = tagsStr
+        ? tagsStr.split(",").map((t) => t.trim()).filter((t) => t.length > 0)
+        : undefined;
+
+      result = await runRemember({
+        type: typeStr,
+        content: contentStr,
+        file: fileStr,
+        summary: summaryStr,
+        sourceRef: sourceRefStr,
+        confidence: confidence !== undefined && !Number.isNaN(confidence) ? confidence : undefined,
+        profileTarget: profileTargetStr,
+        expiresAt: expiresAtStr,
+        tags,
+      });
       break;
     }
 

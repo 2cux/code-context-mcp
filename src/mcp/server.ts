@@ -15,6 +15,7 @@ import { handleListCompressions } from "./tools/listCompressions.js";
 import { handleRetrieveOriginal } from "./tools/retrieveOriginal.js";
 import { handleDeleteOriginal } from "./tools/deleteOriginal.js";
 import { handleCleanupOriginals } from "./tools/cleanupOriginals.js";
+import { handleRememberContext } from "./tools/rememberContext.js";
 
 export interface ServerContext {
   db: Database;
@@ -54,6 +55,7 @@ export async function startServer(): Promise<void> {
     delete_original: (args) => handleDeleteOriginal(ctx, args),
     cleanup_originals: (args) => handleCleanupOriginals(ctx, args),
     list_compressions: (args) => handleListCompressions(ctx, args),
+    remember_context: (args) => handleRememberContext(ctx, args),
   };
 
   server.setRequestHandler(ListToolsRequestSchema, async () => ({
@@ -266,6 +268,80 @@ export async function startServer(): Promise<void> {
             },
           },
           required: ["scopeId"],
+        },
+      },
+      {
+        name: "remember_context",
+        description:
+          "Save structured project memory. " +
+          "Creates a typed memory record scoped to the current repository, " +
+          "optionally writing to the project profile (static for long-term " +
+          "facts, dynamic for transient context). " +
+          "Every remember operation generates an audit receipt. " +
+          "Valid types: decision, bug, command, file_summary, project_rule, " +
+          "user_preference, current_task, test_failure, api_contract, dependency.",
+        inputSchema: {
+          type: "object",
+          properties: {
+            scopeId: {
+              type: "string",
+              description:
+                "The scopeId from current_scope. " +
+                "When omitted, the scope is auto-resolved from the current directory.",
+            },
+            type: {
+              type: "string",
+              description:
+                "Memory type (required). " +
+                "Valid values: decision, bug, command, file_summary, " +
+                "project_rule, user_preference, current_task, test_failure, " +
+                "api_contract, dependency.",
+            },
+            content: {
+              type: "string",
+              description:
+                "The full memory content (required). " +
+                "This is the primary text that will be indexed for retrieval.",
+            },
+            summary: {
+              type: "string",
+              description:
+                "Optional short summary. " +
+                "When profileTarget is set, the summary is used as the profile fact content (falls back to content).",
+            },
+            sourceRef: {
+              type: "string",
+              description:
+                "Optional reference to the source of this memory (e.g. 'user:manual', 'docs/setup.md', 'agent:observed').",
+            },
+            confidence: {
+              type: "number",
+              description:
+                "Confidence score between 0 and 1 (default 0.8). " +
+                "Higher values indicate more reliable/verified memories.",
+            },
+            profileTarget: {
+              type: "string",
+              description:
+                "Which profile layer to write to. " +
+                "'static' for long-term facts (tech stack, rules, decisions). " +
+                "'dynamic' for transient context (current task, recent failures). " +
+                "When omitted, no profile fact is created.",
+            },
+            expiresAt: {
+              type: "string",
+              description:
+                "Optional ISO 8601 expiration date. " +
+                "After this date the memory may be auto-expired.",
+            },
+            tags: {
+              type: "array",
+              items: { type: "string" },
+              description:
+                "Optional tags for categorization and filtering.",
+            },
+          },
+          required: ["type", "content"],
         },
       },
     ],

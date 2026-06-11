@@ -24,7 +24,10 @@ import { registerAllStrategies } from "../compression/registerStrategies.js";
 import { detectContentType } from "../router/contentRouter.js";
 import { compressSafely } from "../safety/safetyLayer.js";
 import { contentHash } from "../utils/hash.js";
+import { MemoryService } from "../memory/memoryService.js";
+import { MemoryFtsIndex } from "../memory/memoryFts.js";
 import type { ContentType } from "../compressed/compressedStore.js";
+import type { MemoryType, MemoryStatus } from "../memory/types.js";
 
 // ---------------------------------------------------------------------------
 // Types
@@ -521,6 +524,138 @@ export async function runCleanup(): Promise<CliResult> {
         result.deleted === 0
           ? "No expired originals to clean up."
           : `Deleted ${result.deleted} expired original(s). ${result.affectedCcrIds.length} CCR(s) affected.`,
+    });
+  } catch (err) {
+    closeDb();
+    return fail(err instanceof Error ? err.message : String(err));
+  }
+}
+
+// ---------------------------------------------------------------------------
+// 8. remember
+// ---------------------------------------------------------------------------
+
+const VALID_MEMORY_TYPES_CLI = new Set([
+  "decision", "bug", "command", "file_summary", "project_rule",
+  "user_preference", "current_task", "test_failure", "api_contract", "dependency",
+]);
+
+const VALID_PROFILE_TARGETS_CLI = new Set(["static", "dynamic"]);
+
+const MAX_CONTENT_LENGTH_CLI = 256_000;
+
+export interface RememberOpts {
+  type: string;
+  content?: string;
+  file?: string;
+  summary?: string;
+  sourceRef?: string;
+  confidence?: number;
+  profileTarget?: string;
+  expiresAt?: string;
+  tags?: string[];
+}
+
+export async function runRemember(opts: RememberOpts): Promise<CliResult> {
+  // Validate type
+  if (!VALID_MEMORY_TYPES_CLI.has(opts.type)) {
+    return fail(
+      `Invalid type "${opts.type}". Valid types: ${Array.from(VALID_MEMORY_TYPES_CLI).join(", ")}`,
+    );
+  }
+
+  // Get content: from --content or --file
+  let content: string;
+  if (opts.content !== undefined) {
+    content = opts.content;
+  } else if (opts.file) {
+    try {
+      content = readFileSync(opts.file, "utf-8");
+    } catch (err) {
+      return fail(
+        `Cannot read file: ${opts.file} — ${err instanceof Error ? err.message : String(err)}`,
+      );
+    }
+  } else {
+    return fail("Either --content or --file is required.");
+  }
+
+  if (!content || !content.trim()) {
+    return fail("Content must not be empty.");
+  }
+
+  if (content.length > MAX_CONTENT_LENGTH_CLI) {
+    return fail(
+      `Content exceeds maximum length of ${MAX_CONTENT_LENGTH_CLI} characters (got ${content.length}).`,
+    );
+  }
+
+  // Validate confidence
+  if (opts.confidence !== undefined) {
+    if (Number.isNaN(opts.confidence) || opts.confidence < 0 || opts.confidence > 1) {
+      return fail(`confidence must be between 0 and 1 (got ${opts.confidence}).`);
+    }
+  }
+
+  // Validate profileTarget
+  let profileTarget: "static" | "dynamic" | undefined;
+  if (opts.profileTarget) {
+    if (!VALID_PROFILE_TARGETS_CLI.has(opts.profileTarget)) {
+      return fail(
+        `Invalid profileTarget "${opts.profileTarget}". Valid values: static, dynamic.`,
+      );
+    }
+    profileTarget = opts.profileTarget as "static" | "dynamic";
+  }
+
+  // Validate expiresAt
+  if (opts.expiresAt) {
+    const parsed = Date.parse(opts.expiresAt);
+    if (Number.isNaN(parsed) || !/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}/.test(opts.expiresAt)) {
+      return fail(
+        `expiresAt must be a valid ISO 8601 date string (e.g. "2027-06-10T00:00:00Z"), got "${opts.expiresAt}".`,
+      );
+    }
+  }
+
+  // Init DB
+  const init = await initDb();
+  if (!init.ok) return fail(init.error);
+
+  try {
+    const db = init.db;
+    const scope = resolveScope();
+    ensureScopeRecord(db);
+
+    const ftsIndex = new MemoryFtsIndex(db);
+    const memoryService = new MemoryService(db, { ftsIndex });
+
+    const summary = opts.summary?.trim() || undefined;
+    const sourceRef = opts.sourceRef?.trim() || undefined;
+
+    const result = memoryService.remember({
+      scopeId: scope.scopeId,
+      type: opts.type as MemoryType,
+      content,
+      summary,
+      sourceRef,
+      confidence: opts.confidence,
+      profileTarget,
+      expiresAt: opts.expiresAt,
+      tags: opts.tags,
+    });
+
+    closeDb();
+
+    return ok({
+      memoryId: result.memoryId,
+      scopeId: result.scopeId,
+      type: result.type,
+      status: result.status,
+      receiptId: result.receiptId,
+      ...(summary ? { summary } : {}),
+      ...(sourceRef ? { sourceRef } : {}),
+      ...(profileTarget ? { profileTarget } : {}),
     });
   } catch (err) {
     closeDb();
