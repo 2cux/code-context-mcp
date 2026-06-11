@@ -16,6 +16,7 @@ import { handleRetrieveOriginal } from "./tools/retrieveOriginal.js";
 import { handleDeleteOriginal } from "./tools/deleteOriginal.js";
 import { handleCleanupOriginals } from "./tools/cleanupOriginals.js";
 import { handleRememberContext } from "./tools/rememberContext.js";
+import { handleRecallContext } from "./tools/recallContext.js";
 
 export interface ServerContext {
   db: Database;
@@ -56,6 +57,7 @@ export async function startServer(): Promise<void> {
     cleanup_originals: (args) => handleCleanupOriginals(ctx, args),
     list_compressions: (args) => handleListCompressions(ctx, args),
     remember_context: (args) => handleRememberContext(ctx, args),
+    recall_context: (args) => handleRecallContext(ctx, args),
   };
 
   server.setRequestHandler(ListToolsRequestSchema, async () => ({
@@ -342,6 +344,94 @@ export async function startServer(): Promise<void> {
             },
           },
           required: ["type", "content"],
+        },
+      },
+      {
+        name: "recall_context",
+        description:
+          "Recall project profile, relevant memories, and compressed context " +
+          "references for a given query. " +
+          "Searches memories using BM25 full-text search with confidence " +
+          "merging and recency weighting. Returns matched memories with " +
+          "relevance scores, merged profile facts (static rules + dynamic " +
+          "context), and related compressed contexts from prior " +
+          "compress_context operations. " +
+          "Always generates an audit receipt — even when no results are found.",
+        inputSchema: {
+          type: "object",
+          properties: {
+            scopeId: {
+              type: "string",
+              description:
+                "The scopeId from current_scope. " +
+                "When omitted, the scope is auto-resolved from the current directory.",
+            },
+            query: {
+              type: "string",
+              description:
+                "The search query (required). " +
+                "Searches memory content, summary, and sourceRef fields.",
+            },
+            types: {
+              type: "array",
+              items: { type: "string" },
+              description:
+                "Optional filter by memory types. " +
+                "Valid values: decision, bug, command, file_summary, " +
+                "project_rule, user_preference, current_task, test_failure, " +
+                "api_contract, dependency.",
+            },
+            status: {
+              type: "array",
+              items: { type: "string" },
+              description:
+                "Optional filter by memory status. " +
+                "Defaults to ['active']. " +
+                "Valid values: active, superseded, forgotten, expired.",
+            },
+            limit: {
+              type: "number",
+              description:
+                "Maximum number of memories to return (1-50, default 10).",
+            },
+            includeProfile: {
+              type: "boolean",
+              description:
+                "Whether to include the repo profile in the result. " +
+                "Default: true. When false, both static and dynamic " +
+                "profiles are excluded.",
+            },
+            includeStatic: {
+              type: "boolean",
+              description:
+                "Whether to include static profile facts " +
+                "(project_rule, decision, dependency, api_contract). " +
+                "Default: same as includeProfile.",
+            },
+            includeDynamic: {
+              type: "boolean",
+              description:
+                "Whether to include dynamic profile context " +
+                "(current_task, test_failure, bug, command). " +
+                "Default: same as includeProfile.",
+            },
+            includeCompressedRefs: {
+              type: "boolean",
+              description:
+                "Whether to include related compressed context references " +
+                "from prior compress_context operations. " +
+                "Matches CCRs by sourceRef. Default: true.",
+            },
+            retrieveOriginal: {
+              type: "boolean",
+              description:
+                "Whether to automatically retrieve original content for " +
+                "matched compressed contexts. Default: false. " +
+                "NOTE: inline retrieval is planned for a future version — " +
+                "setting this to true currently produces a warning.",
+            },
+          },
+          required: ["query"],
         },
       },
     ],
