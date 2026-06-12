@@ -28,6 +28,10 @@ import {
   runCleanup,
   runRemember,
   runForget,
+  runRecall,
+  runListContext,
+  runProfile,
+  runReceipts,
 } from "./commands.js";
 import type { CliResult } from "./commands.js";
 
@@ -70,11 +74,35 @@ Commands:
       --profile-target static|dynamic   Profile target layer
       --expires-at <ISO>                Expiration date
       --tags <tag1,tag2,...>            Comma-separated tags
+  recall <query>                        Search project memory
+      --type <memoryType>               Filter by memory type
+      --status <memoryStatus>           Filter by status
+      --limit <n>                       Max results (default: 10)
+      --profile                         Include repo profile
+      --no-related-ccrs                 Exclude related compressed contexts
+  list-context                          List project memories
+      --type <memoryType>               Filter by memory type
+      --status <memoryStatus>           Filter by status
+      --limit <n>                       Max records (default: 20)
+      --offset <n>                      Pagination offset
+      --sort-by <field>                 Sort field (createdAt, updatedAt, type, status, confidence)
+      --sort-order <asc|desc>          Sort order (default: desc)
   forget <memoryId>                     Forget a project memory
       --mode soft_forget|supersede|expire|hard_delete
                                         Forget mode (required)
       --reason <text>                   Reason for forgetting
-      --superseded-by <id>              Replacement memory id (supersede only)
+      --by <id>                         Replacement memory id (supersede only)
+      --superseded-by <id>              Alias for --by
+  profile                               Show repo profile (both layers)
+      --static                          Show static profile only
+      --dynamic                         Show dynamic context only
+      --all                             Include expired facts
+      --limit <n>                       Max records (default: 20)
+      --offset <n>                      Pagination offset
+  receipts                              List all operation receipts
+      --operation <operation>           Filter by operation type
+      --limit <n>                       Max records (default: 20)
+      --offset <n>                      Pagination offset
 
 Global flags:
   --help, -h                           Show this help
@@ -91,8 +119,13 @@ Examples:
   code-context cleanup --originals
   code-context remember --type project_rule --content "Use pnpm" --profile-target static
   code-context remember --type current_task --file ./task.md --profile-target dynamic
+  code-context recall "package manager" --type project_rule --profile
+  code-context list-context --type project_rule --status active --sort-by confidence
   code-context forget mem_01HXYZ --mode soft_forget --reason "No longer relevant"
-  code-context forget mem_01HXYZ --mode supersede --superseded-by mem_02NEW`;
+  code-context forget mem_01HXYZ --mode supersede --by mem_02NEW
+  code-context profile --static
+  code-context profile --dynamic --all
+  code-context receipts --operation remember --limit 10`;
 
 // ---------------------------------------------------------------------------
 // Arg parsing helpers
@@ -363,8 +396,9 @@ async function main(): Promise<void> {
             '  --mode <mode>            Forget mode (required): soft_forget, supersede,\n' +
             '                           expire, hard_delete.\n' +
             '  --reason <text>          Optional reason for forgetting.\n' +
-            '  --superseded-by <id>     Required when mode is supersede.\n' +
-            '                           Id of the memory that replaces this one.',
+            '  --by <id>                Required when mode is supersede.\n' +
+            '                           Id of the memory that replaces this one.\n' +
+            '  --superseded-by <id>     Alias for --by.',
         );
         process.exit(1);
       }
@@ -379,13 +413,128 @@ async function main(): Promise<void> {
       }
 
       const reasonStr = getOpt(cmdArgs, "reason");
-      const supersededByStr = getOpt(cmdArgs, "superseded-by");
+      const supersededByStr = getOpt(cmdArgs, "by") ?? getOpt(cmdArgs, "superseded-by");
 
       result = await runForget({
         id: idStr,
         mode: modeStr,
         reason: reasonStr,
         supersededBy: supersededByStr,
+      });
+      break;
+    }
+
+    // ------------------------------------------------------------------
+    // recall
+    // ------------------------------------------------------------------
+    case "recall": {
+      const query = cmdArgs[0];
+      if (!query) {
+        outputError(
+          'Usage: code-context recall <query> [options]\n' +
+            '  --type <memoryType>       Filter by memory type.\n' +
+            '  --status <memoryStatus>   Filter by status.\n' +
+            '  --limit <n>               Max results (default: 10).\n' +
+            '  --profile                 Include repo profile.\n' +
+            '  --no-related-ccrs         Exclude related compressed contexts.',
+        );
+        process.exit(1);
+      }
+
+      const typeStr = getOpt(cmdArgs, "type");
+      const statusStr = getOpt(cmdArgs, "status");
+      const limitStr = getOpt(cmdArgs, "limit");
+      const includeProfile = hasFlag(cmdArgs, "profile");
+      const noRelatedCcrs = hasFlag(cmdArgs, "no-related-ccrs");
+
+      const types = typeStr
+        ? typeStr.split(",").map((t) => t.trim()).filter((t) => t.length > 0)
+        : undefined;
+      const statuses = statusStr
+        ? statusStr.split(",").map((s) => s.trim()).filter((s) => s.length > 0)
+        : undefined;
+      const limit = limitStr ? parseInt(limitStr, 10) : undefined;
+
+      result = await runRecall(query, {
+        types,
+        status: statuses,
+        limit: limit && !Number.isNaN(limit) ? Math.max(1, Math.min(limit, 100)) : undefined,
+        includeProfile,
+        includeRelatedCCRs: !noRelatedCcrs,
+      });
+      break;
+    }
+
+    // ------------------------------------------------------------------
+    // list-context
+    // ------------------------------------------------------------------
+    case "list-context": {
+      const typeStr = getOpt(cmdArgs, "type");
+      const statusStr = getOpt(cmdArgs, "status");
+      const limitStr = getOpt(cmdArgs, "limit");
+      const offsetStr = getOpt(cmdArgs, "offset");
+      const sortByStr = getOpt(cmdArgs, "sort-by");
+      const sortOrderStr = getOpt(cmdArgs, "sort-order");
+
+      const types = typeStr
+        ? typeStr.split(",").map((t) => t.trim()).filter((t) => t.length > 0)
+        : undefined;
+      const statuses = statusStr
+        ? statusStr.split(",").map((s) => s.trim()).filter((s) => s.length > 0)
+        : undefined;
+      const limit = limitStr ? parseInt(limitStr, 10) : undefined;
+      const offset = offsetStr ? parseInt(offsetStr, 10) : undefined;
+
+      result = await runListContext({
+        types,
+        status: statuses,
+        limit: limit && !Number.isNaN(limit) ? Math.max(1, Math.min(limit, 100)) : undefined,
+        offset: offset && !Number.isNaN(offset) ? Math.max(0, offset) : undefined,
+        sortBy: sortByStr,
+        sortOrder: sortOrderStr,
+      });
+      break;
+    }
+
+    // ------------------------------------------------------------------
+    // profile
+    // ------------------------------------------------------------------
+    case "profile": {
+      const staticFlag = hasFlag(cmdArgs, "static");
+      const dynamicFlag = hasFlag(cmdArgs, "dynamic");
+      const allFlag = hasFlag(cmdArgs, "all");
+      const limitStr = getOpt(cmdArgs, "limit");
+      const offsetStr = getOpt(cmdArgs, "offset");
+
+      const limit = limitStr ? parseInt(limitStr, 10) : undefined;
+      const offset = offsetStr ? parseInt(offsetStr, 10) : undefined;
+
+      const layer = staticFlag ? "static" : dynamicFlag ? "dynamic" : undefined;
+
+      result = await runProfile({
+        layer,
+        activeOnly: !allFlag,
+        limit: limit && !Number.isNaN(limit) ? Math.max(1, Math.min(limit, 100)) : undefined,
+        offset: offset && !Number.isNaN(offset) ? Math.max(0, offset) : undefined,
+      });
+      break;
+    }
+
+    // ------------------------------------------------------------------
+    // receipts
+    // ------------------------------------------------------------------
+    case "receipts": {
+      const operationStr = getOpt(cmdArgs, "operation");
+      const limitStr = getOpt(cmdArgs, "limit");
+      const offsetStr = getOpt(cmdArgs, "offset");
+
+      const limit = limitStr ? parseInt(limitStr, 10) : undefined;
+      const offset = offsetStr ? parseInt(offsetStr, 10) : undefined;
+
+      result = await runReceipts({
+        operation: operationStr,
+        limit: limit && !Number.isNaN(limit) ? Math.max(1, Math.min(limit, 100)) : undefined,
+        offset: offset && !Number.isNaN(offset) ? Math.max(0, offset) : undefined,
       });
       break;
     }

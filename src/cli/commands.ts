@@ -26,8 +26,12 @@ import { compressSafely } from "../safety/safetyLayer.js";
 import { contentHash } from "../utils/hash.js";
 import { MemoryService } from "../memory/memoryService.js";
 import { MemoryFtsIndex } from "../memory/memoryFts.js";
+import { RecallEngine } from "../memory/recallEngine.js";
+import { ProfileService } from "../profile/profileService.js";
 import type { ContentType } from "../compressed/compressedStore.js";
 import type { MemoryType, MemoryStatus } from "../memory/types.js";
+import type { ForgetMode } from "../memory/types.js";
+import type { ListMemorySortField, SortOrder } from "../memory/types.js";
 
 // ---------------------------------------------------------------------------
 // Types
@@ -733,6 +737,453 @@ export async function runForget(opts: ForgetOpts): Promise<CliResult> {
       receiptId: result.receiptId,
       ...(result.supersededBy ? { supersededBy: result.supersededBy } : {}),
       ...(opts.reason ? { reason: opts.reason } : {}),
+    });
+  } catch (err) {
+    closeDb();
+    return fail(err instanceof Error ? err.message : String(err));
+  }
+}
+
+// ---------------------------------------------------------------------------
+// 10. recall — search project memory
+// ---------------------------------------------------------------------------
+
+export interface RecallOpts {
+  types?: string[];
+  status?: string[];
+  limit?: number;
+  includeProfile?: boolean;
+  includeRelatedCCRs?: boolean;
+}
+
+export async function runRecall(query: string, opts: RecallOpts): Promise<CliResult> {
+  // Validate query
+  if (!query || !query.trim()) {
+    return fail("Usage: code-context recall <query> [options]\n  query is required.");
+  }
+
+  // Validate types if provided
+  if (opts.types && opts.types.length > 0) {
+    for (const t of opts.types) {
+      if (!VALID_MEMORY_TYPES_CLI.has(t)) {
+        return fail(
+          `Invalid type "${t}". Valid types: ${Array.from(VALID_MEMORY_TYPES_CLI).join(", ")}`,
+        );
+      }
+    }
+  }
+
+  // Validate statuses if provided
+  if (opts.status && opts.status.length > 0) {
+    const validStatuses = new Set(["active", "superseded", "forgotten", "expired"]);
+    for (const s of opts.status) {
+      if (!validStatuses.has(s)) {
+        return fail(
+          `Invalid status "${s}". Valid statuses: active, superseded, forgotten, expired.`,
+        );
+      }
+    }
+  }
+
+  const init = await initDb();
+  if (!init.ok) return fail(init.error);
+
+  try {
+    const db = init.db;
+    const scope = resolveScope();
+    ensureScopeRecord(db);
+
+    const ftsIndex = new MemoryFtsIndex(db);
+    const recallEngine = new RecallEngine(db, ftsIndex);
+    const receipts = new ReceiptService(db);
+    const profileService = new ProfileService(db, { receipts });
+
+    const limit = opts.limit ?? 10;
+
+    // Search memories
+    const results = recallEngine.searchEnhanced({
+      scopeId: scope.scopeId,
+      query: query.trim(),
+      types: opts.types as MemoryType[] | undefined,
+      status: opts.status as MemoryStatus[] | undefined,
+      limit,
+      includeCanExpand: opts.includeRelatedCCRs ?? true,
+    });
+
+    // Get profile if requested
+    let profile: { static: unknown[]; dynamic: unknown[] } | undefined;
+    if (opts.includeProfile) {
+      const repoProfile = profileService.getProfile(scope.scopeId);
+      profile = {
+        static: repoProfile.staticFacts.map((f) => ({
+          id: f.id,
+          content: f.content,
+          sourceMemoryId: f.sourceMemoryId,
+          confidence: f.confidence,
+          createdAt: f.createdAt,
+        })),
+        dynamic: repoProfile.dynamicContext.map((f) => ({
+          id: f.id,
+          content: f.content,
+          sourceMemoryId: f.sourceMemoryId,
+          confidence: f.confidence,
+          createdAt: f.createdAt,
+        })),
+      };
+    }
+
+    // Get related CCRs if requested
+    let relatedCCRs: unknown[] | undefined;
+    if (opts.includeRelatedCCRs && results.length > 0) {
+      const memories = results.map((r) => r.memory);
+      const ccrs = recallEngine.findRelatedCCRs(scope.scopeId, memories);
+      relatedCCRs = ccrs.map((c) => ({
+        ccrId: c.ccrId,
+        summary: c.summary,
+        originalRef: c.originalRef,
+        canRetrieveOriginal: c.canRetrieveOriginal,
+      }));
+    }
+
+    // Create receipt — capture query and filters for auditability
+    const receiptQueryParts: string[] = [query.trim()];
+    if (opts.types && opts.types.length > 0) receiptQueryParts.push(`types:${opts.types.join(",")}`);
+    if (opts.status && opts.status.length > 0) receiptQueryParts.push(`status:${opts.status.join(",")}`);
+
+    const receipt = receipts.create({
+      operation: "recall",
+      scopeId: scope.scopeId,
+      query: receiptQueryParts.join(" "),
+      memoryIds: results.map((r) => r.memory.id),
+      compressed: results.length > 0,
+    });
+
+    closeDb();
+
+    const result: Record<string, unknown> = {
+      scopeId: scope.scopeId,
+      query: query.trim(),
+      count: results.length,
+      receiptId: receipt.id,
+      results: results.map((r) => ({
+        memoryId: r.memory.id,
+        type: r.memory.type,
+        summary: r.memory.summary,
+        status: r.memory.status,
+        sourceRef: r.memory.sourceRef,
+        confidence: r.memory.confidence,
+        score: r.score,
+        mergedScore: r.mergedScore,
+        recencyBoost: r.recencyBoost,
+        finalScore: r.finalScore,
+        rank: r.rank,
+        canExpand: r.canExpand,
+        createdAt: r.memory.createdAt,
+      })),
+      ...(profile ? { profile } : {}),
+      ...(relatedCCRs ? { relatedCCRs } : {}),
+    };
+
+    return ok(result);
+  } catch (err) {
+    closeDb();
+    return fail(err instanceof Error ? err.message : String(err));
+  }
+}
+
+// ---------------------------------------------------------------------------
+// 11. list-context — list project memories
+// ---------------------------------------------------------------------------
+
+export interface ListContextOpts {
+  types?: string[];
+  status?: string[];
+  limit?: number;
+  offset?: number;
+  sortBy?: string;
+  sortOrder?: string;
+}
+
+const VALID_SORT_FIELDS_CLI = new Set([
+  "createdAt", "updatedAt", "type", "status", "confidence",
+]);
+
+const VALID_SORT_ORDERS_CLI = new Set(["asc", "desc"]);
+
+export async function runListContext(opts: ListContextOpts): Promise<CliResult> {
+  // Validate types
+  if (opts.types && opts.types.length > 0) {
+    for (const t of opts.types) {
+      if (!VALID_MEMORY_TYPES_CLI.has(t)) {
+        return fail(
+          `Invalid type "${t}". Valid types: ${Array.from(VALID_MEMORY_TYPES_CLI).join(", ")}`,
+        );
+      }
+    }
+  }
+
+  // Validate statuses
+  if (opts.status && opts.status.length > 0) {
+    const validStatuses = new Set(["active", "superseded", "forgotten", "expired"]);
+    for (const s of opts.status) {
+      if (!validStatuses.has(s)) {
+        return fail(
+          `Invalid status "${s}". Valid statuses: active, superseded, forgotten, expired.`,
+        );
+      }
+    }
+  }
+
+  // Validate sortBy
+  if (opts.sortBy && !VALID_SORT_FIELDS_CLI.has(opts.sortBy)) {
+    return fail(
+      `Invalid sortBy "${opts.sortBy}". Valid fields: ${Array.from(VALID_SORT_FIELDS_CLI).join(", ")}`,
+    );
+  }
+
+  // Validate sortOrder
+  if (opts.sortOrder && !VALID_SORT_ORDERS_CLI.has(opts.sortOrder)) {
+    return fail(`Invalid sortOrder "${opts.sortOrder}". Valid values: asc, desc.`);
+  }
+
+  const init = await initDb();
+  if (!init.ok) return fail(init.error);
+
+  try {
+    const db = init.db;
+    const scope = resolveScope();
+    ensureScopeRecord(db);
+
+    const ftsIndex = new MemoryFtsIndex(db);
+    const memoryService = new MemoryService(db, { ftsIndex });
+    const receipts = new ReceiptService(db);
+
+    const result = memoryService.list({
+      scopeId: scope.scopeId,
+      types: opts.types as MemoryType[] | undefined,
+      status: opts.status as MemoryStatus[] | undefined,
+      limit: opts.limit ?? 20,
+      offset: opts.offset ?? 0,
+      sortBy: opts.sortBy as ListMemorySortField | undefined,
+      sortOrder: opts.sortOrder as SortOrder | undefined,
+    });
+
+    // Create receipt — capture filter params for auditability
+    const queryParts: string[] = [];
+    if (opts.types && opts.types.length > 0) queryParts.push(`types:${opts.types.join(",")}`);
+    if (opts.status && opts.status.length > 0) queryParts.push(`status:${opts.status.join(",")}`);
+    if (opts.sortBy) queryParts.push(`sortBy:${opts.sortBy}`);
+    const receiptQuery = queryParts.length > 0 ? queryParts.join(" ") : undefined;
+
+    const receipt = receipts.create({
+      operation: "list",
+      scopeId: scope.scopeId,
+      query: receiptQuery,
+      memoryIds: result.items.map((i) => i.id),
+    });
+
+    closeDb();
+
+    return ok({
+      scopeId: result.scopeId,
+      receiptId: receipt.id,
+      items: result.items.map((m) => ({
+        memoryId: m.id,
+        type: m.type,
+        summary: m.summary,
+        content: m.content.length > 500 ? m.content.slice(0, 500) + "..." : m.content,
+        status: m.status,
+        sourceRef: m.sourceRef,
+        confidence: m.confidence,
+        tags: m.tags,
+        supersededBy: m.supersededBy,
+        supersedes: m.supersedes,
+        createdAt: m.createdAt,
+        updatedAt: m.updatedAt,
+        expiresAt: m.expiresAt,
+      })),
+      total: result.total,
+      limit: result.limit,
+      offset: result.offset,
+    });
+  } catch (err) {
+    closeDb();
+    return fail(err instanceof Error ? err.message : String(err));
+  }
+}
+
+// ---------------------------------------------------------------------------
+// 12. profile — view repo profile
+// ---------------------------------------------------------------------------
+
+export interface ProfileOpts {
+  layer?: "static" | "dynamic";
+  activeOnly?: boolean;
+  limit?: number;
+  offset?: number;
+}
+
+export async function runProfile(opts: ProfileOpts): Promise<CliResult> {
+  const init = await initDb();
+  if (!init.ok) return fail(init.error);
+
+  try {
+    const db = init.db;
+    const scope = resolveScope();
+    ensureScopeRecord(db);
+
+    const receipts = new ReceiptService(db);
+    const profileService = new ProfileService(db, { receipts });
+
+    const activeOnly = opts.activeOnly ?? true;
+
+    if (opts.layer === "static") {
+      const result = profileService.getStaticFacts(scope.scopeId, {
+        activeOnly,
+        limit: opts.limit,
+        offset: opts.offset,
+      });
+
+      closeDb();
+
+      return ok({
+        scopeId: result.scopeId,
+        layer: "static",
+        items: result.items.map((f) => ({
+          id: f.id,
+          content: f.content,
+          sourceMemoryId: f.sourceMemoryId,
+          sourceRef: f.sourceRef,
+          confidence: f.confidence,
+          createdAt: f.createdAt,
+          updatedAt: f.updatedAt,
+          expiresAt: f.expiresAt,
+        })),
+        total: result.total,
+        limit: result.limit,
+        offset: result.offset,
+        activeOnly,
+      });
+    }
+
+    if (opts.layer === "dynamic") {
+      const result = profileService.getDynamicContext(scope.scopeId, {
+        activeOnly,
+        limit: opts.limit,
+        offset: opts.offset,
+      });
+
+      closeDb();
+
+      return ok({
+        scopeId: result.scopeId,
+        layer: "dynamic",
+        items: result.items.map((f) => ({
+          id: f.id,
+          content: f.content,
+          sourceMemoryId: f.sourceMemoryId,
+          sourceRef: f.sourceRef,
+          confidence: f.confidence,
+          createdAt: f.createdAt,
+          updatedAt: f.updatedAt,
+          expiresAt: f.expiresAt,
+        })),
+        total: result.total,
+        limit: result.limit,
+        offset: result.offset,
+        activeOnly,
+      });
+    }
+
+    // Default: return full profile (both layers)
+    const repoProfile = profileService.getProfile(scope.scopeId, { activeOnly });
+
+    closeDb();
+
+    return ok({
+      scopeId: repoProfile.scopeId,
+      staticFacts: repoProfile.staticFacts.map((f) => ({
+        id: f.id,
+        content: f.content,
+        sourceMemoryId: f.sourceMemoryId,
+        sourceRef: f.sourceRef,
+        confidence: f.confidence,
+        createdAt: f.createdAt,
+        updatedAt: f.updatedAt,
+        expiresAt: f.expiresAt,
+      })),
+      dynamicContext: repoProfile.dynamicContext.map((f) => ({
+        id: f.id,
+        content: f.content,
+        sourceMemoryId: f.sourceMemoryId,
+        sourceRef: f.sourceRef,
+        confidence: f.confidence,
+        createdAt: f.createdAt,
+        updatedAt: f.updatedAt,
+        expiresAt: f.expiresAt,
+      })),
+      updatedAt: repoProfile.updatedAt,
+      activeOnly,
+    });
+  } catch (err) {
+    closeDb();
+    return fail(err instanceof Error ? err.message : String(err));
+  }
+}
+
+// ---------------------------------------------------------------------------
+// 13. receipts — list all receipts
+// ---------------------------------------------------------------------------
+
+export interface ReceiptsOpts {
+  operation?: string;
+  limit?: number;
+  offset?: number;
+}
+
+export async function runReceipts(opts: ReceiptsOpts): Promise<CliResult> {
+  const init = await initDb();
+  if (!init.ok) return fail(init.error);
+
+  try {
+    const db = init.db;
+    const scope = resolveScope();
+    ensureScopeRecord(db);
+
+    const receipts = new ReceiptService(db);
+
+    const items = receipts.list(scope.scopeId, {
+      operation: opts.operation,
+      limit: opts.limit ?? 20,
+      offset: opts.offset ?? 0,
+    });
+
+    closeDb();
+
+    return ok({
+      scopeId: scope.scopeId,
+      items: items.map((r) => ({
+        id: r.id,
+        operation: r.operation,
+        inputHash: r.inputHash,
+        query: r.query,
+        resultIds: r.resultIds,
+        memoryIds: r.memoryIds,
+        ccrIds: r.ccrIds,
+        originalRefs: r.originalRefs,
+        tokensBefore: r.tokensBefore,
+        tokensAfter: r.tokensAfter,
+        tokensSaved: r.tokensSaved,
+        compressionRatio: r.compressionRatio,
+        compressed: r.compressed,
+        retrievedOriginal: r.retrievedOriginal,
+        failed: r.failed,
+        errorReason: r.errorReason,
+        timestamp: r.timestamp,
+      })),
+      count: items.length,
+      limit: opts.limit ?? 20,
+      offset: opts.offset ?? 0,
     });
   } catch (err) {
     closeDb();
