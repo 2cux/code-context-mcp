@@ -23,6 +23,7 @@ import type { ServerContext } from "../server.js";
 import { RecallEngine } from "../../memory/recallEngine.js";
 import { MemoryFtsIndex } from "../../memory/memoryFts.js";
 import { ProfileService } from "../../profile/profileService.js";
+import { OriginalStore } from "../../originals/originalStore.js";
 import { resolveScope } from "../../scope/resolveScope.js";
 import { runStmt } from "../../storage/db.js";
 import type {
@@ -223,16 +224,11 @@ export async function handleRecallContext(
       ? args.includeCompressedRefs
       : true;
 
-  // ---- Process retrieveOriginal flag (PRD §11.7, default false, future feature) ----
+  // ---- Process retrieveOriginal flag (PRD §11.7, default false) ----
   const retrieveOriginal =
     typeof args.retrieveOriginal === "boolean"
       ? args.retrieveOriginal
       : false;
-  if (retrieveOriginal) {
-    warnings.push(
-      "retrieveOriginal=true is not yet implemented — original content retrieval will be available in a future version.",
-    );
-  }
 
   // ---- Auto-resolve scope ----
   let scopeId = typeof args.scopeId === "string" ? args.scopeId.trim() : "";
@@ -341,6 +337,41 @@ export async function handleRecallContext(
     memoryIds,
     ccrIds,
   });
+
+  // ==========================================================================
+  // 20.3.5 — Retrieve original content when requested (PRD §23.3)
+  // ==========================================================================
+
+  if (retrieveOriginal && relatedCompressedContexts.length > 0) {
+    const originalStore = new OriginalStore(db);
+    const enrichedCCRs: Record<string, unknown>[] = [];
+
+    for (const ccr of relatedCompressedContexts) {
+      const enriched: Record<string, unknown> = { ...ccr };
+      if (ccr.canRetrieveOriginal && ccr.originalRef) {
+        try {
+          const orig = originalStore.getRecord(ccr.originalRef, scopeId);
+          if (orig) {
+            enriched.retrievedOriginal = {
+              content: orig.content,
+              tokens: orig.tokens,
+              contentHash: orig.contentHash,
+              contentType: orig.contentType,
+              createdAt: orig.createdAt,
+            };
+          }
+        } catch (_origErr) {
+          // Individual retrieval failure is non-blocking
+          warnings.push(
+            `Failed to retrieve original content for ${ccr.originalRef}`,
+          );
+        }
+      }
+      enrichedCCRs.push(enriched);
+    }
+
+    relatedCompressedContexts = enrichedCCRs as RecallResult["relatedCompressedContexts"];
+  }
 
   // ==========================================================================
   // Build response per PRD §11.7

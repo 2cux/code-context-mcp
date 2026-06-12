@@ -21,8 +21,11 @@ import type { Database } from "sql.js";
 import type { ServerContext } from "../server.js";
 import { MemoryService } from "../../memory/memoryService.js";
 import { MemoryFtsIndex } from "../../memory/memoryFts.js";
+import { CompressedStore } from "../../compressed/compressedStore.js";
+import { OriginalStore } from "../../originals/originalStore.js";
 import { resolveScope } from "../../scope/resolveScope.js";
 import { runStmt } from "../../storage/db.js";
+import { ccrRef, origRef, isRecognizedSourceRef } from "../../memory/sourceRef.js";
 import type {
   MemoryType,
   MemoryStatus,
@@ -192,7 +195,7 @@ export async function handleRememberContext(
   }
 
   // ---- 18.1.4: Process summary ----
-  const summary =
+  let summary =
     typeof args.summary === "string" && args.summary.trim().length > 0
       ? args.summary.trim()
       : undefined;
@@ -215,12 +218,100 @@ export async function handleRememberContext(
   }
 
   // ---- 18.1.6: Process sourceRef ----
-  const sourceRef =
+  let sourceRef =
     typeof args.sourceRef === "string" && args.sourceRef.trim().length > 0
       ? args.sourceRef.trim()
       : undefined;
 
-  // ---- 18.1.7: Process expiresAt ----
+  // ---- Validate sourceRef format (warning for unrecognized, never blocking) ----
+  if (sourceRef && !isRecognizedSourceRef(sourceRef)) {
+    warnings.push(
+      `Unrecognized sourceRef format: "${sourceRef}". Use standard formats: user:manual, file:<path>, ccr:<id>, orig:<id>, command:<cmd> for best results.`,
+    );
+  }
+
+  // ---- 18.1.7: Process ccrId (compression result → memory link) ----
+  const ccrId =
+    typeof args.ccrId === "string" && args.ccrId.trim().length > 0
+      ? args.ccrId.trim()
+      : undefined;
+
+  if (ccrId) {
+    const compressedStore = new CompressedStore(db);
+    const ccr = compressedStore.get(ccrId, scopeId);
+    if (!ccr) {
+      return {
+        content: [
+          {
+            type: "text",
+            text: `Error: ccrId "${ccrId}" not found in scope "${scopeId}".`,
+          },
+        ],
+        isError: true,
+      };
+    }
+    // Auto-derive sourceRef from ccrId (ccr:<id> format)
+    if (!sourceRef) {
+      sourceRef = ccrRef(ccrId);
+    }
+    // Auto-derive summary from CCR when not explicitly provided
+    if (!summary && ccr.summary) {
+      // Use the CCR summary as-is; it's already concise
+      summary = ccr.summary;
+    }
+    // Warn if type doesn't align well with compression content type
+    if (ccr.contentType === "test_output" && type !== "test_failure") {
+      warnings.push(
+        `Compression content type is "test_output" but memory type is "${type}". Consider using type "test_failure" for test output compression results.`,
+      );
+    }
+    if (ccr.contentType === "file_summary" && type !== "file_summary") {
+      warnings.push(
+        `Compression content type is "file_summary" but memory type is "${type}". Consider using type "file_summary" for file summary compression results.`,
+      );
+    }
+  }
+
+  // ---- 18.1.8: Process originalRef ----
+  const originalRefArg =
+    typeof args.originalRef === "string" && args.originalRef.trim().length > 0
+      ? args.originalRef.trim()
+      : undefined;
+
+  if (originalRefArg) {
+    const originalStore = new OriginalStore(db);
+    const exists = originalStore.exists(originalRefArg, scopeId);
+    if (!exists) {
+      // Check if it might be in a different scope
+      const otherScope = originalStore.lookupScope(originalRefArg);
+      if (otherScope) {
+        return {
+          content: [
+            {
+              type: "text",
+              text: `Error: originalRef "${originalRefArg}" belongs to a different scope ("${otherScope}"), cannot be used in scope "${scopeId}".`,
+            },
+          ],
+          isError: true,
+        };
+      }
+      return {
+        content: [
+          {
+            type: "text",
+            text: `Error: originalRef "${originalRefArg}" not found.`,
+          },
+        ],
+        isError: true,
+      };
+    }
+    // Auto-derive sourceRef from originalRef when not already set
+    if (!sourceRef) {
+      sourceRef = origRef(originalRefArg);
+    }
+  }
+
+  // ---- 18.1.9: Process expiresAt ----
   let expiresAt: string | undefined;
   if (typeof args.expiresAt === "string" && args.expiresAt.trim().length > 0) {
     const raw = args.expiresAt.trim();
@@ -304,6 +395,8 @@ export async function handleRememberContext(
     // Include optional fields in response for clarity
     if (summary) response.summary = summary;
     if (sourceRef) response.sourceRef = sourceRef;
+    if (ccrId) response.ccrId = ccrId;
+    if (originalRefArg) response.originalRef = originalRefArg;
     if (profileTarget) response.profileTarget = profileTarget;
     if (warnings.length > 0) response.warnings = warnings;
 

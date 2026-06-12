@@ -1287,27 +1287,51 @@ describe("recall_context Tool Handler", () => {
       expect(data.receiptId).toMatch(/^rcp_/);
     });
 
-    it("retrieveOriginal=true warns but does not error (PRD §11.7 placeholder)", async () => {
-      await seedMemory({
-        type: "bug",
-        content: "Test bug for retrieveOriginal.",
+    it("retrieveOriginal=true returns original content for related CCRs", async () => {
+      // Seed a memory with a sourceRef that links to a CCR
+      const mem = await seedMemory({
+        type: "test_failure",
+        content: "Auth test failure: session cookie not cleared.",
+        summary: "Auth test failure",
+        sourceRef: "tests/auth/session.test.ts",
       });
+
+      // Seed a CCR with matching sourceRef AND original content
+      const ccrId = seedCCR({
+        sourceRef: "tests/auth/session.test.ts",
+        summary: "Compressed auth test output",
+        originalRef: "orig_retrieve_test_001",
+        canRetrieveOriginal: 1,
+      });
+
+      // Seed the original content
+      runStmt(
+        db,
+        `INSERT INTO original_contents (id, scope_id, ccr_id, content_type, content, content_hash, tokens, created_at)
+         VALUES (?, ?, ?, 'test_output', 'Full test output with stack traces...', 'hash_abc', 500, ?)`,
+        ["orig_retrieve_test_001", SCOPE_ID, ccrId, new Date().toISOString()],
+      );
 
       const result = await handleRecallContext(ctx, {
         scopeId: SCOPE_ID,
-        query: "retrieveOriginal",
+        query: "auth session cookie",
         retrieveOriginal: true,
       });
 
       expect(isError(result)).toBe(false);
       const data = parseToolText(result);
       expect(data.receiptId).toMatch(/^rcp_/);
-      expect(data.warnings).toBeDefined();
-      expect(
-        (data.warnings as string[]).some((w) =>
-          w.includes("retrieveOriginal"),
-        ),
-      ).toBe(true);
+      expect(Array.isArray(data.relatedCompressedContexts)).toBe(true);
+
+      const ccrs = data.relatedCompressedContexts as Record<string, unknown>[];
+      expect(ccrs.length).toBeGreaterThanOrEqual(1);
+
+      // At least one CCR should have retrievedOriginal content
+      const withOriginal = ccrs.filter((c) => c.retrievedOriginal);
+      expect(withOriginal.length).toBeGreaterThanOrEqual(1);
+      expect((withOriginal[0]!.retrievedOriginal as Record<string, unknown>).content).toBe(
+        "Full test output with stack traces...",
+      );
     });
 
     it("retrieveOriginal defaults to false with no warning", async () => {
