@@ -27,6 +27,7 @@ import {
   runRetrieve,
   runCleanup,
   runRemember,
+  runForget,
 } from "./commands.js";
 import type { CliResult } from "./commands.js";
 
@@ -69,6 +70,11 @@ Commands:
       --profile-target static|dynamic   Profile target layer
       --expires-at <ISO>                Expiration date
       --tags <tag1,tag2,...>            Comma-separated tags
+  forget <memoryId>                     Forget a project memory
+      --mode soft_forget|supersede|expire|hard_delete
+                                        Forget mode (required)
+      --reason <text>                   Reason for forgetting
+      --superseded-by <id>              Replacement memory id (supersede only)
 
 Global flags:
   --help, -h                           Show this help
@@ -84,7 +90,9 @@ Examples:
   code-context stats --json
   code-context cleanup --originals
   code-context remember --type project_rule --content "Use pnpm" --profile-target static
-  code-context remember --type current_task --file ./task.md --profile-target dynamic`;
+  code-context remember --type current_task --file ./task.md --profile-target dynamic
+  code-context forget mem_01HXYZ --mode soft_forget --reason "No longer relevant"
+  code-context forget mem_01HXYZ --mode supersede --superseded-by mem_02NEW`;
 
 // ---------------------------------------------------------------------------
 // Arg parsing helpers
@@ -340,6 +348,44 @@ async function main(): Promise<void> {
         profileTarget: profileTargetStr,
         expiresAt: expiresAtStr,
         tags,
+      });
+      break;
+    }
+
+    // ------------------------------------------------------------------
+    // forget
+    // ------------------------------------------------------------------
+    case "forget": {
+      const idStr = cmdArgs[0];
+      if (!idStr) {
+        outputError(
+          'Usage: code-context forget <memoryId> [options]\n' +
+            '  --mode <mode>            Forget mode (required): soft_forget, supersede,\n' +
+            '                           expire, hard_delete.\n' +
+            '  --reason <text>          Optional reason for forgetting.\n' +
+            '  --superseded-by <id>     Required when mode is supersede.\n' +
+            '                           Id of the memory that replaces this one.',
+        );
+        process.exit(1);
+      }
+
+      const modeStr = getOpt(cmdArgs, "mode");
+      if (!modeStr) {
+        outputError(
+          'Usage: code-context forget <memoryId> --mode <mode>\n' +
+            '  --mode is required. Valid modes: soft_forget, supersede, expire, hard_delete.',
+        );
+        process.exit(1);
+      }
+
+      const reasonStr = getOpt(cmdArgs, "reason");
+      const supersededByStr = getOpt(cmdArgs, "superseded-by");
+
+      result = await runForget({
+        id: idStr,
+        mode: modeStr,
+        reason: reasonStr,
+        supersededBy: supersededByStr,
       });
       break;
     }

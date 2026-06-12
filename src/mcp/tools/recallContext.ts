@@ -154,8 +154,13 @@ export async function handleRecallContext(
     }
   }
 
-  // ---- Validate status (optional, defaults to ["active"]) ----
+  // ---- Validate status (optional) ----
+  // Default: exclude inactive (superseded, forgotten, expired).
+  // When includeInactive=true and no explicit status filter, include all.
   let status: MemoryStatus[] | undefined;
+  const includeInactive =
+    typeof args.includeInactive === "boolean" ? args.includeInactive : false;
+
   if (Array.isArray(args.status) && args.status.length > 0) {
     const rawStatus = args.status.filter(
       (s): s is string => typeof s === "string" && s.length > 0,
@@ -175,7 +180,13 @@ export async function handleRecallContext(
       }
       status = rawStatus as MemoryStatus[];
     }
+  } else if (includeInactive) {
+    // When includeInactive is true and no explicit status filter,
+    // include all statuses (active + inactive)
+    status = ["active", "superseded", "forgotten", "expired"];
   }
+  // Otherwise (no status filter, includeInactive=false): status stays undefined,
+  // which means the FTS engine defaults to active-only.
 
   // ---- Process limit ----
   let limit = DEFAULT_LIMIT;

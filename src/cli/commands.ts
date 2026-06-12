@@ -662,3 +662,80 @@ export async function runRemember(opts: RememberOpts): Promise<CliResult> {
     return fail(err instanceof Error ? err.message : String(err));
   }
 }
+
+// ---------------------------------------------------------------------------
+// 9. forget
+// ---------------------------------------------------------------------------
+
+const VALID_FORGET_MODES_CLI = new Set([
+  "soft_forget", "supersede", "expire", "hard_delete",
+]);
+
+export interface ForgetOpts {
+  id: string;
+  mode: string;
+  reason?: string;
+  supersededBy?: string;
+}
+
+export async function runForget(opts: ForgetOpts): Promise<CliResult> {
+  // Validate id
+  if (!opts.id || !opts.id.trim()) {
+    return fail("id is required.");
+  }
+
+  // Validate mode (trim for robustness, consistent with MCP handler)
+  const mode = opts.mode.trim();
+  if (!VALID_FORGET_MODES_CLI.has(mode)) {
+    return fail(
+      `Invalid mode "${mode}". Valid modes: ${Array.from(VALID_FORGET_MODES_CLI).join(", ")}`,
+    );
+  }
+
+  // Validate supersededBy for supersede mode
+  if (mode === "supersede" && !opts.supersededBy) {
+    return fail('supersededBy is required when mode is "supersede".');
+  }
+
+  // Init DB
+  const init = await initDb();
+  if (!init.ok) return fail(init.error);
+
+  try {
+    const db = init.db;
+    const scope = resolveScope();
+    ensureScopeRecord(db);
+
+    const ftsIndex = new MemoryFtsIndex(db);
+    const memoryService = new MemoryService(db, { ftsIndex });
+
+    const result = memoryService.forget({
+      id: opts.id.trim(),
+      scopeId: scope.scopeId,
+      mode: mode as "soft_forget" | "supersede" | "expire" | "hard_delete",
+      reason: opts.reason,
+      supersededBy: opts.supersededBy,
+    });
+
+    if (!result) {
+      closeDb();
+      return fail(
+        `Memory not found: "${opts.id}". Check that the memory exists and belongs to scope "${scope.scopeId}".`,
+      );
+    }
+
+    closeDb();
+
+    return ok({
+      memoryId: result.memoryId,
+      previousStatus: result.previousStatus,
+      newStatus: result.newStatus,
+      receiptId: result.receiptId,
+      ...(result.supersededBy ? { supersededBy: result.supersededBy } : {}),
+      ...(opts.reason ? { reason: opts.reason } : {}),
+    });
+  } catch (err) {
+    closeDb();
+    return fail(err instanceof Error ? err.message : String(err));
+  }
+}

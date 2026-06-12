@@ -17,6 +17,7 @@ import { handleDeleteOriginal } from "./tools/deleteOriginal.js";
 import { handleCleanupOriginals } from "./tools/cleanupOriginals.js";
 import { handleRememberContext } from "./tools/rememberContext.js";
 import { handleRecallContext } from "./tools/recallContext.js";
+import { handleForgetContext } from "./tools/forgetContext.js";
 
 export interface ServerContext {
   db: Database;
@@ -58,6 +59,7 @@ export async function startServer(): Promise<void> {
     list_compressions: (args) => handleListCompressions(ctx, args),
     remember_context: (args) => handleRememberContext(ctx, args),
     recall_context: (args) => handleRecallContext(ctx, args),
+    forget_context: (args) => handleForgetContext(ctx, args),
   };
 
   server.setRequestHandler(ListToolsRequestSchema, async () => ({
@@ -389,6 +391,15 @@ export async function startServer(): Promise<void> {
                 "Defaults to ['active']. " +
                 "Valid values: active, superseded, forgotten, expired.",
             },
+            includeInactive: {
+              type: "boolean",
+              description:
+                "When true, recall includes inactive memories " +
+                "(superseded, forgotten, expired) in addition to active ones. " +
+                "Equivalent to setting status to all four values. " +
+                "Ignored when an explicit status filter is provided. " +
+                "Default: false.",
+            },
             limit: {
               type: "number",
               description:
@@ -432,6 +443,61 @@ export async function startServer(): Promise<void> {
             },
           },
           required: ["query"],
+        },
+      },
+      {
+        name: "forget_context",
+        description:
+          "Forget, supersede, or expire a project memory to prevent stale " +
+          "information from polluting future recall results. " +
+          "Supports soft_forget (marks as forgotten), supersede (marks as " +
+          "superseded by a newer memory), expire (marks as expired), and " +
+          "hard_delete (permanently removes the record). " +
+          "Every forget operation generates an audit receipt. " +
+          "Forgotten/superseded/expired memories are excluded from recall " +
+          "by default.",
+        inputSchema: {
+          type: "object",
+          properties: {
+            id: {
+              type: "string",
+              description:
+                "The memory id to forget (required). " +
+                "Obtained from remember_context or list_context outputs.",
+            },
+            mode: {
+              type: "string",
+              description:
+                "Forget mode (required). " +
+                "Valid values: soft_forget, supersede, expire, hard_delete. " +
+                "soft_forget: marks the memory as forgotten. " +
+                "supersede: marks as superseded (requires supersededBy). " +
+                "expire: marks as expired. " +
+                "hard_delete: permanently deletes the memory record.",
+            },
+            reason: {
+              type: "string",
+              description:
+                "Optional reason for forgetting. " +
+                "Stored in the forget receipt for auditability. " +
+                "Max 2000 characters.",
+            },
+            supersededBy: {
+              type: "string",
+              description:
+                "Required when mode is 'supersede'. " +
+                "The id of the memory that replaces this one. " +
+                "The replacement memory will show this memory in its " +
+                "supersedes list.",
+            },
+            scopeId: {
+              type: "string",
+              description:
+                "The scopeId from current_scope. " +
+                "When omitted, the scope is auto-resolved from the current directory.",
+            },
+          },
+          required: ["id", "mode"],
         },
       },
     ],
