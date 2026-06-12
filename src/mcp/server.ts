@@ -18,6 +18,7 @@ import { handleCleanupOriginals } from "./tools/cleanupOriginals.js";
 import { handleRememberContext } from "./tools/rememberContext.js";
 import { handleRecallContext } from "./tools/recallContext.js";
 import { handleForgetContext } from "./tools/forgetContext.js";
+import { handleListContext } from "./tools/listContext.js";
 
 export interface ServerContext {
   db: Database;
@@ -60,6 +61,7 @@ export async function startServer(): Promise<void> {
     remember_context: (args) => handleRememberContext(ctx, args),
     recall_context: (args) => handleRecallContext(ctx, args),
     forget_context: (args) => handleForgetContext(ctx, args),
+    list_context: (args) => handleListContext(ctx, args),
   };
 
   server.setRequestHandler(ListToolsRequestSchema, async () => ({
@@ -498,6 +500,68 @@ export async function startServer(): Promise<void> {
             },
           },
           required: ["id", "mode"],
+        },
+      },
+      {
+        name: "list_context",
+        description:
+          "List project memories with filtering, sorting, and pagination. " +
+          "Supports filtering by memory types and statuses for audit " +
+          "purposes — view active, superseded, forgotten, or expired " +
+          "memories separately or together. " +
+          "Returns paginated results with memory id, type, summary, " +
+          "status, sourceRef, confidence, and timestamps. " +
+          "Always generates an audit receipt.",
+        inputSchema: {
+          type: "object",
+          properties: {
+            scopeId: {
+              type: "string",
+              description:
+                "The scopeId from current_scope (required). " +
+                "Used for scope isolation — only memories within this scope are returned.",
+            },
+            types: {
+              type: "array",
+              items: { type: "string" },
+              description:
+                "Optional filter by memory types. " +
+                "Valid values: decision, bug, command, file_summary, " +
+                "project_rule, user_preference, current_task, test_failure, " +
+                "api_contract, dependency. " +
+                "When omitted, all types are returned.",
+            },
+            status: {
+              type: "array",
+              items: { type: "string" },
+              description:
+                "Optional filter by memory status. " +
+                "Valid values: active, superseded, forgotten, expired. " +
+                "When omitted, all statuses are returned (useful for auditing).",
+            },
+            limit: {
+              type: "number",
+              description:
+                "Maximum number of records to return (1-100, default 50).",
+            },
+            offset: {
+              type: "number",
+              description:
+                "Number of records to skip for pagination (default 0).",
+            },
+            sortBy: {
+              type: "string",
+              description:
+                "Field to sort by. Valid values: createdAt, updatedAt, " +
+                "type, status, confidence. Default: createdAt.",
+            },
+            sortOrder: {
+              type: "string",
+              description:
+                "Sort order: asc or desc. Default: desc (most recent first).",
+            },
+          },
+          required: ["scopeId"],
         },
       },
     ],
