@@ -1,11 +1,11 @@
 # CodeContext MCP
 
-> **Beta Release v0.2.0** — Context Compression + Project Memory
+> **Beta Release v0.2.0** — Context Compression + Project Memory, dual-core.
 
-Local-first MCP server for AI coding agents. It solves two problems:
+CodeContext MCP is a **local-first MCP server** for AI coding agents (Claude Code, Cursor, etc.). It solves two core problems in long coding sessions:
 
-1. **Context is too long** → Compress logs, command output, code, JSON, RAG chunks, conversation history
-2. **Project knowledge is forgotten** → Scoped, typed, auditable project memory
+1. **Context gets too long** — Compress logs, command output, code, JSON, RAG chunks, conversation history, and more.
+2. **Project knowledge is forgotten** — Remember, recall, and forget typed, scoped, auditable project memory across sessions.
 
 ---
 
@@ -19,11 +19,9 @@ Local-first MCP server for AI coding agents. It solves two problems:
 ### Install
 
 ```bash
-# Clone
 git clone https://github.com/2cux/code-context-mcp.git
 cd code-context-mcp
 
-# Install & build
 pnpm install
 pnpm build
 
@@ -33,7 +31,7 @@ pnpm cli scope
 
 ### MCP Configuration
 
-Add to your AI coding agent's MCP config (e.g., Claude Code, Cursor):
+Add to your AI coding agent's MCP config:
 
 ```json
 {
@@ -70,10 +68,10 @@ pnpm cli scope
 # Compress a file (auto-detect content type)
 pnpm cli compress tests/fixtures/vitest-output.txt
 
-# Compress with specific type and low token budget
+# Compress with type override and token budget
 pnpm cli compress tests/fixtures/app-log.txt --type log --max-tokens 500
 
-# Retrieve original content
+# Retrieve original content by ref
 pnpm cli retrieve orig_7b35451e
 
 # Retrieve with pagination
@@ -85,13 +83,13 @@ pnpm cli stats
 # List recent compressions
 pnpm cli list-compressions --limit 10
 
-# View a receipt
+# View receipts (audit trail)
 pnpm cli receipts --limit 5
 
 # Cleanup expired originals
 pnpm cli cleanup --originals
 
-# ========== Memory Tools (Beta) ==========
+# ========== Memory Tools ==========
 
 # Remember project knowledge
 pnpm cli remember --type project_rule --content "Use pnpm as the package manager" \
@@ -122,37 +120,9 @@ pnpm cli forget mem_old_xxxx --mode supersede --superseded-by mem_new_xxxx \
 
 # View repo profile (static + dynamic layers)
 pnpm cli profile
-
-# View static/dynamic profile separately
 pnpm cli profile --static
 pnpm cli profile --dynamic
 ```
-
----
-
-## MCP Tools
-
-### Compression Tools
-
-| Tool | Description |
-|---|---|
-| `current_scope` | Resolve stable scopeId for current repository |
-| `compress_context` | Compress content with type detection, returns originalRef + receipt |
-| `retrieve_original` | Retrieve full original content by originalRef, supports pagination |
-| `delete_original` | Delete a single original content record |
-| `cleanup_originals` | Remove all expired original content records |
-| `list_compressions` | List compressed context records with token stats |
-
-### Memory Tools (Beta)
-
-| Tool | Description |
-|---|---|
-| `remember_context` | Store typed project memory (9 types) with profile targeting |
-| `recall_context` | Search memories by query, type, status, or profile layer |
-| `forget_context` | Soft-forget, supersede, expire, or hard-delete memories |
-| `list_context` | List memories with filtering, pagination, and sorting |
-| `repo_profile` | View repo profile split into `static` and `dynamic` layers |
-| `list_receipts` | Audit trail — list receipts by operation, pagination supported |
 
 ---
 
@@ -160,17 +130,17 @@ pnpm cli profile --dynamic
 
 | Type | Compressor | Behavior |
 |---|---|---|
-| `test_output` | Test Output | Extract failed tests, errors, stack traces |
-| `log` | Log | Preserve ERROR/FATAL lines, summarize INFO/WARN |
-| `command_output` | Command Output | Preserve stderr, collapse repetitive output |
-| `code` | Code | Keep function signatures, fold bodies, keep comments |
-| `json` | JSON | Keep schema structure, truncate arrays/objects |
+| `test_output` | Test Output | Extract failed tests, errors, expected/received, stack traces |
+| `log` | Log | Preserve ERROR/WARN lines, collapse repeated INFO/debug |
+| `command_output` | Command Output | Preserve stderr, collapse repetitive stdout |
+| `code` | Code | Keep function signatures, imports, fold bodies, preserve semantics |
+| `json` | JSON | Keep schema structure, truncate large arrays/objects |
 | `markdown` | Markdown | Keep headings, preserve code blocks |
 | `rag_chunk` | RAG Chunk | Rank by score, deduplicate, keep top sources |
 | `conversation_history` | Conversation | Preserve key context, collapse long exchanges |
-| `plain_text` | Plain Text | General-purpose NLP compression |
+| `plain_text` | Plain Text | Section scoring, repeat folding, token-aware truncation |
 
-Type detection is automatic when `contentType` is omitted.
+Type detection is automatic when `contentType` is omitted. The ContentRouter runs all 8 detectors and picks the best match by confidence.
 
 ---
 
@@ -183,7 +153,7 @@ Type detection is automatic when `contentType` is omitted.
 | `bug` | Known bugs, workarounds | `static` |
 | `command` | Useful commands, scripts | `static` |
 | `file_summary` | Key file descriptions | `static` |
-| `user_preference` | User tooling preferences | `static` |
+| `user_preference` | User tooling/coding preferences | `static` |
 | `current_task` | What's being worked on now | `dynamic` |
 | `test_failure` | Recent test failure context | `dynamic` |
 | `api_contract` | API endpoint contracts | `static` |
@@ -195,16 +165,14 @@ Type detection is automatic when `contentType` is omitted.
 
 | Status | Meaning |
 |---|---|
-| `active` | Currently valid and searchable |
+| `active` | Currently valid and returned in recall |
 | `superseded` | Replaced by a newer memory |
-| `forgotten` | Soft-deleted, excluded from recall |
+| `forgotten` | Soft-deleted, excluded from recall by default |
 | `expired` | Past its `expiresAt` timestamp |
 
-Memories transition through these statuses via `forget_context` modes:
-- `soft_forget` → marks as forgotten (recoverable)
-- `supersede` → marks as replaced by another memory
-- `expire` → marks as expired
-- `hard_delete` → permanently removes from storage
+Transitions via `forget_context` modes: `soft_forget` → forgotten, `supersede` → superseded (requires `supersededBy`), `expire` → expired, `hard_delete` → permanently removed.
+
+Valid reversals: `superseded → active`, `forgotten → active`, `expired → active`.
 
 ---
 
@@ -217,18 +185,18 @@ Each repository has a two-layer profile:
 | `static` | Long-lived project knowledge | Coding conventions, architecture decisions, API contracts |
 | `dynamic` | Current session/task context | What you're working on now, recent test failures |
 
-Profile facts are auto-derived from `remember_context` calls and kept in sync.
+Profile facts are derived from `remember_context` calls with `profileTarget` and included in `recall_context` results.
 
 ---
 
 ## Key Design Principles
 
-- **Local-first**: All data stays on your machine
+- **Local-first**: All data stays on your machine in SQLite (`~/.code-context-mcp/`)
 - **Fail-open**: If compression fails, original content is returned
-- **Scope isolation**: Each repo's data is isolated by git remote + root
+- **Scope isolation**: Each repo's data is isolated by `hash(gitRemote + gitRoot)`
 - **Auditable**: Every operation generates a receipt
-- **Recoverable**: Original content can be retrieved via `originalRef`
-- **Forgettable**: Memory has a lifecycle — old knowledge won't pollute recall
+- **Recoverable**: Original content can be retrieved via `originalRef` when saved
+- **Forgettable**: Memory has a lifecycle — old knowledge won't pollute future recall
 
 ---
 
@@ -239,7 +207,7 @@ AI Coding Agent
     ↓ MCP (stdio)
 CodeContext MCP Server
     ├── Scope Resolver (git remote + root)
-    ├── ContentRouter (9 detectors)
+    ├── ContentRouter (8 detectors)
     ├── Compression Engine (9 strategies)
     ├── Original Content Store
     ├── Compressed Context Store
@@ -250,6 +218,118 @@ CodeContext MCP Server
     ├── Safety Layer (timeout, size limit, chunking, fail-open)
     └── SQLite Storage (~/.code-context-mcp/)
 ```
+
+For full architecture details, see [ARCHITECTURE.md](./ARCHITECTURE.md).
+
+---
+
+## Demos
+
+### Compression Demo
+
+```bash
+# Compress a long test output (auto-detected)
+$ pnpm cli compress tests/fixtures/vitest-output.txt --max-tokens 500
+{
+  "ccrId": "ccr_lz3abc_1a2b3c_000001",
+  "compressed": true,
+  "contentType": "test_output",
+  "tokensBefore": 2450,
+  "tokensAfter": 487,
+  "tokensSaved": 1963,
+  "compressionRatio": 0.8012,
+  "canRetrieveOriginal": true,
+  "receiptId": "rcp_lz3def_4d5e6f_000002"
+}
+```
+
+### Memory Demo
+
+```bash
+# Remember a project rule
+$ pnpm cli remember --type project_rule \
+  --content "Use pnpm as the package manager. No npm or yarn." \
+  --profile-target static --tags "build,convention"
+{
+  "memoryId": "mem_lz3ghi_7a8b9c_000012",
+  "scopeId": "repo_a1b2c3d4",
+  "type": "project_rule",
+  "status": "active",
+  "receiptId": "rcp_lz3jkl_0d1e2f_000013"
+}
+
+# Recall it
+$ pnpm cli recall "package manager"
+{
+  "profile": { "static": [...], "dynamic": [...] },
+  "memories": [
+    {
+      "id": "mem_lz3ghi_7a8b9c_000012",
+      "type": "project_rule",
+      "content": "Use pnpm as the package manager. No npm or yarn.",
+      "confidence": 0.8,
+      "status": "active",
+      "score": 2.45
+    }
+  ],
+  "receiptId": "rcp_lz3mno_3f4g5h_000014"
+}
+```
+
+### Scope Isolation Demo
+
+```bash
+# Project A
+$ cd /projects/backend && pnpm cli scope
+{ "scopeId": "repo_a1b2c3d4" }
+
+# Project B — completely isolated
+$ cd /projects/frontend && pnpm cli scope
+{ "scopeId": "repo_e5f6a7b8" }
+```
+
+Memories and compressions saved in one repo are invisible from the other.
+
+### Receipt Demo
+
+```bash
+$ pnpm cli receipts --limit 5
+[
+  { "id": "rcp_...", "operation": "remember", "timestamp": "..." },
+  { "id": "rcp_...", "operation": "compress", "tokensSaved": 1963, "timestamp": "..." },
+  { "id": "rcp_...", "operation": "recall", "query": "package manager", "timestamp": "..." }
+]
+```
+
+Every operation leaves an audit trail. For a complete walkthrough, see [DEMO.md](./DEMO.md).
+
+---
+
+## Documentation
+
+| Document | Content |
+|---|---|
+| [MCP_TOOLS.md](./MCP_TOOLS.md) | All 10 MCP tools — input/output schemas, error handling |
+| [DATA_MODEL.md](./DATA_MODEL.md) | Data models, record types, SQLite schema |
+| [ARCHITECTURE.md](./ARCHITECTURE.md) | Architecture, module responsibilities, data flows |
+| [SECURITY.md](./SECURITY.md) | Security model, data directory, privacy, encryption |
+| [DEMO.md](./DEMO.md) | End-to-end demo walkthrough with all features |
+
+PRD documents are in [`docs/`](./docs/INDEX.md).
+
+---
+
+## Non-Goals (What this Beta is NOT)
+
+- ❌ Not a transparent HTTP proxy
+- ❌ Not a WebSocket interceptor
+- ❌ Not a multi-provider auth layer
+- ❌ Not an ML-based compressor
+- ❌ Not a CLAUDE.md auto-modifier
+- ❌ Not a cloud sync service
+- ❌ Not a multi-user permission system
+- ❌ No image/binary compression support
+- ❌ No complex UI or dashboard
 
 ---
 
@@ -263,37 +343,6 @@ pnpm test:watch     # Watch mode
 pnpm lint           # ESLint
 pnpm format         # Prettier
 ```
-
----
-
-## Beta Known Limitations
-
-### Compression
-- Compression is **conservative by default** — content within token budget is kept intact
-- Content type auto-detection confidence varies by content size (smaller inputs → lower confidence)
-- Large files (>1MB) are chunked; very large files (>20 chunks) are truncated
-- No image/binary compression support
-
-### Memory
-- FTS5 full-text search not yet enabled (using LIKE-based fallback with scoring)
-- Memory lifecycle automation (auto-expire, auto-supersede) not yet implemented
-- No automatic deduplication of similar memories
-- Profile sync is one-way (memory → profile), no bidirectional sync
-
-### General
-- SQLite database is stored in `~/.code-context-mcp/` (cross-drive access may vary on Windows)
-- No cloud sync, multi-user, or team features
-- No transparent HTTP proxy or WebSocket interceptor
-- No ML-based compression
-- No automatic modification of `CLAUDE.md` or `AGENTS.md`
-
-### What this Beta is NOT
-- ❌ Not a transparent HTTP proxy
-- ❌ Not a WebSocket interceptor
-- ❌ Not a multi-provider auth layer
-- ❌ Not an ML-based compressor
-- ❌ Not a CLAUDE.md auto-modifier
-- ❌ Not a cloud sync service
 
 ---
 
