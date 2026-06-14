@@ -49,6 +49,12 @@ CREATE TABLE IF NOT EXISTS compressed_contexts (
     created_at            TEXT NOT NULL,
     updated_at            TEXT NOT NULL,
     expires_at            TEXT,
+    -- CacheAligner fields (§31)
+    content_hash          TEXT,
+    cache_key             TEXT UNIQUE,
+    strategy_version      TEXT,
+    cache_hit_count       INTEGER NOT NULL DEFAULT 0,
+    last_accessed_at      TEXT,
     FOREIGN KEY (scope_id) REFERENCES scopes(scope_id)
 );
 
@@ -56,6 +62,7 @@ CREATE INDEX IF NOT EXISTS idx_ccr_scope       ON compressed_contexts(scope_id);
 CREATE INDEX IF NOT EXISTS idx_ccr_type        ON compressed_contexts(content_type);
 CREATE INDEX IF NOT EXISTS idx_ccr_created     ON compressed_contexts(created_at);
 CREATE INDEX IF NOT EXISTS idx_ccr_original_ref ON compressed_contexts(original_ref);
+CREATE UNIQUE INDEX IF NOT EXISTS idx_ccr_cache_key ON compressed_contexts(cache_key);
 
 -- ---------------------------------------------------------------------------
 -- 3. Original Contents — full original content cached for later retrieval
@@ -169,6 +176,7 @@ CREATE TABLE IF NOT EXISTS receipts (
     retrieved_original  INTEGER,
     failed              INTEGER DEFAULT 0,
     error_reason        TEXT,
+    cache_hit           INTEGER DEFAULT 0,
     timestamp           TEXT NOT NULL,
     FOREIGN KEY (scope_id) REFERENCES scopes(scope_id)
 );

@@ -31,6 +31,9 @@ import {
   runRecall,
   runListContext,
   runProfile,
+  runCacheStats,
+  runCacheClear,
+  runCacheList,
   runReceipts,
 } from "./commands.js";
 import type { CliResult } from "./commands.js";
@@ -101,6 +104,11 @@ Commands:
       --offset <n>                      Pagination offset
   receipts                              List all operation receipts
       --operation <operation>           Filter by operation type
+      --limit <n>                       Max records (default: 20)
+      --offset <n>                      Pagination offset
+  cache stats                           Show cache statistics
+  cache clear                           Clear all cached compression entries
+  cache list                            List cache entries
       --limit <n>                       Max records (default: 20)
       --offset <n>                      Pagination offset
 
@@ -536,6 +544,57 @@ async function main(): Promise<void> {
         limit: limit && !Number.isNaN(limit) ? Math.max(1, Math.min(limit, 100)) : undefined,
         offset: offset && !Number.isNaN(offset) ? Math.max(0, offset) : undefined,
       });
+      break;
+    }
+
+    // ------------------------------------------------------------------
+    // cache
+    // ------------------------------------------------------------------
+    case "cache": {
+      const cacheSub = cmdArgs[0];
+      const cacheRest = cmdArgs.slice(1);
+
+      switch (cacheSub) {
+        case "stats": {
+          result = await runCacheStats();
+          break;
+        }
+        case "clear": {
+          result = await runCacheClear();
+          break;
+        }
+        case "list": {
+          const limitStr = getOpt(cacheRest, "limit");
+          const offsetStr = getOpt(cacheRest, "offset");
+
+          const limit = limitStr ? parseInt(limitStr, 10) : undefined;
+          const offset = offsetStr ? parseInt(offsetStr, 10) : undefined;
+
+          result = await runCacheList({
+            limit: limit && !Number.isNaN(limit) ? Math.max(1, Math.min(limit, 100)) : undefined,
+            offset: offset && !Number.isNaN(offset) ? Math.max(0, offset) : undefined,
+          });
+          break;
+        }
+        default: {
+          if (cacheSub) {
+            outputError(
+              `Unknown cache subcommand: ${cacheSub}\n` +
+                `Available: stats, clear, list\n` +
+                `Run "code-context --help" for usage.`,
+            );
+          } else {
+            outputError(
+              `Usage: code-context cache <subcommand>\n` +
+                `  stats   Show cache statistics\n` +
+                `  clear   Clear all cached compression entries\n` +
+                `  list    List cache entries\n` +
+                `Run "code-context --help" for usage.`,
+            );
+          }
+          process.exit(1);
+        }
+      }
       break;
     }
 

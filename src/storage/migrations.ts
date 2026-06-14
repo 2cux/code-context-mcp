@@ -41,6 +41,9 @@ export function runMigrations(db: Database): void {
   // Post-schema migrations for constraint changes that SQLite can't ALTER.
   // Safe to run on fresh databases — checks table state before acting.
   migrateReceiptsConstraint(db);
+
+  // CacheAligner columns (§31.2) — added in v1.1
+  migrateCacheColumns(db);
 }
 
 /**
@@ -94,6 +97,7 @@ function migrateReceiptsConstraint(db: Database): void {
           retrieved_original  INTEGER,
           failed              INTEGER DEFAULT 0,
           error_reason        TEXT,
+          cache_hit           INTEGER DEFAULT 0,
           timestamp           TEXT NOT NULL,
           FOREIGN KEY (scope_id) REFERENCES scopes(scope_id)
       )`,
@@ -108,6 +112,50 @@ function migrateReceiptsConstraint(db: Database): void {
       "receipts CHECK constraint migration skipped:",
       migrationErr instanceof Error ? migrationErr.message : String(migrationErr),
     );
+  }
+}
+
+/**
+ * Add CacheAligner columns to compressed_contexts and receipts.
+ *
+ * SQLite ALTER TABLE only supports ADD COLUMN, so we add each column
+ * individually.  All are nullable or have defaults so existing rows
+ * are unaffected.
+ *
+ * The UNIQUE index on cache_key is created separately because
+ * IF NOT EXISTS on an index is safe even if the column was just added.
+ */
+function migrateCacheColumns(db: Database): void {
+  const ccrColumns = [
+    "content_hash TEXT",
+    "cache_key TEXT",
+    "strategy_version TEXT",
+    "cache_hit_count INTEGER NOT NULL DEFAULT 0",
+    "last_accessed_at TEXT",
+  ];
+
+  for (const col of ccrColumns) {
+    try {
+      db.run(`ALTER TABLE compressed_contexts ADD COLUMN ${col}`);
+    } catch {
+      // Column already exists — safe to ignore
+    }
+  }
+
+  // Create the unique index (IF NOT EXISTS is safe)
+  try {
+    db.run(
+      `CREATE UNIQUE INDEX IF NOT EXISTS idx_ccr_cache_key ON compressed_contexts(cache_key)`,
+    );
+  } catch {
+    // Index already exists
+  }
+
+  // Receipts cache_hit column
+  try {
+    db.run("ALTER TABLE receipts ADD COLUMN cache_hit INTEGER DEFAULT 0");
+  } catch {
+    // Column already exists
   }
 }
 

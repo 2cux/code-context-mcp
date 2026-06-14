@@ -23,6 +23,8 @@ import { contentHash } from "../../utils/hash.js";
 import { detectContentType } from "../../router/contentRouter.js";
 import { resolveScope, toScopeRecord } from "../../scope/resolveScope.js";
 import { runStmt } from "../../storage/db.js";
+import { getStrategy } from "../../compression/compressionEngine.js";
+import { computeCacheKey, canCache } from "../../cache/cacheService.js";
 
 // ---------------------------------------------------------------------------
 // Constants
@@ -200,6 +202,90 @@ export async function handleCompressContext(
     ...(scopeAutoResolved ? { scopeAutoResolved: true } : {}),
   };
 
+  // ---- CacheAligner: check cache before compression (§31.3) ----
+
+  const inputHash = contentHash(content);
+
+  // Resolve the actual strategy to get its full semver for cache key computation.
+  let resolvedStrategy = getStrategy(contentType);
+  let effectiveContentType = contentType;
+  if (!resolvedStrategy) {
+    resolvedStrategy = getStrategy("plain_text");
+    effectiveContentType = "plain_text";
+  }
+  const strategyVersion = resolvedStrategy?.version ?? "";
+
+  const cacheKey = canCache(strategyVersion)
+    ? computeCacheKey(scopeId, inputHash, effectiveContentType, strategyVersion, maxTokens, keepOriginal)
+    : "";
+
+  // Check for an existing cached result
+  if (cacheKey) {
+    const cached = compressedStore.findByCacheKey(cacheKey, scopeId);
+    if (cached) {
+      // Cache hit — increment the counter and return the cached result
+      compressedStore.incrementCacheHit(cached.id);
+
+      // Create receipt with cacheHit flag for auditability
+      let cacheReceiptId = `rcp_cache_${cached.id}`;
+      try {
+        const cacheReceipt = receipts.create({
+          operation: "compress",
+          scopeId,
+          inputHash,
+          resultIds: [cached.id],
+          ccrIds: [cached.id],
+          originalRefs: cached.originalRef ? [cached.originalRef] : [],
+          tokensBefore: cached.tokensBefore,
+          tokensAfter: cached.tokensAfter,
+          tokensSaved: cached.tokensSaved,
+          compressionRatio: cached.compressionRatio,
+          compressed: cached.tokensSaved > 0,
+          failed: cached.failed,
+          errorReason: cached.errorReason,
+          cacheHit: true,
+        });
+        cacheReceiptId = cacheReceipt.id;
+      } catch {
+        // Receipt write is non-blocking
+      }
+
+      return {
+        content: [
+          {
+            type: "text",
+            text: JSON.stringify(
+              {
+                ccrId: cached.id,
+                compressed: cached.tokensSaved > 0,
+                scopeId: cached.scopeId,
+                contentType: cached.contentType,
+                strategy: cached.strategy,
+                compressedContent: cached.compressedContent,
+                summary: cached.summary,
+                originalRef: cached.originalRef,
+                tokensBefore: cached.tokensBefore,
+                tokensAfter: cached.tokensAfter,
+                tokensSaved: cached.tokensSaved,
+                compressionRatio: cached.compressionRatio,
+                canRetrieveOriginal: cached.canRetrieveOriginal,
+                receiptId: cacheReceiptId,
+                warnings: [`cacheHit=true (served from cache, hit #${cached.cacheHitCount + 1})`],
+                cacheHit: true,
+                cacheHitCount: cached.cacheHitCount + 1,
+                detection: detectedBy === "auto"
+                  ? { method: "auto", detectedAs: contentType, confidence: detectionConfidence }
+                  : { method: "user", specifiedType: contentTypeRaw },
+              },
+              null,
+              2,
+            ),
+          },
+        ],
+      };
+    }
+  }
+
   // ---- Build compression input ----
 
   const input = {
@@ -252,6 +338,9 @@ export async function handleCompressContext(
       canRetrieveOriginal: output.canRetrieveOriginal,
       failed: output.failed ?? false,
       errorReason: output.errorReason,
+      contentHash: inputHash,
+      cacheKey,
+      strategyVersion,
     });
   } catch (dbErr) {
     // §12.3.5: SQLite failure — still return result, add warning (non-blocking)

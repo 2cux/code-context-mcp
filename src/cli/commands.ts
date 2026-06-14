@@ -24,6 +24,8 @@ import { registerAllStrategies } from "../compression/registerStrategies.js";
 import { detectContentType } from "../router/contentRouter.js";
 import { compressSafely } from "../safety/safetyLayer.js";
 import { contentHash } from "../utils/hash.js";
+import { getStrategy } from "../compression/compressionEngine.js";
+import { computeCacheKey, canCache } from "../cache/cacheService.js";
 import { MemoryService } from "../memory/memoryService.js";
 import { MemoryFtsIndex } from "../memory/memoryFts.js";
 import { RecallEngine } from "../memory/recallEngine.js";
@@ -289,6 +291,76 @@ export async function runCompress(filePath: string, opts: CompressOpts): Promise
         : {}),
     };
 
+    // ---- CacheAligner: check cache before compression (§31.3) ----
+
+    const inputHash = contentHash(content);
+
+    let resolvedStrategy = getStrategy(contentType);
+    let effectiveContentType = contentType;
+    if (!resolvedStrategy) {
+      resolvedStrategy = getStrategy("plain_text");
+      effectiveContentType = "plain_text";
+    }
+    const strategyVersion = resolvedStrategy?.version ?? "";
+
+    const cacheKey = canCache(strategyVersion)
+      ? computeCacheKey(scope.scopeId, inputHash, effectiveContentType, strategyVersion, maxTokens, keepOriginal)
+      : "";
+
+    if (cacheKey) {
+      const cached = compressedStore.findByCacheKey(cacheKey, scope.scopeId);
+      if (cached) {
+        // Cache hit — increment counter, create receipt, return cached result
+        compressedStore.incrementCacheHit(cached.id);
+
+        let cacheReceiptId = `rcp_cache_${cached.id}`;
+        try {
+          const cacheReceipt = receipts.create({
+            operation: "compress",
+            scopeId: scope.scopeId,
+            inputHash,
+            resultIds: [cached.id],
+            ccrIds: [cached.id],
+            originalRefs: cached.originalRef ? [cached.originalRef] : [],
+            tokensBefore: cached.tokensBefore,
+            tokensAfter: cached.tokensAfter,
+            tokensSaved: cached.tokensSaved,
+            compressionRatio: cached.compressionRatio,
+            compressed: cached.tokensSaved > 0,
+            failed: cached.failed,
+            errorReason: cached.errorReason,
+            cacheHit: true,
+          });
+          cacheReceiptId = cacheReceipt.id;
+        } catch {
+          // Receipt write is non-blocking
+        }
+
+        closeDb();
+
+        return ok({
+          ccrId: cached.id,
+          compressed: cached.tokensSaved > 0,
+          scopeId: cached.scopeId,
+          contentType: cached.contentType,
+          strategy: cached.strategy,
+          compressedContent: cached.compressedContent,
+          summary: cached.summary,
+          originalRef: cached.originalRef,
+          tokensBefore: cached.tokensBefore,
+          tokensAfter: cached.tokensAfter,
+          tokensSaved: cached.tokensSaved,
+          compressionRatio: cached.compressionRatio,
+          canRetrieveOriginal: cached.canRetrieveOriginal,
+          receiptId: cacheReceiptId,
+          warnings: [`cacheHit=true (served from cache, hit #${cached.cacheHitCount + 1})`],
+          cacheHit: true,
+          cacheHitCount: cached.cacheHitCount + 1,
+          detection: { method: "user", specifiedType: contentTypeRaw },
+        });
+      }
+    }
+
     // Compress via safety layer
     const safetyResult = await compressSafely(
       {
@@ -329,6 +401,9 @@ export async function runCompress(filePath: string, opts: CompressOpts): Promise
         canRetrieveOriginal: output.canRetrieveOriginal,
         failed: output.failed ?? false,
         errorReason: output.errorReason,
+        contentHash: inputHash,
+        cacheKey,
+        strategyVersion,
       });
     } catch (dbErr) {
       warnings.push(
@@ -1132,7 +1207,103 @@ export async function runProfile(opts: ProfileOpts): Promise<CliResult> {
 }
 
 // ---------------------------------------------------------------------------
-// 13. receipts — list all receipts
+// 13. cache stats — CacheAligner cache statistics
+// ---------------------------------------------------------------------------
+
+export async function runCacheStats(): Promise<CliResult> {
+  const init = await initDb();
+  if (!init.ok) return fail(init.error);
+
+  try {
+    const db = init.db;
+    const scope = resolveScope();
+    ensureScopeRecord(db);
+
+    const store = new CompressedStore(db);
+    const stats = store.getCacheStats(scope.scopeId);
+
+    closeDb();
+
+    return ok({
+      ...stats,
+      hitRate:
+        stats.totalEntries > 0
+          ? Math.round((stats.totalHits / stats.totalEntries) * 10000) / 10000
+          : 0,
+    });
+  } catch (err) {
+    closeDb();
+    return fail(err instanceof Error ? err.message : String(err));
+  }
+}
+
+// ---------------------------------------------------------------------------
+// 14. cache clear — clear CacheAligner cache
+// ---------------------------------------------------------------------------
+
+export async function runCacheClear(): Promise<CliResult> {
+  const init = await initDb();
+  if (!init.ok) return fail(init.error);
+
+  try {
+    const db = init.db;
+    const scope = resolveScope();
+    ensureScopeRecord(db);
+
+    const store = new CompressedStore(db);
+    const result = store.clearCache(scope.scopeId);
+
+    closeDb();
+
+    return ok({
+      scopeId: scope.scopeId,
+      deleted: result.deleted,
+      message:
+        result.deleted === 0
+          ? "No cache entries to clear."
+          : `Cleared ${result.deleted} cache entry/entries.`,
+    });
+  } catch (err) {
+    closeDb();
+    return fail(err instanceof Error ? err.message : String(err));
+  }
+}
+
+// ---------------------------------------------------------------------------
+// 15. cache list — list CacheAligner cache entries
+// ---------------------------------------------------------------------------
+
+export interface CacheListOpts {
+  limit?: number;
+  offset?: number;
+}
+
+export async function runCacheList(opts: CacheListOpts): Promise<CliResult> {
+  const init = await initDb();
+  if (!init.ok) return fail(init.error);
+
+  try {
+    const db = init.db;
+    const scope = resolveScope();
+    ensureScopeRecord(db);
+
+    const store = new CompressedStore(db);
+    const result = store.listCacheEntries(scope.scopeId, {
+      limit: opts.limit,
+      offset: opts.offset,
+    });
+
+    closeDb();
+
+    return ok(result);
+  } catch (err) {
+    closeDb();
+    return fail(err instanceof Error ? err.message : String(err));
+  }
+}
+
+// ---------------------------------------------------------------------------
+// 16. receipts — list all receipts
 // ---------------------------------------------------------------------------
 
 export interface ReceiptsOpts {

@@ -331,6 +331,7 @@ function mergeChunkResults(
     scopeId: originalInput.scopeId,
     contentType: originalInput.contentType,
     strategy: mergedStrategy,
+    strategyVersion: "",
     compressedContent: mergedContent,
     summary: `[Chunked] ${outputs.length} chunks compressed and merged.`,
     originalRef: originalInput.keepOriginal
@@ -366,6 +367,7 @@ function buildFailOpenResult(
     scopeId: input.scopeId,
     contentType: input.contentType,
     strategy: "",
+    strategyVersion: "",
     compressedContent: input.content,
     originalRef: input.keepOriginal
       ? `orig_${shortHash(input.content)}`
@@ -404,6 +406,7 @@ function buildSingleChunkFallback(
     scopeId: input.scopeId,
     contentType: input.contentType,
     strategy: "",
+    strategyVersion: "",
     compressedContent: input.content,
     originalRef: input.keepOriginal
       ? `orig_${shortHash(input.content)}`

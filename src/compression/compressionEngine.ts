@@ -52,6 +52,8 @@ export interface CompressionOutput {
   contentType: ContentType;
   /** Strategy identifier, e.g. "test_output_conservative_v1" */
   strategy: string;
+  /** Full strategy semver, e.g. "1.0.0" — used by CacheAligner for cache key computation */
+  strategyVersion: string;
   compressedContent: string;
   summary?: string;
   originalRef?: string;
@@ -175,6 +177,7 @@ function buildFallbackOutput(
     scopeId: input.scopeId,
     contentType: input.contentType,
     strategy: "",
+    strategyVersion: "",
     compressedContent: input.content,
     originalRef: input.keepOriginal
       ? `orig_${shortHash(input.content)}`
@@ -297,6 +300,7 @@ export async function compress(
         scopeId: input.scopeId,
         contentType,
         strategy: strategyId,
+        strategyVersion: strategy.version,
         compressedContent: strategyResult.compressedContent,
         summary: strategyResult.summary,
         originalRef: input.keepOriginal
