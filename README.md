@@ -1,6 +1,12 @@
 # CodeContext MCP
 
-> **Beta Release v0.2.0** — Context Compression + Project Memory, dual-core.
+[![npm version](https://img.shields.io/npm/v/code-context-mcp?color=blue)](https://www.npmjs.com/package/code-context-mcp)
+[![License: MIT](https://img.shields.io/badge/license-MIT-yellow)](./LICENSE)
+[![Node.js](https://img.shields.io/badge/node-%3E%3D18-green)](https://nodejs.org)
+[![MCP](https://img.shields.io/badge/MCP-compatible-purple)](https://modelcontextprotocol.io)
+[![Tests](https://img.shields.io/badge/tests-904%20passing-brightgreen)](./tests)
+
+> **v1.0.0** — Context Compression + Project Memory, dual-core.
 
 CodeContext MCP is a **local-first MCP server** for AI coding agents (Claude Code, Cursor, etc.). It solves two core problems in long coding sessions:
 
@@ -19,6 +25,10 @@ CodeContext MCP is a **local-first MCP server** for AI coding agents (Claude Cod
 ### Install
 
 ```bash
+# npm (recommended)
+npm install -g code-context-mcp
+
+# Or from source
 git clone https://github.com/2cux/code-context-mcp.git
 cd code-context-mcp
 
@@ -26,7 +36,7 @@ pnpm install
 pnpm build
 
 # Verify
-pnpm cli scope
+code-context scope
 ```
 
 ### MCP Configuration
@@ -37,21 +47,21 @@ Add to your AI coding agent's MCP config:
 {
   "mcpServers": {
     "code-context": {
-      "command": "node",
-      "args": ["/absolute/path/to/code-context-mcp/dist/index.js"]
+      "command": "npx",
+      "args": ["-y", "code-context-mcp"]
     }
   }
 }
 ```
 
-For Claude Code (`claude_desktop_config.json` or `.claude/mcp.json`):
+Or with global install:
 
 ```json
 {
   "mcpServers": {
     "code-context": {
-      "command": "node",
-      "args": ["D:/project/CodeContext/dist/index.js"]
+      "command": "code-context-server",
+      "args": []
     }
   }
 }
@@ -63,65 +73,65 @@ For Claude Code (`claude_desktop_config.json` or `.claude/mcp.json`):
 
 ```bash
 # Show current repo scope
-pnpm cli scope
+code-context scope
 
 # Compress a file (auto-detect content type)
-pnpm cli compress tests/fixtures/vitest-output.txt
+code-context compress tests/fixtures/vitest-output.txt
 
 # Compress with type override and token budget
-pnpm cli compress tests/fixtures/app-log.txt --type log --max-tokens 500
+code-context compress tests/fixtures/app-log.txt --type log --max-tokens 500
 
 # Retrieve original content by ref
-pnpm cli retrieve orig_7b35451e
+code-context retrieve orig_7b35451e
 
 # Retrieve with pagination
-pnpm cli retrieve orig_7b35451e --offset 0 --limit 200
+code-context retrieve orig_7b35451e --offset 0 --limit 200
 
 # View token stats
-pnpm cli stats
+code-context stats
 
 # List recent compressions
-pnpm cli list-compressions --limit 10
+code-context list-compressions --limit 10
 
 # View receipts (audit trail)
-pnpm cli receipts --limit 5
+code-context receipts --limit 5
 
 # Cleanup expired originals
-pnpm cli cleanup --originals
+code-context cleanup --originals
 
 # ========== Memory Tools ==========
 
 # Remember project knowledge
-pnpm cli remember --type project_rule --content "Use pnpm as the package manager" \
+code-context remember --type project_rule --content "Use pnpm as the package manager" \
   --profile-target static --tags "build,convention"
 
 # Remember current task
-pnpm cli remember --type current_task --content "Refactoring auth module" \
+code-context remember --type current_task --content "Refactoring auth module" \
   --profile-target dynamic --tags "refactor"
 
 # Recall relevant context
-pnpm cli recall "package manager"
+code-context recall "package manager"
 
 # Recall with type and profile filter
-pnpm cli recall "auth" --type project_rule --profile static
+code-context recall "auth" --type project_rule --profile static
 
 # List all memories
-pnpm cli list-context --limit 20
+code-context list-context --limit 20
 
 # Filter by type and status
-pnpm cli list-context --type project_rule --status active
+code-context list-context --type project_rule --status active
 
 # Forget (soft delete) a memory
-pnpm cli forget mem_xxxxxxxx --mode soft_forget --reason "No longer relevant"
+code-context forget mem_xxxxxxxx --mode soft_forget --reason "No longer relevant"
 
 # Supersede old memory with new one
-pnpm cli forget mem_old_xxxx --mode supersede --superseded-by mem_new_xxxx \
+code-context forget mem_old_xxxx --mode supersede --superseded-by mem_new_xxxx \
   --reason "Replaced by updated rule"
 
 # View repo profile (static + dynamic layers)
-pnpm cli profile
-pnpm cli profile --static
-pnpm cli profile --dynamic
+code-context profile
+code-context profile --static
+code-context profile --dynamic
 ```
 
 ---
@@ -229,7 +239,7 @@ For full architecture details, see [ARCHITECTURE.md](./ARCHITECTURE.md).
 
 ```bash
 # Compress a long test output (auto-detected)
-$ pnpm cli compress tests/fixtures/vitest-output.txt --max-tokens 500
+$ code-context compress tests/fixtures/vitest-output.txt --max-tokens 500
 {
   "ccrId": "ccr_lz3abc_1a2b3c_000001",
   "compressed": true,
@@ -247,7 +257,7 @@ $ pnpm cli compress tests/fixtures/vitest-output.txt --max-tokens 500
 
 ```bash
 # Remember a project rule
-$ pnpm cli remember --type project_rule \
+$ code-context remember --type project_rule \
   --content "Use pnpm as the package manager. No npm or yarn." \
   --profile-target static --tags "build,convention"
 {
@@ -259,7 +269,7 @@ $ pnpm cli remember --type project_rule \
 }
 
 # Recall it
-$ pnpm cli recall "package manager"
+$ code-context recall "package manager"
 {
   "profile": { "static": [...], "dynamic": [...] },
   "memories": [
@@ -280,11 +290,11 @@ $ pnpm cli recall "package manager"
 
 ```bash
 # Project A
-$ cd /projects/backend && pnpm cli scope
+$ cd /projects/backend && code-context scope
 { "scopeId": "repo_a1b2c3d4" }
 
 # Project B — completely isolated
-$ cd /projects/frontend && pnpm cli scope
+$ cd /projects/frontend && code-context scope
 { "scopeId": "repo_e5f6a7b8" }
 ```
 
@@ -293,7 +303,7 @@ Memories and compressions saved in one repo are invisible from the other.
 ### Receipt Demo
 
 ```bash
-$ pnpm cli receipts --limit 5
+$ code-context receipts --limit 5
 [
   { "id": "rcp_...", "operation": "remember", "timestamp": "..." },
   { "id": "rcp_...", "operation": "compress", "tokensSaved": 1963, "timestamp": "..." },
@@ -319,7 +329,7 @@ PRD documents are in [`docs/`](./docs/INDEX.md).
 
 ---
 
-## Non-Goals (What this Beta is NOT)
+## Non-Goals
 
 - ❌ Not a transparent HTTP proxy
 - ❌ Not a WebSocket interceptor

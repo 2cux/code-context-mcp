@@ -1,0 +1,5 @@
+blank_issues_enabled: true
+contact_links:
+  - name: Documentation
+    url: https://github.com/2cux/code-context-mcp#readme
+    about: Read the README and docs before filing an issue.

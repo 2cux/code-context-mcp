@@ -1,18 +1,22 @@
 {
   "name": "code-context-mcp",
-  "version": "0.2.0-beta",
+  "version": "1.0.0",
   "description": "Local-first MCP server for AI coding agents — context compression and project-scoped memory",
   "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "bin": {
-    "code-context": "./dist/cli/index.js"
+    "code-context": "./dist/cli/index.js",
+    "code-context-server": "./dist/index.js"
   },
   "files": [
     "dist/",
     "docs/",
+    "examples/",
     "README.md",
-    "CLAUDE.md"
+    "CHANGELOG.md",
+    "CLAUDE.md",
+    "LICENSE"
   ],
   "scripts": {
     "build": "tsc",
