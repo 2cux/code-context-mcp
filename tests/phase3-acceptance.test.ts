@@ -545,7 +545,7 @@ describe("Criterion 4: 原文可删除 (delete + cleanup originals)", () => {
     expect(json.receiptId).toBeTruthy();
   });
 
-  it("retrieve after delete returns original_not_found", async () => {
+  it("retrieve after delete returns original_deleted", async () => {
     const result = await handleRetrieveOriginal(ctx, {
       scopeId: SCOPE_ID,
       originalRef: originalRefToDelete,
@@ -554,7 +554,7 @@ describe("Criterion 4: 原文可删除 (delete + cleanup originals)", () => {
     expect(result.isError).toBe(true);
     const json = parseToolText(result);
     expect(json.found).toBe(false);
-    expect(json.error).toBe("original_not_found");
+    expect(json.error).toBe("original_deleted");
   });
 
   it("delete_original fails gracefully for already-deleted ref", async () => {

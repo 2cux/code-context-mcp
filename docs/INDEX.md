@@ -1,5 +1,11 @@
 # CodeContext MCP — PRD 索引
 
+> **Release Status**
+> - `v0.2.0-beta` — Context Compression + Project Memory (current)
+> - `v0.1.0-alpha` — Context Compression only
+>
+> Beta adds: `remember_context`, `recall_context`, `forget_context`, `list_context`, `repo_profile` (static/dynamic), `list_receipts`. 775 tests passing. Demo script: [demo-script-v0.2.0-beta.md](./demo-script-v0.2.0-beta.md)
+
 > 本文档索引了 `docs/` 下所有 PRD 分篇文件，每篇对应原 PRD.md 的若干连续章节。
 
 | # | 文件 | 原章节 | 内容概要 |
