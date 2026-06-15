@@ -471,6 +471,11 @@ describe("ReceiptService", () => {
       "recall",
       "forget",
       "list",
+      "harness_run",
+      "harness_phase",
+      "harness_checkpoint",
+      "harness_check",
+      "harness_artifact",
     ];
 
     it("creates receipts for all operation types", () => {
@@ -482,6 +487,21 @@ describe("ReceiptService", () => {
             ? { tokensBefore: 100, tokensAfter: 100, tokensSaved: 0, compressionRatio: 0 }
             : {}),
           ...(op === "recall" || op === "remember" ? { query: "test" } : {}),
+          ...(op === "harness_run"
+            ? { runId: "run_test_001", moduleId: "compression-flow", coveredTools: ["compress_context"] }
+            : {}),
+          ...(op === "harness_phase"
+            ? { runId: "run_test_001", parentRunId: "run_test_001", phase: "compress" }
+            : {}),
+          ...(op === "harness_checkpoint"
+            ? { runId: "run_test_001", phase: "compress", checkpointName: "compress:code" }
+            : {}),
+          ...(op === "harness_check"
+            ? { runId: "run_test_001", phase: "check", checkpointName: "run:check" }
+            : {}),
+          ...(op === "harness_artifact"
+            ? { runId: "run_test_001", artifactPaths: ["run_test_001/artifacts/output.log"] }
+            : {}),
         });
         expect(rec.operation).toBe(op);
         expect(rec.id).toMatch(/^rcp_/);
@@ -507,6 +527,214 @@ describe("ReceiptService", () => {
         expect(list.length).toBeGreaterThanOrEqual(1);
         expect(list[0]!.operation).toBe(op);
       }
+    });
+  });
+
+  // ==========================================================================
+  // Run receipt fields (§34)
+  // ==========================================================================
+
+  describe("run receipt fields", () => {
+    it("creates a harness_run receipt with all run fields", () => {
+      const rec = receipts.create({
+        operation: "harness_run",
+        scopeId: SCOPE_A,
+        runId: "run_20260615_abc123_001",
+        moduleId: "compression-flow",
+        phase: "compress",
+        eventType: "run:started",
+        coveredTools: ["compress_context", "retrieve_original", "get_receipt"],
+        artifactPaths: [
+          "run_20260615_abc123_001/artifacts/output.log",
+          "run_20260615_abc123_001/artifacts/summary.md",
+        ],
+      });
+
+      expect(rec.operation).toBe("harness_run");
+      expect(rec.runId).toBe("run_20260615_abc123_001");
+      expect(rec.moduleId).toBe("compression-flow");
+      expect(rec.phase).toBe("compress");
+      expect(rec.eventType).toBe("run:started");
+      expect(rec.coveredTools).toEqual(["compress_context", "retrieve_original", "get_receipt"]);
+      expect(rec.artifactPaths).toEqual([
+        "run_20260615_abc123_001/artifacts/output.log",
+        "run_20260615_abc123_001/artifacts/summary.md",
+      ]);
+    });
+
+    it("creates a harness_checkpoint receipt", () => {
+      const rec = receipts.create({
+        operation: "harness_checkpoint",
+        scopeId: SCOPE_A,
+        runId: "run_20260615_abc123_001",
+        phase: "compress",
+        checkpointName: "compress:code",
+        eventType: "checkpoint",
+      });
+
+      expect(rec.operation).toBe("harness_checkpoint");
+      expect(rec.runId).toBe("run_20260615_abc123_001");
+      expect(rec.phase).toBe("compress");
+      expect(rec.checkpointName).toBe("compress:code");
+      expect(rec.eventType).toBe("checkpoint");
+    });
+
+    it("creates a harness_artifact receipt", () => {
+      const rec = receipts.create({
+        operation: "harness_artifact",
+        scopeId: SCOPE_A,
+        runId: "run_test_art_001",
+        artifactPaths: ["run_test_art_001/artifacts/roundtrip-diff.md"],
+      });
+
+      expect(rec.artifactPaths).toEqual(["run_test_art_001/artifacts/roundtrip-diff.md"]);
+    });
+
+    it("round-trips run receipt fields through get", () => {
+      const created = receipts.create({
+        operation: "harness_run",
+        scopeId: SCOPE_A,
+        runId: "run_roundtrip_001",
+        moduleId: "memory-flow",
+        coveredTools: ["remember_context", "recall_context"],
+        artifactPaths: ["run_roundtrip_001/artifacts/result.json"],
+      });
+
+      const fetched = receipts.get(created.id);
+      expect(fetched).not.toBeNull();
+      expect(fetched!.runId).toBe("run_roundtrip_001");
+      expect(fetched!.moduleId).toBe("memory-flow");
+      expect(fetched!.coveredTools).toEqual(["remember_context", "recall_context"]);
+      expect(fetched!.artifactPaths).toEqual(["run_roundtrip_001/artifacts/result.json"]);
+    });
+
+    it("run fields are undefined when not provided", () => {
+      const rec = receipts.create({
+        operation: "compress",
+        scopeId: SCOPE_A,
+        tokensBefore: 100,
+        tokensAfter: 50,
+        tokensSaved: 50,
+        compressionRatio: 0.5,
+      });
+
+      expect(rec.runId).toBeUndefined();
+      expect(rec.moduleId).toBeUndefined();
+      expect(rec.parentRunId).toBeUndefined();
+      expect(rec.phase).toBeUndefined();
+      expect(rec.eventType).toBeUndefined();
+      expect(rec.checkpointName).toBeUndefined();
+      expect(rec.artifactPaths).toBeUndefined();
+      expect(rec.coveredTools).toBeUndefined();
+    });
+
+    it("child receipt links to parent run via runId", () => {
+      // Create the main harness run receipt
+      const runReceipt = receipts.create({
+        operation: "harness_run",
+        scopeId: SCOPE_A,
+        runId: "run_parent_001",
+        moduleId: "compression-flow",
+        coveredTools: ["compress_context"],
+      });
+
+      // Create a child compress receipt referencing the run
+      const childReceipt = receipts.create({
+        operation: "compress",
+        scopeId: SCOPE_A,
+        runId: "run_parent_001",
+        tokensBefore: 1000,
+        tokensAfter: 200,
+        tokensSaved: 800,
+        compressionRatio: 0.8,
+        compressed: true,
+        ccrIds: ["ccr_child_001"],
+      });
+
+      expect(childReceipt.runId).toBe("run_parent_001");
+
+      // getByRunId should return both receipts
+      const byRun = receipts.getByRunId("run_parent_001");
+      expect(byRun.length).toBe(2);
+      expect(byRun.map((r) => r.id)).toContain(runReceipt.id);
+      expect(byRun.map((r) => r.id)).toContain(childReceipt.id);
+    });
+
+    it("getByRunId returns empty array for unknown runId", () => {
+      const results = receipts.getByRunId("run_nonexistent");
+      expect(results).toEqual([]);
+    });
+
+    it("list can filter by runId", () => {
+      receipts.create({
+        operation: "harness_run",
+        scopeId: SCOPE_A,
+        runId: "run_list_filter_001",
+      });
+      receipts.create({
+        operation: "harness_phase",
+        scopeId: SCOPE_A,
+        runId: "run_list_filter_001",
+        phase: "compress",
+      });
+      receipts.create({
+        operation: "compress",
+        scopeId: SCOPE_A,
+        runId: "run_list_filter_002",
+        tokensBefore: 100,
+        tokensAfter: 100,
+        tokensSaved: 0,
+        compressionRatio: 0,
+      });
+
+      const filtered = receipts.list(SCOPE_A, { runId: "run_list_filter_001" });
+      expect(filtered.length).toBe(2);
+      for (const r of filtered) {
+        expect(r.runId).toBe("run_list_filter_001");
+      }
+    });
+
+    it("list can filter by eventType", () => {
+      receipts.create({
+        operation: "harness_run",
+        scopeId: SCOPE_A,
+        runId: "run_evt_001",
+        eventType: "run:started",
+      });
+      receipts.create({
+        operation: "harness_checkpoint",
+        scopeId: SCOPE_A,
+        runId: "run_evt_001",
+        eventType: "checkpoint",
+        checkpointName: "compress:log",
+      });
+
+      const started = receipts.list(SCOPE_A, { eventType: "run:started" });
+      expect(started.length).toBe(1);
+      expect(started[0]!.eventType).toBe("run:started");
+
+      const cps = receipts.list(SCOPE_A, { eventType: "checkpoint" });
+      expect(cps.length).toBe(1);
+      expect(cps[0]!.checkpointName).toBe("compress:log");
+    });
+
+    it("harness_phase receipt with parentRunId references parent run", () => {
+      const parentRunId = "run_phase_parent_001";
+      const phaseRec = receipts.create({
+        operation: "harness_phase",
+        scopeId: SCOPE_A,
+        runId: parentRunId,
+        parentRunId: parentRunId,
+        phase: "verify",
+      });
+
+      expect(phaseRec.parentRunId).toBe(parentRunId);
+      expect(phaseRec.phase).toBe("verify");
+
+      // Verify round-trip
+      const fetched = receipts.get(phaseRec.id);
+      expect(fetched!.parentRunId).toBe(parentRunId);
+      expect(fetched!.phase).toBe("verify");
     });
   });
 });

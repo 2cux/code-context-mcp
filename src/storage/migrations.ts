@@ -40,6 +40,10 @@ export function runMigrations(db: Database): void {
 
   // Post-schema migrations for constraint changes that SQLite can't ALTER.
   // Safe to run on fresh databases — checks table state before acting.
+  //
+  // Order matters: migrateReceiptsRunFields adds the new columns first,
+  // then migrateReceiptsConstraint can safely rebuild with all columns.
+  migrateReceiptsRunFields(db);
   migrateReceiptsConstraint(db);
 
   // CacheAligner columns (§31.2) — added in v1.1
@@ -64,8 +68,8 @@ function migrateReceiptsConstraint(db: Database): void {
     if (!rows.length || !rows[0]!.values.length) return; // no receipts table yet
 
     const createSql = String(rows[0]!.values[0]![0] ?? "");
-    if (createSql.includes("delete_original") && createSql.includes("cleanup_originals")) {
-      return; // already migrated
+    if (createSql.includes("delete_original") && createSql.includes("cleanup_originals") && createSql.includes("harness_run")) {
+      return; // already migrated (including run receipt upgrade)
     }
   } catch {
     return; // can't read schema — skip migration
@@ -80,7 +84,9 @@ function migrateReceiptsConstraint(db: Database): void {
           operation           TEXT NOT NULL CHECK (operation IN (
                                   'compress', 'retrieve_original', 'delete_original',
                                   'cleanup_originals', 'remember', 'recall', 'forget',
-                                  'list'
+                                  'list', 'harness_run', 'harness_phase',
+                                  'harness_checkpoint', 'harness_check',
+                                  'harness_artifact'
                               )),
           scope_id            TEXT NOT NULL,
           input_hash          TEXT,
@@ -99,12 +105,25 @@ function migrateReceiptsConstraint(db: Database): void {
           error_reason        TEXT,
           cache_hit           INTEGER DEFAULT 0,
           timestamp           TEXT NOT NULL,
+          run_id              TEXT,
+          module_id           TEXT,
+          parent_run_id       TEXT,
+          phase               TEXT,
+          event_type          TEXT,
+          checkpoint_name     TEXT,
+          artifact_paths      TEXT,
+          covered_tools       TEXT,
           FOREIGN KEY (scope_id) REFERENCES scopes(scope_id)
       )`,
     );
-    execRaw(db, "INSERT INTO receipts_migrated SELECT * FROM receipts");
+    execRaw(db, "INSERT INTO receipts_migrated SELECT id, operation, scope_id, input_hash, query, result_ids, memory_ids, ccr_ids, original_refs, tokens_before, tokens_after, tokens_saved, compression_ratio, compressed, retrieved_original, failed, error_reason, cache_hit, timestamp, run_id, module_id, parent_run_id, phase, event_type, checkpoint_name, artifact_paths, covered_tools FROM receipts");
     execRaw(db, "DROP TABLE receipts");
     execRaw(db, "ALTER TABLE receipts_migrated RENAME TO receipts");
+    // Re-create indexes on the new table
+    execRaw(db, "CREATE INDEX IF NOT EXISTS idx_rcp_scope ON receipts(scope_id)");
+    execRaw(db, "CREATE INDEX IF NOT EXISTS idx_rcp_operation ON receipts(operation)");
+    execRaw(db, "CREATE INDEX IF NOT EXISTS idx_rcp_time ON receipts(timestamp)");
+    execRaw(db, "CREATE INDEX IF NOT EXISTS idx_rcp_run_id ON receipts(run_id)");
   } catch (migrationErr) {
     // If migration fails, skip — old table stays intact.
     // New operation types will still fail until the DB is recreated.
@@ -156,6 +175,121 @@ function migrateCacheColumns(db: Database): void {
     db.run("ALTER TABLE receipts ADD COLUMN cache_hit INTEGER DEFAULT 0");
   } catch {
     // Column already exists
+  }
+}
+
+/**
+ * Add run receipt fields to the receipts table (§34).
+ *
+ * Adds 8 nullable columns for harness run tracking.  Then rebuilds the
+ * CHECK constraint if the current schema does not include the new harness
+ * operation types (SQLite cannot ALTER a CHECK constraint).
+ *
+ * Also creates the idx_rcp_run_id index for efficient run-level lookups.
+ */
+function migrateReceiptsRunFields(db: Database): void {
+  // ── Phase 1: Add new columns (each individually, safe to re-run) ──────────
+
+  const newColumns = [
+    "run_id TEXT",
+    "module_id TEXT",
+    "parent_run_id TEXT",
+    "phase TEXT",
+    "event_type TEXT",
+    "checkpoint_name TEXT",
+    "artifact_paths TEXT",
+    "covered_tools TEXT",
+  ];
+
+  for (const col of newColumns) {
+    try {
+      db.run(`ALTER TABLE receipts ADD COLUMN ${col}`);
+    } catch {
+      // Column already exists — safe to ignore
+    }
+  }
+
+  // ── Phase 2: Create run_id index ──────────────────────────────────────────
+
+  try {
+    db.run(
+      "CREATE INDEX IF NOT EXISTS idx_rcp_run_id ON receipts(run_id)",
+    );
+  } catch {
+    // Index already exists
+  }
+
+  // ── Phase 3: Rebuild CHECK constraint if needed ───────────────────────────
+
+  try {
+    const rows = db.exec(
+      "SELECT sql FROM sqlite_master WHERE type='table' AND name='receipts'",
+    );
+    if (!rows.length || !rows[0]!.values.length) return; // no receipts table yet
+
+    const createSql = String(rows[0]!.values[0]![0] ?? "");
+    if (createSql.includes("harness_run")) {
+      return; // already migrated — CHECK constraint is up to date
+    }
+  } catch {
+    return; // can't read schema — skip migration
+  }
+
+  // Recreate the table with the updated constraint.
+  try {
+    execRaw(
+      db,
+      `CREATE TABLE IF NOT EXISTS receipts_migrated (
+          id                  TEXT PRIMARY KEY,
+          operation           TEXT NOT NULL CHECK (operation IN (
+                                  'compress', 'retrieve_original', 'delete_original',
+                                  'cleanup_originals', 'remember', 'recall', 'forget',
+                                  'list', 'harness_run', 'harness_phase',
+                                  'harness_checkpoint', 'harness_check',
+                                  'harness_artifact'
+                              )),
+          scope_id            TEXT NOT NULL,
+          input_hash          TEXT,
+          query               TEXT,
+          result_ids          TEXT,
+          memory_ids          TEXT,
+          ccr_ids             TEXT,
+          original_refs       TEXT,
+          tokens_before       INTEGER,
+          tokens_after        INTEGER,
+          tokens_saved        INTEGER,
+          compression_ratio   REAL,
+          compressed          INTEGER,
+          retrieved_original  INTEGER,
+          failed              INTEGER DEFAULT 0,
+          error_reason        TEXT,
+          cache_hit           INTEGER DEFAULT 0,
+          timestamp           TEXT NOT NULL,
+          run_id              TEXT,
+          module_id           TEXT,
+          parent_run_id       TEXT,
+          phase               TEXT,
+          event_type          TEXT,
+          checkpoint_name     TEXT,
+          artifact_paths      TEXT,
+          covered_tools       TEXT,
+          FOREIGN KEY (scope_id) REFERENCES scopes(scope_id)
+      )`,
+    );
+    execRaw(db, "INSERT INTO receipts_migrated SELECT id, operation, scope_id, input_hash, query, result_ids, memory_ids, ccr_ids, original_refs, tokens_before, tokens_after, tokens_saved, compression_ratio, compressed, retrieved_original, failed, error_reason, cache_hit, timestamp, run_id, module_id, parent_run_id, phase, event_type, checkpoint_name, artifact_paths, covered_tools FROM receipts");
+    execRaw(db, "DROP TABLE receipts");
+    execRaw(db, "ALTER TABLE receipts_migrated RENAME TO receipts");
+    // Re-create indexes on the new table
+    execRaw(db, "CREATE INDEX IF NOT EXISTS idx_rcp_scope ON receipts(scope_id)");
+    execRaw(db, "CREATE INDEX IF NOT EXISTS idx_rcp_operation ON receipts(operation)");
+    execRaw(db, "CREATE INDEX IF NOT EXISTS idx_rcp_time ON receipts(timestamp)");
+    execRaw(db, "CREATE INDEX IF NOT EXISTS idx_rcp_run_id ON receipts(run_id)");
+  } catch (migrationErr) {
+    // If migration fails, skip — old table stays intact.
+    console.warn(
+      "receipts run-fields CHECK constraint migration skipped:",
+      migrationErr instanceof Error ? migrationErr.message : String(migrationErr),
+    );
   }
 }
 

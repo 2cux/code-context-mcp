@@ -153,13 +153,16 @@ CREATE INDEX IF NOT EXISTS idx_pf_layer ON profile_facts(layer);
 
 -- ---------------------------------------------------------------------------
 -- 7. Receipts — audit trail for compress/retrieve/remember/recall/forget
+--    Also serves as run receipt for harness execution records (§34).
 -- ---------------------------------------------------------------------------
 CREATE TABLE IF NOT EXISTS receipts (
     id                  TEXT PRIMARY KEY,
     operation           TEXT NOT NULL CHECK (operation IN (
                             'compress', 'retrieve_original', 'delete_original',
                             'cleanup_originals', 'remember',
-                            'recall', 'forget', 'list'
+                            'recall', 'forget', 'list',
+                            'harness_run', 'harness_phase', 'harness_checkpoint',
+                            'harness_check', 'harness_artifact'
                         )),
     scope_id            TEXT NOT NULL,
     input_hash          TEXT,
@@ -178,12 +181,22 @@ CREATE TABLE IF NOT EXISTS receipts (
     error_reason        TEXT,
     cache_hit           INTEGER DEFAULT 0,
     timestamp           TEXT NOT NULL,
+    -- Run receipt fields (§34) — all nullable for backward compatibility
+    run_id              TEXT,
+    module_id           TEXT,
+    parent_run_id       TEXT,
+    phase               TEXT,
+    event_type          TEXT,
+    checkpoint_name     TEXT,
+    artifact_paths      TEXT,  -- JSON array string
+    covered_tools       TEXT,  -- JSON array string
     FOREIGN KEY (scope_id) REFERENCES scopes(scope_id)
 );
 
 CREATE INDEX IF NOT EXISTS idx_rcp_scope     ON receipts(scope_id);
 CREATE INDEX IF NOT EXISTS idx_rcp_operation ON receipts(operation);
 CREATE INDEX IF NOT EXISTS idx_rcp_time      ON receipts(timestamp);
+CREATE INDEX IF NOT EXISTS idx_rcp_run_id    ON receipts(run_id);
 
 -- ---------------------------------------------------------------------------
 -- 8. Failure Events — Failure Learning (§33)

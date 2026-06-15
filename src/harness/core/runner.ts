@@ -12,6 +12,7 @@
 
 import type { HarnessModule, RunId, RunState } from "./types.js";
 import type { TransitionSnapshot } from "./stateStore.js";
+import type { ReceiptService } from "../../receipts/receiptService.js";
 import { createHarnessContext } from "./context.js";
 import {
   createRun,
@@ -69,6 +70,8 @@ export interface ExecuteOptions {
   input?: unknown;
   /** Override the initial phase. */
   initialPhase?: string;
+  /** Optional ReceiptService for persisting run receipts to the database. */
+  receipts?: ReceiptService;
 }
 
 /**
@@ -83,7 +86,7 @@ export interface ExecuteOptions {
  *   6. Transition to completed or failed (single write with snapshot)
  */
 export async function executeRun(opts: ExecuteOptions): Promise<RunState> {
-  const { module: mod, runId, input = {}, initialPhase } = opts;
+  const { module: mod, runId, input = {}, initialPhase, receipts } = opts;
   const manifest = mod.manifest;
   const startPhase = initialPhase ?? manifest.phases[0]?.name;
 
@@ -99,6 +102,11 @@ export async function executeRun(opts: ExecuteOptions): Promise<RunState> {
     manifest,
     initialPhase: startPhase,
   });
+
+  // Inject ReceiptService for run receipt persistence (§34)
+  if (receipts) {
+    ctx.setReceiptService(receipts);
+  }
 
   // ── Transition to running (validated) ──────────────────────────────────────
 

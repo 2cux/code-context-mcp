@@ -20,6 +20,9 @@ import type {
   HarnessManifest,
   RunId,
 } from "./types.js";
+import type { ReceiptService } from "../../receipts/receiptService.js";
+import { getDb as getGlobalDb, runStmt } from "../../storage/db.js";
+import { nowISO } from "../../utils/time.js";
 import { writeArtifact as persistArtifact, sanitizeArtifactName } from "./artifactStore.js";
 import {
   recordPhase,
@@ -42,6 +45,7 @@ export class HarnessContextImpl<TInput = unknown> implements HarnessContext<TInp
   private _artifacts: ArtifactEntry[] = [];
   private _logs: string[] = [];
   private _seq: CheckpointSeq = 0;
+  private _receipts: ReceiptService | null = null;
   readonly manifest: HarnessManifest;
 
   constructor(
@@ -123,12 +127,53 @@ export class HarnessContextImpl<TInput = unknown> implements HarnessContext<TInp
     persistArtifactRecord(this.runId, entry);
   }
 
+  // ── Receipt Service Injection ──────────────────────────────────────────────
+
+  /** Inject a ReceiptService so createReceipt() can persist to the database. */
+  setReceiptService(svc: ReceiptService): void {
+    this._receipts = svc;
+  }
+
   // ── Receipt ────────────────────────────────────────────────────────────────
 
   createReceipt(): string {
-    const receiptId = generateReceiptId(this.runId);
-    this._logs.push(`[receipt] created run receipt: ${receiptId}`);
-    return receiptId;
+    if (!this._receipts) {
+      // Fallback stub when ReceiptService is not available (e.g. unit tests)
+      const stubId = `receipt_${this.runId}`;
+      this._logs.push(`[receipt] stub run receipt (no ReceiptService): ${stubId}`);
+      return stubId;
+    }
+
+    // Ensure the harness scope record exists to satisfy the FK constraint
+    // on receipts.scope_id → scopes.scope_id.
+    this.ensureHarnessScope();
+
+    const record = this._receipts.create({
+      operation: "harness_run",
+      scopeId: "harness", // harness runs use a fixed scope
+      runId: this.runId,
+      moduleId: this.manifest.id,
+      coveredTools: this.manifest.coversTools,
+      artifactPaths: this._artifacts.map((a) => a.path),
+    });
+
+    this._logs.push(`[receipt] created run receipt: ${record.id}`);
+    return record.id;
+  }
+
+  /** Ensure the fixed "harness" scope row exists (best-effort, idempotent). */
+  private ensureHarnessScope(): void {
+    try {
+      const db = getGlobalDb();
+      runStmt(
+        db,
+        `INSERT OR IGNORE INTO scopes (scope_id, cwd, scope_strategy, created_at, updated_at)
+         VALUES ('harness', '/harness', 'cwdFallback', ?, ?)`,
+        [nowISO(), nowISO()],
+      );
+    } catch {
+      // best-effort: if the scope already exists or we can't write, that's ok
+    }
   }
 
   // ── Snapshot (for RunState persistence) ────────────────────────────────────
@@ -150,19 +195,6 @@ export interface Snapshot {
   checkpoints: Checkpoint[];
   artifacts: ArtifactEntry[];
   logs: string[];
-}
-
-// ── Receipt ID Generator ─────────────────────────────────────────────────────
-
-/**
- * Generate a run-level receipt ID.
- *
- * In production this delegates to the receipt service (src/receipts/).
- * The stub generates a deterministic ID from the run ID.
- */
-function generateReceiptId(runId: RunId): string {
-  // Stub: production would call receiptService.createRunReceipt(runId)
-  return `receipt_${runId}`;
 }
 
 // ── Factory ──────────────────────────────────────────────────────────────────
