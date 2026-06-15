@@ -39,4 +39,6 @@ export const profileFlowManifest: HarnessManifest = {
     "recall_context",
     "get_receipt",
   ],
+  tags: ["profile", "acceptance", "mcp"],
+  capability: "profile",
 };

@@ -61,4 +61,6 @@ export const fullContextFlowManifest: HarnessManifest = {
     "failure_stats",
     "get_receipt",
   ],
+  tags: ["compression", "memory", "profile", "acceptance", "full", "mcp"],
+  capability: "full-context",
 };

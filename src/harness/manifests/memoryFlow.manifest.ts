@@ -45,4 +45,6 @@ export const memoryFlowManifest: HarnessManifest = {
     "list_context",
     "get_receipt",
   ],
+  tags: ["memory", "acceptance", "mcp"],
+  capability: "memory",
 };

@@ -53,4 +53,6 @@ export const mcpToolsSmokeFlowManifest: HarnessManifest = {
     "failure_stats",
     "get_receipt",
   ],
+  tags: ["smoke", "mcp", "acceptance"],
+  capability: "smoke-test",
 };

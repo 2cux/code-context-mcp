@@ -132,6 +132,21 @@ export interface HarnessManifest {
    *    "delete_original", "list_compressions", "get_receipt"]
    */
   coversTools: string[];
+
+  /**
+   * Optional tags for filtering and categorization.
+   *
+   * Example: ["compression", "smoke", "acceptance", "cli", "mcp"]
+   */
+  tags?: string[];
+
+  /**
+   * Optional capability category for high-level grouping.
+   *
+   * Example: "compression", "memory", "originals", "profile",
+   *          "full-context", "smoke-test"
+   */
+  capability?: string;
 }
 
 // ── HarnessModule ─────────────────────────────────────────────────────────────

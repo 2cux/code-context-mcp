@@ -38,4 +38,6 @@ export const cliSmokeFlowManifest: HarnessManifest = {
     { name: "cli-smoke-results", description: "Per-command smoke test results", contentType: "application/json" },
   ],
   coversTools: [],
+  tags: ["smoke", "cli", "acceptance"],
+  capability: "smoke-test",
 };

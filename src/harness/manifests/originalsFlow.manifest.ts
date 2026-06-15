@@ -42,4 +42,6 @@ export const originalsFlowManifest: HarnessManifest = {
     "cleanup_originals",
     "get_receipt",
   ],
+  tags: ["originals", "acceptance", "mcp"],
+  capability: "originals",
 };

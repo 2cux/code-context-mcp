@@ -42,4 +42,6 @@ export const compressionFlowManifest: HarnessManifest = {
     "list_compressions",
     "get_receipt",
   ],
+  tags: ["compression", "acceptance", "mcp"],
+  capability: "compression",
 };

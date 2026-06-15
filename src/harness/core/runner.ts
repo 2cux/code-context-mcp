@@ -24,40 +24,16 @@ import {
 import { recordCompleted, recordError } from "./reporter.js";
 import { serializeError } from "../utils/serializeError.js";
 
-// ── Module Registry ──────────────────────────────────────────────────────────
+// ── Module Registry (re-exports from unified registry) ────────────────────────
 
-const modules = new Map<string, HarnessModule>();
-
-/** Register a HarnessModule by its manifest id. */
-export function registerModule(mod: HarnessModule): void {
-  const id = mod.manifest.id;
-  if (modules.has(id)) {
-    throw new Error(`Module "${id}" is already registered.`);
-  }
-  modules.set(id, mod);
-}
-
-/** Register multiple modules at once. */
-export function registerModules(list: HarnessModule[]): void {
-  for (const mod of list) {
-    registerModule(mod);
-  }
-}
-
-/** Get a registered module by manifest id. */
-export function getModule(id: string): HarnessModule | undefined {
-  return modules.get(id);
-}
-
-/** List all registered module ids. */
-export function listModules(): string[] {
-  return [...modules.keys()].sort();
-}
-
-/** Remove all registered modules (test helper). */
-export function clearModules(): void {
-  modules.clear();
-}
+export {
+  registerModule,
+  registerModules,
+  getModule,
+  listModules,
+  clearModules,
+  hasModule,
+} from "./registry.js";
 
 // ── Execute ──────────────────────────────────────────────────────────────────
 
@@ -190,12 +166,6 @@ export async function executeRun(opts: ExecuteOptions): Promise<RunState> {
 
 // ── Legacy Compatibility ─────────────────────────────────────────────────────
 
-/**
- * @deprecated Use `registerModule` instead.
- */
-export const registerFlow = registerModule;
-
-/**
- * @deprecated Use `clearModules` instead.
- */
-export const clearFlows = clearModules;
+export {
+  registerModule as registerFlow,
+} from "./registry.js";

@@ -89,6 +89,36 @@ describe("HarnessManifest (type-level shape validation)", () => {
     expect(m.inputSchema?.type).toBe("object");
     expect(m.outputSchema?.type).toBe("object");
   });
+
+  it("allows optional tags and capability", () => {
+    const m: HarnessManifest = {
+      id: "tagged-flow",
+      name: "Tagged Flow",
+      description: "A flow with tags and capability",
+      phases: [],
+      checkpoints: [],
+      artifacts: [],
+      coversTools: ["compress_context"],
+      tags: ["compression", "acceptance"],
+      capability: "compression",
+    };
+    expect(m.tags).toEqual(["compression", "acceptance"]);
+    expect(m.capability).toBe("compression");
+  });
+
+  it("allows manifest without tags and capability (backward compatible)", () => {
+    const m: HarnessManifest = {
+      id: "minimal-flow",
+      name: "Minimal",
+      description: "Minimal manifest",
+      phases: [],
+      checkpoints: [],
+      artifacts: [],
+      coversTools: [],
+    };
+    expect(m.tags).toBeUndefined();
+    expect(m.capability).toBeUndefined();
+  });
 });
 
 // ── Checkpoint Shape ──────────────────────────────────────────────────────────
