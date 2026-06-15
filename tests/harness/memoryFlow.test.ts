@@ -4,29 +4,28 @@
  * Covers: memoryFlow execution with the memoryFlow manifest.
  */
 
-import { describe, it, expect, beforeEach } from "vitest";
-import { registerFlow, executeRun, clearFlows } from "../../src/harness/core/runner.js";
+import { describe, it, expect } from "vitest";
+import { executeRun } from "../../src/harness/core/runner.js";
 import { memoryFlow } from "../../src/harness/flows/memoryFlow.js";
 import { memoryFlowManifest } from "../../src/harness/manifests/memoryFlow.manifest.js";
-
-beforeEach(() => {
-  clearFlows();
-});
+import type { HarnessModule } from "../../src/harness/core/types.js";
 
 describe("memoryFlow", () => {
-  it("executes all manifest steps without throwing", async () => {
-    registerFlow("memoryFlow", memoryFlow);
+  it("executes all manifest checkpoints without throwing", async () => {
+    const mod: HarnessModule = {
+      manifest: memoryFlowManifest,
+      run: memoryFlow,
+    };
 
-    const record = await executeRun(
-      memoryFlowManifest,
-      "run_memory_test" as never,
-      "scope:test",
-    );
+    const state = await executeRun({
+      module: mod,
+      runId: "run_memory_test" as never,
+    });
 
-    expect(record.status).toBe("passed");
-    const stepCheckpoints = record.checkpoints.filter(
-      (c) => c.label !== "run:start" && c.label !== "run:passed" && c.label !== "run:error",
+    expect(state.status).toBe("completed");
+    const stepCheckpoints = state.checkpoints.filter(
+      (c) => c.label !== "run:start" && c.label !== "run:completed",
     );
-    expect(stepCheckpoints.length).toBe(memoryFlowManifest.steps.length);
+    expect(stepCheckpoints.length).toBe(memoryFlowManifest.checkpoints.length);
   });
 });

@@ -9,23 +9,56 @@
  * PRD §34: 完整压缩 + 记忆验收 Manifest。
  */
 
-import type { Manifest } from "../core/types.js";
+import type { HarnessManifest } from "../core/types.js";
 
-export const fullContextFlowManifest: Manifest = {
-  name: "fullContextFlow",
-  description: "Complete compression + memory acceptance across all content types and lifecycle stages",
-  loopType: "fullContext",
-  tags: ["full", "acceptance", "closed-loop"],
-  steps: [
-    { name: "scope", description: "Resolve current scope", expect: "success" },
-    { name: "compress_all_types", description: "Compress all 9 content types", expect: "success" },
-    { name: "verify_all_compressions", description: "Verify every compression produced valid output", expect: "success" },
-    { name: "retrieve_all_originals", description: "Retrieve originals for all compressions", expect: "success" },
-    { name: "remember_all_categories", description: "Store memories across all categories", expect: "success" },
-    { name: "recall_each", description: "Recall each memory by query", expect: "success" },
-    { name: "forget_and_verify", description: "Forget memories and verify exclusion", expect: "success" },
-    { name: "profile_read_write", description: "Read and update profile facts", expect: "success" },
-    { name: "receipt_audit", description: "Verify run receipt covers all sub-receipts", expect: "success" },
-    { name: "stats_consistency", description: "Verify token stats are consistent with receipts", expect: "success" },
+export const fullContextFlowManifest: HarnessManifest = {
+  id: "full-context-flow",
+  name: "Full Context Flow",
+  description:
+    "Complete compression + memory acceptance across all content types " +
+    "and lifecycle stages — the most comprehensive acceptance flow",
+  phases: [
+    { name: "setup", description: "Resolve scope and prepare all fixtures" },
+    { name: "compress", description: "Compress all 9 content types" },
+    { name: "verify_compression", description: "Verify every compression produced valid output" },
+    { name: "retrieve", description: "Retrieve originals for all compressions" },
+    { name: "remember", description: "Store memories across all categories" },
+    { name: "recall", description: "Recall each memory by query" },
+    { name: "forget", description: "Forget memories and verify exclusion" },
+    { name: "profile", description: "Read and update profile facts" },
+    { name: "audit", description: "Verify run receipt covers all sub-receipts" },
+  ],
+  checkpoints: [
+    { name: "full:scope", description: "Resolve current scope", expect: "pass" },
+    { name: "full:compress_all", description: "Compress all 9 content types", expect: "pass" },
+    { name: "full:verify_compressions", description: "Verify every compression produced valid output", expect: "pass" },
+    { name: "full:retrieve_all", description: "Retrieve originals for all compressions", expect: "pass" },
+    { name: "full:remember_all", description: "Store memories across all categories", expect: "pass" },
+    { name: "full:recall_each", description: "Recall each memory by query", expect: "pass" },
+    { name: "full:forget_verify", description: "Forget memories and verify exclusion", expect: "pass" },
+    { name: "full:profile_rw", description: "Read and update profile facts", expect: "pass" },
+    { name: "full:receipt_audit", description: "Verify run receipt covers all sub-receipts", expect: "pass" },
+    { name: "full:stats_consistency", description: "Verify token stats are consistent with receipts", expect: "pass" },
+  ],
+  artifacts: [
+    { name: "full-compression-results", description: "Compression output for all content types", contentType: "application/json" },
+    { name: "full-memory-records", description: "All memory records created", contentType: "application/json" },
+    { name: "full-receipt-audit", description: "Receipt audit cross-reference", contentType: "application/json" },
+  ],
+  coversTools: [
+    "current_scope",
+    "compress_context",
+    "retrieve_original",
+    "delete_original",
+    "list_compressions",
+    "remember_context",
+    "recall_context",
+    "forget_context",
+    "list_context",
+    "analyze_context",
+    "cleanup_originals",
+    "list_failures",
+    "failure_stats",
+    "get_receipt",
   ],
 };

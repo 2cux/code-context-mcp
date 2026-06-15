@@ -7,14 +7,7 @@
  * PRD §34: 错误序列化工具。
  */
 
-// ── Serialized Error Shape ────────────────────────────────────────────────────
-
-export interface SerializedError {
-  name: string;
-  message: string;
-  stack?: string;
-  cause?: SerializedError | null;
-}
+import type { SerializedError } from "../core/types.js";
 
 // ── Serialize ─────────────────────────────────────────────────────────────────
 

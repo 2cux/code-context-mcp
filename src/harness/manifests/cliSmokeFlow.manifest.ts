@@ -6,27 +6,36 @@
  * PRD §34: CLI 验收 Manifest。
  */
 
-import type { Manifest } from "../core/types.js";
+import type { HarnessManifest } from "../core/types.js";
 
-export const cliSmokeFlowManifest: Manifest = {
-  name: "cliSmokeFlow",
-  description: "Smoke test for all CLI commands — every command must run without crashing",
-  loopType: "cliSmoke",
-  tags: ["cli", "smoke", "closed-loop"],
-  steps: [
-    { name: "scope", description: "Run 'code-context scope' command", expect: "success" },
-    { name: "compress", description: "Run 'code-context compress' command", expect: "success" },
-    { name: "retrieve", description: "Run 'code-context retrieve' command", expect: "success" },
-    { name: "list_compressions", description: "Run 'code-context list-compressions' command", expect: "success" },
-    { name: "stats", description: "Run 'code-context stats' command", expect: "success" },
-    { name: "remember", description: "Run 'code-context remember' command", expect: "success" },
-    { name: "recall", description: "Run 'code-context recall' command", expect: "success" },
-    { name: "forget", description: "Run 'code-context forget' command", expect: "success" },
-    { name: "list_context", description: "Run 'code-context list-context' command", expect: "success" },
-    { name: "profile", description: "Run 'code-context profile' command", expect: "success" },
-    { name: "receipts", description: "Run 'code-context receipts' command", expect: "success" },
-    { name: "cache_stats", description: "Run 'code-context cache stats' command", expect: "success" },
-    { name: "failures_list", description: "Run 'code-context failures list' command", expect: "success" },
-    { name: "cleanup", description: "Run 'code-context cleanup' command", expect: "success" },
+export const cliSmokeFlowManifest: HarnessManifest = {
+  id: "cli-smoke-flow",
+  name: "CLI Smoke Flow",
+  description:
+    "Smoke test for all CLI commands — every command must run without crashing",
+  phases: [
+    { name: "compression_cmds", description: "Smoke test compression CLI commands" },
+    { name: "memory_cmds", description: "Smoke test memory CLI commands" },
+    { name: "utility_cmds", description: "Smoke test utility CLI commands" },
   ],
+  checkpoints: [
+    { name: "cli:scope", description: "Run 'code-context scope' command", expect: "pass" },
+    { name: "cli:compress", description: "Run 'code-context compress' command", expect: "pass" },
+    { name: "cli:retrieve", description: "Run 'code-context retrieve' command", expect: "pass" },
+    { name: "cli:list_compressions", description: "Run 'code-context list-compressions' command", expect: "pass" },
+    { name: "cli:stats", description: "Run 'code-context stats' command", expect: "pass" },
+    { name: "cli:remember", description: "Run 'code-context remember' command", expect: "pass" },
+    { name: "cli:recall", description: "Run 'code-context recall' command", expect: "pass" },
+    { name: "cli:forget", description: "Run 'code-context forget' command", expect: "pass" },
+    { name: "cli:list_context", description: "Run 'code-context list-context' command", expect: "pass" },
+    { name: "cli:profile", description: "Run 'code-context profile' command", expect: "pass" },
+    { name: "cli:receipts", description: "Run 'code-context receipts' command", expect: "pass" },
+    { name: "cli:cache_stats", description: "Run 'code-context cache stats' command", expect: "pass" },
+    { name: "cli:failures_list", description: "Run 'code-context failures list' command", expect: "pass" },
+    { name: "cli:cleanup", description: "Run 'code-context cleanup' command", expect: "pass" },
+  ],
+  artifacts: [
+    { name: "cli-smoke-results", description: "Per-command smoke test results", contentType: "application/json" },
+  ],
+  coversTools: [],
 };

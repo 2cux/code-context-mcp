@@ -7,19 +7,39 @@
  * PRD §34: 压缩闭环 Manifest。
  */
 
-import type { Manifest } from "../core/types.js";
+import type { HarnessManifest } from "../core/types.js";
 
-export const compressionFlowManifest: Manifest = {
-  name: "compressionFlow",
-  description: "Exercises the full compression closed loop across all content types",
-  loopType: "compression",
-  tags: ["compression", "smoke", "closed-loop"],
-  steps: [
-    { name: "scope", description: "Resolve current scope", expect: "success" },
-    { name: "detect_and_compress_all_types", description: "Detect content type and compress for each fixture type", expect: "success" },
-    { name: "retrieve_original", description: "Retrieve original content for each compression", expect: "success" },
-    { name: "verify_roundtrip", description: "Verify retrieved original matches input", expect: "success" },
-    { name: "list_compressions", description: "List all compressed context records", expect: "success" },
-    { name: "token_stats", description: "Verify token statistics are recorded", expect: "success" },
+export const compressionFlowManifest: HarnessManifest = {
+  id: "compression-flow",
+  name: "Compression Flow",
+  description:
+    "Exercises the full compression closed loop across all content types: " +
+    "detect → compress → store → retrieve original → verify round-trip → " +
+    "list compressions → token stats",
+  phases: [
+    { name: "setup", description: "Resolve scope and prepare fixtures" },
+    { name: "compress", description: "Detect content type and compress each fixture type" },
+    { name: "retrieve", description: "Retrieve original content for each compression" },
+    { name: "verify", description: "Verify round-trip: retrieved original matches input" },
+  ],
+  checkpoints: [
+    { name: "compress:scope", description: "Resolve current scope", expect: "pass" },
+    { name: "compress:detect_and_compress", description: "Detect type and compress for each fixture", expect: "pass" },
+    { name: "compress:retrieve_original", description: "Retrieve original for each compression", expect: "pass" },
+    { name: "compress:verify_roundtrip", description: "Verify retrieved original matches input", expect: "pass" },
+    { name: "compress:list", description: "List all compressed context records", expect: "pass" },
+    { name: "compress:token_stats", description: "Verify token statistics are recorded", expect: "pass" },
+  ],
+  artifacts: [
+    { name: "compression-results", description: "Compression output per content type", contentType: "application/json" },
+    { name: "roundtrip-diff", description: "Diff between original and retrieved content", contentType: "text/plain" },
+  ],
+  coversTools: [
+    "current_scope",
+    "compress_context",
+    "retrieve_original",
+    "delete_original",
+    "list_compressions",
+    "get_receipt",
   ],
 };

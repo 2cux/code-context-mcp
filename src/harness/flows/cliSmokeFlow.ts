@@ -11,8 +11,7 @@
  * PRD §34: CLI 验收。
  */
 
-import type { RunContext, RunStatus } from "../core/types.js";
-import type { LogFn } from "../core/runner.js";
+import type { HarnessContext } from "../core/types.js";
 
 /**
  * Stub implementation: logs a pass checkpoint for each CLI command.
@@ -21,14 +20,14 @@ import type { LogFn } from "../core/runner.js";
  * CLI command inside a try/catch, logging failures as individual step
  * checkpoints without aborting the run.
  */
-export async function cliSmokeFlow(ctx: RunContext, log: LogFn): Promise<RunStatus> {
-  const steps = ctx.manifest.steps;
-  let hasFailure = false;
+export async function cliSmokeFlow(ctx: HarnessContext): Promise<{ checked: number }> {
+  const cps = ctx.manifest.checkpoints;
+  let checked = 0;
 
-  for (const step of steps) {
-    const ts = new Date().toISOString();
-    log({ timestamp: ts, label: `cliSmoke:${step.name}`, outcome: "pass", message: `step: ${step.description}` });
+  for (const cp of cps) {
+    ctx.checkpoint(cp.name, "pass", cp.description);
+    checked++;
   }
 
-  return hasFailure ? "failed" : "passed";
+  return { checked };
 }

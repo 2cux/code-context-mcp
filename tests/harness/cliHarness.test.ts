@@ -5,31 +5,30 @@
  * and the CliAdapter factory.
  */
 
-import { describe, it, expect, beforeEach } from "vitest";
-import { registerFlow, executeRun, clearFlows } from "../../src/harness/core/runner.js";
+import { describe, it, expect } from "vitest";
+import { executeRun } from "../../src/harness/core/runner.js";
 import { cliSmokeFlow } from "../../src/harness/flows/cliSmokeFlow.js";
 import { cliSmokeFlowManifest } from "../../src/harness/manifests/cliSmokeFlow.manifest.js";
 import { createCliAdapter } from "../../src/harness/adapters/cliAdapter.js";
-
-beforeEach(() => {
-  clearFlows();
-});
+import type { HarnessModule } from "../../src/harness/core/types.js";
 
 describe("cliSmokeFlow", () => {
-  it("executes all manifest steps without throwing", async () => {
-    registerFlow("cliSmokeFlow", cliSmokeFlow);
+  it("executes all manifest checkpoints without throwing", async () => {
+    const mod: HarnessModule = {
+      manifest: cliSmokeFlowManifest,
+      run: cliSmokeFlow,
+    };
 
-    const record = await executeRun(
-      cliSmokeFlowManifest,
-      "run_cli_test" as never,
-      "scope:test",
-    );
+    const state = await executeRun({
+      module: mod,
+      runId: "run_cli_test" as never,
+    });
 
-    expect(record.status).toBe("passed");
-    const stepCheckpoints = record.checkpoints.filter(
-      (c) => c.label !== "run:start" && c.label !== "run:passed" && c.label !== "run:error",
+    expect(state.status).toBe("completed");
+    const stepCheckpoints = state.checkpoints.filter(
+      (c) => c.label !== "run:start" && c.label !== "run:completed",
     );
-    expect(stepCheckpoints.length).toBe(cliSmokeFlowManifest.steps.length);
+    expect(stepCheckpoints.length).toBe(cliSmokeFlowManifest.checkpoints.length);
   });
 });
 

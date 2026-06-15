@@ -14,16 +14,19 @@ import {
   listManifestDetails,
   clearRegistry,
 } from "../../src/harness/core/registry.js";
-import type { Manifest } from "../../src/harness/core/types.js";
+import type { HarnessManifest } from "../../src/harness/core/types.js";
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
 
-function makeManifest(name: string): Manifest {
+function makeManifest(id: string): HarnessManifest {
   return {
-    name,
-    description: `Manifest ${name}`,
-    loopType: "compression",
-    steps: [{ name: "step1", description: "A step", expect: "success" }],
+    id,
+    name: `Manifest ${id}`,
+    description: `Description for ${id}`,
+    phases: [{ name: "main", description: "Main phase" }],
+    checkpoints: [{ name: "step1", description: "A step", expect: "pass" }],
+    artifacts: [],
+    coversTools: [],
   };
 }
 
@@ -36,23 +39,27 @@ beforeEach(() => {
 // ── Register ──────────────────────────────────────────────────────────────────
 
 describe("registerManifest", () => {
-  it("registers a manifest and retrieves it by name", () => {
-    const m = makeManifest("test");
+  it("registers a manifest and retrieves it by id", () => {
+    const m = makeManifest("test-flow");
     registerManifest(m);
-    expect(getManifest("test")).toEqual(m);
+    expect(getManifest("test-flow")).toEqual(m);
   });
 
-  it("throws when registering a duplicate name", () => {
-    registerManifest(makeManifest("test"));
-    expect(() => registerManifest(makeManifest("test"))).toThrow(
-      'Manifest "test" is already registered.',
+  it("throws when registering a duplicate id", () => {
+    registerManifest(makeManifest("test-flow"));
+    expect(() => registerManifest(makeManifest("test-flow"))).toThrow(
+      'Manifest "test-flow" is already registered.',
     );
   });
 });
 
 describe("registerManifests", () => {
   it("registers multiple manifests at once", () => {
-    registerManifests([makeManifest("a"), makeManifest("b"), makeManifest("c")]);
+    registerManifests([
+      makeManifest("a"),
+      makeManifest("b"),
+      makeManifest("c"),
+    ]);
     expect(listManifests()).toEqual(["a", "b", "c"]);
   });
 });
@@ -60,7 +67,7 @@ describe("registerManifests", () => {
 // ── Retrieve ──────────────────────────────────────────────────────────────────
 
 describe("getManifest", () => {
-  it("returns undefined for an unregistered name", () => {
+  it("returns undefined for an unregistered id", () => {
     expect(getManifest("nonexistent")).toBeUndefined();
   });
 });
@@ -70,18 +77,22 @@ describe("listManifests", () => {
     expect(listManifests()).toEqual([]);
   });
 
-  it("returns sorted names", () => {
-    registerManifests([makeManifest("c"), makeManifest("a"), makeManifest("b")]);
+  it("returns sorted ids", () => {
+    registerManifests([
+      makeManifest("c"),
+      makeManifest("a"),
+      makeManifest("b"),
+    ]);
     expect(listManifests()).toEqual(["a", "b", "c"]);
   });
 });
 
 describe("listManifestDetails", () => {
   it("returns full manifest objects", () => {
-    registerManifest(makeManifest("test"));
+    registerManifest(makeManifest("test-flow"));
     const details = listManifestDetails();
     expect(details).toHaveLength(1);
-    expect(details[0]?.description).toBe("Manifest test");
+    expect(details[0]?.description).toBe("Description for test-flow");
   });
 });
 
@@ -89,7 +100,7 @@ describe("listManifestDetails", () => {
 
 describe("clearRegistry", () => {
   it("removes all registered manifests", () => {
-    registerManifest(makeManifest("test"));
+    registerManifest(makeManifest("test-flow"));
     clearRegistry();
     expect(listManifests()).toEqual([]);
   });

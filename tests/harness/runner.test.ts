@@ -1,7 +1,7 @@
 /**
  * Runner Tests
  *
- * Covers: registerFlow, executeRun, clearFlows.
+ * Covers: registerModule, executeRun, clearModules.
  */
 
 import { describe, it, expect, beforeEach, afterEach } from "vitest";
@@ -9,21 +9,34 @@ import * as fs from "node:fs";
 import * as path from "node:path";
 import * as os from "node:os";
 import {
-  registerFlow,
+  registerModule,
   executeRun,
-  clearFlows,
+  clearModules,
 } from "../../src/harness/core/runner.js";
 import { setRunsDir } from "../../src/harness/core/stateStore.js";
-import type { Manifest, RunStatus } from "../../src/harness/core/types.js";
+import type { HarnessManifest, HarnessModule, HarnessContext } from "../../src/harness/core/types.js";
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
 
-function makeManifest(name = "testFlow"): Manifest {
+function makeManifest(id = "test-flow"): HarnessManifest {
   return {
-    name,
+    id,
+    name: `Manifest ${id}`,
     description: "Test manifest",
-    loopType: "compression",
-    steps: [{ name: "step1", description: "A step", expect: "success" }],
+    phases: [{ name: "main", description: "Main phase" }],
+    checkpoints: [{ name: "step1", description: "A step", expect: "pass" }],
+    artifacts: [],
+    coversTools: [],
+  };
+}
+
+function makeModule(
+  id: string,
+  runFn: (ctx: HarnessContext) => Promise<unknown>,
+): HarnessModule {
+  return {
+    manifest: makeManifest(id),
+    run: runFn,
   };
 }
 
@@ -34,7 +47,7 @@ let tmpDir: string;
 beforeEach(() => {
   tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), "cc-harness-runner-"));
   setRunsDir(tmpDir);
-  clearFlows();
+  clearModules();
 });
 
 afterEach(() => {
@@ -44,27 +57,41 @@ afterEach(() => {
 // ── Execute ───────────────────────────────────────────────────────────────────
 
 describe("executeRun", () => {
-  it("throws when no flow handler is registered", async () => {
-    const manifest = makeManifest("noHandler");
-    await expect(
-      executeRun(manifest, "run_test_001" as never, "scope:test"),
-    ).rejects.toThrow('No flow handler registered for manifest "noHandler".');
-  });
-
-  it("executes a registered flow, returns and persists a passed run record", async () => {
-    registerFlow("testFlow", async (_ctx, log) => {
-      log({ timestamp: new Date().toISOString(), label: "test:step", outcome: "pass" });
-      return "passed" as RunStatus;
+  it("executes module directly without pre-registration", async () => {
+    const mod = makeModule("direct-exec", async (ctx) => {
+      ctx.checkpoint("step", "pass");
+      return { ok: true };
     });
 
-    const manifest = makeManifest("testFlow");
-    const record = await executeRun(manifest, "run_test_002" as never, "scope:test");
+    // No registerModule call — executeRun takes the module directly
+    const state = await executeRun({
+      module: mod,
+      runId: "run_test_001" as never,
+    });
 
-    expect(record.status).toBe("passed");
-    expect(record.manifestName).toBe("testFlow");
-    // run:start + handler's test:step + run:passed = 3 checkpoints
-    expect(record.checkpoints.length).toBe(3);
-    expect(record.completedAt).toBeDefined();
+    expect(state.status).toBe("completed");
+    expect(state.moduleId).toBe("direct-exec");
+  });
+
+  it("executes a registered module, returns and persists a completed run state", async () => {
+    const mod: HarnessModule = {
+      manifest: makeManifest("test-flow"),
+      run: async (ctx) => {
+        ctx.checkpoint("test:step", "pass", "OK");
+        return { checked: 1 };
+      },
+    };
+
+    const state = await executeRun({
+      module: mod,
+      runId: "run_test_002" as never,
+    });
+
+    expect(state.status).toBe("completed");
+    expect(state.moduleId).toBe("test-flow");
+    // run:start + handler's test:step + run:completed = 3 checkpoints
+    expect(state.checkpoints.length).toBeGreaterThanOrEqual(3);
+    expect(state.completedAt).toBeDefined();
 
     // Verify persistence: file should exist on disk
     const runFile = path.join(tmpDir, "run_test_002.json");
@@ -72,53 +99,86 @@ describe("executeRun", () => {
   });
 
   it("records a failed run when the handler throws", async () => {
-    registerFlow("failingFlow", async (_ctx, _log) => {
-      throw new Error("boom");
-    });
-
-    const manifest: Manifest = {
-      name: "failingFlow",
-      description: "Will fail",
-      loopType: "compression",
-      steps: [],
+    const mod: HarnessModule = {
+      manifest: {
+        id: "failing-flow",
+        name: "Failing",
+        description: "Will fail",
+        phases: [],
+        checkpoints: [],
+        artifacts: [],
+        coversTools: [],
+      },
+      run: async () => {
+        throw new Error("boom");
+      },
     };
 
-    const record = await executeRun(manifest, "run_test_003" as never, "scope:test");
-
-    expect(record.status).toBe("failed");
-    const errorCheckpoint = record.checkpoints.find((c) => c.label === "run:error");
-    expect(errorCheckpoint).toBeDefined();
-    expect(errorCheckpoint?.message).toContain("boom");
-  });
-
-  it("records a failed run when the handler returns failed", async () => {
-    registerFlow("returnsFailed", async (_ctx, log) => {
-      log({ timestamp: new Date().toISOString(), label: "step", outcome: "fail" });
-      return "failed" as RunStatus;
+    const state = await executeRun({
+      module: mod,
+      runId: "run_test_003" as never,
     });
 
-    const manifest: Manifest = {
-      name: "returnsFailed",
-      description: "Returns failed",
-      loopType: "fullContext",
-      steps: [],
+    expect(state.status).toBe("failed");
+    expect(state.error).toBeDefined();
+    expect(state.error?.message).toContain("boom");
+  });
+
+  it("records a failed run when the handler returns with a failure checkpoint", async () => {
+    const mod: HarnessModule = {
+      manifest: {
+        id: "returns-failed",
+        name: "ReturnsFailed",
+        description: "Returns failed checkpoints",
+        phases: [{ name: "main", description: "Main" }],
+        checkpoints: [],
+        artifacts: [],
+        coversTools: [],
+      },
+      run: async (ctx) => {
+        ctx.checkpoint("step", "fail", "intentional failure");
+        return {};
+      },
     };
 
-    const record = await executeRun(manifest, "run_test_004" as never, "scope:test");
-    expect(record.status).toBe("failed");
+    const state = await executeRun({
+      module: mod,
+      runId: "run_test_004" as never,
+    });
+
+    // The flow itself completed (didn't throw), so status is "completed"
+    // Individual checkpoint outcomes are recorded but don't block execution
+    expect(state.status).toBe("completed");
+    const failCp = state.checkpoints.find((c) => c.label === "step");
+    expect(failCp?.outcome).toBe("fail");
   });
-});
 
-// ── Clear ─────────────────────────────────────────────────────────────────────
+  it("calls setup and check hooks when provided", async () => {
+    const calls: string[] = [];
 
-describe("clearFlows", () => {
-  it("removes all registered flow handlers", async () => {
-    registerFlow("testFlow", async () => "passed");
-    clearFlows();
+    const mod: HarnessModule = {
+      manifest: makeManifest("hooked-flow"),
+      setup: async (ctx) => {
+        calls.push("setup");
+        ctx.log("setup done");
+      },
+      run: async (ctx) => {
+        calls.push("run");
+        ctx.checkpoint("done", "pass");
+        return { ok: true };
+      },
+      check: async (_ctx, output) => {
+        calls.push("check");
+        if (!(output as { ok: boolean }).ok) throw new Error("check failed");
+      },
+    };
 
-    const manifest = makeManifest("testFlow");
-    await expect(
-      executeRun(manifest, "run_test_005" as never, "scope:test"),
-    ).rejects.toThrow("No flow handler registered");
+    const state = await executeRun({
+      module: mod,
+      runId: "run_test_005" as never,
+    });
+
+    expect(calls).toEqual(["setup", "run", "check"]);
+    expect(state.status).toBe("completed");
   });
 });

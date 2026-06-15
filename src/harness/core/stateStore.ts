@@ -1,16 +1,16 @@
 /**
  * Run State Store
  *
- * Persists RunRecords to the filesystem under the runs/ directory.
+ * Persists RunState records to the filesystem under the runs/ directory.
  * Each run is stored as a JSON file keyed by RunId.
- * Supports create, read, list, and status-transition operations.
+ * Supports create, read, update, list, and status-transition operations.
  *
  * PRD §34: Run 执行记录持久化到 runs/ 目录。
  */
 
 import * as fs from "node:fs";
 import * as path from "node:path";
-import type { RunId, RunRecord, RunStatus } from "./types.js";
+import type { RunId, RunState, RunStatus } from "./types.js";
 import { RUN_STATUS_TRANSITIONS } from "./types.js";
 import { resolveRunsDir } from "../utils/runPaths.js";
 
@@ -38,21 +38,21 @@ export function runFilePath(runId: RunId): string {
 
 // ── CRUD ──────────────────────────────────────────────────────────────────────
 
-/** Save a RunRecord to disk. Creates the runs/ directory if needed. */
-export function saveRun(record: RunRecord): void {
+/** Save a RunState to disk. Creates the runs/ directory if needed. */
+export function saveRun(state: RunState): void {
   if (!fs.existsSync(runsDir)) {
     fs.mkdirSync(runsDir, { recursive: true });
   }
-  const filePath = runFilePath(record.runId);
-  fs.writeFileSync(filePath, JSON.stringify(record, null, 2), "utf-8");
+  const filePath = runFilePath(state.runId);
+  fs.writeFileSync(filePath, JSON.stringify(state, null, 2), "utf-8");
 }
 
-/** Load a RunRecord from disk. Returns undefined if not found. */
-export function loadRun(runId: RunId): RunRecord | undefined {
+/** Load a RunState from disk. Returns undefined if not found. */
+export function loadRun(runId: RunId): RunState | undefined {
   const filePath = runFilePath(runId);
   if (!fs.existsSync(filePath)) return undefined;
   const raw = fs.readFileSync(filePath, "utf-8");
-  return JSON.parse(raw) as RunRecord;
+  return JSON.parse(raw) as RunState;
 }
 
 /** List all RunIds in the runs directory. */
@@ -68,27 +68,28 @@ export function listRuns(): RunId[] {
 // ── Status Transitions ────────────────────────────────────────────────────────
 
 /** Transition a run to a new status, validating the transition. */
-export function transitionStatus(runId: RunId, newStatus: RunStatus): RunRecord {
-  const record = loadRun(runId);
-  if (!record) {
+export function transitionStatus(runId: RunId, newStatus: RunStatus): RunState {
+  const state = loadRun(runId);
+  if (!state) {
     throw new Error(`Run "${runId}" not found.`);
   }
 
-  const allowed = RUN_STATUS_TRANSITIONS[record.status];
+  const allowed = RUN_STATUS_TRANSITIONS[state.status];
   if (!allowed.includes(newStatus)) {
     throw new Error(
-      `Invalid status transition: "${record.status}" -> "${newStatus}". ` +
+      `Invalid status transition: "${state.status}" -> "${newStatus}". ` +
         `Allowed: [${allowed.join(", ")}]`,
     );
   }
 
-  record.status = newStatus;
-  if (newStatus === "passed" || newStatus === "failed" || newStatus === "aborted") {
-    record.completedAt = new Date().toISOString();
+  state.status = newStatus;
+  if (newStatus === "failed" || newStatus === "completed") {
+    state.completedAt = new Date().toISOString();
   }
+  state.updatedAt = new Date().toISOString();
 
-  saveRun(record);
-  return record;
+  saveRun(state);
+  return state;
 }
 
 // ── Delete ────────────────────────────────────────────────────────────────────
