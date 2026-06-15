@@ -93,9 +93,9 @@ describe("executeRun", () => {
     expect(state.checkpoints.length).toBeGreaterThanOrEqual(3);
     expect(state.completedAt).toBeDefined();
 
-    // Verify persistence: file should exist on disk
-    const runFile = path.join(tmpDir, "run_test_002.json");
-    expect(fs.existsSync(runFile)).toBe(true);
+    // Verify persistence: state.json should exist in the run directory
+    const stateFile = path.join(tmpDir, "run_test_002", "state.json");
+    expect(fs.existsSync(stateFile)).toBe(true);
   });
 
   it("records a failed run when the handler throws", async () => {

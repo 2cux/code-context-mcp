@@ -1,14 +1,24 @@
 /**
  * Run Path Utilities
  *
- * Resolves filesystem paths for run records, artifacts, and the
- * .harness/ configuration directory.
+ * Resolves filesystem paths for run directories, state files, event logs,
+ * and the .harness/ configuration directory.
  *
  * PRD §34: Run 路径解析工具。
+ *
+ * Directory structure per run:
+ *   runs/<run-id>/
+ *     state.json
+ *     input.json
+ *     output.json
+ *     logs.jsonl
+ *     checkpoints.jsonl
+ *     artifacts/
  */
 
 import * as path from "node:path";
 import * as fs from "node:fs";
+import type { RunId } from "../core/types.js";
 
 // ── Directory Resolution ──────────────────────────────────────────────────────
 
@@ -38,16 +48,47 @@ export function resolveHarnessDir(projectRoot?: string): string {
   return path.join(root, ".harness");
 }
 
-// ── Path Builders ─────────────────────────────────────────────────────────────
+// ── Run Directory ─────────────────────────────────────────────────────────────
 
-/** Build the file path for a run record JSON file. */
-export function runRecordPath(runsDir: string, runId: string): string {
-  return path.join(runsDir, `${runId}.json`);
+/** Build the directory path for a given run. */
+export function runDirPath(runsDir: string, runId: RunId): string {
+  return path.join(runsDir, runId);
 }
 
-/** Build the directory path for a run's artifacts. */
-export function runArtifactDirPath(runsDir: string, runId: string): string {
-  return path.join(runsDir, runId);
+// ── Core State Files ──────────────────────────────────────────────────────────
+
+/** Build the path for a run's state.json file. */
+export function stateJsonPath(runsDir: string, runId: RunId): string {
+  return path.join(runsDir, runId, "state.json");
+}
+
+/** Build the path for a run's input.json file. */
+export function inputJsonPath(runsDir: string, runId: RunId): string {
+  return path.join(runsDir, runId, "input.json");
+}
+
+/** Build the path for a run's output.json file. */
+export function outputJsonPath(runsDir: string, runId: RunId): string {
+  return path.join(runsDir, runId, "output.json");
+}
+
+// ── Event Log Files ───────────────────────────────────────────────────────────
+
+/** Build the path for a run's logs.jsonl file. */
+export function logsJsonlPath(runsDir: string, runId: RunId): string {
+  return path.join(runsDir, runId, "logs.jsonl");
+}
+
+/** Build the path for a run's checkpoints.jsonl file. */
+export function checkpointsJsonlPath(runsDir: string, runId: RunId): string {
+  return path.join(runsDir, runId, "checkpoints.jsonl");
+}
+
+// ── Artifacts ─────────────────────────────────────────────────────────────────
+
+/** Build the directory path for a run's artifacts/ subdirectory. */
+export function artifactsDirPath(runsDir: string, runId: RunId): string {
+  return path.join(runsDir, runId, "artifacts");
 }
 
 // ── Directory Setup ───────────────────────────────────────────────────────────

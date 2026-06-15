@@ -1,7 +1,7 @@
 /**
  * Harness Runner
  *
- * Executes a HarnessModule as a Run: creates RunState, invokes
+ * Executes a HarnessModule as a Run: creates the run directory, invokes
  * setup → run → check, collects checkpoints, transitions status,
  * and persists the final state.
  *
@@ -10,10 +10,17 @@
  * 不提供 getProvider()，暂不做 ProviderRegistry。
  */
 
-import type { HarnessManifest, HarnessModule, RunId, RunState, RunStatus } from "./types.js";
-import type { HarnessContextImpl } from "./context.js";
+import type { HarnessModule, RunId, RunState } from "./types.js";
+import type { TransitionSnapshot } from "./stateStore.js";
 import { createHarnessContext } from "./context.js";
-import { saveRun } from "./stateStore.js";
+import {
+  createRun,
+  markRunning,
+  writeOutput,
+  markCompleted,
+  markFailed,
+} from "./stateStore.js";
+import { recordCompleted, recordError } from "./reporter.js";
 import { serializeError } from "../utils/serializeError.js";
 
 // ── Module Registry ──────────────────────────────────────────────────────────
@@ -68,17 +75,21 @@ export interface ExecuteOptions {
  * Execute a HarnessModule as a run.
  *
  * Lifecycle:
- *   1. Create RunState (status: created)
- *   2. Transition to running
+ *   1. Create run directory with input.json and initial state.json
+ *   2. Transition to running (validated)
  *   3. Call module.setup() (if provided)
  *   4. Call module.run()
  *   5. Call module.check() (if provided)
- *   6. Transition to completed or failed
- *   7. Persist final RunState
+ *   6. Transition to completed or failed (single write with snapshot)
  */
 export async function executeRun(opts: ExecuteOptions): Promise<RunState> {
   const { module: mod, runId, input = {}, initialPhase } = opts;
   const manifest = mod.manifest;
+  const startPhase = initialPhase ?? manifest.phases[0]?.name;
+
+  // ── Create run directory and initial state ─────────────────────────────────
+
+  createRun(runId, manifest.id, input, startPhase);
 
   // ── Create HarnessContext ──────────────────────────────────────────────────
 
@@ -86,33 +97,15 @@ export async function executeRun(opts: ExecuteOptions): Promise<RunState> {
     runId,
     input,
     manifest,
-    initialPhase,
+    initialPhase: startPhase,
   });
 
-  // ── Initialize RunState ────────────────────────────────────────────────────
+  // ── Transition to running (validated) ──────────────────────────────────────
 
-  const now = new Date().toISOString();
-  const state: RunState = {
-    runId,
-    moduleId: manifest.id,
-    status: "created",
-    currentPhase: initialPhase ?? manifest.phases[0]?.name,
-    input,
-    artifacts: [],
-    checkpoints: [],
-    createdAt: now,
-    updatedAt: now,
-  };
+  markRunning(runId);
 
-  saveRun(state);
-
-  // ── Transition to running ──────────────────────────────────────────────────
-
-  state.status = "running";
-  state.updatedAt = new Date().toISOString();
-  saveRun(state);
-
-  // Log run:start in a system phase, before any business phase
+  // Log run:start using an internal lifecycle phase ("system" is special-cased
+  // by HarnessContextImpl to skip manifest-declaration validation).
   ctx.phase("system");
   ctx.checkpoint("run:start", "pass", `module: ${manifest.id}`);
 
@@ -121,7 +114,7 @@ export async function executeRun(opts: ExecuteOptions): Promise<RunState> {
   let output: unknown;
 
   try {
-    // Setup phase
+    // Setup phase — "setup" is a lifecycle phase, also special-cased
     if (mod.setup) {
       ctx.phase("setup");
       ctx.log("Running setup hook");
@@ -132,9 +125,11 @@ export async function executeRun(opts: ExecuteOptions): Promise<RunState> {
     // Run phase — execute the closed loop
     ctx.phase(manifest.phases[0]?.name ?? "run");
     output = await mod.run(ctx);
-    state.output = output;
 
-    // Check phase — optional post-run validation
+    // Persist output
+    writeOutput(runId, output);
+
+    // Check phase — "check" is a lifecycle phase, also special-cased
     if (mod.check) {
       ctx.phase("check");
       ctx.log("Running check hook");
@@ -142,36 +137,47 @@ export async function executeRun(opts: ExecuteOptions): Promise<RunState> {
       ctx.checkpoint("run:check", "pass");
     }
 
-    state.status = "completed";
+    // ── Finalize: Completed (single write) ───────────────────────────────────
+
+    ctx.checkpoint("run:completed", "pass", `runId: ${runId}`);
+
+    const snap = ctx.snapshot();
+    const transitionSnap: TransitionSnapshot = {
+      currentPhase: snap.currentPhase,
+      checkpoints: [...snap.checkpoints],
+      artifacts: [...snap.artifacts],
+      output,
+    };
+    const final = markCompleted(runId, transitionSnap);
+
+    // Record completion event
+    recordCompleted(runId);
+
+    return final;
   } catch (err) {
-    state.status = "failed";
-    state.error = serializeError(err);
+    // ── Finalize: Failed (single write) ──────────────────────────────────────
+
+    const serialized = serializeError(err);
     ctx.checkpoint(
       "run:error",
       "fail",
       err instanceof Error ? err.message : String(err),
     );
+    ctx.checkpoint("run:failed", "fail", `runId: ${runId}`);
+
+    // Record error event
+    recordError(runId, serialized);
+
+    const snap = ctx.snapshot();
+    const transitionSnap: TransitionSnapshot = {
+      currentPhase: snap.currentPhase,
+      checkpoints: [...snap.checkpoints],
+      artifacts: [...snap.artifacts],
+    };
+    const final = markFailed(runId, serialized, transitionSnap);
+
+    return final;
   }
-
-  // ── Finalize ───────────────────────────────────────────────────────────────
-
-  // Log terminal checkpoint first so its timestamp ≤ completedAt
-  ctx.checkpoint(
-    `run:${state.status}`,
-    state.status === "completed" ? "pass" : "fail",
-    `runId: ${runId}`,
-  );
-
-  // Snapshot AFTER the final checkpoint so it's included
-  const snap = ctx.snapshot();
-  state.currentPhase = snap.currentPhase;
-  state.checkpoints = [...snap.checkpoints];
-  state.artifacts = [...snap.artifacts];
-  state.completedAt = new Date().toISOString();
-  state.updatedAt = state.completedAt;
-
-  saveRun(state);
-  return state;
 }
 
 // ── Legacy Compatibility ─────────────────────────────────────────────────────
