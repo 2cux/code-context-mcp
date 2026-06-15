@@ -19,6 +19,7 @@ import { compressSafely, type SafetyCompressResult } from "../../safety/safetyLa
 import type { ServerContext } from "../server.js";
 import { CompressedStore, type ContentType } from "../../compressed/compressedStore.js";
 import { OriginalStore } from "../../originals/originalStore.js";
+import { FailureStore } from "../../failure/failureStore.js";
 import { contentHash } from "../../utils/hash.js";
 import { detectContentType } from "../../router/contentRouter.js";
 import { resolveScope, toScopeRecord } from "../../scope/resolveScope.js";
@@ -311,6 +312,74 @@ export async function handleCompressContext(
   // Fold in safety warnings
   for (const w of safetyResult.safetyWarnings) {
     warnings.push(w);
+  }
+
+  // ---- Failure Learning (§33.2): record compression failures ----
+  const failureStore = new FailureStore(db);
+  try {
+    if (output.failed) {
+      const reason = output.errorReason ?? "";
+      if (reason.includes("timeout")) {
+        failureStore.record({
+          scopeId,
+          operation: "compress",
+          eventType: "compression_timeout",
+          contentType,
+          strategy: output.strategy || strategy,
+          errorReason: output.errorReason,
+          metadata: { maxTokens, timeoutMs },
+        });
+      } else {
+        failureStore.record({
+          scopeId,
+          operation: "compress",
+          eventType: "compression_error",
+          contentType,
+          strategy: output.strategy || strategy,
+          errorReason: output.errorReason,
+          metadata: { maxTokens, timeoutMs },
+        });
+      }
+    }
+
+    if (
+      safetyResult.safetyActions.includes("size_rejected") ||
+      safetyResult.safetyActions.includes("size_truncated")
+    ) {
+      failureStore.record({
+        scopeId,
+        operation: "compress",
+        eventType: "oversized_input",
+        contentType,
+        strategy: output.strategy || strategy,
+        errorReason: "input_exceeded_size_limit",
+        metadata: {
+          contentLength: content.length,
+          safetyActions: safetyResult.safetyActions,
+        },
+      });
+    }
+
+    if (
+      !output.failed &&
+      output.compressionRatio < 0.05
+    ) {
+      failureStore.record({
+        scopeId,
+        operation: "compress",
+        eventType: "poor_compression_ratio",
+        contentType,
+        strategy: output.strategy || strategy,
+        errorReason: `compression_ratio_${Math.round(output.compressionRatio * 100)}pct`,
+        metadata: {
+          tokensBefore: output.tokensBefore,
+          tokensAfter: output.tokensAfter,
+          compressionRatio: output.compressionRatio,
+        },
+      });
+    }
+  } catch {
+    // Failure recording is non-blocking
   }
 
   // ---- 12.2.2: Persist compressed record (CompressedContextRecord) ----

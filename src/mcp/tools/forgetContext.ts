@@ -22,6 +22,7 @@ import type { Database } from "sql.js";
 import type { ServerContext } from "../server.js";
 import { MemoryService } from "../../memory/memoryService.js";
 import { MemoryFtsIndex } from "../../memory/memoryFts.js";
+import { FailureStore } from "../../failure/failureStore.js";
 import { resolveScope } from "../../scope/resolveScope.js";
 import { runStmt } from "../../storage/db.js";
 import type { ForgetMode } from "../../memory/types.js";
@@ -207,6 +208,26 @@ export async function handleForgetContext(
         ],
         isError: true,
       };
+    }
+
+    // ---- Failure Learning (§33.3): record recall_wrong_memory AFTER successful forget ----
+    // failure_events uses soft references (no FK), so recording after hard_delete is safe.
+    try {
+      const failureStore = new FailureStore(db);
+      failureStore.record({
+        scopeId,
+        operation: "recall",
+        eventType: "recall_wrong_memory",
+        memoryId: result.memoryId,
+        errorReason: `forgotten_via_${mode}`,
+        metadata: {
+          forgetMode: mode,
+          previousStatus: result.previousStatus,
+          reason,
+        },
+      });
+    } catch {
+      // Non-blocking
     }
 
     // Build response per PRD §11.8

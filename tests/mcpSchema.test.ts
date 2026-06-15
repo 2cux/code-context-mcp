@@ -2,7 +2,7 @@
  * MCP Tool Schema Validation Tests
  *
  * Covers:
- *   - All 10 tool definitions exist with correct structure
+ *   - All 13 tool definitions exist with correct structure
  *   - Each tool has name, description, inputSchema
  *   - inputSchema has type: "object" and properties
  *   - Required fields are declared correctly
@@ -29,7 +29,10 @@ const EXPECTED_TOOLS = [
   "remember_context",
   "recall_context",
   "forget_context",
+  "analyze_context",
   "list_context",
+  "list_failures",
+  "failure_stats",
 ];
 
 // Valid JSON Schema types
@@ -42,8 +45,8 @@ const VALID_TYPES = new Set([
 // ---------------------------------------------------------------------------
 
 describe("Tool Definitions Structure", () => {
-  it("has exactly 10 tools", () => {
-    expect(TOOL_DEFINITIONS).toHaveLength(10);
+  it("has exactly 13 tools", () => {
+    expect(TOOL_DEFINITIONS).toHaveLength(13);
   });
 
   it("has all expected tools", () => {

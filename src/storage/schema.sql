@@ -184,3 +184,38 @@ CREATE TABLE IF NOT EXISTS receipts (
 CREATE INDEX IF NOT EXISTS idx_rcp_scope     ON receipts(scope_id);
 CREATE INDEX IF NOT EXISTS idx_rcp_operation ON receipts(operation);
 CREATE INDEX IF NOT EXISTS idx_rcp_time      ON receipts(timestamp);
+
+-- ---------------------------------------------------------------------------
+-- 8. Failure Events — Failure Learning (§33)
+--    Records compression failures, recall misses, and over-retrieval signals
+--    for strategy optimization over time.
+-- ---------------------------------------------------------------------------
+CREATE TABLE IF NOT EXISTS failure_events (
+    id            TEXT PRIMARY KEY,
+    scope_id      TEXT NOT NULL,
+    operation     TEXT NOT NULL CHECK (operation IN (
+                      'compress', 'recall', 'retrieve_original'
+                  )),
+    content_type  TEXT,
+    strategy      TEXT,
+    ccr_id        TEXT,
+    memory_id     TEXT,
+    error_reason  TEXT,
+    event_type    TEXT NOT NULL CHECK (event_type IN (
+                      'compression_timeout', 'compression_error',
+                      'oversized_input', 'poor_compression_ratio',
+                      'recall_no_hit', 'recall_low_confidence',
+                      'recall_wrong_memory', 'high_retrieve_count'
+                  )),
+    created_at    TEXT NOT NULL,
+    metadata      TEXT  -- JSON string
+    -- Note: ccr_id and memory_id are soft references (no FK constraints).
+    -- Failure events are diagnostic data; enforcing referential integrity
+    -- here would break cleanup of parent rows in tests and maintenance ops.
+);
+
+CREATE INDEX IF NOT EXISTS idx_fev_scope     ON failure_events(scope_id);
+CREATE INDEX IF NOT EXISTS idx_fev_event     ON failure_events(event_type);
+CREATE INDEX IF NOT EXISTS idx_fev_operation ON failure_events(operation);
+CREATE INDEX IF NOT EXISTS idx_fev_created   ON failure_events(created_at);
+CREATE INDEX IF NOT EXISTS idx_fev_ccr       ON failure_events(ccr_id);

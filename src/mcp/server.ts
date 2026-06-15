@@ -19,6 +19,9 @@ import { handleRememberContext } from "./tools/rememberContext.js";
 import { handleRecallContext } from "./tools/recallContext.js";
 import { handleForgetContext } from "./tools/forgetContext.js";
 import { handleListContext } from "./tools/listContext.js";
+import { handleAnalyzeContext } from "./tools/analyzeContext.js";
+import { handleListFailures } from "./tools/listFailures.js";
+import { handleFailureStats } from "./tools/failureStats.js";
 import { TOOL_DEFINITIONS } from "./toolSchemas.js";
 
 export interface ServerContext {
@@ -63,6 +66,9 @@ export async function startServer(): Promise<void> {
     recall_context: (args) => handleRecallContext(ctx, args),
     forget_context: (args) => handleForgetContext(ctx, args),
     list_context: (args) => handleListContext(ctx, args),
+    analyze_context: (args) => handleAnalyzeContext(ctx, args),
+    list_failures: (args) => handleListFailures(ctx, args),
+    failure_stats: (args) => handleFailureStats(ctx, args),
   };
 
   server.setRequestHandler(ListToolsRequestSchema, async () => ({

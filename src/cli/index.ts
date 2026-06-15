@@ -35,6 +35,8 @@ import {
   runCacheClear,
   runCacheList,
   runReceipts,
+  runFailuresList,
+  runFailuresStats,
 } from "./commands.js";
 import type { CliResult } from "./commands.js";
 
@@ -111,6 +113,12 @@ Commands:
   cache list                            List cache entries
       --limit <n>                       Max records (default: 20)
       --offset <n>                      Pagination offset
+  failures list                         List failure events (§33)
+      --event-type <type>               Filter by event type
+      --operation <op>                  Filter by operation
+      --limit <n>                       Max records (default: 20)
+      --offset <n>                      Pagination offset
+  failures stats                        Show failure event statistics
 
 Global flags:
   --help, -h                           Show this help
@@ -133,7 +141,10 @@ Examples:
   code-context forget mem_01HXYZ --mode supersede --by mem_02NEW
   code-context profile --static
   code-context profile --dynamic --all
-  code-context receipts --operation remember --limit 10`;
+  code-context receipts --operation remember --limit 10
+  code-context failures list --event-type compression_timeout --limit 10
+  code-context failures list --operation recall
+  code-context failures stats`;
 
 // ---------------------------------------------------------------------------
 // Arg parsing helpers
@@ -589,6 +600,56 @@ async function main(): Promise<void> {
                 `  stats   Show cache statistics\n` +
                 `  clear   Clear all cached compression entries\n` +
                 `  list    List cache entries\n` +
+                `Run "code-context --help" for usage.`,
+            );
+          }
+          process.exit(1);
+        }
+      }
+      break;
+    }
+
+    // ------------------------------------------------------------------
+    // failures
+    // ------------------------------------------------------------------
+    case "failures": {
+      const failSub = cmdArgs[0];
+      const failRest = cmdArgs.slice(1);
+
+      switch (failSub) {
+        case "list": {
+          const eventTypeStr = getOpt(failRest, "event-type");
+          const operationStr = getOpt(failRest, "operation");
+          const limitStr = getOpt(failRest, "limit");
+          const offsetStr = getOpt(failRest, "offset");
+
+          const limit = limitStr ? parseInt(limitStr, 10) : undefined;
+          const offset = offsetStr ? parseInt(offsetStr, 10) : undefined;
+
+          result = await runFailuresList({
+            eventType: eventTypeStr,
+            operation: operationStr,
+            limit: limit && !Number.isNaN(limit) ? Math.max(1, Math.min(limit, 100)) : undefined,
+            offset: offset && !Number.isNaN(offset) ? Math.max(0, offset) : undefined,
+          });
+          break;
+        }
+        case "stats": {
+          result = await runFailuresStats();
+          break;
+        }
+        default: {
+          if (failSub) {
+            outputError(
+              `Unknown failures subcommand: ${failSub}\n` +
+                `Available: list, stats\n` +
+                `Run "code-context --help" for usage.`,
+            );
+          } else {
+            outputError(
+              `Usage: code-context failures <subcommand>\n` +
+                `  list    List failure events\n` +
+                `  stats   Show failure event statistics\n` +
                 `Run "code-context --help" for usage.`,
             );
           }

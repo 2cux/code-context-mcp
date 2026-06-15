@@ -24,6 +24,7 @@ import { RecallEngine } from "../../memory/recallEngine.js";
 import { MemoryFtsIndex } from "../../memory/memoryFts.js";
 import { ProfileService } from "../../profile/profileService.js";
 import { OriginalStore } from "../../originals/originalStore.js";
+import { FailureStore } from "../../failure/failureStore.js";
 import { resolveScope } from "../../scope/resolveScope.js";
 import { runStmt } from "../../storage/db.js";
 import type {
@@ -295,6 +296,39 @@ export async function handleRecallContext(
     }));
 
     memoryIds = memories.map((m) => m.id);
+
+    // ---- Failure Learning (§33.3): record recall failures ----
+    const failureStore = new FailureStore(db);
+    try {
+      if (searchResults.length === 0) {
+        failureStore.record({
+          scopeId,
+          operation: "recall",
+          eventType: "recall_no_hit",
+          errorReason: "no_results_for_query",
+          metadata: { query, types, status },
+        });
+      } else {
+        const allLowConfidence = searchResults.every(
+          (r) => (r.finalScore ?? r.score) < 0.3,
+        );
+        if (allLowConfidence) {
+          failureStore.record({
+            scopeId,
+            operation: "recall",
+            eventType: "recall_low_confidence",
+            errorReason: "all_results_below_confidence_threshold",
+            metadata: {
+              query,
+              resultCount: searchResults.length,
+              maxScore: Math.max(...searchResults.map((r) => r.finalScore ?? r.score)),
+            },
+          });
+        }
+      }
+    } catch {
+      // Non-blocking
+    }
 
     // 20.2 — Profile merge
     if (includeProfile) {

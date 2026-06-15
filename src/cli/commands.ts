@@ -30,6 +30,8 @@ import { MemoryService } from "../memory/memoryService.js";
 import { MemoryFtsIndex } from "../memory/memoryFts.js";
 import { RecallEngine } from "../memory/recallEngine.js";
 import { ProfileService } from "../profile/profileService.js";
+import { FailureStore, HIGH_RETRIEVE_THRESHOLD } from "../failure/failureStore.js";
+import type { FailureEventType, FailureOperation } from "../failure/failureStore.js";
 import type { ContentType } from "../compressed/compressedStore.js";
 import type { MemoryType, MemoryStatus } from "../memory/types.js";
 import type { ForgetMode } from "../memory/types.js";
@@ -378,6 +380,79 @@ export async function runCompress(filePath: string, opts: CompressOpts): Promise
     const output = safetyResult.output;
     const warnings = [...safetyResult.safetyWarnings, ...output.warnings];
 
+    // ---- Failure Learning (§33.2): record compression failures ----
+    const failureStore = new FailureStore(db);
+    try {
+      if (output.failed) {
+        const reason = output.errorReason ?? "";
+        if (reason.includes("timeout")) {
+          failureStore.record({
+            scopeId: scope.scopeId,
+            operation: "compress",
+            eventType: "compression_timeout",
+            contentType,
+            strategy: output.strategy || strategy,
+            errorReason: output.errorReason,
+            metadata: { source: filePath, maxTokens, timeoutMs },
+          });
+        } else {
+          failureStore.record({
+            scopeId: scope.scopeId,
+            operation: "compress",
+            eventType: "compression_error",
+            contentType,
+            strategy: output.strategy || strategy,
+            errorReason: output.errorReason,
+            metadata: { source: filePath, maxTokens, timeoutMs },
+          });
+        }
+      }
+
+      // Check for oversized input signal
+      if (
+        safetyResult.safetyActions.includes("size_rejected") ||
+        safetyResult.safetyActions.includes("size_truncated")
+      ) {
+        failureStore.record({
+          scopeId: scope.scopeId,
+          operation: "compress",
+          eventType: "oversized_input",
+          contentType,
+          strategy: output.strategy || strategy,
+          errorReason: "input_exceeded_size_limit",
+          metadata: {
+            source: filePath,
+            contentLength: content.length,
+            safetyActions: safetyResult.safetyActions,
+          },
+        });
+      }
+
+      // Check for poor compression ratio
+      if (
+        !output.failed &&
+        output.compressionRatio < 0.05
+      ) {
+        failureStore.record({
+          scopeId: scope.scopeId,
+          operation: "compress",
+          eventType: "poor_compression_ratio",
+          contentType,
+          strategy: output.strategy || strategy,
+          errorReason: `compression_ratio_${Math.round(output.compressionRatio * 100)}pct`,
+          metadata: {
+            source: filePath,
+            tokensBefore: output.tokensBefore,
+            tokensAfter: output.tokensAfter,
+            compressionRatio: output.compressionRatio,
+          },
+        });
+      }
+    } catch {
+      // Failure recording is non-blocking — already handled inside record(),
+      // but double-wrap for safety.
+    }
+
     // Persist CCR
     let savedRecord = null;
     try {
@@ -559,6 +634,31 @@ export async function runRetrieve(originalRef: string, opts: RetrieveOpts): Prom
       originalRefs: [originalRef],
       retrievedOriginal: true,
     });
+
+    // ---- Failure Learning (§33.4): check high_retrieve_count ----
+    try {
+      const failureStore = new FailureStore(db);
+      const retrieveCount = failureStore.getRetrieveCount(result.ccrId);
+      if (
+        retrieveCount >= HIGH_RETRIEVE_THRESHOLD &&
+        !failureStore.hasRecentHighRetrieveEvent(result.ccrId, scope.scopeId)
+      ) {
+        failureStore.record({
+          scopeId: scope.scopeId,
+          operation: "retrieve_original",
+          eventType: "high_retrieve_count",
+          ccrId: result.ccrId,
+          errorReason: `retrieved_${retrieveCount}_times`,
+          metadata: {
+            retrieveCount,
+            originalRef,
+            threshold: HIGH_RETRIEVE_THRESHOLD,
+          },
+        });
+      }
+    } catch {
+      // Non-blocking
+    }
 
     closeDb();
     return ok(result);
@@ -803,6 +903,26 @@ export async function runForget(opts: ForgetOpts): Promise<CliResult> {
       );
     }
 
+    // ---- Failure Learning (§33.3): record recall_wrong_memory AFTER successful forget ----
+    // failure_events uses soft references (no FK), so recording after hard_delete is safe.
+    try {
+      const failureStore = new FailureStore(db);
+      failureStore.record({
+        scopeId: scope.scopeId,
+        operation: "recall",
+        eventType: "recall_wrong_memory",
+        memoryId: result.memoryId,
+        errorReason: `forgotten_via_${mode}`,
+        metadata: {
+          forgetMode: mode,
+          previousStatus: result.previousStatus,
+          reason: opts.reason,
+        },
+      });
+    } catch {
+      // Non-blocking
+    }
+
     closeDb();
 
     return ok({
@@ -884,6 +1004,40 @@ export async function runRecall(query: string, opts: RecallOpts): Promise<CliRes
       limit,
       includeCanExpand: opts.includeRelatedCCRs ?? true,
     });
+
+    // ---- Failure Learning (§33.3): record recall failures ----
+    const failureStore = new FailureStore(db);
+    try {
+      if (results.length === 0) {
+        failureStore.record({
+          scopeId: scope.scopeId,
+          operation: "recall",
+          eventType: "recall_no_hit",
+          errorReason: `no_results_for_query`,
+          metadata: { query: query.trim(), types: opts.types, status: opts.status },
+        });
+      } else {
+        // Check for low confidence across all results
+        const allLowConfidence = results.every(
+          (r) => (r.finalScore ?? r.score) < 0.3,
+        );
+        if (allLowConfidence) {
+          failureStore.record({
+            scopeId: scope.scopeId,
+            operation: "recall",
+            eventType: "recall_low_confidence",
+            errorReason: `all_results_below_confidence_threshold`,
+            metadata: {
+              query: query.trim(),
+              resultCount: results.length,
+              maxScore: Math.max(...results.map((r) => r.finalScore ?? r.score)),
+            },
+          });
+        }
+      }
+    } catch {
+      // Non-blocking
+    }
 
     // Get profile if requested
     let profile: { static: unknown[]; dynamic: unknown[] } | undefined;
@@ -1356,6 +1510,111 @@ export async function runReceipts(opts: ReceiptsOpts): Promise<CliResult> {
       limit: opts.limit ?? 20,
       offset: opts.offset ?? 0,
     });
+  } catch (err) {
+    closeDb();
+    return fail(err instanceof Error ? err.message : String(err));
+  }
+}
+
+// ---------------------------------------------------------------------------
+// 17. failures list — list failure events (§33.5)
+// ---------------------------------------------------------------------------
+
+export interface FailuresListOpts {
+  eventType?: string;
+  operation?: string;
+  limit?: number;
+  offset?: number;
+}
+
+const VALID_FAILURE_EVENT_TYPES = new Set([
+  "compression_timeout", "compression_error",
+  "oversized_input", "poor_compression_ratio",
+  "recall_no_hit", "recall_low_confidence",
+  "recall_wrong_memory", "high_retrieve_count",
+]);
+
+const VALID_FAILURE_OPERATIONS = new Set([
+  "compress", "recall", "retrieve_original",
+]);
+
+export async function runFailuresList(opts: FailuresListOpts): Promise<CliResult> {
+  // Validate eventType
+  if (opts.eventType && !VALID_FAILURE_EVENT_TYPES.has(opts.eventType)) {
+    return fail(
+      `Invalid eventType "${opts.eventType}". Valid values: ${Array.from(VALID_FAILURE_EVENT_TYPES).join(", ")}`,
+    );
+  }
+
+  // Validate operation
+  if (opts.operation && !VALID_FAILURE_OPERATIONS.has(opts.operation)) {
+    return fail(
+      `Invalid operation "${opts.operation}". Valid values: ${Array.from(VALID_FAILURE_OPERATIONS).join(", ")}`,
+    );
+  }
+
+  const init = await initDb();
+  if (!init.ok) return fail(init.error);
+
+  try {
+    const db = init.db;
+    const scope = resolveScope();
+    ensureScopeRecord(db);
+
+    const failureStore = new FailureStore(db);
+    const result = failureStore.list({
+      scopeId: scope.scopeId,
+      eventType: opts.eventType as FailureEventType | undefined,
+      operation: opts.operation as FailureOperation | undefined,
+      limit: opts.limit ?? 20,
+      offset: opts.offset ?? 0,
+    });
+
+    closeDb();
+
+    return ok({
+      scopeId: result.scopeId,
+      items: result.items.map((e) => ({
+        id: e.id,
+        operation: e.operation,
+        eventType: e.eventType,
+        contentType: e.contentType,
+        strategy: e.strategy,
+        ccrId: e.ccrId,
+        memoryId: e.memoryId,
+        errorReason: e.errorReason,
+        metadata: e.metadata,
+        createdAt: e.createdAt,
+      })),
+      total: result.total,
+      limit: result.limit,
+      offset: result.offset,
+    });
+  } catch (err) {
+    closeDb();
+    return fail(err instanceof Error ? err.message : String(err));
+  }
+}
+
+// ---------------------------------------------------------------------------
+// 18. failures stats — failure event statistics (§33.5)
+// ---------------------------------------------------------------------------
+
+export async function runFailuresStats(): Promise<CliResult> {
+  const init = await initDb();
+  if (!init.ok) return fail(init.error);
+
+  try {
+    const db = init.db;
+    const scope = resolveScope();
+    ensureScopeRecord(db);
+
+    const failureStore = new FailureStore(db);
+    const stats = failureStore.stats(scope.scopeId);
+
+    closeDb();
+
+    return ok(stats);
   } catch (err) {
     closeDb();
     return fail(err instanceof Error ? err.message : String(err));

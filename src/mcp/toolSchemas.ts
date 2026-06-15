@@ -450,6 +450,56 @@ export const TOOL_DEFINITIONS: Tool[] = [
     },
   },
   {
+    name: "analyze_context",
+    description:
+      "Analyze content and/or query to recommend context management actions. " +
+      "Returns shouldCompress, shouldRecall, shouldSaveMemory, and " +
+      "shouldRetrieveOriginal decisions with confidence scores and " +
+      "human-readable reasons. Also suggests which tools to call next. " +
+      "NOTE: This tool only provides SUGGESTIONS — it does not " +
+      "automatically invoke compress_context, recall_context, or any " +
+      "other tool. The agent decides which actions to take (§32.5).",
+    inputSchema: {
+      type: "object" as const,
+      properties: {
+        content: {
+          type: "string",
+          description:
+            "The raw content to analyze for compression / memory-saving " +
+            "decisions. Required for shouldCompress, shouldSaveMemory, " +
+            "and shouldRetrieveOriginal analysis.",
+        },
+        contentType: {
+          type: "string",
+          description:
+            "Known or expected content type. When omitted, a basic " +
+            "heuristic is used. Valid values: test_output, log, " +
+            "command_output, code, json, markdown, plain_text, " +
+            "rag_chunk, file_summary, conversation_history, unknown.",
+        },
+        query: {
+          type: "string",
+          description:
+            "The user's current query / request. Required for " +
+            "shouldRecall analysis. Also used for shouldSaveMemory " +
+            "to detect task/decision/bug patterns.",
+        },
+        source: {
+          type: "string",
+          description:
+            "Source hint — where the content came from. " +
+            "E.g. 'agent', 'user', 'command_output', 'test_runner', " +
+            "'log_file'. Used to refine compression recommendations.",
+        },
+        metadata: {
+          type: "object",
+          description:
+            "Optional metadata (command, filePath, etc.) for additional signals.",
+        },
+      },
+    },
+  },
+  {
     name: "list_context",
     description:
       "List project memories with filtering, sorting, and pagination. " +
@@ -507,6 +557,69 @@ export const TOOL_DEFINITIONS: Tool[] = [
         },
       },
       required: ["scopeId"],
+    },
+  },
+  {
+    name: "list_failures",
+    description:
+      "List failure events recorded by the Failure Learning system (§33). " +
+      "Returns paginated failure events with optional filtering by eventType " +
+      "(compression_timeout, compression_error, oversized_input, " +
+      "poor_compression_ratio, recall_no_hit, recall_low_confidence, " +
+      "recall_wrong_memory, high_retrieve_count) and operation " +
+      "(compress, recall, retrieve_original). " +
+      "Use this to review what's failing and adjust strategies.",
+    inputSchema: {
+      type: "object" as const,
+      properties: {
+        scopeId: {
+          type: "string",
+          description:
+            "The scopeId from current_scope. " +
+            "When omitted, the scope is auto-resolved from the current directory.",
+        },
+        eventType: {
+          type: "string",
+          description:
+            "Optional filter by event type. " +
+            "Valid values: compression_timeout, compression_error, " +
+            "oversized_input, poor_compression_ratio, recall_no_hit, " +
+            "recall_low_confidence, recall_wrong_memory, high_retrieve_count.",
+        },
+        operation: {
+          type: "string",
+          description:
+            "Optional filter by operation. " +
+            "Valid values: compress, recall, retrieve_original.",
+        },
+        limit: {
+          type: "number",
+          description: "Maximum number of records to return (1-100, default 20).",
+        },
+        offset: {
+          type: "number",
+          description: "Number of records to skip for pagination (default 0).",
+        },
+      },
+    },
+  },
+  {
+    name: "failure_stats",
+    description:
+      "Show failure event statistics for a scope (§33.5). " +
+      "Returns total event count, breakdowns by eventType and operation, " +
+      "recent events (last 24h), and top CCRs by failure count. " +
+      "Use this to identify patterns and prioritize fixes.",
+    inputSchema: {
+      type: "object" as const,
+      properties: {
+        scopeId: {
+          type: "string",
+          description:
+            "The scopeId from current_scope. " +
+            "When omitted, the scope is auto-resolved from the current directory.",
+        },
+      },
     },
   },
 ];

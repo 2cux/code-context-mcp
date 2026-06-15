@@ -31,6 +31,7 @@
 import type { CallToolResult } from "@modelcontextprotocol/sdk/types.js";
 import type { ServerContext } from "../server.js";
 import { OriginalStore } from "../../originals/originalStore.js";
+import { FailureStore, HIGH_RETRIEVE_THRESHOLD } from "../../failure/failureStore.js";
 import { contentHash } from "../../utils/hash.js";
 import { resolveScope, toScopeRecord } from "../../scope/resolveScope.js";
 import { runStmt } from "../../storage/db.js";
@@ -296,6 +297,31 @@ export async function handleRetrieveOriginal(
     originalRefs: [originalRef],
     retrievedOriginal: true,
   });
+
+  // ---- Failure Learning (§33.4): check high_retrieve_count ----
+  try {
+    const failureStore = new FailureStore(db);
+    const retrieveCount = failureStore.getRetrieveCount(result.ccrId);
+    if (
+      retrieveCount >= HIGH_RETRIEVE_THRESHOLD &&
+      !failureStore.hasRecentHighRetrieveEvent(result.ccrId, scopeId)
+    ) {
+      failureStore.record({
+        scopeId,
+        operation: "retrieve_original",
+        eventType: "high_retrieve_count",
+        ccrId: result.ccrId,
+        errorReason: `retrieved_${retrieveCount}_times`,
+        metadata: {
+          retrieveCount,
+          originalRef,
+          threshold: HIGH_RETRIEVE_THRESHOLD,
+        },
+      });
+    }
+  } catch {
+    // Non-blocking
+  }
 
   // ------------------------------------------------------------------
   // §13.2.1-5: Build response
