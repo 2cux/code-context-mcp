@@ -91,3 +91,5 @@ code-context cleanup --originals
 ### Phase 7：演示与作品集包装
 产出：demo repo、fixtures、README screenshots、DEMO.md、演示脚本
 演示：压缩长测试日志、retrieve 原文、保存/recall 项目规则、supersede 旧记忆、repo scope 隔离、receipt 审计
+验收：compress loop 通过、original loop 通过、memory loop 通过、profile loop 通过、audit loop 通过、CLI + MCP acceptance loops 通过、full_acceptance loop 通过
+详见：[14-harness.md](./14-harness.md)

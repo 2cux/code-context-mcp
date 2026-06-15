@@ -37,7 +37,12 @@ export async function handleDeleteOriginal(
 
   // ---- Delete ----
   const store = new OriginalStore(ctx.db);
+  const actualScopeId = store.lookupScope(originalRef);
   const deleted = store.delete(originalRef, scopeId);
+  const errorReason =
+    actualScopeId && actualScopeId !== scopeId
+      ? "scope_mismatch"
+      : "original_not_found_or_scope_mismatch";
 
   // ---- Receipt ----
   const receipt = ctx.receipts.create({
@@ -46,7 +51,7 @@ export async function handleDeleteOriginal(
     inputHash: contentHash(`${scopeId}:${originalRef}`),
     originalRefs: [originalRef],
     failed: !deleted,
-    errorReason: deleted ? undefined : "original_not_found_or_scope_mismatch",
+    errorReason: deleted ? undefined : errorReason,
   });
 
   // ---- Response ----
@@ -59,9 +64,13 @@ export async function handleDeleteOriginal(
             scopeId,
             originalRef,
             deleted: false,
-            error: "original_not_found_or_scope_mismatch",
-            hint: "The original may have already been deleted, or belongs to a different scope.",
+            error: errorReason,
+            hint:
+              actualScopeId && actualScopeId !== scopeId
+                ? `The original belongs to scope "${actualScopeId}", not "${scopeId}".`
+                : "The original may have already been deleted, or belongs to a different scope.",
             receiptId: receipt.id,
+            ...(actualScopeId && actualScopeId !== scopeId ? { actualScopeId } : {}),
           }),
         },
       ],

@@ -5,7 +5,7 @@
 > - `v0.2.0-beta` — Context Compression + Project Memory
 > - `v0.1.0-alpha` — Context Compression only
 >
-> Stable release: `remember_context`, `recall_context`, `forget_context`, `list_context`, `repo_profile` (static/dynamic), `list_receipts`. 775 tests passing. Demo script: [demo-script-v0.2.0-beta.md](./demo-script-v0.2.0-beta.md)
+> Stable release: `current_scope`, `compress_context`, `retrieve_original`, `delete_original`, `cleanup_originals`, `list_compressions`, `remember_context`, `recall_context`, `forget_context`, `list_context`, `analyze_context`, `list_failures`, `failure_stats`. 904 tests passing. Demo script: [demo-script-v0.2.0-beta.md](./demo-script-v0.2.0-beta.md)
 
 > 本文档索引了 `docs/` 下所有 PRD 分篇文件，每篇对应原 PRD.md 的若干连续章节。
 
@@ -24,6 +24,7 @@
 | 11 | [11-performance-cli-and-development.md](./11-performance-cli-and-development.md) | §21–23 | 性能目标表、CLI 命令设计、8 个开发阶段规划（Phase 0–7） |
 | 12 | [12-verification-demo-and-architecture.md](./12-verification-demo-and-architecture.md) | §24–28 | MVP 验收用例（7 个）、READEME 演示场景（5 个）、技术架构图、模块职责、目录结构、文档要求 |
 | 13 | [13-success-criteria-risks-and-conclusion.md](./13-success-criteria-risks-and-conclusion.md) | §29–33 | 4 类成功标准（MVP/V1/用户价值/作品集）、5 类风险分析、不做清单、最小可验证版本、最终结论 |
+| 14 | [14-harness.md](./14-harness.md) | §34 | CodeContext Harness：统一业务闭环执行框架，Manifest + Run + Run Receipt，第一版定位与设计约束 |
 
 ---
 

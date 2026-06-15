@@ -201,7 +201,10 @@ export async function compressSafely(
     // ---- Step 4: Merge chunk results ----
 
     safetyActions.push("chunk_compressed_and_merged");
-    const merged = mergeChunkResults(input, validOutputs, chunkResult.chunks, tokensBefore, safetyWarnings);
+    const merged = ensureNonEmptyOutput(
+      input,
+      mergeChunkResults(input, validOutputs, chunkResult.chunks, tokensBefore, safetyWarnings),
+    );
 
     return {
       output: merged,
@@ -224,12 +227,14 @@ export async function compressSafely(
     return buildFailOpenResult(input, safetyWarnings, safetyActions);
   }
 
-  if (output.failed) {
+  const normalizedOutput = ensureNonEmptyOutput(input, output);
+
+  if (normalizedOutput.failed) {
     safetyActions.push("fail_open");
   }
 
   return {
-    output,
+    output: normalizedOutput,
     safetyWarnings,
     safetyTriggered: safetyActions.length > 0 && !safetyActions.includes("size_ok"),
     safetyActions,
@@ -345,6 +350,22 @@ function mergeChunkResults(
     receiptId,
     warnings,
   };
+}
+
+function ensureNonEmptyOutput(
+  input: CompressionInput,
+  output: CompressionOutput,
+): CompressionOutput {
+  if (output.compressedContent) {
+    return output;
+  }
+
+  const fallback = buildSingleChunkFallback(input, "empty_compression_output");
+  fallback.warnings = [
+    ...output.warnings,
+    "Compression produced empty output; returned original content instead.",
+  ];
+  return fallback;
 }
 
 // ---------------------------------------------------------------------------

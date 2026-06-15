@@ -44,7 +44,7 @@ import type { CliResult } from "./commands.js";
 // Constants
 // ---------------------------------------------------------------------------
 
-const VERSION = "0.1.0";
+const VERSION = "1.0.0";
 
 const HELP_TEXT = `CodeContext MCP CLI v${VERSION}
 

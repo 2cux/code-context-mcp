@@ -223,7 +223,36 @@ export async function handleCompressContext(
   // Check for an existing cached result
   if (cacheKey) {
     const cached = compressedStore.findByCacheKey(cacheKey, scopeId);
-    if (cached) {
+    const cachedOriginalRef = cached?.originalRef;
+    let cachedOriginalUsable =
+      Boolean(cached?.compressedContent) && (
+        !keepOriginal ||
+      (
+        Boolean(cachedOriginalRef) &&
+        Boolean(cached?.canRetrieveOriginal) &&
+        (cachedOriginalRef ? originalStore.exists(cachedOriginalRef, scopeId) : false)
+      ));
+    if (cached && keepOriginal && !cachedOriginalUsable) {
+      try {
+        const repairedOriginal = originalStore.save({
+          scopeId,
+          ccrId: cached.id,
+          contentType,
+          content,
+          metadata: cleanMetadata({
+            ...metadata,
+            repairedFromCache: true,
+          }),
+        });
+        originalStore.linkOriginalToCcr(cached.id, repairedOriginal.id);
+        cached.originalRef = repairedOriginal.id;
+        cached.canRetrieveOriginal = true;
+        cachedOriginalUsable = true;
+      } catch {
+        cachedOriginalUsable = false;
+      }
+    }
+    if (cached && cachedOriginalUsable) {
       // Cache hit — increment the counter and return the cached result
       compressedStore.incrementCacheHit(cached.id);
 
@@ -393,7 +422,7 @@ export async function handleCompressContext(
       strategy: output.strategy || "none",
       compressedContent: output.compressedContent,
       summary: output.summary,
-      originalRef: output.originalRef,
+      originalRef: undefined,
       sourceRef: userMetadata.source as string | undefined,
       metadata: cleanMetadata({
         ...metadata,
@@ -404,7 +433,7 @@ export async function handleCompressContext(
       tokensAfter: output.tokensAfter,
       tokensSaved: output.tokensSaved,
       compressionRatio: output.compressionRatio,
-      canRetrieveOriginal: output.canRetrieveOriginal,
+      canRetrieveOriginal: false,
       failed: output.failed ?? false,
       errorReason: output.errorReason,
       contentHash: inputHash,
@@ -421,23 +450,22 @@ export async function handleCompressContext(
   // §12.3.3: Original save failure → warning, non-blocking
 
   let originalSaved = false;
+  let storedOriginalRef: string | undefined;
   if (keepOriginal && savedRecord) {
     try {
-      const originalId = output.originalRef;
-      if (originalId) {
-        originalStore.save({
-          id: originalId,
-          scopeId,
-          ccrId: savedRecord.id,
-          contentType,
-          content,
-          metadata: cleanMetadata({
-            ...metadata,
-            safetyWarnings: safetyResult.safetyWarnings,
-          }),
-        });
-        originalSaved = true;
-      }
+      const savedOriginal = originalStore.save({
+        scopeId,
+        ccrId: savedRecord.id,
+        contentType,
+        content,
+        metadata: cleanMetadata({
+          ...metadata,
+          safetyWarnings: safetyResult.safetyWarnings,
+        }),
+      });
+      storedOriginalRef = savedOriginal.id;
+      originalStore.linkOriginalToCcr(savedRecord.id, savedOriginal.id);
+      originalSaved = true;
     } catch (origErr) {
       const origMessage = origErr instanceof Error ? origErr.message : String(origErr);
       warnings.push(`Warning: unable to save original content — ${origMessage}`);
@@ -457,7 +485,7 @@ export async function handleCompressContext(
       inputHash,
       resultIds: savedRecord ? [savedRecord.id] : [],
       ccrIds: savedRecord ? [savedRecord.id] : [],
-      originalRefs: output.originalRef ? [output.originalRef] : [],
+      originalRefs: storedOriginalRef ? [storedOriginalRef] : [],
       tokensBefore: output.tokensBefore,
       tokensAfter: output.tokensAfter,
       tokensSaved: output.tokensSaved,
@@ -482,12 +510,12 @@ export async function handleCompressContext(
     strategy: output.strategy,
     compressedContent: output.compressedContent,
     summary: output.summary,
-    originalRef: output.originalRef,
+    originalRef: storedOriginalRef,
     tokensBefore: output.tokensBefore,
     tokensAfter: output.tokensAfter,
     tokensSaved: output.tokensSaved,
     compressionRatio: output.compressionRatio,
-    canRetrieveOriginal: output.canRetrieveOriginal,
+    canRetrieveOriginal: originalSaved,
     receiptId,
     warnings: [...warnings, ...output.warnings],
     detection: detectedBy === "auto"

@@ -25,7 +25,7 @@ CodeContext MCP is a **local-first MCP server** for AI coding agents (Claude Cod
 ### Install
 
 ```bash
-# npm (recommended)
+# npm
 npm install -g code-context-mcp
 
 # Or from source
@@ -34,6 +34,7 @@ cd code-context-mcp
 
 pnpm install
 pnpm build
+npm run build
 
 # Verify
 code-context scope
@@ -96,6 +97,9 @@ code-context list-compressions --limit 10
 # View receipts (audit trail)
 code-context receipts --limit 5
 
+# Inspect a single receipt
+code-context receipt rcp_xxxxxxxx
+
 # Cleanup expired originals
 code-context cleanup --originals
 
@@ -132,6 +136,14 @@ code-context forget mem_old_xxxx --mode supersede --superseded-by mem_new_xxxx \
 code-context profile
 code-context profile --static
 code-context profile --dynamic
+
+# Cache inspection
+code-context cache stats
+code-context cache list --limit 10
+
+# Failure diagnostics
+code-context failures list --limit 10
+code-context failures stats
 ```
 
 ---
@@ -319,7 +331,7 @@ Every operation leaves an audit trail. For a complete walkthrough, see [DEMO.md]
 
 | Document | Content |
 |---|---|
-| [MCP_TOOLS.md](./MCP_TOOLS.md) | All 10 MCP tools — input/output schemas, error handling |
+| [MCP_TOOLS.md](./MCP_TOOLS.md) | All 13 MCP tools — input/output schemas, error handling |
 | [DATA_MODEL.md](./DATA_MODEL.md) | Data models, record types, SQLite schema |
 | [ARCHITECTURE.md](./ARCHITECTURE.md) | Architecture, module responsibilities, data flows |
 | [SECURITY.md](./SECURITY.md) | Security model, data directory, privacy, encryption |
@@ -348,10 +360,14 @@ PRD documents are in [`docs/`](./docs/INDEX.md).
 ```bash
 pnpm install        # Install dependencies
 pnpm build          # Build TypeScript
-pnpm test           # Run tests (775 tests)
+npm run build       # Cross-platform build (Windows/macOS/Linux)
+pnpm test           # Run tests (904 tests)
 pnpm test:watch     # Watch mode
 pnpm lint           # ESLint
 pnpm format         # Prettier
+
+Windows notes:
+The build is cross-platform. `npm run build` and `pnpm build` both use a Node-based cleanup step instead of `rm -rf dist/`.
 ```
 
 ---

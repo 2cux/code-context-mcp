@@ -33,7 +33,7 @@ First stable release after alpha and beta cycles. Core features are production-r
 - Repository-scoped isolation via git remote + root hash
 
 ### Technical
-- 775 tests passing
+- 904 tests passing
 - Node.js ≥ 18.0.0
 - SQLite local storage (`~/.code-context-mcp/`)
 - MCP SDK `@modelcontextprotocol/sdk`

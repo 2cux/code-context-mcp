@@ -1,6 +1,6 @@
 # CodeContext MCP — Tool Reference
 
-Complete reference for all 10 MCP tools. Every tool is scope-isolated and generates audit receipts.
+Complete reference for all 13 MCP tools. Every tool is scope-isolated and generates audit receipts.
 
 ---
 
@@ -18,6 +18,10 @@ Complete reference for all 10 MCP tools. Every tool is scope-isolated and genera
   - [`recall_context`](#recall_context)
   - [`forget_context`](#forget_context)
   - [`list_context`](#list_context)
+- [Analysis & Failure Tools](#analysis--failure-tools)
+  - [`analyze_context`](#analyze_context)
+  - [`list_failures`](#list_failures)
+  - [`failure_stats`](#failure_stats)
 
 ---
 
@@ -503,6 +507,41 @@ List project memories with filtering, sorting, and pagination. Useful for auditi
 ```
 
 Note: unlike `recall_context`, `list_context` returns all statuses by default (useful for auditing). The `status` field is not filtered unless explicitly provided.
+
+---
+
+## Analysis & Failure Tools
+
+### `analyze_context`
+
+Read-only analysis tool that reviews the current project context and suggests which other tools to call next. It does not mutate storage.
+
+**Typical uses:**
+
+- Decide whether content should be compressed, remembered, recalled, or ignored
+- Get human-readable reasoning before invoking mutation tools
+- Inspect likely next steps without writing receipts for additional actions
+
+### `list_failures`
+
+List failure-learning events captured from compression, recall, and repeated original retrieval flows.
+
+**Typical filters:**
+
+- `eventType`: `compression_timeout`, `compression_error`, `oversized_input`, `poor_compression_ratio`, `recall_no_hit`, `recall_low_confidence`, `recall_wrong_memory`, `high_retrieve_count`
+- `operation`: `compress`, `recall`, `retrieve_original`
+- `limit` / `offset` for pagination
+
+### `failure_stats`
+
+Return aggregate failure statistics for the current scope so agents can spot recurring weak points in compression and recall behavior.
+
+**Typical output includes:**
+
+- Total failure events
+- Counts by event type
+- Counts by operation
+- Scope id for the analyzed repository
 
 ---
 

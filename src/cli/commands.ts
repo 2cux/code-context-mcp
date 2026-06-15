@@ -311,7 +311,36 @@ export async function runCompress(filePath: string, opts: CompressOpts): Promise
 
     if (cacheKey) {
       const cached = compressedStore.findByCacheKey(cacheKey, scope.scopeId);
-      if (cached) {
+      const cachedOriginalRef = cached?.originalRef;
+      let cachedOriginalUsable =
+        Boolean(cached?.compressedContent) && (
+          !keepOriginal ||
+        (
+          Boolean(cachedOriginalRef) &&
+          Boolean(cached?.canRetrieveOriginal) &&
+          (cachedOriginalRef ? originalStore.exists(cachedOriginalRef, scope.scopeId) : false)
+        ));
+      if (cached && keepOriginal && !cachedOriginalUsable) {
+        try {
+          const repairedOriginal = originalStore.save({
+            scopeId: scope.scopeId,
+            ccrId: cached.id,
+            contentType,
+            content,
+            metadata: {
+              ...metadata,
+              repairedFromCache: true,
+            },
+          });
+          originalStore.linkOriginalToCcr(cached.id, repairedOriginal.id);
+          cached.originalRef = repairedOriginal.id;
+          cached.canRetrieveOriginal = true;
+          cachedOriginalUsable = true;
+        } catch {
+          cachedOriginalUsable = false;
+        }
+      }
+      if (cached && cachedOriginalUsable) {
         // Cache hit — increment counter, create receipt, return cached result
         compressedStore.incrementCacheHit(cached.id);
 
@@ -462,7 +491,7 @@ export async function runCompress(filePath: string, opts: CompressOpts): Promise
         strategy: output.strategy || "none",
         compressedContent: output.compressedContent,
         summary: output.summary,
-        originalRef: output.originalRef,
+        originalRef: undefined,
         sourceRef: filePath,
         metadata: {
           ...metadata,
@@ -473,7 +502,7 @@ export async function runCompress(filePath: string, opts: CompressOpts): Promise
         tokensAfter: output.tokensAfter,
         tokensSaved: output.tokensSaved,
         compressionRatio: output.compressionRatio,
-        canRetrieveOriginal: output.canRetrieveOriginal,
+        canRetrieveOriginal: false,
         failed: output.failed ?? false,
         errorReason: output.errorReason,
         contentHash: inputHash,
@@ -488,10 +517,10 @@ export async function runCompress(filePath: string, opts: CompressOpts): Promise
 
     // Save original
     let originalSaved = false;
-    if (keepOriginal && savedRecord && output.originalRef) {
+    let storedOriginalRef: string | undefined;
+    if (keepOriginal && savedRecord) {
       try {
-        originalStore.save({
-          id: output.originalRef,
+        const savedOriginal = originalStore.save({
           scopeId: scope.scopeId,
           ccrId: savedRecord.id,
           contentType,
@@ -501,6 +530,8 @@ export async function runCompress(filePath: string, opts: CompressOpts): Promise
             safetyWarnings: safetyResult.safetyWarnings,
           },
         });
+        storedOriginalRef = savedOriginal.id;
+        originalStore.linkOriginalToCcr(savedRecord.id, savedOriginal.id);
         originalSaved = true;
       } catch (origErr) {
         warnings.push(
@@ -518,7 +549,7 @@ export async function runCompress(filePath: string, opts: CompressOpts): Promise
         inputHash: contentHash(content),
         resultIds: savedRecord ? [savedRecord.id] : [],
         ccrIds: savedRecord ? [savedRecord.id] : [],
-        originalRefs: output.originalRef ? [output.originalRef] : [],
+        originalRefs: storedOriginalRef ? [storedOriginalRef] : [],
         tokensBefore: output.tokensBefore,
         tokensAfter: output.tokensAfter,
         tokensSaved: output.tokensSaved,
@@ -544,12 +575,12 @@ export async function runCompress(filePath: string, opts: CompressOpts): Promise
       strategy: output.strategy,
       compressedContent: output.compressedContent,
       summary: output.summary,
-      originalRef: output.originalRef,
+      originalRef: storedOriginalRef,
       tokensBefore: output.tokensBefore,
       tokensAfter: output.tokensAfter,
       tokensSaved: output.tokensSaved,
       compressionRatio: output.compressionRatio,
-      canRetrieveOriginal: output.canRetrieveOriginal,
+      canRetrieveOriginal: originalSaved,
       receiptId,
       warnings,
       detection: detectedBy === "auto"
@@ -604,12 +635,16 @@ export async function runRetrieve(originalRef: string, opts: RetrieveOpts): Prom
       const deletedCheck = store.checkDeleted(originalRef);
 
       let errorMsg: string;
+      let errorReason: "scope_mismatch" | "original_deleted" | "original_not_found";
       if (actualScope && actualScope !== scope.scopeId) {
         errorMsg = `Original "${originalRef}" belongs to scope "${actualScope}", not "${scope.scopeId}".`;
+        errorReason = "scope_mismatch";
       } else if (deletedCheck.found && deletedCheck.deleted) {
         errorMsg = `Original "${originalRef}" was deleted and is no longer available.`;
+        errorReason = "original_deleted";
       } else {
         errorMsg = `Original not found: ${originalRef}`;
+        errorReason = "original_not_found";
       }
 
       // Create failure receipt
@@ -619,7 +654,7 @@ export async function runRetrieve(originalRef: string, opts: RetrieveOpts): Prom
         inputHash: contentHash(`${scope.scopeId}:${originalRef}`),
         originalRefs: [originalRef],
         failed: true,
-        errorReason: "original_not_found",
+        errorReason,
       });
 
       closeDb();
