@@ -162,6 +162,20 @@ fixtures/generated/
 fixtures/**/*.local.*
 fixtures/**/*.secret.*
 
+# =============================================================================
+# Evaluation Fixtures
+# =============================================================================
+# Large fixture files stay local; only small samples and README are committed.
+
+fixtures/evaluation/**/*.log
+fixtures/evaluation/**/*.json
+fixtures/evaluation/**/*.txt
+fixtures/evaluation/**/*.md
+!fixtures/evaluation/**/README.md
+!fixtures/evaluation/**/*.sample.*
+!fixtures/evaluation/**/*.example.*
+!fixtures/evaluation/**/.gitkeep
+
 
 # =============================================================================
 # Editor and IDE Files

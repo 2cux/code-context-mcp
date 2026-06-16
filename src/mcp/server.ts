@@ -26,6 +26,7 @@ import { handleListHarnessFlows } from "./tools/listHarnessFlows.js";
 import { handleRunHarnessFlow } from "./tools/runHarnessFlow.js";
 import { handleGetHarnessRun } from "./tools/getHarnessRun.js";
 import { handleCheckHarnessFlow } from "./tools/checkHarnessFlow.js";
+import { handleRunContextFlow } from "./tools/runContextFlow.js";
 import { TOOL_DEFINITIONS } from "./toolSchemas.js";
 import { registerAllFlows } from "../harness/register.js";
 
@@ -64,6 +65,7 @@ export async function startServer(): Promise<void> {
     string,
     (args: Record<string, unknown>) => Promise<CallToolResult>
   > = {
+    run_context_flow: (args) => handleRunContextFlow(ctx, args),
     current_scope: (args) => handleCurrentScope(ctx, args),
     compress_context: (args) => handleCompressContext(ctx, args),
     retrieve_original: (args) => handleRetrieveOriginal(ctx, args),

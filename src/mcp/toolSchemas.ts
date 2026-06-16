@@ -722,6 +722,97 @@ export const TOOL_DEFINITIONS: Tool[] = [
       required: ["flowId"],
     },
   },
+  {
+    name: "run_context_flow",
+    description:
+      "Unified agent-facing entry point for context management. " +
+      "Wraps compression, memory, and recall into a single call " +
+      "to reduce tool-selection overhead. " +
+      "Three flow modes: " +
+      "'compression' (compress content, optionally save memory and recall), " +
+      "'memory' (remember and/or recall project context), " +
+      "'full' (compress -> remember -> recall complete chain). " +
+      "Returns a runId for tracking and a receiptId for audit. " +
+      "All individual operations are fail-open — partial failures " +
+      "are reported in warnings with status 'partial'.",
+    inputSchema: {
+      type: "object" as const,
+      properties: {
+        flow: {
+          type: "string",
+          description:
+            "Flow mode (required). " +
+            "Valid values: compression, memory, full. " +
+            "compression: compress content with optional remember/recall. " +
+            "memory: remember and/or recall project context via query. " +
+            "full: complete compress -> remember -> recall chain.",
+        },
+        scopeId: {
+          type: "string",
+          description:
+            "The scopeId from current_scope. " +
+            "When omitted, the scope is auto-resolved from the current directory.",
+        },
+        goal: {
+          type: "string",
+          description:
+            "What the agent is trying to accomplish. " +
+            "Used as context for recall and memory operations to " +
+            "improve relevance of results.",
+        },
+        content: {
+          type: "string",
+          description:
+            "Raw content to compress. Required for compression and full flows. " +
+            "Optional for memory flow (used as memory content to save).",
+        },
+        contentType: {
+          type: "string",
+          description:
+            "Content type hint. Defaults to auto-detection via ContentRouter. " +
+            "Valid values: test_output, log, command_output, code, json, " +
+            "markdown, plain_text, rag_chunk, file_summary, " +
+            "conversation_history, unknown.",
+        },
+        query: {
+          type: "string",
+          description:
+            "Search query for recall. Used in memory and full flows. " +
+            "Optional — when omitted, recall is skipped.",
+        },
+        options: {
+          type: "object",
+          description:
+            "Flow-level options controlling which sub-operations are performed.",
+          properties: {
+            keepOriginal: {
+              type: "boolean",
+              description:
+                "Save original content for later retrieval. Default: true.",
+            },
+            includeRecall: {
+              type: "boolean",
+              description:
+                "Run recall after compression to find related memories and profiles. " +
+                "Default: false. Requires query to be set.",
+            },
+            saveMemory: {
+              type: "boolean",
+              description:
+                "Save the compressed result as a project memory. " +
+                "Default: false for compression flow, true for full flow.",
+            },
+            maxTokens: {
+              type: "number",
+              description:
+                "Target max output tokens for compression. Default: 2000.",
+            },
+          },
+        },
+      },
+      required: ["flow"],
+    },
+  },
 ];
 
 /** Map from tool name to definition for quick lookup. */

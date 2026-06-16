@@ -37,6 +37,7 @@ const EXPECTED_TOOLS = [
   "run_harness_flow",
   "get_harness_run",
   "check_harness_flow",
+  "run_context_flow",
 ];
 
 // Valid JSON Schema types
@@ -49,8 +50,8 @@ const VALID_TYPES = new Set([
 // ---------------------------------------------------------------------------
 
 describe("Tool Definitions Structure", () => {
-  it("has exactly 17 tools", () => {
-    expect(TOOL_DEFINITIONS).toHaveLength(17);
+  it("has exactly 18 tools", () => {
+    expect(TOOL_DEFINITIONS).toHaveLength(18);
   });
 
   it("has all expected tools", () => {
@@ -174,6 +175,7 @@ describe("Required Fields", () => {
       recall_context: ["query"],
       forget_context: ["id", "mode"],
       list_context: ["scopeId"],
+      run_context_flow: ["flow"],
     };
 
     for (const tool of TOOL_DEFINITIONS) {
@@ -370,6 +372,37 @@ describe("Tool-Specific Schema Checks", () => {
       expect(props["limit"].type).toBe("number");
       expect(props["offset"].type).toBe("number");
       expect(props["contentType"].type).toBe("string");
+    });
+  });
+
+  describe("run_context_flow", () => {
+    const tool = TOOL_MAP["run_context_flow"]!;
+
+    it("requires flow only", () => {
+      expect(tool.inputSchema.required).toEqual(["flow"]);
+    });
+
+    it("has flow as string", () => {
+      expect(tool.inputSchema.properties!["flow"].type).toBe("string");
+    });
+
+    it("has optional content and query", () => {
+      const props = tool.inputSchema.properties!;
+      expect(props["content"].type).toBe("string");
+      expect(props["query"].type).toBe("string");
+      expect(props["goal"].type).toBe("string");
+      expect(props["scopeId"].type).toBe("string");
+      expect(props["contentType"].type).toBe("string");
+    });
+
+    it("has options as object with nested booleans and number", () => {
+      const opts = tool.inputSchema.properties!["options"];
+      expect(opts.type).toBe("object");
+      const optProps = (opts as Record<string, unknown>).properties as Record<string, unknown>;
+      expect((optProps["keepOriginal"] as Record<string, unknown>).type).toBe("boolean");
+      expect((optProps["includeRecall"] as Record<string, unknown>).type).toBe("boolean");
+      expect((optProps["saveMemory"] as Record<string, unknown>).type).toBe("boolean");
+      expect((optProps["maxTokens"] as Record<string, unknown>).type).toBe("number");
     });
   });
 });
