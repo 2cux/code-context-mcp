@@ -1,0 +1,21 @@
+{
+  "scopeId": "repo_fixture",
+  "description": "Smoke input for CLI command coverage. Commands may be adapted to the project's exact CLI syntax.",
+  "commands": [
+    { "name": "scope", "args": ["scope"] },
+    { "name": "compress", "args": ["compress", "test-data/performance/test-output-10kb.log", "--type", "test_output"] },
+    { "name": "retrieve", "args": ["retrieve", "${originalRef}"] },
+    { "name": "list-compressions", "args": ["list-compressions", "--limit", "10"] },
+    { "name": "remember", "args": ["remember", "--type", "project_rule", "--content", "本项目使用 pnpm，不要使用 npm。"] },
+    { "name": "recall", "args": ["recall", "package manager"] },
+    { "name": "list-context", "args": ["list-context", "--type", "project_rule"] },
+    { "name": "forget", "args": ["forget", "${memoryId}", "--mode", "soft_forget"] },
+    { "name": "profile", "args": ["profile", "--all"] },
+    { "name": "receipts", "args": ["receipts", "--limit", "10"] },
+    { "name": "harness-list", "args": ["harness", "list"] },
+    { "name": "harness-run", "args": ["harness", "run", "full-context-flow", "--input", "test-data/harness-inputs/full-context-flow.input.json"] },
+    { "name": "harness-check", "args": ["harness", "check", "full-context-flow"] },
+    { "name": "harness-show", "args": ["harness", "show", "${runId}"] },
+    { "name": "failures-stats", "args": ["failures", "stats"] }
+  ]
+}

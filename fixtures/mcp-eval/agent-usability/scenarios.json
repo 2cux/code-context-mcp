@@ -1,0 +1,111 @@
+[
+  {
+    "id": "U01-long-test-output",
+    "title": "长测试日志压缩",
+    "userPrompt": "这是一段很长的 pnpm test 输出，请帮我找出失败原因，必要时保存关键失败信息。",
+    "inputFile": "../performance/test-output-100kb.log",
+    "expectedGoodTools": [
+      "compress_context",
+      "retrieve_original",
+      "remember_context"
+    ],
+    "expectedWithRunContextFlow": [
+      "run_context_flow"
+    ],
+    "badToolPatterns": [
+      "list_failures before compression",
+      "delete_original",
+      "cleanup_originals"
+    ],
+    "successCriteria": [
+      "识别 auth/session.test.ts",
+      "保留 Expected/Received",
+      "返回 originalRef",
+      "不调用危险工具"
+    ]
+  },
+  {
+    "id": "U02-build-failure",
+    "title": "构建失败分析",
+    "userPrompt": "这段 build 输出太长，帮我压缩成可行动摘要。",
+    "inputFile": "../performance/build-output-failure-100kb.log",
+    "expectedGoodTools": [
+      "compress_context"
+    ],
+    "expectedWithRunContextFlow": [
+      "run_context_flow"
+    ],
+    "badToolPatterns": [
+      "recall_context without query reason",
+      "delete_original"
+    ],
+    "successCriteria": [
+      "保留 TS 错误文件",
+      "保留行号",
+      "保留错误类型"
+    ]
+  },
+  {
+    "id": "U03-project-rule-memory",
+    "title": "保存并召回项目规则",
+    "userPrompt": "记住：本项目使用 pnpm，不要用 npm。随后帮我安装 zod。",
+    "expectedGoodTools": [
+      "remember_context",
+      "recall_context"
+    ],
+    "expectedWithRunContextFlow": [
+      "run_context_flow"
+    ],
+    "badToolPatterns": [
+      "compress_context for short rule",
+      "list_context before recall"
+    ],
+    "successCriteria": [
+      "保存 project_rule",
+      "后续召回 pnpm",
+      "不给出 npm install"
+    ]
+  },
+  {
+    "id": "U04-supersede-memory",
+    "title": "替换旧记忆",
+    "userPrompt": "之前说用 npm 是错的，现在统一改成 pnpm，并且旧规则以后不要再召回。",
+    "expectedGoodTools": [
+      "remember_context",
+      "forget_context",
+      "recall_context"
+    ],
+    "expectedWithRunContextFlow": [
+      "run_context_flow"
+    ],
+    "badToolPatterns": [
+      "hard delete without confirmation",
+      "list_failures"
+    ],
+    "successCriteria": [
+      "旧 npm 规则 superseded",
+      "默认 recall 只返回 pnpm"
+    ]
+  },
+  {
+    "id": "U05-large-code-file",
+    "title": "大代码文件保守压缩",
+    "userPrompt": "压缩这个大 TypeScript 文件，保留 public API、类型定义、错误相关代码块。",
+    "inputFile": "../content/large-typescript-file.ts",
+    "expectedGoodTools": [
+      "compress_context"
+    ],
+    "expectedWithRunContextFlow": [
+      "run_context_flow"
+    ],
+    "badToolPatterns": [
+      "aggressive summary",
+      "forget_context"
+    ],
+    "successCriteria": [
+      "保留 interfaces",
+      "保留 class public methods",
+      "保留 TODO/FIXME"
+    ]
+  }
+]

@@ -1,0 +1,1322 @@
+[
+  {
+    "source": "docs/architecture-0.md",
+    "documentTitle": "Architecture Note 0",
+    "chunkId": "chunk_0000",
+    "score": 0.97,
+    "metadata": {
+      "section": "0. Design",
+      "scopeId": "repo_fixture"
+    },
+    "text": "CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. "
+  },
+  {
+    "source": "docs/architecture-1.md",
+    "documentTitle": "Architecture Note 1",
+    "chunkId": "chunk_0001",
+    "score": 0.967,
+    "metadata": {
+      "section": "1. Design",
+      "scopeId": "repo_fixture"
+    },
+    "text": "CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. "
+  },
+  {
+    "source": "docs/architecture-2.md",
+    "documentTitle": "Architecture Note 2",
+    "chunkId": "chunk_0002",
+    "score": 0.964,
+    "metadata": {
+      "section": "2. Design",
+      "scopeId": "repo_fixture"
+    },
+    "text": "CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. "
+  },
+  {
+    "source": "docs/architecture-3.md",
+    "documentTitle": "Architecture Note 3",
+    "chunkId": "chunk_0003",
+    "score": 0.961,
+    "metadata": {
+      "section": "3. Design",
+      "scopeId": "repo_fixture"
+    },
+    "text": "CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. "
+  },
+  {
+    "source": "docs/architecture-4.md",
+    "documentTitle": "Architecture Note 4",
+    "chunkId": "chunk_0004",
+    "score": 0.958,
+    "metadata": {
+      "section": "4. Design",
+      "scopeId": "repo_fixture"
+    },
+    "text": "CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. "
+  },
+  {
+    "source": "docs/architecture-5.md",
+    "documentTitle": "Architecture Note 5",
+    "chunkId": "chunk_0005",
+    "score": 0.955,
+    "metadata": {
+      "section": "5. Design",
+      "scopeId": "repo_fixture"
+    },
+    "text": "CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. "
+  },
+  {
+    "source": "docs/architecture-6.md",
+    "documentTitle": "Architecture Note 6",
+    "chunkId": "chunk_0006",
+    "score": 0.952,
+    "metadata": {
+      "section": "6. Design",
+      "scopeId": "repo_fixture"
+    },
+    "text": "CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. "
+  },
+  {
+    "source": "docs/architecture-7.md",
+    "documentTitle": "Architecture Note 7",
+    "chunkId": "chunk_0007",
+    "score": 0.949,
+    "metadata": {
+      "section": "7. Design",
+      "scopeId": "repo_fixture"
+    },
+    "text": "CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. "
+  },
+  {
+    "source": "docs/architecture-0.md",
+    "documentTitle": "Architecture Note 0",
+    "chunkId": "chunk_0008",
+    "score": 0.946,
+    "metadata": {
+      "section": "8. Design",
+      "scopeId": "repo_fixture"
+    },
+    "text": "CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. "
+  },
+  {
+    "source": "docs/architecture-1.md",
+    "documentTitle": "Architecture Note 1",
+    "chunkId": "chunk_0009",
+    "score": 0.943,
+    "metadata": {
+      "section": "9. Design",
+      "scopeId": "repo_fixture"
+    },
+    "text": "CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. "
+  },
+  {
+    "source": "docs/architecture-2.md",
+    "documentTitle": "Architecture Note 2",
+    "chunkId": "chunk_0010",
+    "score": 0.94,
+    "metadata": {
+      "section": "10. Design",
+      "scopeId": "repo_fixture"
+    },
+    "text": "CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. "
+  },
+  {
+    "source": "docs/architecture-3.md",
+    "documentTitle": "Architecture Note 3",
+    "chunkId": "chunk_0011",
+    "score": 0.937,
+    "metadata": {
+      "section": "11. Design",
+      "scopeId": "repo_fixture"
+    },
+    "text": "CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. "
+  },
+  {
+    "source": "docs/architecture-4.md",
+    "documentTitle": "Architecture Note 4",
+    "chunkId": "chunk_0012",
+    "score": 0.934,
+    "metadata": {
+      "section": "0. Design",
+      "scopeId": "repo_fixture"
+    },
+    "text": "CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. "
+  },
+  {
+    "source": "docs/architecture-5.md",
+    "documentTitle": "Architecture Note 5",
+    "chunkId": "chunk_0013",
+    "score": 0.931,
+    "metadata": {
+      "section": "1. Design",
+      "scopeId": "repo_fixture"
+    },
+    "text": "CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. "
+  },
+  {
+    "source": "docs/architecture-6.md",
+    "documentTitle": "Architecture Note 6",
+    "chunkId": "chunk_0014",
+    "score": 0.928,
+    "metadata": {
+      "section": "2. Design",
+      "scopeId": "repo_fixture"
+    },
+    "text": "CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. "
+  },
+  {
+    "source": "docs/architecture-7.md",
+    "documentTitle": "Architecture Note 7",
+    "chunkId": "chunk_0015",
+    "score": 0.925,
+    "metadata": {
+      "section": "3. Design",
+      "scopeId": "repo_fixture"
+    },
+    "text": "CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. "
+  },
+  {
+    "source": "docs/architecture-0.md",
+    "documentTitle": "Architecture Note 0",
+    "chunkId": "chunk_0016",
+    "score": 0.922,
+    "metadata": {
+      "section": "4. Design",
+      "scopeId": "repo_fixture"
+    },
+    "text": "CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. "
+  },
+  {
+    "source": "docs/architecture-1.md",
+    "documentTitle": "Architecture Note 1",
+    "chunkId": "chunk_0017",
+    "score": 0.919,
+    "metadata": {
+      "section": "5. Design",
+      "scopeId": "repo_fixture"
+    },
+    "text": "CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. "
+  },
+  {
+    "source": "docs/architecture-2.md",
+    "documentTitle": "Architecture Note 2",
+    "chunkId": "chunk_0018",
+    "score": 0.916,
+    "metadata": {
+      "section": "6. Design",
+      "scopeId": "repo_fixture"
+    },
+    "text": "CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. "
+  },
+  {
+    "source": "docs/architecture-3.md",
+    "documentTitle": "Architecture Note 3",
+    "chunkId": "chunk_0019",
+    "score": 0.913,
+    "metadata": {
+      "section": "7. Design",
+      "scopeId": "repo_fixture"
+    },
+    "text": "CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. "
+  },
+  {
+    "source": "docs/architecture-4.md",
+    "documentTitle": "Architecture Note 4",
+    "chunkId": "chunk_0020",
+    "score": 0.91,
+    "metadata": {
+      "section": "8. Design",
+      "scopeId": "repo_fixture"
+    },
+    "text": "CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. "
+  },
+  {
+    "source": "docs/architecture-5.md",
+    "documentTitle": "Architecture Note 5",
+    "chunkId": "chunk_0021",
+    "score": 0.907,
+    "metadata": {
+      "section": "9. Design",
+      "scopeId": "repo_fixture"
+    },
+    "text": "CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. "
+  },
+  {
+    "source": "docs/architecture-6.md",
+    "documentTitle": "Architecture Note 6",
+    "chunkId": "chunk_0022",
+    "score": 0.904,
+    "metadata": {
+      "section": "10. Design",
+      "scopeId": "repo_fixture"
+    },
+    "text": "CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. "
+  },
+  {
+    "source": "docs/architecture-7.md",
+    "documentTitle": "Architecture Note 7",
+    "chunkId": "chunk_0023",
+    "score": 0.901,
+    "metadata": {
+      "section": "11. Design",
+      "scopeId": "repo_fixture"
+    },
+    "text": "CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. "
+  },
+  {
+    "source": "docs/architecture-0.md",
+    "documentTitle": "Architecture Note 0",
+    "chunkId": "chunk_0024",
+    "score": 0.898,
+    "metadata": {
+      "section": "0. Design",
+      "scopeId": "repo_fixture"
+    },
+    "text": "CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. "
+  },
+  {
+    "source": "docs/architecture-1.md",
+    "documentTitle": "Architecture Note 1",
+    "chunkId": "chunk_0025",
+    "score": 0.895,
+    "metadata": {
+      "section": "1. Design",
+      "scopeId": "repo_fixture"
+    },
+    "text": "CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. "
+  },
+  {
+    "source": "docs/architecture-2.md",
+    "documentTitle": "Architecture Note 2",
+    "chunkId": "chunk_0026",
+    "score": 0.892,
+    "metadata": {
+      "section": "2. Design",
+      "scopeId": "repo_fixture"
+    },
+    "text": "CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. "
+  },
+  {
+    "source": "docs/architecture-3.md",
+    "documentTitle": "Architecture Note 3",
+    "chunkId": "chunk_0027",
+    "score": 0.889,
+    "metadata": {
+      "section": "3. Design",
+      "scopeId": "repo_fixture"
+    },
+    "text": "CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. "
+  },
+  {
+    "source": "docs/architecture-4.md",
+    "documentTitle": "Architecture Note 4",
+    "chunkId": "chunk_0028",
+    "score": 0.886,
+    "metadata": {
+      "section": "4. Design",
+      "scopeId": "repo_fixture"
+    },
+    "text": "CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. "
+  },
+  {
+    "source": "docs/architecture-5.md",
+    "documentTitle": "Architecture Note 5",
+    "chunkId": "chunk_0029",
+    "score": 0.883,
+    "metadata": {
+      "section": "5. Design",
+      "scopeId": "repo_fixture"
+    },
+    "text": "CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. "
+  },
+  {
+    "source": "docs/architecture-6.md",
+    "documentTitle": "Architecture Note 6",
+    "chunkId": "chunk_0030",
+    "score": 0.88,
+    "metadata": {
+      "section": "6. Design",
+      "scopeId": "repo_fixture"
+    },
+    "text": "CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. "
+  },
+  {
+    "source": "docs/architecture-7.md",
+    "documentTitle": "Architecture Note 7",
+    "chunkId": "chunk_0031",
+    "score": 0.877,
+    "metadata": {
+      "section": "7. Design",
+      "scopeId": "repo_fixture"
+    },
+    "text": "CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. "
+  },
+  {
+    "source": "docs/architecture-0.md",
+    "documentTitle": "Architecture Note 0",
+    "chunkId": "chunk_0032",
+    "score": 0.874,
+    "metadata": {
+      "section": "8. Design",
+      "scopeId": "repo_fixture"
+    },
+    "text": "CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. "
+  },
+  {
+    "source": "docs/architecture-1.md",
+    "documentTitle": "Architecture Note 1",
+    "chunkId": "chunk_0033",
+    "score": 0.871,
+    "metadata": {
+      "section": "9. Design",
+      "scopeId": "repo_fixture"
+    },
+    "text": "CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. "
+  },
+  {
+    "source": "docs/architecture-2.md",
+    "documentTitle": "Architecture Note 2",
+    "chunkId": "chunk_0034",
+    "score": 0.868,
+    "metadata": {
+      "section": "10. Design",
+      "scopeId": "repo_fixture"
+    },
+    "text": "CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. "
+  },
+  {
+    "source": "docs/architecture-3.md",
+    "documentTitle": "Architecture Note 3",
+    "chunkId": "chunk_0035",
+    "score": 0.865,
+    "metadata": {
+      "section": "11. Design",
+      "scopeId": "repo_fixture"
+    },
+    "text": "CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. "
+  },
+  {
+    "source": "docs/architecture-4.md",
+    "documentTitle": "Architecture Note 4",
+    "chunkId": "chunk_0036",
+    "score": 0.862,
+    "metadata": {
+      "section": "0. Design",
+      "scopeId": "repo_fixture"
+    },
+    "text": "CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. "
+  },
+  {
+    "source": "docs/architecture-5.md",
+    "documentTitle": "Architecture Note 5",
+    "chunkId": "chunk_0037",
+    "score": 0.859,
+    "metadata": {
+      "section": "1. Design",
+      "scopeId": "repo_fixture"
+    },
+    "text": "CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. "
+  },
+  {
+    "source": "docs/architecture-6.md",
+    "documentTitle": "Architecture Note 6",
+    "chunkId": "chunk_0038",
+    "score": 0.856,
+    "metadata": {
+      "section": "2. Design",
+      "scopeId": "repo_fixture"
+    },
+    "text": "CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. "
+  },
+  {
+    "source": "docs/architecture-7.md",
+    "documentTitle": "Architecture Note 7",
+    "chunkId": "chunk_0039",
+    "score": 0.853,
+    "metadata": {
+      "section": "3. Design",
+      "scopeId": "repo_fixture"
+    },
+    "text": "CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. "
+  },
+  {
+    "source": "docs/architecture-0.md",
+    "documentTitle": "Architecture Note 0",
+    "chunkId": "chunk_0040",
+    "score": 0.85,
+    "metadata": {
+      "section": "4. Design",
+      "scopeId": "repo_fixture"
+    },
+    "text": "CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. "
+  },
+  {
+    "source": "docs/architecture-1.md",
+    "documentTitle": "Architecture Note 1",
+    "chunkId": "chunk_0041",
+    "score": 0.847,
+    "metadata": {
+      "section": "5. Design",
+      "scopeId": "repo_fixture"
+    },
+    "text": "CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. "
+  },
+  {
+    "source": "docs/architecture-2.md",
+    "documentTitle": "Architecture Note 2",
+    "chunkId": "chunk_0042",
+    "score": 0.844,
+    "metadata": {
+      "section": "6. Design",
+      "scopeId": "repo_fixture"
+    },
+    "text": "CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. "
+  },
+  {
+    "source": "docs/architecture-3.md",
+    "documentTitle": "Architecture Note 3",
+    "chunkId": "chunk_0043",
+    "score": 0.841,
+    "metadata": {
+      "section": "7. Design",
+      "scopeId": "repo_fixture"
+    },
+    "text": "CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. "
+  },
+  {
+    "source": "docs/architecture-4.md",
+    "documentTitle": "Architecture Note 4",
+    "chunkId": "chunk_0044",
+    "score": 0.838,
+    "metadata": {
+      "section": "8. Design",
+      "scopeId": "repo_fixture"
+    },
+    "text": "CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. "
+  },
+  {
+    "source": "docs/architecture-5.md",
+    "documentTitle": "Architecture Note 5",
+    "chunkId": "chunk_0045",
+    "score": 0.835,
+    "metadata": {
+      "section": "9. Design",
+      "scopeId": "repo_fixture"
+    },
+    "text": "CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. "
+  },
+  {
+    "source": "docs/architecture-6.md",
+    "documentTitle": "Architecture Note 6",
+    "chunkId": "chunk_0046",
+    "score": 0.832,
+    "metadata": {
+      "section": "10. Design",
+      "scopeId": "repo_fixture"
+    },
+    "text": "CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. "
+  },
+  {
+    "source": "docs/architecture-7.md",
+    "documentTitle": "Architecture Note 7",
+    "chunkId": "chunk_0047",
+    "score": 0.829,
+    "metadata": {
+      "section": "11. Design",
+      "scopeId": "repo_fixture"
+    },
+    "text": "CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. "
+  },
+  {
+    "source": "docs/architecture-0.md",
+    "documentTitle": "Architecture Note 0",
+    "chunkId": "chunk_0048",
+    "score": 0.826,
+    "metadata": {
+      "section": "0. Design",
+      "scopeId": "repo_fixture"
+    },
+    "text": "CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. "
+  },
+  {
+    "source": "docs/architecture-1.md",
+    "documentTitle": "Architecture Note 1",
+    "chunkId": "chunk_0049",
+    "score": 0.823,
+    "metadata": {
+      "section": "1. Design",
+      "scopeId": "repo_fixture"
+    },
+    "text": "CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. "
+  },
+  {
+    "source": "docs/architecture-2.md",
+    "documentTitle": "Architecture Note 2",
+    "chunkId": "chunk_0050",
+    "score": 0.82,
+    "metadata": {
+      "section": "2. Design",
+      "scopeId": "repo_fixture"
+    },
+    "text": "CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. "
+  },
+  {
+    "source": "docs/architecture-3.md",
+    "documentTitle": "Architecture Note 3",
+    "chunkId": "chunk_0051",
+    "score": 0.817,
+    "metadata": {
+      "section": "3. Design",
+      "scopeId": "repo_fixture"
+    },
+    "text": "CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. "
+  },
+  {
+    "source": "docs/architecture-4.md",
+    "documentTitle": "Architecture Note 4",
+    "chunkId": "chunk_0052",
+    "score": 0.814,
+    "metadata": {
+      "section": "4. Design",
+      "scopeId": "repo_fixture"
+    },
+    "text": "CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. "
+  },
+  {
+    "source": "docs/architecture-5.md",
+    "documentTitle": "Architecture Note 5",
+    "chunkId": "chunk_0053",
+    "score": 0.811,
+    "metadata": {
+      "section": "5. Design",
+      "scopeId": "repo_fixture"
+    },
+    "text": "CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. "
+  },
+  {
+    "source": "docs/architecture-6.md",
+    "documentTitle": "Architecture Note 6",
+    "chunkId": "chunk_0054",
+    "score": 0.808,
+    "metadata": {
+      "section": "6. Design",
+      "scopeId": "repo_fixture"
+    },
+    "text": "CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. "
+  },
+  {
+    "source": "docs/architecture-7.md",
+    "documentTitle": "Architecture Note 7",
+    "chunkId": "chunk_0055",
+    "score": 0.805,
+    "metadata": {
+      "section": "7. Design",
+      "scopeId": "repo_fixture"
+    },
+    "text": "CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. "
+  },
+  {
+    "source": "docs/architecture-0.md",
+    "documentTitle": "Architecture Note 0",
+    "chunkId": "chunk_0056",
+    "score": 0.802,
+    "metadata": {
+      "section": "8. Design",
+      "scopeId": "repo_fixture"
+    },
+    "text": "CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. "
+  },
+  {
+    "source": "docs/architecture-1.md",
+    "documentTitle": "Architecture Note 1",
+    "chunkId": "chunk_0057",
+    "score": 0.799,
+    "metadata": {
+      "section": "9. Design",
+      "scopeId": "repo_fixture"
+    },
+    "text": "CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. "
+  },
+  {
+    "source": "docs/architecture-2.md",
+    "documentTitle": "Architecture Note 2",
+    "chunkId": "chunk_0058",
+    "score": 0.796,
+    "metadata": {
+      "section": "10. Design",
+      "scopeId": "repo_fixture"
+    },
+    "text": "CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. "
+  },
+  {
+    "source": "docs/architecture-3.md",
+    "documentTitle": "Architecture Note 3",
+    "chunkId": "chunk_0059",
+    "score": 0.793,
+    "metadata": {
+      "section": "11. Design",
+      "scopeId": "repo_fixture"
+    },
+    "text": "CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. "
+  },
+  {
+    "source": "docs/architecture-4.md",
+    "documentTitle": "Architecture Note 4",
+    "chunkId": "chunk_0060",
+    "score": 0.79,
+    "metadata": {
+      "section": "0. Design",
+      "scopeId": "repo_fixture"
+    },
+    "text": "CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. "
+  },
+  {
+    "source": "docs/architecture-5.md",
+    "documentTitle": "Architecture Note 5",
+    "chunkId": "chunk_0061",
+    "score": 0.787,
+    "metadata": {
+      "section": "1. Design",
+      "scopeId": "repo_fixture"
+    },
+    "text": "CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. "
+  },
+  {
+    "source": "docs/architecture-6.md",
+    "documentTitle": "Architecture Note 6",
+    "chunkId": "chunk_0062",
+    "score": 0.784,
+    "metadata": {
+      "section": "2. Design",
+      "scopeId": "repo_fixture"
+    },
+    "text": "CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. "
+  },
+  {
+    "source": "docs/architecture-7.md",
+    "documentTitle": "Architecture Note 7",
+    "chunkId": "chunk_0063",
+    "score": 0.781,
+    "metadata": {
+      "section": "3. Design",
+      "scopeId": "repo_fixture"
+    },
+    "text": "CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. "
+  },
+  {
+    "source": "docs/architecture-0.md",
+    "documentTitle": "Architecture Note 0",
+    "chunkId": "chunk_0064",
+    "score": 0.778,
+    "metadata": {
+      "section": "4. Design",
+      "scopeId": "repo_fixture"
+    },
+    "text": "CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. "
+  },
+  {
+    "source": "docs/architecture-1.md",
+    "documentTitle": "Architecture Note 1",
+    "chunkId": "chunk_0065",
+    "score": 0.775,
+    "metadata": {
+      "section": "5. Design",
+      "scopeId": "repo_fixture"
+    },
+    "text": "CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. "
+  },
+  {
+    "source": "docs/architecture-2.md",
+    "documentTitle": "Architecture Note 2",
+    "chunkId": "chunk_0066",
+    "score": 0.772,
+    "metadata": {
+      "section": "6. Design",
+      "scopeId": "repo_fixture"
+    },
+    "text": "CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. "
+  },
+  {
+    "source": "docs/architecture-3.md",
+    "documentTitle": "Architecture Note 3",
+    "chunkId": "chunk_0067",
+    "score": 0.769,
+    "metadata": {
+      "section": "7. Design",
+      "scopeId": "repo_fixture"
+    },
+    "text": "CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. "
+  },
+  {
+    "source": "docs/architecture-4.md",
+    "documentTitle": "Architecture Note 4",
+    "chunkId": "chunk_0068",
+    "score": 0.766,
+    "metadata": {
+      "section": "8. Design",
+      "scopeId": "repo_fixture"
+    },
+    "text": "CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. "
+  },
+  {
+    "source": "docs/architecture-5.md",
+    "documentTitle": "Architecture Note 5",
+    "chunkId": "chunk_0069",
+    "score": 0.763,
+    "metadata": {
+      "section": "9. Design",
+      "scopeId": "repo_fixture"
+    },
+    "text": "CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. "
+  },
+  {
+    "source": "docs/architecture-6.md",
+    "documentTitle": "Architecture Note 6",
+    "chunkId": "chunk_0070",
+    "score": 0.76,
+    "metadata": {
+      "section": "10. Design",
+      "scopeId": "repo_fixture"
+    },
+    "text": "CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. "
+  },
+  {
+    "source": "docs/architecture-7.md",
+    "documentTitle": "Architecture Note 7",
+    "chunkId": "chunk_0071",
+    "score": 0.757,
+    "metadata": {
+      "section": "11. Design",
+      "scopeId": "repo_fixture"
+    },
+    "text": "CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. "
+  },
+  {
+    "source": "docs/architecture-0.md",
+    "documentTitle": "Architecture Note 0",
+    "chunkId": "chunk_0072",
+    "score": 0.754,
+    "metadata": {
+      "section": "0. Design",
+      "scopeId": "repo_fixture"
+    },
+    "text": "CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. "
+  },
+  {
+    "source": "docs/architecture-1.md",
+    "documentTitle": "Architecture Note 1",
+    "chunkId": "chunk_0073",
+    "score": 0.751,
+    "metadata": {
+      "section": "1. Design",
+      "scopeId": "repo_fixture"
+    },
+    "text": "CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. "
+  },
+  {
+    "source": "docs/architecture-2.md",
+    "documentTitle": "Architecture Note 2",
+    "chunkId": "chunk_0074",
+    "score": 0.748,
+    "metadata": {
+      "section": "2. Design",
+      "scopeId": "repo_fixture"
+    },
+    "text": "CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. "
+  },
+  {
+    "source": "docs/architecture-3.md",
+    "documentTitle": "Architecture Note 3",
+    "chunkId": "chunk_0075",
+    "score": 0.745,
+    "metadata": {
+      "section": "3. Design",
+      "scopeId": "repo_fixture"
+    },
+    "text": "CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. "
+  },
+  {
+    "source": "docs/architecture-4.md",
+    "documentTitle": "Architecture Note 4",
+    "chunkId": "chunk_0076",
+    "score": 0.742,
+    "metadata": {
+      "section": "4. Design",
+      "scopeId": "repo_fixture"
+    },
+    "text": "CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. "
+  },
+  {
+    "source": "docs/architecture-5.md",
+    "documentTitle": "Architecture Note 5",
+    "chunkId": "chunk_0077",
+    "score": 0.739,
+    "metadata": {
+      "section": "5. Design",
+      "scopeId": "repo_fixture"
+    },
+    "text": "CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. "
+  },
+  {
+    "source": "docs/architecture-6.md",
+    "documentTitle": "Architecture Note 6",
+    "chunkId": "chunk_0078",
+    "score": 0.736,
+    "metadata": {
+      "section": "6. Design",
+      "scopeId": "repo_fixture"
+    },
+    "text": "CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. "
+  },
+  {
+    "source": "docs/architecture-7.md",
+    "documentTitle": "Architecture Note 7",
+    "chunkId": "chunk_0079",
+    "score": 0.733,
+    "metadata": {
+      "section": "7. Design",
+      "scopeId": "repo_fixture"
+    },
+    "text": "CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. "
+  },
+  {
+    "source": "docs/architecture-0.md",
+    "documentTitle": "Architecture Note 0",
+    "chunkId": "chunk_0080",
+    "score": 0.73,
+    "metadata": {
+      "section": "8. Design",
+      "scopeId": "repo_fixture"
+    },
+    "text": "CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. "
+  },
+  {
+    "source": "docs/architecture-1.md",
+    "documentTitle": "Architecture Note 1",
+    "chunkId": "chunk_0081",
+    "score": 0.727,
+    "metadata": {
+      "section": "9. Design",
+      "scopeId": "repo_fixture"
+    },
+    "text": "CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. "
+  },
+  {
+    "source": "docs/architecture-2.md",
+    "documentTitle": "Architecture Note 2",
+    "chunkId": "chunk_0082",
+    "score": 0.724,
+    "metadata": {
+      "section": "10. Design",
+      "scopeId": "repo_fixture"
+    },
+    "text": "CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. "
+  },
+  {
+    "source": "docs/architecture-3.md",
+    "documentTitle": "Architecture Note 3",
+    "chunkId": "chunk_0083",
+    "score": 0.721,
+    "metadata": {
+      "section": "11. Design",
+      "scopeId": "repo_fixture"
+    },
+    "text": "CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. "
+  },
+  {
+    "source": "docs/architecture-4.md",
+    "documentTitle": "Architecture Note 4",
+    "chunkId": "chunk_0084",
+    "score": 0.718,
+    "metadata": {
+      "section": "0. Design",
+      "scopeId": "repo_fixture"
+    },
+    "text": "CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. "
+  },
+  {
+    "source": "docs/architecture-5.md",
+    "documentTitle": "Architecture Note 5",
+    "chunkId": "chunk_0085",
+    "score": 0.715,
+    "metadata": {
+      "section": "1. Design",
+      "scopeId": "repo_fixture"
+    },
+    "text": "CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. "
+  },
+  {
+    "source": "docs/architecture-6.md",
+    "documentTitle": "Architecture Note 6",
+    "chunkId": "chunk_0086",
+    "score": 0.712,
+    "metadata": {
+      "section": "2. Design",
+      "scopeId": "repo_fixture"
+    },
+    "text": "CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. "
+  },
+  {
+    "source": "docs/architecture-7.md",
+    "documentTitle": "Architecture Note 7",
+    "chunkId": "chunk_0087",
+    "score": 0.709,
+    "metadata": {
+      "section": "3. Design",
+      "scopeId": "repo_fixture"
+    },
+    "text": "CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. "
+  },
+  {
+    "source": "docs/architecture-0.md",
+    "documentTitle": "Architecture Note 0",
+    "chunkId": "chunk_0088",
+    "score": 0.706,
+    "metadata": {
+      "section": "4. Design",
+      "scopeId": "repo_fixture"
+    },
+    "text": "CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. "
+  },
+  {
+    "source": "docs/architecture-1.md",
+    "documentTitle": "Architecture Note 1",
+    "chunkId": "chunk_0089",
+    "score": 0.703,
+    "metadata": {
+      "section": "5. Design",
+      "scopeId": "repo_fixture"
+    },
+    "text": "CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. "
+  },
+  {
+    "source": "docs/architecture-2.md",
+    "documentTitle": "Architecture Note 2",
+    "chunkId": "chunk_0090",
+    "score": 0.7,
+    "metadata": {
+      "section": "6. Design",
+      "scopeId": "repo_fixture"
+    },
+    "text": "CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. "
+  },
+  {
+    "source": "docs/architecture-3.md",
+    "documentTitle": "Architecture Note 3",
+    "chunkId": "chunk_0091",
+    "score": 0.697,
+    "metadata": {
+      "section": "7. Design",
+      "scopeId": "repo_fixture"
+    },
+    "text": "CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. "
+  },
+  {
+    "source": "docs/architecture-4.md",
+    "documentTitle": "Architecture Note 4",
+    "chunkId": "chunk_0092",
+    "score": 0.694,
+    "metadata": {
+      "section": "8. Design",
+      "scopeId": "repo_fixture"
+    },
+    "text": "CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. "
+  },
+  {
+    "source": "docs/architecture-5.md",
+    "documentTitle": "Architecture Note 5",
+    "chunkId": "chunk_0093",
+    "score": 0.691,
+    "metadata": {
+      "section": "9. Design",
+      "scopeId": "repo_fixture"
+    },
+    "text": "CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. "
+  },
+  {
+    "source": "docs/architecture-6.md",
+    "documentTitle": "Architecture Note 6",
+    "chunkId": "chunk_0094",
+    "score": 0.688,
+    "metadata": {
+      "section": "10. Design",
+      "scopeId": "repo_fixture"
+    },
+    "text": "CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. "
+  },
+  {
+    "source": "docs/architecture-7.md",
+    "documentTitle": "Architecture Note 7",
+    "chunkId": "chunk_0095",
+    "score": 0.685,
+    "metadata": {
+      "section": "11. Design",
+      "scopeId": "repo_fixture"
+    },
+    "text": "CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. "
+  },
+  {
+    "source": "docs/architecture-0.md",
+    "documentTitle": "Architecture Note 0",
+    "chunkId": "chunk_0096",
+    "score": 0.682,
+    "metadata": {
+      "section": "0. Design",
+      "scopeId": "repo_fixture"
+    },
+    "text": "CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. "
+  },
+  {
+    "source": "docs/architecture-1.md",
+    "documentTitle": "Architecture Note 1",
+    "chunkId": "chunk_0097",
+    "score": 0.679,
+    "metadata": {
+      "section": "1. Design",
+      "scopeId": "repo_fixture"
+    },
+    "text": "CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. "
+  },
+  {
+    "source": "docs/architecture-2.md",
+    "documentTitle": "Architecture Note 2",
+    "chunkId": "chunk_0098",
+    "score": 0.676,
+    "metadata": {
+      "section": "2. Design",
+      "scopeId": "repo_fixture"
+    },
+    "text": "CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. "
+  },
+  {
+    "source": "docs/architecture-3.md",
+    "documentTitle": "Architecture Note 3",
+    "chunkId": "chunk_0099",
+    "score": 0.673,
+    "metadata": {
+      "section": "3. Design",
+      "scopeId": "repo_fixture"
+    },
+    "text": "CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. "
+  },
+  {
+    "source": "docs/architecture-4.md",
+    "documentTitle": "Architecture Note 4",
+    "chunkId": "chunk_0100",
+    "score": 0.67,
+    "metadata": {
+      "section": "4. Design",
+      "scopeId": "repo_fixture"
+    },
+    "text": "CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. "
+  },
+  {
+    "source": "docs/architecture-5.md",
+    "documentTitle": "Architecture Note 5",
+    "chunkId": "chunk_0101",
+    "score": 0.667,
+    "metadata": {
+      "section": "5. Design",
+      "scopeId": "repo_fixture"
+    },
+    "text": "CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. "
+  },
+  {
+    "source": "docs/architecture-6.md",
+    "documentTitle": "Architecture Note 6",
+    "chunkId": "chunk_0102",
+    "score": 0.664,
+    "metadata": {
+      "section": "6. Design",
+      "scopeId": "repo_fixture"
+    },
+    "text": "CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. "
+  },
+  {
+    "source": "docs/architecture-7.md",
+    "documentTitle": "Architecture Note 7",
+    "chunkId": "chunk_0103",
+    "score": 0.661,
+    "metadata": {
+      "section": "7. Design",
+      "scopeId": "repo_fixture"
+    },
+    "text": "CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. "
+  },
+  {
+    "source": "docs/architecture-0.md",
+    "documentTitle": "Architecture Note 0",
+    "chunkId": "chunk_0104",
+    "score": 0.658,
+    "metadata": {
+      "section": "8. Design",
+      "scopeId": "repo_fixture"
+    },
+    "text": "CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. "
+  },
+  {
+    "source": "docs/architecture-1.md",
+    "documentTitle": "Architecture Note 1",
+    "chunkId": "chunk_0105",
+    "score": 0.655,
+    "metadata": {
+      "section": "9. Design",
+      "scopeId": "repo_fixture"
+    },
+    "text": "CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. "
+  },
+  {
+    "source": "docs/architecture-2.md",
+    "documentTitle": "Architecture Note 2",
+    "chunkId": "chunk_0106",
+    "score": 0.652,
+    "metadata": {
+      "section": "10. Design",
+      "scopeId": "repo_fixture"
+    },
+    "text": "CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. "
+  },
+  {
+    "source": "docs/architecture-3.md",
+    "documentTitle": "Architecture Note 3",
+    "chunkId": "chunk_0107",
+    "score": 0.649,
+    "metadata": {
+      "section": "11. Design",
+      "scopeId": "repo_fixture"
+    },
+    "text": "CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. "
+  },
+  {
+    "source": "docs/architecture-4.md",
+    "documentTitle": "Architecture Note 4",
+    "chunkId": "chunk_0108",
+    "score": 0.646,
+    "metadata": {
+      "section": "0. Design",
+      "scopeId": "repo_fixture"
+    },
+    "text": "CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. "
+  },
+  {
+    "source": "docs/architecture-5.md",
+    "documentTitle": "Architecture Note 5",
+    "chunkId": "chunk_0109",
+    "score": 0.643,
+    "metadata": {
+      "section": "1. Design",
+      "scopeId": "repo_fixture"
+    },
+    "text": "CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. "
+  },
+  {
+    "source": "docs/architecture-6.md",
+    "documentTitle": "Architecture Note 6",
+    "chunkId": "chunk_0110",
+    "score": 0.64,
+    "metadata": {
+      "section": "2. Design",
+      "scopeId": "repo_fixture"
+    },
+    "text": "CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. "
+  },
+  {
+    "source": "docs/architecture-7.md",
+    "documentTitle": "Architecture Note 7",
+    "chunkId": "chunk_0111",
+    "score": 0.637,
+    "metadata": {
+      "section": "3. Design",
+      "scopeId": "repo_fixture"
+    },
+    "text": "CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. "
+  },
+  {
+    "source": "docs/architecture-0.md",
+    "documentTitle": "Architecture Note 0",
+    "chunkId": "chunk_0112",
+    "score": 0.634,
+    "metadata": {
+      "section": "4. Design",
+      "scopeId": "repo_fixture"
+    },
+    "text": "CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. "
+  },
+  {
+    "source": "docs/architecture-1.md",
+    "documentTitle": "Architecture Note 1",
+    "chunkId": "chunk_0113",
+    "score": 0.631,
+    "metadata": {
+      "section": "5. Design",
+      "scopeId": "repo_fixture"
+    },
+    "text": "CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. "
+  },
+  {
+    "source": "docs/architecture-2.md",
+    "documentTitle": "Architecture Note 2",
+    "chunkId": "chunk_0114",
+    "score": 0.628,
+    "metadata": {
+      "section": "6. Design",
+      "scopeId": "repo_fixture"
+    },
+    "text": "CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. "
+  },
+  {
+    "source": "docs/architecture-3.md",
+    "documentTitle": "Architecture Note 3",
+    "chunkId": "chunk_0115",
+    "score": 0.625,
+    "metadata": {
+      "section": "7. Design",
+      "scopeId": "repo_fixture"
+    },
+    "text": "CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. "
+  },
+  {
+    "source": "docs/architecture-4.md",
+    "documentTitle": "Architecture Note 4",
+    "chunkId": "chunk_0116",
+    "score": 0.622,
+    "metadata": {
+      "section": "8. Design",
+      "scopeId": "repo_fixture"
+    },
+    "text": "CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. "
+  },
+  {
+    "source": "docs/architecture-5.md",
+    "documentTitle": "Architecture Note 5",
+    "chunkId": "chunk_0117",
+    "score": 0.619,
+    "metadata": {
+      "section": "9. Design",
+      "scopeId": "repo_fixture"
+    },
+    "text": "CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. "
+  },
+  {
+    "source": "docs/architecture-6.md",
+    "documentTitle": "Architecture Note 6",
+    "chunkId": "chunk_0118",
+    "score": 0.616,
+    "metadata": {
+      "section": "10. Design",
+      "scopeId": "repo_fixture"
+    },
+    "text": "CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. "
+  },
+  {
+    "source": "docs/architecture-7.md",
+    "documentTitle": "Architecture Note 7",
+    "chunkId": "chunk_0119",
+    "score": 0.613,
+    "metadata": {
+      "section": "11. Design",
+      "scopeId": "repo_fixture"
+    },
+    "text": "CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. CodeContext MCP should preserve original content, record receipts, keep memory scoped, and support recall. "
+  }
+]

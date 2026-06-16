@@ -1,0 +1,13 @@
+{
+  "flow": "full",
+  "goal": "Analyze auth test failure, compress noisy test output, preserve original, and remember the important failure.",
+  "contentFile": "../performance/test-output-100kb.log",
+  "contentType": "test_output",
+  "query": "auth session refresh token cookie",
+  "options": {
+    "keepOriginal": true,
+    "includeRecall": true,
+    "saveMemory": true,
+    "maxTokens": 2000
+  }
+}

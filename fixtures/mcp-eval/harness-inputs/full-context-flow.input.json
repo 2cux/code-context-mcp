@@ -1,0 +1,13 @@
+{
+  "scopeId": "repo_fixture",
+  "contentFile": "../performance/test-output-100kb.log",
+  "contentType": "test_output",
+  "goal": "压缩测试失败日志，保存关键 test_failure，并召回相关项目上下文。",
+  "query": "auth session refresh token cookie failure",
+  "options": {
+    "keepOriginal": true,
+    "saveMemory": true,
+    "includeRecall": true,
+    "maxTokens": 2500
+  }
+}

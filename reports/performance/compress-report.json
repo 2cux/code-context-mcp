@@ -1,0 +1,61 @@
+{
+  "generated": "2026-06-16T11:07:23.402Z",
+  "scenarios": [
+    {
+      "scenario": "compress/10KB test output",
+      "sizeLabel": "10KB test output",
+      "runs": 1,
+      "inputBytes": 10240,
+      "p50Ms": 110,
+      "p95Ms": 110,
+      "maxMs": 110,
+      "avgTokensSaved": 2707,
+      "avgCompressionRatio": 0.92,
+      "statuses": {
+        "ok": 1
+      }
+    },
+    {
+      "scenario": "compress/100KB test output",
+      "sizeLabel": "100KB test output",
+      "runs": 1,
+      "inputBytes": 102400,
+      "p50Ms": 96,
+      "p95Ms": 96,
+      "maxMs": 96,
+      "avgTokensSaved": 28986,
+      "avgCompressionRatio": 0.99,
+      "statuses": {
+        "ok": 1
+      }
+    },
+    {
+      "scenario": "compress/100KB server log",
+      "sizeLabel": "100KB server log",
+      "runs": 1,
+      "inputBytes": 102400,
+      "p50Ms": 124,
+      "p95Ms": 124,
+      "maxMs": 124,
+      "avgTokensSaved": 33740,
+      "avgCompressionRatio": 0.94,
+      "statuses": {
+        "ok": 1
+      }
+    },
+    {
+      "scenario": "compress/100KB build failure",
+      "sizeLabel": "100KB build failure",
+      "runs": 1,
+      "inputBytes": 102400,
+      "p50Ms": 93,
+      "p95Ms": 93,
+      "maxMs": 93,
+      "avgTokensSaved": 34748,
+      "avgCompressionRatio": 0.99,
+      "statuses": {
+        "ok": 1
+      }
+    }
+  ]
+}

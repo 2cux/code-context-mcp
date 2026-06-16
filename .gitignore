@@ -176,6 +176,22 @@ fixtures/evaluation/**/*.md
 !fixtures/evaluation/**/*.example.*
 !fixtures/evaluation/**/.gitkeep
 
+# =============================================================================
+# MCP Eval Fixtures — committed for CI reproducibility
+# =============================================================================
+
+!fixtures/mcp-eval/
+!fixtures/mcp-eval/**
+
+# =============================================================================
+# Performance Reports — committed output
+# =============================================================================
+
+!reports/performance/
+!reports/performance/**/*.json
+!reports/performance/**/*.jsonl
+!reports/performance/**/*.md
+
 
 # =============================================================================
 # Editor and IDE Files

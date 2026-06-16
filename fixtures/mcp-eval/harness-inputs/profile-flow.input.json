@@ -1,0 +1,41 @@
+{
+  "scopeId": "repo_fixture",
+  "description": "Input fixture for profile-flow harness integration tests.",
+  "staticFacts": [
+    {
+      "type": "project_rule",
+      "content": "本项目使用 pnpm，不要使用 npm。",
+      "summary": "Use pnpm as the package manager.",
+      "confidence": 0.95,
+      "sourceRef": "user:manual"
+    },
+    {
+      "type": "dependency",
+      "content": "MCP server is implemented in TypeScript and uses local SQLite storage.",
+      "summary": "TypeScript + SQLite local-first stack.",
+      "confidence": 0.9,
+      "sourceRef": "docs:architecture"
+    }
+  ],
+  "dynamicContext": [
+    {
+      "type": "current_task",
+      "content": "正在验证 Harness 与 MCP 的真实集成效果。",
+      "summary": "Validate real Harness + MCP integration.",
+      "confidence": 0.9,
+      "sourceRef": "user:current_task"
+    },
+    {
+      "type": "test_failure",
+      "content": "auth/session.test.ts 曾经因为 refresh token cookie 未清理而失败。",
+      "summary": "Auth session cookie cleanup test failure.",
+      "confidence": 0.85,
+      "sourceRef": "ccr:fixture"
+    }
+  ],
+  "recallQueries": [
+    "package manager rule",
+    "current harness mcp validation task",
+    "auth session cookie failure"
+  ]
+}

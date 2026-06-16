@@ -1,0 +1,238 @@
+{
+  "scopeId": "repo_fixture",
+  "description": "Smoke input for verifying that the MCP adapter can call real CodeContext MCP tools with minimal valid payloads. The implementation may adjust field names to match the project's actual tool schemas.",
+  "mode": "test",
+  "expected": {
+    "toolCount": 17,
+    "requiredTools": [
+      "current_scope",
+      "compress_context",
+      "retrieve_original",
+      "delete_original",
+      "cleanup_originals",
+      "list_compressions",
+      "remember_context",
+      "recall_context",
+      "forget_context",
+      "list_context",
+      "analyze_context",
+      "list_failures",
+      "failure_stats",
+      "list_harness_flows",
+      "run_harness_flow",
+      "get_harness_run",
+      "check_harness_flow"
+    ]
+  },
+  "fixtures": {
+    "testOutputFile": "../performance/test-output-10kb.log",
+    "fullContextFlowInputFile": "full-context-flow.input.json",
+    "memoryFlowInputFile": "memory-flow.input.json"
+  },
+  "calls": [
+    {
+      "tool": "current_scope",
+      "input": {
+        "cwd": "."
+      },
+      "expect": {
+        "ok": true,
+        "requiredFields": ["scopeId"]
+      }
+    },
+    {
+      "tool": "compress_context",
+      "input": {
+        "scopeId": "repo_fixture",
+        "contentFile": "../performance/test-output-10kb.log",
+        "contentType": "test_output",
+        "metadata": {
+          "command": "pnpm test"
+        },
+        "keepOriginal": true,
+        "maxTokens": 1500
+      },
+      "capture": {
+        "ccrId": "$.ccrId",
+        "originalRef": "$.originalRef",
+        "receiptId": "$.receiptId"
+      },
+      "expect": {
+        "ok": true,
+        "requiredFields": ["compressedContent", "originalRef", "receiptId"]
+      }
+    },
+    {
+      "tool": "retrieve_original",
+      "input": {
+        "scopeId": "repo_fixture",
+        "originalRef": "${originalRef}"
+      },
+      "expect": {
+        "ok": true,
+        "requiredFields": ["content"]
+      }
+    },
+    {
+      "tool": "list_compressions",
+      "input": {
+        "scopeId": "repo_fixture",
+        "limit": 10
+      },
+      "expect": {
+        "ok": true
+      }
+    },
+    {
+      "tool": "remember_context",
+      "input": {
+        "scopeId": "repo_fixture",
+        "type": "project_rule",
+        "content": "本项目使用 pnpm，不要使用 npm。",
+        "summary": "Use pnpm as the package manager.",
+        "profileTarget": "static",
+        "confidence": 0.95,
+        "sourceRef": "user:manual"
+      },
+      "capture": {
+        "memoryId": "$.memoryId",
+        "receiptId": "$.receiptId"
+      },
+      "expect": {
+        "ok": true,
+        "requiredFields": ["memoryId", "receiptId"]
+      }
+    },
+    {
+      "tool": "recall_context",
+      "input": {
+        "scopeId": "repo_fixture",
+        "query": "package manager install dependency",
+        "types": ["project_rule"],
+        "limit": 5,
+        "includeProfile": true
+      },
+      "expect": {
+        "ok": true,
+        "requiredFields": ["memories", "receiptId"]
+      }
+    },
+    {
+      "tool": "list_context",
+      "input": {
+        "scopeId": "repo_fixture",
+        "types": ["project_rule"],
+        "status": "active",
+        "limit": 10
+      },
+      "expect": {
+        "ok": true
+      }
+    },
+    {
+      "tool": "forget_context",
+      "input": {
+        "scopeId": "repo_fixture",
+        "memoryId": "${memoryId}",
+        "mode": "soft_forget",
+        "reason": "MCP smoke cleanup"
+      },
+      "expect": {
+        "ok": true,
+        "requiredFields": ["receiptId"]
+      }
+    },
+    {
+      "tool": "analyze_context",
+      "input": {
+        "scopeId": "repo_fixture",
+        "content": "FAIL auth/session.test.ts refresh token cookie was not cleared",
+        "goal": "decide whether to compress and recall context"
+      },
+      "expect": {
+        "ok": true
+      }
+    },
+    {
+      "tool": "list_failures",
+      "input": {
+        "scopeId": "repo_fixture",
+        "limit": 10
+      },
+      "expect": {
+        "ok": true
+      }
+    },
+    {
+      "tool": "failure_stats",
+      "input": {
+        "scopeId": "repo_fixture"
+      },
+      "expect": {
+        "ok": true
+      }
+    },
+    {
+      "tool": "list_harness_flows",
+      "input": {},
+      "expect": {
+        "ok": true,
+        "requiredFields": ["flows"]
+      }
+    },
+    {
+      "tool": "run_harness_flow",
+      "input": {
+        "flowId": "full-context-flow",
+        "inputFile": "full-context-flow.input.json"
+      },
+      "capture": {
+        "runId": "$.runId",
+        "harnessReceiptId": "$.receiptId"
+      },
+      "expect": {
+        "ok": true,
+        "requiredFields": ["runId"]
+      }
+    },
+    {
+      "tool": "get_harness_run",
+      "input": {
+        "runId": "${runId}"
+      },
+      "expect": {
+        "ok": true,
+        "requiredFields": ["state"]
+      }
+    },
+    {
+      "tool": "check_harness_flow",
+      "input": {
+        "flowId": "full-context-flow"
+      },
+      "expect": {
+        "ok": true
+      }
+    },
+    {
+      "tool": "delete_original",
+      "input": {
+        "scopeId": "repo_fixture",
+        "originalRef": "${originalRef}"
+      },
+      "expect": {
+        "ok": true
+      }
+    },
+    {
+      "tool": "cleanup_originals",
+      "input": {
+        "scopeId": "repo_fixture",
+        "dryRun": true
+      },
+      "expect": {
+        "ok": true
+      }
+    }
+  ]
+}

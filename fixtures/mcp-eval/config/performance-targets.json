@@ -1,0 +1,11 @@
+{
+  "targets": {
+    "current_scope_ms": 300,
+    "compress_context_100kb_ms": 1000,
+    "compress_context_1mb_ms": 5000,
+    "retrieve_original_ms": 1000,
+    "recall_context_100_memories_ms": 1000,
+    "recall_context_1000_memories_ms": 2000,
+    "run_context_flow_full_ms": 8000
+  }
+}

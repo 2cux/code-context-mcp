@@ -1,0 +1,25 @@
+{
+  "scopeId": "repo_fixture",
+  "fixtures": [
+    {
+      "id": "vitest-100kb",
+      "contentFile": "../performance/test-output-100kb.log",
+      "contentType": "test_output",
+      "metadata": {
+        "command": "pnpm test"
+      }
+    },
+    {
+      "id": "build-failure",
+      "contentFile": "../performance/build-output-failure-100kb.log",
+      "contentType": "command_output",
+      "metadata": {
+        "command": "pnpm build"
+      }
+    }
+  ],
+  "options": {
+    "keepOriginal": true,
+    "maxTokens": 2000
+  }
+}

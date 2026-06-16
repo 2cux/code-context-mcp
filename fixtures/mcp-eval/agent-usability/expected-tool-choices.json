@@ -1,0 +1,68 @@
+{
+  "U01-long-test-output": {
+    "expectedGoodTools": [
+      "compress_context",
+      "retrieve_original",
+      "remember_context"
+    ],
+    "expectedWithRunContextFlow": [
+      "run_context_flow"
+    ],
+    "badToolPatterns": [
+      "list_failures before compression",
+      "delete_original",
+      "cleanup_originals"
+    ]
+  },
+  "U02-build-failure": {
+    "expectedGoodTools": [
+      "compress_context"
+    ],
+    "expectedWithRunContextFlow": [
+      "run_context_flow"
+    ],
+    "badToolPatterns": [
+      "recall_context without query reason",
+      "delete_original"
+    ]
+  },
+  "U03-project-rule-memory": {
+    "expectedGoodTools": [
+      "remember_context",
+      "recall_context"
+    ],
+    "expectedWithRunContextFlow": [
+      "run_context_flow"
+    ],
+    "badToolPatterns": [
+      "compress_context for short rule",
+      "list_context before recall"
+    ]
+  },
+  "U04-supersede-memory": {
+    "expectedGoodTools": [
+      "remember_context",
+      "forget_context",
+      "recall_context"
+    ],
+    "expectedWithRunContextFlow": [
+      "run_context_flow"
+    ],
+    "badToolPatterns": [
+      "hard delete without confirmation",
+      "list_failures"
+    ]
+  },
+  "U05-large-code-file": {
+    "expectedGoodTools": [
+      "compress_context"
+    ],
+    "expectedWithRunContextFlow": [
+      "run_context_flow"
+    ],
+    "badToolPatterns": [
+      "aggressive summary",
+      "forget_context"
+    ]
+  }
+}

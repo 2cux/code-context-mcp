@@ -1,0 +1,12 @@
+{
+  "scopeId": "repo_fixture",
+  "contentFile": "../performance/test-output-10kb.log",
+  "contentType": "test_output",
+  "metadata": {
+    "command": "pnpm test"
+  },
+  "options": {
+    "keepOriginal": true,
+    "deleteAfterRetrieve": true
+  }
+}
