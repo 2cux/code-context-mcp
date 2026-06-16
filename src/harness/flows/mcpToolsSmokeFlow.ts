@@ -62,6 +62,7 @@ const ALL_TOOLS: ToolDef[] = [
   { toolName: "analyze_context", checkpoint: "mcp:analyze_context", args: { content: "test content for analysis" } },
   { toolName: "list_failures", checkpoint: "mcp:list_failures", args: { limit: 5 } },
   { toolName: "failure_stats", checkpoint: "mcp:failure_stats", args: {} },
+  { toolName: "run_context_flow", checkpoint: "mcp:run_context_flow", args: { flow: "compression", content: "smoke test content for run_context_flow", contentType: "plain_text", scopeId: "harness", options: { keepOriginal: true, maxTokens: 500 } } },
 ];
 
 // ── Flow Implementation ────────────────────────────────────────────────────────

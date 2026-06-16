@@ -9,25 +9,8 @@ import type { Database } from "sql.js";
 import { initAndMigrate } from "../storage/migrations.js";
 import { getDb, persistDb } from "../storage/db.js";
 import { ReceiptService } from "../receipts/receiptService.js";
-import { handleCurrentScope } from "./tools/currentScope.js";
-import { handleCompressContext } from "./tools/compressContext.js";
-import { handleListCompressions } from "./tools/listCompressions.js";
-import { handleRetrieveOriginal } from "./tools/retrieveOriginal.js";
-import { handleDeleteOriginal } from "./tools/deleteOriginal.js";
-import { handleCleanupOriginals } from "./tools/cleanupOriginals.js";
-import { handleRememberContext } from "./tools/rememberContext.js";
-import { handleRecallContext } from "./tools/recallContext.js";
-import { handleForgetContext } from "./tools/forgetContext.js";
-import { handleListContext } from "./tools/listContext.js";
-import { handleAnalyzeContext } from "./tools/analyzeContext.js";
-import { handleListFailures } from "./tools/listFailures.js";
-import { handleFailureStats } from "./tools/failureStats.js";
-import { handleListHarnessFlows } from "./tools/listHarnessFlows.js";
-import { handleRunHarnessFlow } from "./tools/runHarnessFlow.js";
-import { handleGetHarnessRun } from "./tools/getHarnessRun.js";
-import { handleCheckHarnessFlow } from "./tools/checkHarnessFlow.js";
-import { handleRunContextFlow } from "./tools/runContextFlow.js";
 import { TOOL_DEFINITIONS } from "./toolSchemas.js";
+import { createToolHandlers } from "./toolRegistry.js";
 import { registerAllFlows } from "../harness/register.js";
 
 export interface ServerContext {
@@ -61,29 +44,7 @@ export async function startServer(): Promise<void> {
 
   // ---------- tool handlers ----------
 
-  const tools: Record<
-    string,
-    (args: Record<string, unknown>) => Promise<CallToolResult>
-  > = {
-    run_context_flow: (args) => handleRunContextFlow(ctx, args),
-    current_scope: (args) => handleCurrentScope(ctx, args),
-    compress_context: (args) => handleCompressContext(ctx, args),
-    retrieve_original: (args) => handleRetrieveOriginal(ctx, args),
-    delete_original: (args) => handleDeleteOriginal(ctx, args),
-    cleanup_originals: (args) => handleCleanupOriginals(ctx, args),
-    list_compressions: (args) => handleListCompressions(ctx, args),
-    remember_context: (args) => handleRememberContext(ctx, args),
-    recall_context: (args) => handleRecallContext(ctx, args),
-    forget_context: (args) => handleForgetContext(ctx, args),
-    list_context: (args) => handleListContext(ctx, args),
-    analyze_context: (args) => handleAnalyzeContext(ctx, args),
-    list_failures: (args) => handleListFailures(ctx, args),
-    failure_stats: (args) => handleFailureStats(ctx, args),
-    list_harness_flows: (args) => handleListHarnessFlows(args),
-    run_harness_flow: (args) => handleRunHarnessFlow(ctx, args),
-    get_harness_run: (args) => handleGetHarnessRun(ctx, args),
-    check_harness_flow: (args) => handleCheckHarnessFlow(args),
-  };
+  const tools = createToolHandlers(ctx);
 
   server.setRequestHandler(ListToolsRequestSchema, async () => ({
     tools: TOOL_DEFINITIONS,

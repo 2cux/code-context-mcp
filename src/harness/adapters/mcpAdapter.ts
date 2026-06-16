@@ -5,10 +5,9 @@
  * (bypassing the stdio transport). Used by the MCP tools smoke flow
  * to invoke each tool handler and capture results.
  *
- * The real adapter uses in-memory sql.js + ReceiptService for handlers
- * that need ServerContext (run_harness_flow, get_harness_run).
- * Handlers that don't need ServerContext (list_harness_flows, check_harness_flow)
- * are called directly.
+ * The real adapter uses an in-memory sql.js database + ReceiptService
+ * to construct a ServerContext, then delegates to the shared
+ * createToolHandlers() registry from src/mcp/toolRegistry.ts.
  *
  * PRD §34: MCP tools 验收适配器。
  */
@@ -17,14 +16,9 @@ import initSqlJs from "sql.js";
 import type { Database } from "sql.js";
 import { ReceiptService } from "../../receipts/receiptService.js";
 import type { ServerContext } from "../../mcp/server.js";
+import { createToolHandlers, ALL_TOOL_NAMES } from "../../mcp/toolRegistry.js";
 import { registerAllFlows } from "../../harness/register.js";
-import {
-  clearRegistry,
-  hasModule,
-  listModules,
-} from "../../harness/core/registry.js";
-import { clearModules } from "../../harness/core/runner.js";
-import { resetMockDatabase } from "../../harness/core/mockAdapters.js";
+import { clearRegistry, listModules } from "../../harness/core/registry.js";
 import { execRaw, runStmt } from "../../storage/db.js";
 import { readFileSync, existsSync } from "node:fs";
 import { join, dirname } from "node:path";
@@ -44,7 +38,7 @@ export interface McpAdapter {
   callTool(toolName: string, args: Record<string, unknown>): Promise<McpCallResult>;
 }
 
-// ── Schema Loading (for in-memory DB initialization) ─────────────────────────
+// ── Schema Loading ────────────────────────────────────────────────────────────
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
@@ -75,7 +69,6 @@ async function createInMemoryDb(): Promise<Database> {
   const SQL = await initSqlJs();
   const db = new SQL.Database();
 
-  // Run schema
   try {
     const schemaPath = findSchemaPath();
     const schemaSql = readFileSync(schemaPath, "utf-8");
@@ -87,7 +80,6 @@ async function createInMemoryDb(): Promise<Database> {
     );
   }
 
-  // Ensure harness scope exists
   try {
     runStmt(
       db,
@@ -102,35 +94,19 @@ async function createInMemoryDb(): Promise<Database> {
   return db;
 }
 
-// ── Tool Registry ────────────────────────────────────────────────────────────
-
-/** Set of MCP tools that require ServerContext (db + receipts). */
-const CTX_TOOLS = new Set(["run_harness_flow", "get_harness_run"]);
-
-/** Set of harness-specific MCP tools supported by this adapter. */
-const HARNESS_TOOLS = new Set([
-  "list_harness_flows",
-  "run_harness_flow",
-  "get_harness_run",
-  "check_harness_flow",
-]);
-
 // ── Factory ───────────────────────────────────────────────────────────────────
 
 /**
  * Create a real MCP adapter backed by in-memory SQLite.
  *
- * Supports the 4 harness MCP tools:
- *   - list_harness_flows  (no ServerContext needed)
- *   - check_harness_flow  (no ServerContext needed)
- *   - run_harness_flow    (needs ServerContext with db + receipts)
- *   - get_harness_run     (needs ServerContext with db + receipts)
- *
- * For any unsupported tool, returns an error result (never throws).
+ * Supports ALL 18 registered MCP tools via the shared createToolHandlers()
+ * registry. On first call, initializes an in-memory database, seeds a scope
+ * row, and registers harness flows. The adapter never throws — all errors
+ * are returned as McpCallResult with isError: true.
  */
 export function createMcpAdapter(): McpAdapter {
   let _db: Database | null = null;
-  let _ctx: ServerContext | null = null;
+  let _handlers: Record<string, ReturnType<typeof createToolHandlers>[string]> | null = null;
   let _flowsRegistered = false;
 
   async function ensureDb(): Promise<Database> {
@@ -140,15 +116,14 @@ export function createMcpAdapter(): McpAdapter {
     return _db;
   }
 
-  async function ensureContext(): Promise<ServerContext> {
-    if (!_ctx) {
+  async function ensureHandlers(): Promise<NonNullable<typeof _handlers>> {
+    if (!_handlers) {
       const db = await ensureDb();
-      _ctx = {
-        db,
-        receipts: new ReceiptService(db),
-      };
+      const ctx: ServerContext = { db, receipts: new ReceiptService(db) };
+      ensureFlowsRegistered();
+      _handlers = createToolHandlers(ctx);
     }
-    return _ctx;
+    return _handlers;
   }
 
   function ensureFlowsRegistered(): void {
@@ -160,7 +135,6 @@ export function createMcpAdapter(): McpAdapter {
     } catch (err) {
       const msg = err instanceof Error ? err.message : String(err);
       if (msg.includes("already registered")) {
-        // Clear and re-register if we hit duplicates
         clearRegistry();
         registerAllFlows();
       } else {
@@ -174,85 +148,29 @@ export function createMcpAdapter(): McpAdapter {
     toolName: string,
     args: Record<string, unknown>,
   ): Promise<McpCallResult> {
-    // Ensure flows are registered for harness tools
-    if (HARNESS_TOOLS.has(toolName)) {
-      try {
-        ensureFlowsRegistered();
-      } catch (err) {
-        const msg = err instanceof Error ? err.message : String(err);
+    try {
+      const handlers = await ensureHandlers();
+      const handler = handlers[toolName];
+
+      if (!handler) {
         return {
           toolName,
-          content: [{ type: "text", text: `Error: Failed to register flows — ${msg}` }],
+          content: [
+            {
+              type: "text",
+              text: `Error: Unknown tool "${toolName}". Available tools: [${ALL_TOOL_NAMES.join(", ")}]`,
+            },
+          ],
           isError: true,
         };
       }
-    }
 
-    try {
-      switch (toolName) {
-        case "list_harness_flows": {
-          // Dynamic import to avoid circular deps at module load time
-          const { handleListHarnessFlows } = await import(
-            "../../mcp/tools/listHarnessFlows.js"
-          );
-          const result = await handleListHarnessFlows(args);
-          return {
-            toolName,
-            content: result.content,
-            isError: result.isError ?? false,
-          };
-        }
-
-        case "check_harness_flow": {
-          const { handleCheckHarnessFlow } = await import(
-            "../../mcp/tools/checkHarnessFlow.js"
-          );
-          const result = await handleCheckHarnessFlow(args);
-          return {
-            toolName,
-            content: result.content,
-            isError: result.isError ?? false,
-          };
-        }
-
-        case "run_harness_flow": {
-          const ctx = await ensureContext();
-          const { handleRunHarnessFlow } = await import(
-            "../../mcp/tools/runHarnessFlow.js"
-          );
-          const result = await handleRunHarnessFlow(ctx, args);
-          return {
-            toolName,
-            content: result.content,
-            isError: result.isError ?? false,
-          };
-        }
-
-        case "get_harness_run": {
-          const ctx = await ensureContext();
-          const { handleGetHarnessRun } = await import(
-            "../../mcp/tools/getHarnessRun.js"
-          );
-          const result = await handleGetHarnessRun(ctx, args);
-          return {
-            toolName,
-            content: result.content,
-            isError: result.isError ?? false,
-          };
-        }
-
-        default:
-          return {
-            toolName,
-            content: [
-              {
-                type: "text",
-                text: `Error: Tool "${toolName}" is not supported by the harness MCP adapter. Supported tools: [${[...HARNESS_TOOLS].join(", ")}]`,
-              },
-            ],
-            isError: true,
-          };
-      }
+      const result = await handler(args);
+      return {
+        toolName,
+        content: result.content,
+        isError: result.isError ?? false,
+      };
     } catch (err) {
       const msg = err instanceof Error ? err.message : String(err);
       const stack = err instanceof Error ? err.stack : undefined;

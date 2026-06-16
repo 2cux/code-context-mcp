@@ -35,10 +35,11 @@ export const mcpToolsSmokeFlowManifest: HarnessManifest = {
     { name: "mcp:analyze_context", description: "Call analyze_context tool", expect: "pass" },
     { name: "mcp:list_failures", description: "Call list_failures tool", expect: "pass" },
     { name: "mcp:failure_stats", description: "Call failure_stats tool", expect: "pass" },
+    { name: "mcp:run_context_flow", description: "Call run_context_flow tool", expect: "pass" },
   ],
   artifacts: [
     { name: "mcp-smoke-results", description: "Per-tool smoke test results", contentType: "application/json" },
-    { name: "mcp-tool-matrix", description: "Pass/fail matrix for all 13 tools", contentType: "application/json" },
+    { name: "mcp-tool-matrix", description: "Pass/fail matrix for all 14 tools", contentType: "application/json" },
   ],
   coversTools: [
     "current_scope",
@@ -54,6 +55,7 @@ export const mcpToolsSmokeFlowManifest: HarnessManifest = {
     "analyze_context",
     "list_failures",
     "failure_stats",
+    "run_context_flow",
   ],
   tags: ["smoke", "mcp", "acceptance"],
   capability: "smoke-test",

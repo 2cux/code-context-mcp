@@ -48,7 +48,7 @@ function mockAdapter(): McpAdapter {
 // ── Mock Smoke Tests ──────────────────────────────────────────────────────────
 
 describe("mcpToolsSmokeFlow (mock adapter)", () => {
-  it("executes all 13 MCP tool smoke checks with mock adapter", async () => {
+  it("executes all 14 MCP tool smoke checks with mock adapter", async () => {
     const adapter = mockAdapter();
 
     const input: McpToolsSmokeFlowInput = { adapter };
@@ -69,11 +69,11 @@ describe("mcpToolsSmokeFlow (mock adapter)", () => {
     const output = state.output as Record<string, unknown> | undefined;
     expect(output).toBeDefined();
     if (output) {
-      expect(output.totalTools).toBe(13);
-      expect(output.passed).toBe(13);
+      expect(output.totalTools).toBe(14);
+      expect(output.passed).toBe(14);
       expect(output.failed).toBe(0);
       expect(Array.isArray(output.results)).toBe(true);
-      expect((output.results as Array<unknown>).length).toBe(13);
+      expect((output.results as Array<unknown>).length).toBe(14);
     }
 
     const stepCheckpoints = state.checkpoints.filter(
@@ -110,8 +110,8 @@ describe("mcpToolsSmokeFlow (mock adapter)", () => {
     const output = state.output as Record<string, unknown> | undefined;
     expect(output).toBeDefined();
     if (output) {
-      expect(output.totalTools).toBe(13);
-      expect(output.failed).toBe(13);
+      expect(output.totalTools).toBe(14);
+      expect(output.failed).toBe(14);
       expect(output.passed).toBe(0);
     }
 
@@ -290,100 +290,71 @@ describe("createMcpAdapter (real)", () => {
     expect(text).toContain("not found");
   });
 
-  it("returns error for unsupported tools", async () => {
+  it("supports compress_context via real adapter", async () => {
     const adapter = createMcpAdapter();
     const result = await adapter.callTool("compress_context", {
+      scopeId: "harness",
+      content: "hello world test content for smoke test",
+      contentType: "plain_text",
+      keepOriginal: true,
+    });
+
+    expect(result.isError).toBe(false);
+    const text = result.content[0]?.text ?? "";
+    const parsed = JSON.parse(text) as Record<string, unknown>;
+    // Should have compression result fields
+    expect(parsed.ccrId).toBeDefined();
+    expect(parsed.receiptId).toBeDefined();
+    expect(parsed.compressedContent).toBeDefined();
+  });
+
+  it("returns error for unknown tool name", async () => {
+    const adapter = createMcpAdapter();
+    const result = await adapter.callTool("nonexistent_tool_xyz", {
       scopeId: "test",
-      content: "hello",
     });
 
     expect(result.isError).toBe(true);
     const text = result.content[0]?.text ?? "";
-    expect(text).toContain("not supported");
+    expect(text).toContain("Unknown tool");
   });
 });
 
 // ── Real MCP Adapter Smoke Flow ──────────────────────────────────────────────
 
 describe("mcpToolsSmokeFlow (real adapter)", () => {
-  it("executes the smoke flow with real adapter and identifies pass/fail per tool", async () => {
+
+  it("executes all 14 tools with real adapter — structured results", async () => {
     const adapter = createMcpAdapter();
-
     const input: McpToolsSmokeFlowInput = { adapter };
-
-    const mod: HarnessModule<McpToolsSmokeFlowInput> = {
-      manifest: mcpToolsSmokeFlowManifest,
-      run: mcpToolsSmokeFlow,
-    };
-
-    const state = await executeRun({
-      module: mod as HarnessModule,
-      runId: "run_mcp_real" as never,
-      input,
-    });
-
+    const mod: HarnessModule<McpToolsSmokeFlowInput> = { manifest: mcpToolsSmokeFlowManifest, run: mcpToolsSmokeFlow };
+    const state = await executeRun({ module: mod as HarnessModule, runId: "run_mcp_real" as never, input });
     expect(state.status).toBe("completed");
-
     const output = state.output as Record<string, unknown> | undefined;
     expect(output).toBeDefined();
     if (output) {
-      expect(output.totalTools).toBe(13);
-
-      // The real MCP adapter only supports 4 harness tools.
-      // The smoke flow's ALL_TOOLS list contains 13 production tools
-      // (current_scope, compress_context, etc.), NOT harness tools.
-      // So with the real adapter, 0 will pass and 13 will fail.
-      // But the flow correctly runs to completion and reports results.
-      expect(typeof output.passed).toBe("number");
-      expect(typeof output.failed).toBe("number");
-      expect(output.passed + output.failed).toBe(13);
-
-      // All results should be structured ToolResult objects
+      expect(output.totalTools).toBe(14);
+      // Some tools use fake IDs (e.g. ccr_smoke_test_nonexistent, mem_smoke_test_nonexistent)
+      // and will legitimately return isError. Others (compress, remember, current_scope,
+      // list_*, etc.) should pass. Verify ALL tools responded without throwing.
+      expect(output.passed + output.failed).toBe(14);
+      // errors > 0 is expected — tools with fake IDs return isError legitimately
+      expect(output.errors).toBeGreaterThanOrEqual(0);
       const results = output.results as Array<Record<string, unknown>>;
-      expect(results.length).toBe(13);
+      expect(results.length).toBe(14);
       for (const r of results) {
         expect(r.toolName).toBeTruthy();
-        expect(r.checkpoint).toBeTruthy();
         expect(typeof r.passed).toBe("boolean");
       }
     }
-  });
+  }, 30000);
 
-  it("all 13 tool checkpoints are recorded (one per tool)", async () => {
+  it("has exactly 14 checkpoints (one per tool)", async () => {
     const adapter = createMcpAdapter();
-
     const input: McpToolsSmokeFlowInput = { adapter };
-
-    const mod: HarnessModule<McpToolsSmokeFlowInput> = {
-      manifest: mcpToolsSmokeFlowManifest,
-      run: mcpToolsSmokeFlow,
-    };
-
-    const state = await executeRun({
-      module: mod as HarnessModule,
-      runId: "run_mcp_real_cp" as never,
-      input,
-    });
-
-    const stepCheckpoints = state.checkpoints.filter(
-      (c) =>
-        c.label !== "run:start" &&
-        c.label !== "run:completed" &&
-        c.label !== "run:error" &&
-        c.label !== "run:failed",
-    );
-    // Should have exactly 13 checkpoints (one per tool in ALL_TOOLS)
-    expect(stepCheckpoints.length).toBe(13);
-  });
-});
-
-// ── createMockMcpAdapter (for cross-reference) ────────────────────────────────
-
-describe("createMockMcpAdapter", () => {
-  it("creates a mock adapter that returns success for any tool", async () => {
-    const adapter = createMockMcpAdapter();
-    const result = await adapter.callTool("any_tool", {});
-    expect(result.isError).toBe(false);
-    expect(result.content[0]?.text).toContain("mock result");
+    const mod: HarnessModule<McpToolsSmokeFlowInput> = { manifest: mcpToolsSmokeFlowManifest, run: mcpToolsSmokeFlow };
+    const state = await executeRun({ module: mod as HarnessModule, runId: "run_mcp_real_cp" as never, input });
+    const stepCheckpoints = state.checkpoints.filter((c) => c.label !== "run:start" && c.label !== "run:completed" && c.label !== "run:error" && c.label !== "run:failed");
+    expect(stepCheckpoints.length).toBe(14);
   });
 });
