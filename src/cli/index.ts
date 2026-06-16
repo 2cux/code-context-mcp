@@ -44,6 +44,7 @@ import {
   runHarnessList,
   runHarnessRun,
   runHarnessCheck,
+  runHarnessCheckAll,
   runHarnessRuns,
   runHarnessShow,
   runHarnessLogs,
@@ -133,7 +134,11 @@ Commands:
   harness list                          List all registered harness flows
   harness run <flow-id>                 Execute a harness flow
       --input <file>                     Input JSON file for the flow
-  harness check <flow-id>               Validate a flow manifest
+  harness check <flow-id>               Validate a flow manifest (15-rule check)
+      --manifest-only                    Skip runtime checks
+  harness check-all                     Check all registered flows
+      --manifest-only                    Skip runtime checks for all flows
+      --write-report                     Write artifacts/check-report.md/.json
   harness runs                          List past harness runs
   harness show <run-id>                 Show run details
   harness logs <run-id>                 Show run event logs
@@ -709,13 +714,21 @@ async function main(): Promise<void> {
           const flowId = harnessRest[0];
           if (!flowId) {
             outputError(
-              'Usage: code-context harness check <flow-id>\n' +
+              'Usage: code-context harness check <flow-id> [--manifest-only]\n' +
                 '  flow-id is required.\n' +
+                '  --manifest-only  Skip runtime checks (rules 11–15).\n' +
                 '  Run "code-context harness list" to see available flows.',
             );
             process.exit(1);
           }
-          result = runHarnessCheck(flowId);
+          const manifestOnly = hasFlag(harnessRest, "manifest-only");
+          result = await runHarnessCheck({ flowId, manifestOnly });
+          break;
+        }
+        case "check-all": {
+          const manifestOnly = hasFlag(harnessRest, "manifest-only");
+          const writeReport = hasFlag(harnessRest, "write-report");
+          result = await runHarnessCheckAll({ manifestOnly, writeReport });
           break;
         }
         case "runs": {
@@ -766,7 +779,7 @@ async function main(): Promise<void> {
           if (harnessSub) {
             outputError(
               `Unknown harness subcommand: ${harnessSub}\n` +
-                `Available: list, run, check, runs, show, logs, artifacts\n` +
+                `Available: list, run, check, check-all, runs, show, logs, artifacts\n` +
                 `Run "code-context --help" for usage.`,
             );
           } else {
@@ -774,7 +787,8 @@ async function main(): Promise<void> {
               `Usage: code-context harness <subcommand>\n` +
                 `  list       List all registered harness flows\n` +
                 `  run        Execute a harness flow\n` +
-                `  check      Validate a flow manifest\n` +
+                `  check      Validate a flow manifest (15-rule check)\n` +
+                `  check-all  Check all registered flows\n` +
                 `  runs       List past harness runs\n` +
                 `  show       Show run details\n` +
                 `  logs       Show run event logs\n` +

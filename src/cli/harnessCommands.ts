@@ -22,7 +22,6 @@ import {
   hasModule,
 } from "../harness/core/registry.js";
 import { runModule } from "../harness/core/runner.js";
-import { validateJsonSchema } from "../harness/core/validate.js";
 import {
   listRuns,
   loadState,
@@ -30,7 +29,13 @@ import {
 } from "../harness/core/stateStore.js";
 import { readLogs, detailRun } from "../harness/core/reporter.js";
 import { listArtifacts, readArtifact } from "../harness/core/artifactStore.js";
-import type { HarnessManifest, RunState } from "../harness/core/types.js";
+import type { RunState } from "../harness/core/types.js";
+import {
+  checkFlow,
+  checkAllFlows,
+  writeCheckReports,
+} from "../harness/core/checkEngine.js";
+import type { FlowCheckReport, BatchCheckReport } from "../harness/core/checkEngine.js";
 
 // ── Types ─────────────────────────────────────────────────────────────────────
 
@@ -186,93 +191,6 @@ function formatLogs(logs: Array<Record<string, unknown>>): string {
     .join("\n");
 }
 
-// ── Manifest Check ────────────────────────────────────────────────────────────
-
-/**
- * Validate a HarnessManifest for structural correctness.
- * Returns an array of error strings (empty = valid).
- */
-function checkManifest(manifest: HarnessManifest): string[] {
-  const errors: string[] = [];
-
-  // Required fields
-  if (!manifest.id || typeof manifest.id !== "string") {
-    errors.push("manifest.id is required and must be a string");
-  }
-  if (!manifest.name || typeof manifest.name !== "string") {
-    errors.push("manifest.name is required and must be a string");
-  }
-  if (!manifest.description || typeof manifest.description !== "string") {
-    errors.push("manifest.description is required and must be a string");
-  }
-
-  // Phases
-  if (!Array.isArray(manifest.phases) || manifest.phases.length === 0) {
-    errors.push("manifest.phases must be a non-empty array");
-  } else {
-    const phaseNames = new Set<string>();
-    for (const phase of manifest.phases) {
-      if (!phase.name || typeof phase.name !== "string") {
-        errors.push(`manifest.phases: each phase must have a string "name"`);
-      } else if (phaseNames.has(phase.name)) {
-        errors.push(`manifest.phases: duplicate phase name "${phase.name}"`);
-      } else {
-        phaseNames.add(phase.name);
-      }
-    }
-  }
-
-  // Checkpoints
-  if (!Array.isArray(manifest.checkpoints)) {
-    errors.push("manifest.checkpoints must be an array");
-  } else {
-    const cpNames = new Set<string>();
-    for (const cp of manifest.checkpoints) {
-      if (!cp.name || typeof cp.name !== "string") {
-        errors.push(`manifest.checkpoints: each checkpoint must have a string "name"`);
-      } else if (cpNames.has(cp.name)) {
-        errors.push(`manifest.checkpoints: duplicate checkpoint name "${cp.name}"`);
-      } else {
-        cpNames.add(cp.name);
-      }
-      if (!cp.expect || !["pass", "fail", "warn", "skip"].includes(cp.expect)) {
-        errors.push(
-          `manifest.checkpoints: "${cp.name}" has invalid expect "${cp.expect}" (must be pass|fail|warn|skip)`,
-        );
-      }
-    }
-  }
-
-  // Artifacts
-  if (!Array.isArray(manifest.artifacts)) {
-    errors.push("manifest.artifacts must be an array");
-  } else {
-    for (const art of manifest.artifacts) {
-      if (!art.name || typeof art.name !== "string") {
-        errors.push(`manifest.artifacts: each artifact must have a string "name"`);
-      }
-    }
-  }
-
-  // coversTools
-  if (!Array.isArray(manifest.coversTools)) {
-    errors.push("manifest.coversTools must be an array");
-  }
-
-  // Input schema validation (if present)
-  if (manifest.inputSchema) {
-    const schemaValid = validateJsonSchema(manifest.inputSchema, {}, "inputSchema");
-    if (!schemaValid.valid) {
-      // Schema itself is valid JSON Schema structure — just check it's an object
-      if (manifest.inputSchema.type !== "object") {
-        errors.push("manifest.inputSchema: root type should be 'object' for flow inputs");
-      }
-    }
-  }
-
-  return errors;
-}
-
 // ── 1. harness list ───────────────────────────────────────────────────────────
 
 export function runHarnessList(): CliResult {
@@ -349,58 +267,84 @@ export async function runHarnessRun(opts: HarnessRunOpts): Promise<CliResult> {
 
 // ── 3. harness check ──────────────────────────────────────────────────────────
 
-export function runHarnessCheck(flowId: string): CliResult {
+export interface HarnessCheckOpts {
+  flowId: string;
+  /** If true, skip runtime checks (rules 11–15). */
+  manifestOnly?: boolean;
+}
+
+/**
+ * Check a single harness flow using the 15-rule check engine.
+ *
+ * Runs manifest checks (rules 1–10) and optionally runtime checks
+ * (rules 11–15). Runtime checks execute the flow with mock adapters.
+ */
+export async function runHarnessCheck(opts: HarnessCheckOpts): Promise<CliResult> {
   try {
     ensureRegistry();
   } catch (err) {
     return fail(`Failed to load harness registry: ${err instanceof Error ? err.message : String(err)}`);
   }
 
-  const manifest = getManifest(flowId);
-  if (!manifest) {
+  if (!getManifest(opts.flowId)) {
     const available = listManifestDetails().map((m) => m.id).join(", ");
     return fail(
-      `Flow "${flowId}" not found in registry. Available flows: [${available}]`,
+      `Flow "${opts.flowId}" not found in registry. Available flows: [${available}]`,
     );
   }
 
-  const errors = checkManifest(manifest);
-  const warnings: string[] = [];
+  try {
+    const report = await checkFlow(opts.flowId, {
+      manifestOnly: opts.manifestOnly,
+    });
+    return ok(report);
+  } catch (err) {
+    return fail(err instanceof Error ? err.message : String(err));
+  }
+}
 
-  // Check if the flow has a registered module (runnable)
-  const isRunnable = hasModule(flowId);
-  if (!isRunnable) {
-    warnings.push(
-      `Flow "${flowId}" has a manifest but no registered module — it cannot be executed via "harness run".`,
-    );
+// ── 3b. harness check-all ─────────────────────────────────────────────────────
+
+export interface HarnessCheckAllOpts {
+  /** If true, skip runtime checks for all flows. */
+  manifestOnly?: boolean;
+  /** If true, write artifacts/check-report.md and .json. */
+  writeReport?: boolean;
+}
+
+/**
+ * Check all registered harness flows and produce a batch report.
+ *
+ * Optionally writes reports to disk (artifacts/check-report.md and
+ * artifacts/check-report.json).
+ */
+export async function runHarnessCheckAll(
+  opts: HarnessCheckAllOpts = {},
+): Promise<CliResult> {
+  try {
+    ensureRegistry();
+  } catch (err) {
+    return fail(`Failed to load harness registry: ${err instanceof Error ? err.message : String(err)}`);
   }
 
-  // Check for common issues
-  if (manifest.coversTools.length === 0) {
-    warnings.push("manifest.coversTools is empty — flow exercises no MCP tools.");
-  }
-  if (manifest.checkpoints.length === 0) {
-    warnings.push("manifest.checkpoints is empty — flow has no checkpoints defined.");
-  }
+  try {
+    const batchReport = await checkAllFlows({
+      manifestOnly: opts.manifestOnly,
+    });
 
-  return ok({
-    flowId,
-    valid: errors.length === 0,
-    errors,
-    warnings,
-    isRunnable,
-    manifest: {
-      id: manifest.id,
-      name: manifest.name,
-      description: manifest.description,
-      phases: manifest.phases.map((p) => p.name),
-      checkpoints: manifest.checkpoints.map((c) => ({ name: c.name, expect: c.expect })),
-      artifacts: manifest.artifacts.map((a) => a.name),
-      coversTools: manifest.coversTools,
-      tags: manifest.tags,
-      capability: manifest.capability,
-    },
-  });
+    // Optionally write reports to disk
+    let reportPaths: { jsonPath: string; mdPath: string } | undefined;
+    if (opts.writeReport) {
+      reportPaths = writeCheckReports(batchReport);
+    }
+
+    return ok({
+      batchReport,
+      ...(reportPaths ? { reportPaths } : {}),
+    });
+  } catch (err) {
+    return fail(err instanceof Error ? err.message : String(err));
+  }
 }
 
 // ── 4. harness runs ───────────────────────────────────────────────────────────
@@ -627,33 +571,61 @@ export function formatHumanReadable(command: string, result: CliResult): string 
     }
 
     case "check": {
-      const errors = data.errors as string[];
-      const warnings = data.warnings as string[];
-      const valid = data.valid as boolean;
-      const isRunnable = data.isRunnable as boolean;
+      const report = data as unknown as FlowCheckReport;
+      if (!report) return "No check data.";
 
       const lines: string[] = [];
-      lines.push(`Flow: ${data.flowId}`);
-      lines.push(`Valid: ${valid ? "✓ YES" : "✗ NO"}`);
-      lines.push(`Runnable: ${isRunnable ? "✓ YES" : "✗ NO"}`);
+      const s = report.summary;
+      lines.push(`Flow: ${report.flowId}`);
+      lines.push(`Runnable: ${report.isRunnable ? "✓ YES" : "✗ NO"}`);
+      lines.push(`Run ID: ${report.runId || "—"}`);
+      lines.push(`Timestamp: ${report.timestamp}`);
+      lines.push(`Summary: ${s.pass}P / ${s.fail}F / ${s.warn}W / ${s.skip}S (${s.total} checks)`);
       lines.push("");
 
-      if (warnings && warnings.length > 0) {
-        lines.push("Warnings:");
-        for (const w of warnings) {
-          lines.push(`  ⚠ ${w}`);
-        }
-        lines.push("");
+      const ICONS: Record<string, string> = { pass: "✓", fail: "✗", warn: "⚠", skip: "○" };
+
+      lines.push("── Manifest Checks ──");
+      for (const c of report.manifestChecks) {
+        const icon = ICONS[c.outcome] ?? "?";
+        lines.push(`  ${icon} ${c.rule}: ${c.message}`);
+      }
+      lines.push("");
+
+      lines.push("── Runtime Checks ──");
+      for (const c of report.runtimeChecks) {
+        const icon = ICONS[c.outcome] ?? "?";
+        lines.push(`  ${icon} ${c.rule}: ${c.message}`);
       }
 
-      if (errors && errors.length > 0) {
-        lines.push("Errors:");
-        for (const e of errors) {
-          lines.push(`  ✗ ${e}`);
-        }
+      return lines.join("\n");
+    }
+
+    case "check-all": {
+      const batchReport = (data as { batchReport: BatchCheckReport }).batchReport;
+      if (!batchReport) return "No check data.";
+
+      const lines: string[] = [];
+      const s = batchReport.summary;
+      lines.push(`Batch Check Report — ${batchReport.timestamp}`);
+      lines.push(`Flows checked: ${batchReport.totalFlows}`);
+      lines.push(`Total checks: ${s.total} | ✓ ${s.pass} | ✗ ${s.fail} | ⚠ ${s.warn} | ○ ${s.skip}`);
+      lines.push("");
+
+      for (const flow of batchReport.flows) {
+        const fs = flow.summary;
+        const statusIcon = fs.fail === 0 ? "✓" : "✗";
+        lines.push(
+          `  ${statusIcon} ${flow.flowId}: ${fs.pass}P/${fs.fail}F/${fs.warn}W/${fs.skip}S | Runnable: ${flow.isRunnable ? "YES" : "NO"}`,
+        );
+      }
+
+      const reportPaths = (data as { reportPaths?: { jsonPath: string; mdPath: string } }).reportPaths;
+      if (reportPaths) {
         lines.push("");
-      } else {
-        lines.push("No structural errors found.");
+        lines.push(`Reports written:`);
+        lines.push(`  JSON: ${reportPaths.jsonPath}`);
+        lines.push(`  MD:   ${reportPaths.mdPath}`);
       }
 
       return lines.join("\n");
