@@ -22,7 +22,12 @@ import { handleListContext } from "./tools/listContext.js";
 import { handleAnalyzeContext } from "./tools/analyzeContext.js";
 import { handleListFailures } from "./tools/listFailures.js";
 import { handleFailureStats } from "./tools/failureStats.js";
+import { handleListHarnessFlows } from "./tools/listHarnessFlows.js";
+import { handleRunHarnessFlow } from "./tools/runHarnessFlow.js";
+import { handleGetHarnessRun } from "./tools/getHarnessRun.js";
+import { handleCheckHarnessFlow } from "./tools/checkHarnessFlow.js";
 import { TOOL_DEFINITIONS } from "./toolSchemas.js";
+import { registerAllFlows } from "../harness/register.js";
 
 export interface ServerContext {
   db: Database;
@@ -35,6 +40,9 @@ export async function startServer(): Promise<void> {
   const db = getDb();
   persistDb(); // Persist schema immediately after migration
   const receipts = new ReceiptService(db);
+
+  // Register all harness flows so MCP tools can discover and run them
+  registerAllFlows();
 
   const ctx: ServerContext = { db, receipts };
 
@@ -69,6 +77,10 @@ export async function startServer(): Promise<void> {
     analyze_context: (args) => handleAnalyzeContext(ctx, args),
     list_failures: (args) => handleListFailures(ctx, args),
     failure_stats: (args) => handleFailureStats(ctx, args),
+    list_harness_flows: (args) => handleListHarnessFlows(args),
+    run_harness_flow: (args) => handleRunHarnessFlow(ctx, args),
+    get_harness_run: (args) => handleGetHarnessRun(ctx, args),
+    check_harness_flow: (args) => handleCheckHarnessFlow(args),
   };
 
   server.setRequestHandler(ListToolsRequestSchema, async () => ({

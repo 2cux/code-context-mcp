@@ -622,6 +622,106 @@ export const TOOL_DEFINITIONS: Tool[] = [
       },
     },
   },
+  {
+    name: "list_harness_flows",
+    description:
+      "List all registered Harness business-flow manifests. " +
+      "Returns each flow's id, name, description, phases, coveredTools, " +
+      "and inputSchema. Use this to discover which flows are available " +
+      "before running or checking a specific flow. " +
+      "Optionally filter by tag or capability.",
+    inputSchema: {
+      type: "object" as const,
+      properties: {
+        tag: {
+          type: "string",
+          description:
+            "Optional filter by tag (e.g. 'smoke', 'acceptance', 'mcp', 'cli'). " +
+            "When omitted, all flows are returned.",
+        },
+        capability: {
+          type: "string",
+          description:
+            "Optional filter by capability category (e.g. 'compression', 'memory', 'smoke-test'). " +
+            "When omitted, all flows are returned.",
+        },
+      },
+    },
+  },
+  {
+    name: "run_harness_flow",
+    description:
+      "Execute a registered Harness business flow by flowId. " +
+      "Runs the full closed-loop execution pipeline: validates input, " +
+      "executes setup/run/check hooks, writes artifacts, and records " +
+      "a run receipt. Returns the runId, status, output, receiptId, " +
+      "and produced artifacts. On failure, the run state includes error " +
+      "details — the call itself does not throw.",
+    inputSchema: {
+      type: "object" as const,
+      properties: {
+        flowId: {
+          type: "string",
+          description:
+            "The flow manifest id to execute (required). " +
+            "Use list_harness_flows to discover available flow ids.",
+        },
+        input: {
+          type: "object",
+          description:
+            "Input data for the flow (optional). " +
+            "Must conform to the flow's inputSchema if one is declared.",
+        },
+      },
+      required: ["flowId"],
+    },
+  },
+  {
+    name: "get_harness_run",
+    description:
+      "Retrieve the full state of a previous harness run by runId. " +
+      "Returns the run state (status, checkpoints, artifacts), " +
+      "associated receipts, event logs, and artifact contents. " +
+      "Use this to inspect a run after it completes or diagnose failures.",
+    inputSchema: {
+      type: "object" as const,
+      properties: {
+        runId: {
+          type: "string",
+          description:
+            "The run identifier returned by run_harness_flow (required).",
+        },
+      },
+      required: ["runId"],
+    },
+  },
+  {
+    name: "check_harness_flow",
+    description:
+      "Validate a harness flow manifest without executing it. " +
+      "Checks that the manifest is well-formed, the flow is registered, " +
+      "example input conforms to the declared inputSchema, and all " +
+      "artifact declarations are valid. Returns a structured check result. " +
+      "Use this before running a flow to catch configuration issues early.",
+    inputSchema: {
+      type: "object" as const,
+      properties: {
+        flowId: {
+          type: "string",
+          description:
+            "The flow manifest id to check (required). " +
+            "Use list_harness_flows to discover available flow ids.",
+        },
+        exampleInput: {
+          type: "object",
+          description:
+            "Optional example input to validate against the flow's inputSchema. " +
+            "When omitted, only manifest structure checks are performed.",
+        },
+      },
+      required: ["flowId"],
+    },
+  },
 ];
 
 /** Map from tool name to definition for quick lookup. */

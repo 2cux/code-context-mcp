@@ -33,6 +33,10 @@ const EXPECTED_TOOLS = [
   "list_context",
   "list_failures",
   "failure_stats",
+  "list_harness_flows",
+  "run_harness_flow",
+  "get_harness_run",
+  "check_harness_flow",
 ];
 
 // Valid JSON Schema types
@@ -45,8 +49,8 @@ const VALID_TYPES = new Set([
 // ---------------------------------------------------------------------------
 
 describe("Tool Definitions Structure", () => {
-  it("has exactly 13 tools", () => {
-    expect(TOOL_DEFINITIONS).toHaveLength(13);
+  it("has exactly 17 tools", () => {
+    expect(TOOL_DEFINITIONS).toHaveLength(17);
   });
 
   it("has all expected tools", () => {
