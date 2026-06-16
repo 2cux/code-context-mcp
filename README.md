@@ -4,7 +4,7 @@
 [![License: MIT](https://img.shields.io/badge/license-MIT-yellow)](./LICENSE)
 [![Node.js](https://img.shields.io/badge/node-%3E%3D18-green)](https://nodejs.org)
 [![MCP](https://img.shields.io/badge/MCP-compatible-purple)](https://modelcontextprotocol.io)
-[![Tests](https://img.shields.io/badge/tests-904%20passing-brightgreen)](./tests)
+[![Tests](https://img.shields.io/badge/tests-1179%20passing-brightgreen)](./tests)
 
 > **v1.0.0** — Context Compression + Project Memory, dual-core.
 
@@ -361,7 +361,7 @@ PRD documents are in [`docs/`](./docs/INDEX.md).
 pnpm install        # Install dependencies
 pnpm build          # Build TypeScript
 npm run build       # Cross-platform build (Windows/macOS/Linux)
-pnpm test           # Run tests (904 tests)
+pnpm test           # Run tests (1179 tests)
 pnpm test:watch     # Watch mode
 pnpm lint           # ESLint
 pnpm format         # Prettier
@@ -369,6 +369,52 @@ pnpm format         # Prettier
 Windows notes:
 The build is cross-platform. `npm run build` and `pnpm build` both use a Node-based cleanup step instead of `rm -rf dist/`.
 ```
+
+---
+
+## Harness Testing
+
+CodeContext uses a **Harness** — a unified business closed-loop execution and verification framework. Every business capability (compression, memory, profile, originals) has a corresponding Harness flow that exercises its full lifecycle.
+
+### Test Architecture
+
+| Layer | Location | Tests | Adapter | Purpose |
+|-------|----------|-------|---------|---------|
+| **Core Unit** | `tests/harness/*.test.ts` | ~200 | — | types, registry, runner, state store, artifact store, reporter, check, validate, checkEngine, mockAdapters |
+| **Flow Integration** | `tests/harness/*Flow.test.ts` | ~40 | real + mock | 7 business-capability closed loops |
+| **MCP Tools** | `tests/harness/mcpHarness.test.ts` | 26 | mock + **real** | smoke + real adapter for harness MCP tools |
+| **CLI** | `tests/cli.test.ts` + `tests/harness/cliHarness.test.ts` | 73 | mock | CLI command smoke + integration |
+| **Regression** | `tests/phase*.test.ts` | ~500 | real in-memory DB | compression, memory, profile, acceptance |
+| **Schema** | `tests/mcpSchema.test.ts` | 37 | — | MCP tool schema validation |
+
+### Adapter Strategy
+
+| Flow | Adapter | Type | Notes |
+|------|---------|------|-------|
+| `compression-flow` | `CodeContextAdapter` | **Real** (in-memory SQLite) | Full compression loop |
+| `originals-flow` | `CodeContextAdapter` | **Real** (in-memory SQLite) | Originals lifecycle |
+| `memory-flow` | `CodeContextAdapter` | **Real** (in-memory SQLite) | Memory lifecycle |
+| `profile-flow` | `CodeContextAdapter` | **Real** (in-memory SQLite) | Profile closed loop |
+| `full-context-flow` | `CodeContextAdapter` | **Real** (in-memory SQLite) | Total value chain |
+| `mcp-tools-smoke-flow` | `McpAdapter` | **Real** (4 harness tools) + **Mock** (9 prod tools) | Harness tools call real handlers; prod tools return unsupported |
+| `cli-smoke-flow` | `CliAdapter` | **Mock** (tests) / Real (CLI) | CLI commands |
+
+### Harness MCP Tools (Real Adapter)
+
+The real `McpAdapter` supports 4 harness MCP tools backed by in-memory SQLite:
+
+- **`list_harness_flows`** — Lists all 7 registered flows with filtering by tag/capability
+- **`check_harness_flow`** — Validates manifest structure without execution (15 rules)
+- **`run_harness_flow`** — Executes a full flow via the 14-step runner pipeline
+- **`get_harness_run`** — Retrieves a previous run's full state (artifacts, logs, checkpoints)
+
+### Verification Command
+
+```bash
+pnpm test
+```
+
+Expected: **39 test files, 1179 tests, all passing.**
 
 ---
 

@@ -11,6 +11,7 @@ import * as os from "node:os";
 import {
   registerModule,
   executeRun,
+  runModule,
   clearModules,
 } from "../../src/harness/core/runner.js";
 import { setRunsDir } from "../../src/harness/core/stateStore.js";
@@ -179,6 +180,97 @@ describe("executeRun", () => {
     });
 
     expect(calls).toEqual(["setup", "run", "check"]);
+    expect(state.status).toBe("completed");
+  });
+});
+
+// ── runModule (high-level API) ──────────────────────────────────────────────
+
+describe("runModule", () => {
+  it("executes a registered module by moduleId, generates runId automatically", async () => {
+    const mod: HarnessModule = {
+      manifest: makeManifest("registered-flow"),
+      run: async (ctx) => {
+        ctx.checkpoint("step", "pass");
+        return { ok: true };
+      },
+    };
+    registerModule(mod);
+
+    const state = await runModule("registered-flow");
+
+    expect(state.status).toBe("completed");
+    expect(state.moduleId).toBe("registered-flow");
+    // runId should be auto-generated
+    expect(state.runId).toMatch(/^run_/);
+    expect(state.runId.length).toBeGreaterThan(20);
+  });
+
+  it("throws when moduleId is not found in registry", async () => {
+    await expect(runModule("nonexistent-flow")).rejects.toThrow(
+      "not found in registry",
+    );
+  });
+
+  it("passes input data through to the flow", async () => {
+    const mod: HarnessModule<{ message: string }> = {
+      manifest: makeManifest("input-flow"),
+      run: async (ctx) => {
+        const msg = (ctx.input as { message: string }).message;
+        ctx.checkpoint("input:received", "pass", msg);
+        return { echoed: msg };
+      },
+    };
+    registerModule(mod);
+
+    const state = await runModule("input-flow", {
+      input: { message: "hello world" },
+    });
+
+    expect(state.status).toBe("completed");
+    const output = state.output as { echoed: string };
+    expect(output.echoed).toBe("hello world");
+
+    const echoCp = state.checkpoints.find((c) => c.label === "input:received");
+    expect(echoCp?.message).toBe("hello world");
+  });
+
+  it("returns a failed RunState when the flow throws", async () => {
+    const mod: HarnessModule = {
+      manifest: makeManifest("throw-flow"),
+      run: async () => {
+        throw new Error("intentional failure");
+      },
+    };
+    registerModule(mod);
+
+    const state = await runModule("throw-flow");
+
+    expect(state.status).toBe("failed");
+    expect(state.error).toBeDefined();
+    expect(state.error?.message).toContain("intentional failure");
+  });
+
+  it("propagates initialPhase override", async () => {
+    const mod: HarnessModule = {
+      manifest: {
+        ...makeManifest("phase-flow"),
+        phases: [
+          { name: "init", description: "Init" },
+          { name: "work", description: "Work" },
+        ],
+      },
+      run: async (ctx) => {
+        ctx.checkpoint("work:done", "pass");
+        return {};
+      },
+    };
+    registerModule(mod);
+
+    const state = await runModule("phase-flow", {
+      initialPhase: "work",
+    });
+
     expect(state.status).toBe("completed");
   });
 });

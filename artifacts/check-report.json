@@ -1,23 +1,23 @@
 {
-  "timestamp": "2026-06-16T02:47:27.867Z",
-  "totalFlows": 7,
+  "timestamp": "2026-06-16T06:35:45.146Z",
+  "totalFlows": 1,
   "flows": [
     {
-      "flowId": "cli-smoke-flow",
-      "runId": "run_20260616_mqg1kjgu_5cf40b_000",
-      "timestamp": "2026-06-16T02:47:27.673Z",
+      "flowId": "json-report-flow",
+      "runId": "",
+      "timestamp": "2026-06-16T06:35:45.146Z",
       "manifestChecks": [
         {
           "rule": "manifest.id.unique",
           "description": "Manifest id is unique across all registered manifests",
           "outcome": "pass",
-          "message": "id \"cli-smoke-flow\" is unique (7 total manifests)"
+          "message": "id \"json-report-flow\" is unique (1 total manifests)"
         },
         {
           "rule": "manifest.name.exists",
           "description": "Manifest has a non-empty name",
           "outcome": "pass",
-          "message": "name=\"CLI Smoke Flow\""
+          "message": "name=\"Check Test Flow\""
         },
         {
           "rule": "manifest.description.exists",
@@ -41,13 +41,13 @@
           "rule": "manifest.phases.nonEmpty",
           "description": "Manifest declares at least one phase",
           "outcome": "pass",
-          "message": "5 phases: [spawn_cli_commands, capture_stdout, capture_stderr, verify_exit_code, write_cli_report]"
+          "message": "1 phases: [main]"
         },
         {
           "rule": "manifest.coveredTools.real",
           "description": "All coveredTools match actual MCP tool names",
-          "outcome": "skip",
-          "message": "CLI smoke flow — no MCP tools to cover"
+          "outcome": "pass",
+          "message": "2 tools all valid: [compress_context, retrieve_original]"
         },
         {
           "rule": "module.run.exists",
@@ -71,692 +71,50 @@
       "runtimeChecks": [
         {
           "rule": "run.generates.stateJson",
-          "description": "Run execution produces a valid state.json",
-          "outcome": "pass",
-          "message": "state.json present, status=\"completed\""
+          "description": "",
+          "outcome": "skip",
+          "message": "manifestOnly mode — runtime checks skipped"
         },
         {
           "rule": "run.generates.outputJson",
-          "description": "Run execution produces a valid output.json",
-          "outcome": "pass",
-          "message": "output.json present and contains output data"
+          "description": "",
+          "outcome": "skip",
+          "message": "manifestOnly mode — runtime checks skipped"
         },
         {
           "rule": "run.generates.logsJsonl",
-          "description": "Run execution produces logs.jsonl with event entries",
-          "outcome": "pass",
-          "message": "logs.jsonl has 30 entries, checkpoints.jsonl has 17 entries"
+          "description": "",
+          "outcome": "skip",
+          "message": "manifestOnly mode — runtime checks skipped"
         },
         {
           "rule": "run.generates.receipt",
-          "description": "Run execution creates a run receipt",
-          "outcome": "pass",
-          "message": "receipt log entry found"
+          "description": "",
+          "outcome": "skip",
+          "message": "manifestOnly mode — runtime checks skipped"
         },
         {
           "rule": "artifacts.asExpected",
-          "description": "All declared artifacts are produced as expected",
-          "outcome": "pass",
-          "message": "all 2 declared artifacts produced: [cli-smoke-results, cli-report]"
+          "description": "",
+          "outcome": "skip",
+          "message": "manifestOnly mode — runtime checks skipped"
         }
       ],
       "summary": {
         "total": 15,
-        "pass": 10,
+        "pass": 6,
         "fail": 0,
         "warn": 0,
-        "skip": 5
-      },
-      "isRunnable": true
-    },
-    {
-      "flowId": "compression-flow",
-      "runId": "run_20260616_mqg1kji2_02540b_001",
-      "timestamp": "2026-06-16T02:47:27.729Z",
-      "manifestChecks": [
-        {
-          "rule": "manifest.id.unique",
-          "description": "Manifest id is unique across all registered manifests",
-          "outcome": "pass",
-          "message": "id \"compression-flow\" is unique (7 total manifests)"
-        },
-        {
-          "rule": "manifest.name.exists",
-          "description": "Manifest has a non-empty name",
-          "outcome": "pass",
-          "message": "name=\"Compression Flow\""
-        },
-        {
-          "rule": "manifest.description.exists",
-          "description": "Manifest has a non-empty description",
-          "outcome": "pass",
-          "message": "description present"
-        },
-        {
-          "rule": "manifest.inputSchema.valid",
-          "description": "Declared inputSchema is a well-formed JSON Schema",
-          "outcome": "skip",
-          "message": "no inputSchema declared (optional)"
-        },
-        {
-          "rule": "manifest.outputSchema.valid",
-          "description": "Declared outputSchema is a well-formed JSON Schema",
-          "outcome": "pass",
-          "message": "outputSchema type=\"object\""
-        },
-        {
-          "rule": "manifest.phases.nonEmpty",
-          "description": "Manifest declares at least one phase",
-          "outcome": "pass",
-          "message": "6 phases: [resolve_scope, compress_input, verify_ccr, retrieve_original, verify_receipt, write_report]"
-        },
-        {
-          "rule": "manifest.coveredTools.real",
-          "description": "All coveredTools match actual MCP tool names",
-          "outcome": "fail",
-          "message": "Unknown tools: [get_receipt] — not in TOOL_DEFINITIONS"
-        },
-        {
-          "rule": "module.run.exists",
-          "description": "Registered module has a run function",
-          "outcome": "pass",
-          "message": "module.run is a function"
-        },
-        {
-          "rule": "module.check.exists",
-          "description": "Declared module.check is a valid function",
-          "outcome": "skip",
-          "message": "no module.check declared (optional)"
-        },
-        {
-          "rule": "example.input.valid",
-          "description": "Example input passes inputSchema validation",
-          "outcome": "skip",
-          "message": "no inputSchema declared — input validation skipped"
-        }
-      ],
-      "runtimeChecks": [
-        {
-          "rule": "run.generates.stateJson",
-          "description": "Run execution produces a valid state.json",
-          "outcome": "pass",
-          "message": "state.json present, status=\"failed\""
-        },
-        {
-          "rule": "run.generates.outputJson",
-          "description": "Run execution produces a valid output.json",
-          "outcome": "fail",
-          "message": "output.json missing or empty after run"
-        },
-        {
-          "rule": "run.generates.logsJsonl",
-          "description": "Run execution produces logs.jsonl with event entries",
-          "outcome": "pass",
-          "message": "logs.jsonl has 3 entries, checkpoints.jsonl has 3 entries"
-        },
-        {
-          "rule": "run.generates.receipt",
-          "description": "Run execution creates a run receipt",
-          "outcome": "warn",
-          "message": "no receipt evidence in logs — verify receipt creation"
-        },
-        {
-          "rule": "artifacts.asExpected",
-          "description": "All declared artifacts are produced as expected",
-          "outcome": "fail",
-          "message": "missing: [compression-results, compression-report]; extra: []"
-        }
-      ],
-      "summary": {
-        "total": 15,
-        "pass": 8,
-        "fail": 3,
-        "warn": 1,
-        "skip": 3
-      },
-      "isRunnable": true
-    },
-    {
-      "flowId": "full-context-flow",
-      "runId": "run_20260616_mqg1kjjl_e99873_002",
-      "timestamp": "2026-06-16T02:47:27.766Z",
-      "manifestChecks": [
-        {
-          "rule": "manifest.id.unique",
-          "description": "Manifest id is unique across all registered manifests",
-          "outcome": "pass",
-          "message": "id \"full-context-flow\" is unique (7 total manifests)"
-        },
-        {
-          "rule": "manifest.name.exists",
-          "description": "Manifest has a non-empty name",
-          "outcome": "pass",
-          "message": "name=\"Full Context Flow\""
-        },
-        {
-          "rule": "manifest.description.exists",
-          "description": "Manifest has a non-empty description",
-          "outcome": "pass",
-          "message": "description present"
-        },
-        {
-          "rule": "manifest.inputSchema.valid",
-          "description": "Declared inputSchema is a well-formed JSON Schema",
-          "outcome": "skip",
-          "message": "no inputSchema declared (optional)"
-        },
-        {
-          "rule": "manifest.outputSchema.valid",
-          "description": "Declared outputSchema is a well-formed JSON Schema",
-          "outcome": "pass",
-          "message": "outputSchema type=\"object\""
-        },
-        {
-          "rule": "manifest.phases.nonEmpty",
-          "description": "Manifest declares at least one phase",
-          "outcome": "pass",
-          "message": "10 phases: [resolve_scope, compress_test_output, retrieve_original, save_test_failure_as_memory, recall_related_memory, verify_related_compressed_context, supersede_memory, list_audit, verify_receipts, write_final_report]"
-        },
-        {
-          "rule": "manifest.coveredTools.real",
-          "description": "All coveredTools match actual MCP tool names",
-          "outcome": "fail",
-          "message": "Unknown tools: [get_receipt] — not in TOOL_DEFINITIONS"
-        },
-        {
-          "rule": "module.run.exists",
-          "description": "Registered module has a run function",
-          "outcome": "pass",
-          "message": "module.run is a function"
-        },
-        {
-          "rule": "module.check.exists",
-          "description": "Declared module.check is a valid function",
-          "outcome": "skip",
-          "message": "no module.check declared (optional)"
-        },
-        {
-          "rule": "example.input.valid",
-          "description": "Example input passes inputSchema validation",
-          "outcome": "skip",
-          "message": "no inputSchema declared — input validation skipped"
-        }
-      ],
-      "runtimeChecks": [
-        {
-          "rule": "run.generates.stateJson",
-          "description": "Run execution produces a valid state.json",
-          "outcome": "pass",
-          "message": "state.json present, status=\"completed\""
-        },
-        {
-          "rule": "run.generates.outputJson",
-          "description": "Run execution produces a valid output.json",
-          "outcome": "pass",
-          "message": "output.json present and contains output data"
-        },
-        {
-          "rule": "run.generates.logsJsonl",
-          "description": "Run execution produces logs.jsonl with event entries",
-          "outcome": "pass",
-          "message": "logs.jsonl has 27 entries, checkpoints.jsonl has 15 entries"
-        },
-        {
-          "rule": "run.generates.receipt",
-          "description": "Run execution creates a run receipt",
-          "outcome": "pass",
-          "message": "run completed — receipt created by runner pipeline"
-        },
-        {
-          "rule": "artifacts.asExpected",
-          "description": "All declared artifacts are produced as expected",
-          "outcome": "pass",
-          "message": "all 4 declared artifacts produced: [full-compression-results, full-memory-records, full-receipt-audit, full-final-report]"
-        }
-      ],
-      "summary": {
-        "total": 15,
-        "pass": 11,
-        "fail": 1,
-        "warn": 0,
-        "skip": 3
-      },
-      "isRunnable": true
-    },
-    {
-      "flowId": "mcp-tools-smoke-flow",
-      "runId": "run_20260616_mqg1kjkm_509383_003",
-      "timestamp": "2026-06-16T02:47:27.795Z",
-      "manifestChecks": [
-        {
-          "rule": "manifest.id.unique",
-          "description": "Manifest id is unique across all registered manifests",
-          "outcome": "pass",
-          "message": "id \"mcp-tools-smoke-flow\" is unique (7 total manifests)"
-        },
-        {
-          "rule": "manifest.name.exists",
-          "description": "Manifest has a non-empty name",
-          "outcome": "pass",
-          "message": "name=\"MCP Tools Smoke Flow\""
-        },
-        {
-          "rule": "manifest.description.exists",
-          "description": "Manifest has a non-empty description",
-          "outcome": "pass",
-          "message": "description present"
-        },
-        {
-          "rule": "manifest.inputSchema.valid",
-          "description": "Declared inputSchema is a well-formed JSON Schema",
-          "outcome": "skip",
-          "message": "no inputSchema declared (optional)"
-        },
-        {
-          "rule": "manifest.outputSchema.valid",
-          "description": "Declared outputSchema is a well-formed JSON Schema",
-          "outcome": "skip",
-          "message": "no outputSchema declared (optional)"
-        },
-        {
-          "rule": "manifest.phases.nonEmpty",
-          "description": "Manifest declares at least one phase",
-          "outcome": "pass",
-          "message": "4 phases: [call_each_tool_with_minimal_valid_input, verify_no_unhandled_error, verify_structured_output, write_tool_matrix]"
-        },
-        {
-          "rule": "manifest.coveredTools.real",
-          "description": "All coveredTools match actual MCP tool names",
-          "outcome": "pass",
-          "message": "13 tools all valid: [current_scope, compress_context, retrieve_original, delete_original, cleanup_originals, list_compressions, remember_context, recall_context, forget_context, list_context, analyze_context, list_failures, failure_stats]"
-        },
-        {
-          "rule": "module.run.exists",
-          "description": "Registered module has a run function",
-          "outcome": "pass",
-          "message": "module.run is a function"
-        },
-        {
-          "rule": "module.check.exists",
-          "description": "Declared module.check is a valid function",
-          "outcome": "skip",
-          "message": "no module.check declared (optional)"
-        },
-        {
-          "rule": "example.input.valid",
-          "description": "Example input passes inputSchema validation",
-          "outcome": "skip",
-          "message": "no inputSchema declared — input validation skipped"
-        }
-      ],
-      "runtimeChecks": [
-        {
-          "rule": "run.generates.stateJson",
-          "description": "Run execution produces a valid state.json",
-          "outcome": "pass",
-          "message": "state.json present, status=\"completed\""
-        },
-        {
-          "rule": "run.generates.outputJson",
-          "description": "Run execution produces a valid output.json",
-          "outcome": "pass",
-          "message": "output.json present and contains output data"
-        },
-        {
-          "rule": "run.generates.logsJsonl",
-          "description": "Run execution produces logs.jsonl with event entries",
-          "outcome": "pass",
-          "message": "logs.jsonl has 26 entries, checkpoints.jsonl has 15 entries"
-        },
-        {
-          "rule": "run.generates.receipt",
-          "description": "Run execution creates a run receipt",
-          "outcome": "pass",
-          "message": "run completed — receipt created by runner pipeline"
-        },
-        {
-          "rule": "artifacts.asExpected",
-          "description": "All declared artifacts are produced as expected",
-          "outcome": "pass",
-          "message": "all 2 declared artifacts produced: [mcp-smoke-results, mcp-tool-matrix]"
-        }
-      ],
-      "summary": {
-        "total": 15,
-        "pass": 11,
-        "fail": 0,
-        "warn": 0,
-        "skip": 4
-      },
-      "isRunnable": true
-    },
-    {
-      "flowId": "memory-flow",
-      "runId": "run_20260616_mqg1kjlf_33afc0_004",
-      "timestamp": "2026-06-16T02:47:27.825Z",
-      "manifestChecks": [
-        {
-          "rule": "manifest.id.unique",
-          "description": "Manifest id is unique across all registered manifests",
-          "outcome": "pass",
-          "message": "id \"memory-flow\" is unique (7 total manifests)"
-        },
-        {
-          "rule": "manifest.name.exists",
-          "description": "Manifest has a non-empty name",
-          "outcome": "pass",
-          "message": "name=\"Memory Flow\""
-        },
-        {
-          "rule": "manifest.description.exists",
-          "description": "Manifest has a non-empty description",
-          "outcome": "pass",
-          "message": "description present"
-        },
-        {
-          "rule": "manifest.inputSchema.valid",
-          "description": "Declared inputSchema is a well-formed JSON Schema",
-          "outcome": "skip",
-          "message": "no inputSchema declared (optional)"
-        },
-        {
-          "rule": "manifest.outputSchema.valid",
-          "description": "Declared outputSchema is a well-formed JSON Schema",
-          "outcome": "pass",
-          "message": "outputSchema type=\"object\""
-        },
-        {
-          "rule": "manifest.phases.nonEmpty",
-          "description": "Manifest declares at least one phase",
-          "outcome": "pass",
-          "message": "7 phases: [remember_project_rule, recall_project_rule, remember_new_rule, supersede_old_rule, recall_after_supersede, list_context_audit, write_report]"
-        },
-        {
-          "rule": "manifest.coveredTools.real",
-          "description": "All coveredTools match actual MCP tool names",
-          "outcome": "pass",
-          "message": "4 tools all valid: [remember_context, recall_context, forget_context, list_context]"
-        },
-        {
-          "rule": "module.run.exists",
-          "description": "Registered module has a run function",
-          "outcome": "pass",
-          "message": "module.run is a function"
-        },
-        {
-          "rule": "module.check.exists",
-          "description": "Declared module.check is a valid function",
-          "outcome": "skip",
-          "message": "no module.check declared (optional)"
-        },
-        {
-          "rule": "example.input.valid",
-          "description": "Example input passes inputSchema validation",
-          "outcome": "skip",
-          "message": "no inputSchema declared — input validation skipped"
-        }
-      ],
-      "runtimeChecks": [
-        {
-          "rule": "run.generates.stateJson",
-          "description": "Run execution produces a valid state.json",
-          "outcome": "pass",
-          "message": "state.json present, status=\"completed\""
-        },
-        {
-          "rule": "run.generates.outputJson",
-          "description": "Run execution produces a valid output.json",
-          "outcome": "pass",
-          "message": "output.json present and contains output data"
-        },
-        {
-          "rule": "run.generates.logsJsonl",
-          "description": "Run execution produces logs.jsonl with event entries",
-          "outcome": "pass",
-          "message": "logs.jsonl has 27 entries, checkpoints.jsonl has 10 entries"
-        },
-        {
-          "rule": "run.generates.receipt",
-          "description": "Run execution creates a run receipt",
-          "outcome": "pass",
-          "message": "run completed — receipt created by runner pipeline"
-        },
-        {
-          "rule": "artifacts.asExpected",
-          "description": "All declared artifacts are produced as expected",
-          "outcome": "pass",
-          "message": "all 3 declared artifacts produced: [memory-records, recall-results, memory-report]"
-        }
-      ],
-      "summary": {
-        "total": 15,
-        "pass": 12,
-        "fail": 0,
-        "warn": 0,
-        "skip": 3
-      },
-      "isRunnable": true
-    },
-    {
-      "flowId": "originals-flow",
-      "runId": "run_20260616_mqg1kjma_015522_005",
-      "timestamp": "2026-06-16T02:47:27.840Z",
-      "manifestChecks": [
-        {
-          "rule": "manifest.id.unique",
-          "description": "Manifest id is unique across all registered manifests",
-          "outcome": "pass",
-          "message": "id \"originals-flow\" is unique (7 total manifests)"
-        },
-        {
-          "rule": "manifest.name.exists",
-          "description": "Manifest has a non-empty name",
-          "outcome": "pass",
-          "message": "name=\"Originals Flow\""
-        },
-        {
-          "rule": "manifest.description.exists",
-          "description": "Manifest has a non-empty description",
-          "outcome": "pass",
-          "message": "description present"
-        },
-        {
-          "rule": "manifest.inputSchema.valid",
-          "description": "Declared inputSchema is a well-formed JSON Schema",
-          "outcome": "skip",
-          "message": "no inputSchema declared (optional)"
-        },
-        {
-          "rule": "manifest.outputSchema.valid",
-          "description": "Declared outputSchema is a well-formed JSON Schema",
-          "outcome": "skip",
-          "message": "no outputSchema declared (optional)"
-        },
-        {
-          "rule": "manifest.phases.nonEmpty",
-          "description": "Manifest declares at least one phase",
-          "outcome": "pass",
-          "message": "6 phases: [compress_with_original, retrieve_before_delete, delete_original, retrieve_after_delete, verify_canRetrieveOriginal, write_report]"
-        },
-        {
-          "rule": "manifest.coveredTools.real",
-          "description": "All coveredTools match actual MCP tool names",
-          "outcome": "pass",
-          "message": "4 tools all valid: [compress_context, retrieve_original, delete_original, cleanup_originals]"
-        },
-        {
-          "rule": "module.run.exists",
-          "description": "Registered module has a run function",
-          "outcome": "pass",
-          "message": "module.run is a function"
-        },
-        {
-          "rule": "module.check.exists",
-          "description": "Declared module.check is a valid function",
-          "outcome": "skip",
-          "message": "no module.check declared (optional)"
-        },
-        {
-          "rule": "example.input.valid",
-          "description": "Example input passes inputSchema validation",
-          "outcome": "skip",
-          "message": "no inputSchema declared — input validation skipped"
-        }
-      ],
-      "runtimeChecks": [
-        {
-          "rule": "run.generates.stateJson",
-          "description": "Run execution produces a valid state.json",
-          "outcome": "pass",
-          "message": "state.json present, status=\"completed\""
-        },
-        {
-          "rule": "run.generates.outputJson",
-          "description": "Run execution produces a valid output.json",
-          "outcome": "pass",
-          "message": "output.json present and contains output data"
-        },
-        {
-          "rule": "run.generates.logsJsonl",
-          "description": "Run execution produces logs.jsonl with event entries",
-          "outcome": "pass",
-          "message": "logs.jsonl has 6 entries, checkpoints.jsonl has 4 entries"
-        },
-        {
-          "rule": "run.generates.receipt",
-          "description": "Run execution creates a run receipt",
-          "outcome": "pass",
-          "message": "run completed — receipt created by runner pipeline"
-        },
-        {
-          "rule": "artifacts.asExpected",
-          "description": "All declared artifacts are produced as expected",
-          "outcome": "fail",
-          "message": "missing: [originals-retrieval-log, originals-deletion-log, originals-report]; extra: []"
-        }
-      ],
-      "summary": {
-        "total": 15,
-        "pass": 10,
-        "fail": 1,
-        "warn": 0,
-        "skip": 4
-      },
-      "isRunnable": true
-    },
-    {
-      "flowId": "profile-flow",
-      "runId": "run_20260616_mqg1kjmo_3e6c74_006",
-      "timestamp": "2026-06-16T02:47:27.866Z",
-      "manifestChecks": [
-        {
-          "rule": "manifest.id.unique",
-          "description": "Manifest id is unique across all registered manifests",
-          "outcome": "pass",
-          "message": "id \"profile-flow\" is unique (7 total manifests)"
-        },
-        {
-          "rule": "manifest.name.exists",
-          "description": "Manifest has a non-empty name",
-          "outcome": "pass",
-          "message": "name=\"Profile Flow\""
-        },
-        {
-          "rule": "manifest.description.exists",
-          "description": "Manifest has a non-empty description",
-          "outcome": "pass",
-          "message": "description present"
-        },
-        {
-          "rule": "manifest.inputSchema.valid",
-          "description": "Declared inputSchema is a well-formed JSON Schema",
-          "outcome": "skip",
-          "message": "no inputSchema declared (optional)"
-        },
-        {
-          "rule": "manifest.outputSchema.valid",
-          "description": "Declared outputSchema is a well-formed JSON Schema",
-          "outcome": "skip",
-          "message": "no outputSchema declared (optional)"
-        },
-        {
-          "rule": "manifest.phases.nonEmpty",
-          "description": "Manifest declares at least one phase",
-          "outcome": "pass",
-          "message": "6 phases: [save_static_fact, save_dynamic_context, recall_with_profile, verify_static_profile, verify_dynamic_profile, write_report]"
-        },
-        {
-          "rule": "manifest.coveredTools.real",
-          "description": "All coveredTools match actual MCP tool names",
-          "outcome": "pass",
-          "message": "3 tools all valid: [remember_context, recall_context, list_context]"
-        },
-        {
-          "rule": "module.run.exists",
-          "description": "Registered module has a run function",
-          "outcome": "pass",
-          "message": "module.run is a function"
-        },
-        {
-          "rule": "module.check.exists",
-          "description": "Declared module.check is a valid function",
-          "outcome": "skip",
-          "message": "no module.check declared (optional)"
-        },
-        {
-          "rule": "example.input.valid",
-          "description": "Example input passes inputSchema validation",
-          "outcome": "skip",
-          "message": "no inputSchema declared — input validation skipped"
-        }
-      ],
-      "runtimeChecks": [
-        {
-          "rule": "run.generates.stateJson",
-          "description": "Run execution produces a valid state.json",
-          "outcome": "pass",
-          "message": "state.json present, status=\"completed\""
-        },
-        {
-          "rule": "run.generates.outputJson",
-          "description": "Run execution produces a valid output.json",
-          "outcome": "pass",
-          "message": "output.json present and contains output data"
-        },
-        {
-          "rule": "run.generates.logsJsonl",
-          "description": "Run execution produces logs.jsonl with event entries",
-          "outcome": "pass",
-          "message": "logs.jsonl has 26 entries, checkpoints.jsonl has 8 entries"
-        },
-        {
-          "rule": "run.generates.receipt",
-          "description": "Run execution creates a run receipt",
-          "outcome": "pass",
-          "message": "run completed — receipt created by runner pipeline"
-        },
-        {
-          "rule": "artifacts.asExpected",
-          "description": "All declared artifacts are produced as expected",
-          "outcome": "pass",
-          "message": "all 2 declared artifacts produced: [profile-snapshot, profile-report]"
-        }
-      ],
-      "summary": {
-        "total": 15,
-        "pass": 11,
-        "fail": 0,
-        "warn": 0,
-        "skip": 4
+        "skip": 9
       },
       "isRunnable": true
     }
   ],
   "summary": {
-    "total": 105,
-    "pass": 73,
-    "fail": 5,
-    "warn": 1,
-    "skip": 26
+    "total": 15,
+    "pass": 6,
+    "fail": 0,
+    "warn": 0,
+    "skip": 9
   }
 }
