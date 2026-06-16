@@ -160,6 +160,7 @@ const cliSmokeModule: HarnessModule<CliSmokeFlowInput, CliSmokeFlowOutput> = {
  * Guard with hasModule() if you need to check before calling.
  */
 export function registerAllFlows(): void {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   registerModules([
     compressionModule,
     originalsModule,
@@ -168,7 +169,7 @@ export function registerAllFlows(): void {
     fullContextModule,
     mcpToolsSmokeModule,
     cliSmokeModule,
-  ]);
+  ] as any);
 }
 
 // ── Re-exports for convenience ────────────────────────────────────────────────

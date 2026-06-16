@@ -40,6 +40,17 @@ import {
 } from "./commands.js";
 import type { CliResult } from "./commands.js";
 
+import {
+  runHarnessList,
+  runHarnessRun,
+  runHarnessCheck,
+  runHarnessRuns,
+  runHarnessShow,
+  runHarnessLogs,
+  runHarnessArtifacts,
+  formatHumanReadable,
+} from "./harnessCommands.js";
+
 // ---------------------------------------------------------------------------
 // Constants
 // ---------------------------------------------------------------------------
@@ -119,6 +130,15 @@ Commands:
       --limit <n>                       Max records (default: 20)
       --offset <n>                      Pagination offset
   failures stats                        Show failure event statistics
+  harness list                          List all registered harness flows
+  harness run <flow-id>                 Execute a harness flow
+      --input <file>                     Input JSON file for the flow
+  harness check <flow-id>               Validate a flow manifest
+  harness runs                          List past harness runs
+  harness show <run-id>                 Show run details
+  harness logs <run-id>                 Show run event logs
+  harness artifacts <run-id>            List run artifacts
+      --name <artifact-name>             Read a specific artifact
 
 Global flags:
   --help, -h                           Show this help
@@ -660,6 +680,115 @@ async function main(): Promise<void> {
     }
 
     // ------------------------------------------------------------------
+    // harness
+    // ------------------------------------------------------------------
+    case "harness": {
+      const harnessSub = cmdArgs[0];
+      const harnessRest = cmdArgs.slice(1);
+
+      switch (harnessSub) {
+        case "list": {
+          result = runHarnessList();
+          break;
+        }
+        case "run": {
+          const flowId = harnessRest[0];
+          if (!flowId) {
+            outputError(
+              'Usage: code-context harness run <flow-id> [--input <file>]\n' +
+                '  flow-id is required.\n' +
+                '  Run "code-context harness list" to see available flows.',
+            );
+            process.exit(1);
+          }
+          const inputFile = getOpt(harnessRest, "input");
+          result = await runHarnessRun({ flowId, inputFile });
+          break;
+        }
+        case "check": {
+          const flowId = harnessRest[0];
+          if (!flowId) {
+            outputError(
+              'Usage: code-context harness check <flow-id>\n' +
+                '  flow-id is required.\n' +
+                '  Run "code-context harness list" to see available flows.',
+            );
+            process.exit(1);
+          }
+          result = runHarnessCheck(flowId);
+          break;
+        }
+        case "runs": {
+          result = runHarnessRuns();
+          break;
+        }
+        case "show": {
+          const runId = harnessRest[0];
+          if (!runId) {
+            outputError(
+              'Usage: code-context harness show <run-id>\n' +
+                '  run-id is required.\n' +
+                '  Run "code-context harness runs" to see available runs.',
+            );
+            process.exit(1);
+          }
+          result = runHarnessShow({ runId });
+          break;
+        }
+        case "logs": {
+          const runId = harnessRest[0];
+          if (!runId) {
+            outputError(
+              'Usage: code-context harness logs <run-id>\n' +
+                '  run-id is required.\n' +
+                '  Run "code-context harness runs" to see available runs.',
+            );
+            process.exit(1);
+          }
+          result = runHarnessLogs({ runId });
+          break;
+        }
+        case "artifacts": {
+          const runId = harnessRest[0];
+          if (!runId) {
+            outputError(
+              'Usage: code-context harness artifacts <run-id> [--name <artifact-name>]\n' +
+                '  run-id is required.\n' +
+                '  Run "code-context harness runs" to see available runs.',
+            );
+            process.exit(1);
+          }
+          const name = getOpt(harnessRest, "name");
+          result = runHarnessArtifacts({ runId, name });
+          break;
+        }
+        default: {
+          if (harnessSub) {
+            outputError(
+              `Unknown harness subcommand: ${harnessSub}\n` +
+                `Available: list, run, check, runs, show, logs, artifacts\n` +
+                `Run "code-context --help" for usage.`,
+            );
+          } else {
+            outputError(
+              `Usage: code-context harness <subcommand>\n` +
+                `  list       List all registered harness flows\n` +
+                `  run        Execute a harness flow\n` +
+                `  check      Validate a flow manifest\n` +
+                `  runs       List past harness runs\n` +
+                `  show       Show run details\n` +
+                `  logs       Show run event logs\n` +
+                `  artifacts  List run artifacts\n` +
+                `Run "code-context --help" for usage.`,
+            );
+          }
+          process.exit(1);
+        }
+      }
+      break;
+    }
+
+    // ------------------------------------------------------------------
     // unknown / empty
     // ------------------------------------------------------------------
     case "":
@@ -675,7 +804,13 @@ async function main(): Promise<void> {
 
   // Output
   if (result.status === "ok") {
-    outputResult(result, compactJson);
+    // Harness commands: human-readable by default, JSON with --json flag
+    if (command === "harness" && !compactJson) {
+      const harnessSub = cmdArgs[0] ?? "";
+      console.log(formatHumanReadable(harnessSub, result));
+    } else {
+      outputResult(result, compactJson);
+    }
     process.exit(0);
   } else {
     outputError(result.error ?? "Unknown error");
