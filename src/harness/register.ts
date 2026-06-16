@@ -1,12 +1,14 @@
 /**
  * Harness Flow Registration
  *
- * Assembles all 7 CodeContext HarnessModules and registers them with
- * the unified HarnessRegistry.
+ * Assembles all 7 CodeContext HarnessModules with proper generic typing
+ * and registers them with the unified HarnessRegistry.
  *
  * Each flow bundles a business-capability manifest with its execution
- * logic (stub or real). Registration order is deterministic but not
- * order-dependent.
+ * logic. Adapters (CodeContextAdapter, McpAdapter, CliAdapter) are
+ * injected through HarnessContext.input at runtime.
+ *
+ * Registration order is deterministic but not order-dependent.
  *
  * PRD §34: 第一批注册的 7 个 CodeContext Flow。
  */
@@ -27,46 +29,123 @@ import { cliSmokeFlowManifest } from "./manifests/cliSmokeFlow.manifest.js";
 // ── Flow Implementations ──────────────────────────────────────────────────────
 
 import { compressionFlow } from "./flows/compressionFlow.js";
+import type { CompressionFlowInput, CompressionFlowOutput } from "./flows/compressionFlow.js";
+
 import { originalsFlow } from "./flows/originalsFlow.js";
+import type { OriginalsFlowInput, OriginalsFlowOutput } from "./flows/originalsFlow.js";
+
 import { memoryFlow } from "./flows/memoryFlow.js";
+import type { MemoryFlowInput, MemoryFlowOutput } from "./flows/memoryFlow.js";
+
 import { profileFlow } from "./flows/profileFlow.js";
+import type { ProfileFlowInput, ProfileFlowOutput } from "./flows/profileFlow.js";
+
 import { fullContextFlow } from "./flows/fullContextFlow.js";
+import type { FullContextFlowInput, FullContextFlowOutput } from "./flows/fullContextFlow.js";
+
 import { mcpToolsSmokeFlow } from "./flows/mcpToolsSmokeFlow.js";
+import type { McpToolsSmokeFlowInput, McpToolsSmokeFlowOutput } from "./flows/mcpToolsSmokeFlow.js";
+
 import { cliSmokeFlow } from "./flows/cliSmokeFlow.js";
+import type { CliSmokeFlowInput, CliSmokeFlowOutput } from "./flows/cliSmokeFlow.js";
+
+// ── Output Schemas ────────────────────────────────────────────────────────────
+
+import { compressionFlowOutputSchema } from "./schemas/compressionFlow.schema.js";
+import { memoryFlowOutputSchema } from "./schemas/memoryFlow.schema.js";
+import { fullContextFlowOutputSchema } from "./schemas/fullContextFlow.schema.js";
 
 // ── Module Assembly ───────────────────────────────────────────────────────────
 
-const compressionModule: HarnessModule = {
-  manifest: compressionFlowManifest,
+/**
+ * 9.1 Compression Flow
+ *
+ * Exercises: current_scope, compress_context, retrieve_original,
+ *   list_compressions, get_receipt
+ * Adapter: CodeContextAdapter (injected via ctx.input)
+ */
+const compressionModule: HarnessModule<CompressionFlowInput, CompressionFlowOutput> = {
+  manifest: {
+    ...compressionFlowManifest,
+    outputSchema: compressionFlowOutputSchema,
+  },
   run: compressionFlow,
 };
 
-const originalsModule: HarnessModule = {
+/**
+ * 9.2 Originals Flow (most critical)
+ *
+ * Exercises: compress_context, retrieve_original, delete_original,
+ *   cleanup_originals
+ * Adapter: CodeContextAdapter (injected via ctx.input)
+ */
+const originalsModule: HarnessModule<OriginalsFlowInput, OriginalsFlowOutput> = {
   manifest: originalsFlowManifest,
   run: originalsFlow,
 };
 
-const memoryModule: HarnessModule = {
-  manifest: memoryFlowManifest,
+/**
+ * 9.3 Memory Flow
+ *
+ * Exercises: remember_context, recall_context, forget_context,
+ *   list_context
+ * Adapter: CodeContextAdapter (injected via ctx.input)
+ */
+const memoryModule: HarnessModule<MemoryFlowInput, MemoryFlowOutput> = {
+  manifest: {
+    ...memoryFlowManifest,
+    outputSchema: memoryFlowOutputSchema,
+  },
   run: memoryFlow,
 };
 
-const profileModule: HarnessModule = {
+/**
+ * 9.4 Profile Flow
+ *
+ * Exercises: remember_context, recall_context, repo_profile.static,
+ *   repo_profile.dynamic
+ * Adapter: CodeContextAdapter (injected via ctx.input)
+ */
+const profileModule: HarnessModule<ProfileFlowInput, ProfileFlowOutput> = {
   manifest: profileFlowManifest,
   run: profileFlow,
 };
 
-const fullContextModule: HarnessModule = {
-  manifest: fullContextFlowManifest,
+/**
+ * 9.5 Full Context Flow (final acceptance)
+ *
+ * Exercises the complete main value chain:
+ *   current_scope, compress_context, retrieve_original,
+ *   remember_context, recall_context, forget_context,
+ *   list_context, get_receipt
+ * Adapter: CodeContextAdapter (injected via ctx.input)
+ */
+const fullContextModule: HarnessModule<FullContextFlowInput, FullContextFlowOutput> = {
+  manifest: {
+    ...fullContextFlowManifest,
+    outputSchema: fullContextFlowOutputSchema,
+  },
   run: fullContextFlow,
 };
 
-const mcpToolsSmokeModule: HarnessModule = {
+/**
+ * 9.6 MCP Tools Smoke Flow
+ *
+ * Exercises all 13 MCP tools.
+ * Adapter: McpAdapter (injected via ctx.input)
+ */
+const mcpToolsSmokeModule: HarnessModule<McpToolsSmokeFlowInput, McpToolsSmokeFlowOutput> = {
   manifest: mcpToolsSmokeFlowManifest,
   run: mcpToolsSmokeFlow,
 };
 
-const cliSmokeModule: HarnessModule = {
+/**
+ * 9.7 CLI Smoke Flow
+ *
+ * Exercises all CLI commands.
+ * Adapter: CliAdapter (injected via ctx.input)
+ */
+const cliSmokeModule: HarnessModule<CliSmokeFlowInput, CliSmokeFlowOutput> = {
   manifest: cliSmokeFlowManifest,
   run: cliSmokeFlow,
 };
@@ -102,4 +181,23 @@ export {
   fullContextModule,
   mcpToolsSmokeModule,
   cliSmokeModule,
+};
+
+// ── Type re-exports ───────────────────────────────────────────────────────────
+
+export type {
+  CompressionFlowInput,
+  CompressionFlowOutput,
+  OriginalsFlowInput,
+  OriginalsFlowOutput,
+  MemoryFlowInput,
+  MemoryFlowOutput,
+  ProfileFlowInput,
+  ProfileFlowOutput,
+  FullContextFlowInput,
+  FullContextFlowOutput,
+  McpToolsSmokeFlowInput,
+  McpToolsSmokeFlowOutput,
+  CliSmokeFlowInput,
+  CliSmokeFlowOutput,
 };

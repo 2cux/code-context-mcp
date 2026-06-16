@@ -152,6 +152,9 @@ export interface CodeContextAdapter {
 
   /** Return aggregate failure statistics for the current scope. */
   runFailureStats(): FailureStats;
+
+  /** Run batch cleanup of expired original content. */
+  runCleanupOriginals(): { deleted: number; affectedCcrIds: string[] };
 }
 
 // ── Factory ────────────────────────────────────────────────────────────────────
@@ -603,6 +606,18 @@ export function createCodeContextAdapter(db: Database): CodeContextAdapter {
 
     runFailureStats(): FailureStats {
       return failureStore.stats(scopeId);
+    },
+
+    // ======================================================================
+    // Cleanup Originals
+    // ======================================================================
+
+    runCleanupOriginals(): { deleted: number; affectedCcrIds: string[] } {
+      const result = originalStore.cleanup(scopeId);
+      return {
+        deleted: result.deleted,
+        affectedCcrIds: result.affectedCcrIds,
+      };
     },
   };
 

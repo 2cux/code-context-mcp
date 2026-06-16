@@ -1,10 +1,11 @@
 /**
  * Profile Flow Manifest
  *
- * Declares the profile management closed-loop:
- * read profile → write facts → read back → verify.
+ * Declares the repo profile closed-loop:
+ *   save_static_fact → save_dynamic_context → recall_with_profile →
+ *   verify_static_profile → verify_dynamic_profile → write_report
  *
- * PRD §34: profile 闭环 Manifest。
+ * PRD §34 / §9.4: profile 闭环 Manifest。
  */
 
 import type { HarnessManifest } from "../core/types.js";
@@ -14,30 +15,32 @@ export const profileFlowManifest: HarnessManifest = {
   name: "Profile Flow",
   description:
     "Exercises the repo profile static/dynamic closed loop: " +
-    "read → update → verify persistence",
+    "save static fact → save dynamic context → recall with profile → " +
+    "verify static → verify dynamic → write report",
   phases: [
-    { name: "setup", description: "Resolve scope" },
-    { name: "read", description: "Read static and dynamic profile facts" },
-    { name: "update", description: "Update static and dynamic profile facts" },
-    { name: "verify", description: "Re-read and verify updates persisted" },
+    { name: "save_static_fact", description: "Store a static profile fact (e.g. framework, language)" },
+    { name: "save_dynamic_context", description: "Store dynamic context (e.g. current task, recent decisions)" },
+    { name: "recall_with_profile", description: "Recall memories with profile enrichment" },
+    { name: "verify_static_profile", description: "Re-read and verify static facts persisted correctly" },
+    { name: "verify_dynamic_profile", description: "Re-read and verify dynamic context persisted correctly" },
+    { name: "write_report", description: "Write aggregate profile flow report artifact" },
   ],
   checkpoints: [
-    { name: "profile:current_scope", description: "Resolve current scope", expect: "pass" },
-    { name: "profile:read_static", description: "Read static profile facts", expect: "pass" },
-    { name: "profile:update_static", description: "Update a static profile fact", expect: "pass" },
-    { name: "profile:read_dynamic", description: "Read dynamic profile facts", expect: "pass" },
-    { name: "profile:update_dynamic", description: "Update a dynamic profile fact", expect: "pass" },
-    { name: "profile:verify_persistence", description: "Re-read and verify updates persisted", expect: "pass" },
+    { name: "profile:save_static_fact", description: "Save a static profile fact via remember_context", expect: "pass" },
+    { name: "profile:save_dynamic_context", description: "Save dynamic context via remember_context", expect: "pass" },
+    { name: "profile:recall_enriched", description: "Recall returns results enriched with profile context", expect: "pass" },
+    { name: "profile:verify_static", description: "Verify static fact is retrievable and unchanged", expect: "pass" },
+    { name: "profile:verify_dynamic", description: "Verify dynamic context is retrievable and unchanged", expect: "pass" },
+    { name: "profile:list_context", description: "List all context records for audit", expect: "pass" },
   ],
   artifacts: [
-    { name: "profile-snapshot", description: "Full profile snapshot after updates", contentType: "application/json" },
+    { name: "profile-snapshot", description: "Full profile snapshot before and after updates", contentType: "application/json" },
+    { name: "profile-report", description: "Aggregate profile flow report", contentType: "application/json" },
   ],
   coversTools: [
-    "current_scope",
-    "analyze_context",
     "remember_context",
     "recall_context",
-    "get_receipt",
+    "list_context",
   ],
   tags: ["profile", "acceptance", "mcp"],
   capability: "profile",
