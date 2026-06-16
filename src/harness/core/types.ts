@@ -42,6 +42,18 @@ export const RUN_STATUS_TRANSITIONS: Record<RunStatus, readonly RunStatus[]> = {
 /** Outcome of a single checkpoint. */
 export type CheckpointOutcome = "pass" | "fail" | "warn" | "skip";
 
+/**
+ * Result returned by each checkpoint call.
+ *
+ * Checkpoints are record-only by design — they never block execution,
+ * never transition the run to "blocked", and never wait for human
+ * confirmation. This result makes that contract explicit.
+ */
+export interface CheckpointResult {
+  approved: true;
+  mode: "record_only";
+}
+
 /** A single checkpoint entry logged during a run. */
 export interface Checkpoint {
   /** Monotonic sequence number within the run. */
@@ -222,13 +234,17 @@ export interface HarnessContext<TInput = unknown> {
    *
    * The current phase (set via `phase()`) is automatically attached.
    * `seq` and `timestamp` are filled in by the context implementation.
+   *
+   * Returns a CheckpointResult confirming that the checkpoint is
+   * record-only — it never blocks, never enters "blocked" status,
+   * and never waits for human confirmation.
    */
   checkpoint(
     label: string,
     outcome: CheckpointOutcome,
     message?: string,
     metadata?: Record<string, unknown>,
-  ): void;
+  ): CheckpointResult;
 
   /**
    * Write an artifact (captured output, diff, log) keyed by name.

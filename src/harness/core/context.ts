@@ -15,6 +15,7 @@ import type {
   ArtifactEntry,
   Checkpoint,
   CheckpointOutcome,
+  CheckpointResult,
   CheckpointSeq,
   HarnessContext,
   HarnessManifest,
@@ -94,7 +95,7 @@ export class HarnessContextImpl<TInput = unknown> implements HarnessContext<TInp
     outcome: CheckpointOutcome,
     message?: string,
     metadata?: Record<string, unknown>,
-  ): void {
+  ): CheckpointResult {
     const cp: Checkpoint = {
       seq: this._seq++,
       timestamp: new Date().toISOString(),
@@ -108,6 +109,9 @@ export class HarnessContextImpl<TInput = unknown> implements HarnessContext<TInp
 
     // Persist checkpoint via FileReporter
     persistCheckpoint(this.runId, cp);
+
+    // Checkpoints are always record-only — never block, never wait (§34)
+    return { approved: true, mode: "record_only" };
   }
 
   // ── Artifact ───────────────────────────────────────────────────────────────
