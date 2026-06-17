@@ -1,0 +1,52 @@
+{
+  "generated": "2026-06-17T02:15:26.863Z",
+  "memory": {
+    "totalMemoryMb": 32373,
+    "freeMemoryMb": 7813,
+    "heapUsedMb": 19
+  },
+  "mode": "full",
+  "sampleRatio": null,
+  "thresholds": {
+    "standardMinMemoryMb": 4096,
+    "extremeRecommendedMemoryMb": 16384,
+    "skipBelowMemoryMb": 8192,
+    "sampleRatioWhenLowMemory": 0.2
+  },
+  "cases": [
+    {
+      "label": "132KB RAG chunks",
+      "bytes": 132009,
+      "minMemMb": 4096,
+      "eligible": "full"
+    },
+    {
+      "label": "218KB TypeScript",
+      "bytes": 218117,
+      "minMemMb": 4096,
+      "eligible": "full"
+    },
+    {
+      "label": "500KB test output",
+      "bytes": 512000,
+      "minMemMb": 8192,
+      "eligible": "full"
+    },
+    {
+      "label": "1MB test output",
+      "bytes": 1048576,
+      "minMemMb": 16384,
+      "eligible": "full"
+    },
+    {
+      "label": "604KB JSON",
+      "bytes": 604035,
+      "minMemMb": 4096,
+      "eligible": "full"
+    }
+  ],
+  "notes": [
+    "Total memory (32373MB) meets extreme recommendation. Full extreme suite available.",
+    "PERF_TEST_EXTREME=not set — extreme tests skipped (set PERF_TEST_EXTREME=1 to enable)."
+  ]
+}

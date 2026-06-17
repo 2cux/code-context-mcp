@@ -1,0 +1,82 @@
+{
+  "generated": "2026-06-17T02:23:53.718Z",
+  "environment": {
+    "node": "v24.13.0",
+    "platform": "win32",
+    "arch": "x64",
+    "cpus": 22,
+    "totalMemoryMb": 32373
+  },
+  "summary": {
+    "total": 9,
+    "passed": 9,
+    "failed": 0,
+    "skipped": 0,
+    "totalMs": 8603
+  },
+  "steps": [
+    {
+      "name": "Clean install",
+      "status": "ok",
+      "durationMs": 541,
+      "detail": "pnpm install done",
+      "error": null
+    },
+    {
+      "name": "Build (tsc)",
+      "status": "ok",
+      "durationMs": 3063,
+      "detail": "dist/index.js created",
+      "error": null
+    },
+    {
+      "name": "TypeScript check (tsc --noEmit)",
+      "status": "ok",
+      "durationMs": 2213,
+      "detail": "zero errors",
+      "error": null
+    },
+    {
+      "name": "CLI version",
+      "status": "ok",
+      "durationMs": 183,
+      "detail": "version: 1.0.0",
+      "error": null
+    },
+    {
+      "name": "CLI help",
+      "status": "ok",
+      "durationMs": 181,
+      "detail": "help displayed",
+      "error": null
+    },
+    {
+      "name": "MCP server: agent mode tools",
+      "status": "ok",
+      "durationMs": 352,
+      "detail": "7 tools (agent mode): compress_context, current_scope, retrieve_original, remember_context, recall_context, forget_context, run_context_flow",
+      "error": null
+    },
+    {
+      "name": "MCP server: dev mode tools",
+      "status": "ok",
+      "durationMs": 356,
+      "detail": "18 tools (dev mode, 4 harness)",
+      "error": null
+    },
+    {
+      "name": "npm pack: tarball content check",
+      "status": "ok",
+      "durationMs": 1711,
+      "detail": "no forbidden files in 938 packaged files",
+      "error": null
+    },
+    {
+      "name": "Package version",
+      "status": "ok",
+      "durationMs": 0,
+      "detail": "v1.0.0",
+      "error": null
+    }
+  ]
+}

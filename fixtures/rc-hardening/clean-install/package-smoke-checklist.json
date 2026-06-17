@@ -1,0 +1,19 @@
+{
+  "checks": [
+    "clean install",
+    "build",
+    "tsc",
+    "cli help",
+    "cli version",
+    "mcp list tools agent=7",
+    "mcp list tools dev=18",
+    "npm pack excludes local data"
+  ],
+  "forbiddenInPack": [
+    "runs/",
+    "reports/performance/raw-results.jsonl",
+    "*.sqlite",
+    "originals/",
+    ".env"
+  ]
+}

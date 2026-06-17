@@ -1,14 +1,14 @@
 # Cache Warm Performance Analysis
 
-**Generated**: 2026-06-17T02:03:44.945Z
+**Generated**: 2026-06-17T02:15:27.118Z
 
 ## Cold vs Warm Split
 
 | Category | Avg Latency | Count | Threshold | Status |
 |---|---:|---:|---:|---:|
-| Cold cache | 66.86ms | 7 | 1000ms | ✅ |
+| Cold cache | 59.29ms | 7 | 1000ms | ✅ |
 | Warm same-process | 1.17ms | 6 | 200ms | ✅ |
-| Persistent new-process | 77.67ms | 3 | 20ms | ❌ |
+| Persistent new-process | 68ms | 3 | 20ms | ❌ |
 
 ## Per-Step Breakdown
 
@@ -19,7 +19,7 @@
 | strategyResolution | 0ms |
 | computeCacheKey | 0ms |
 | findByCacheKey | 0ms |
-| fullCompress | 243ms |
+| fullCompress | 217ms |
 
 ### per-step/warm-same-process
 | Step | Avg Latency |
@@ -29,7 +29,7 @@
 ### cold/cold-compress-100kb
 | Step | Avg Latency |
 |---|---:|
-| compress+save | 107ms |
+| compress+save | 101ms |
 
 ### warm/warm-hit-same-process
 | Step | Avg Latency |
@@ -43,14 +43,14 @@
 ### persistent/cold-in-first-process
 | Step | Avg Latency |
 |---|---:|
-| compress | 117ms |
+| compress | 96ms |
 
 ### persistent/new-process-hit
 | Step | Avg Latency |
 |---|---:|
-| hit_1 | 79ms |
-| hit_2 | 82ms |
-| hit_3 | 72ms |
+| hit_1 | 70ms |
+| hit_2 | 71ms |
+| hit_3 | 63ms |
 
 ## Notes
 - Cold cache = first compression in process (includes init + compress + save)

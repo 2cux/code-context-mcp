@@ -90,8 +90,77 @@ beforeAll(async () => {
   registerAllStrategies();
 });
 
-afterAll(() => {
+afterAll(async () => {
   try { writeReport(); } catch (e) { console.warn("Report write failed:", String(e)); }
+
+  // Generate extreme-memory report (always, even when extreme tests skipped)
+  try {
+    const { loadMemoryThresholds, checkMemoryStatus } = await import("../../src/safety/memoryGuard.js");
+    loadMemoryThresholds(path.resolve(__dirname, "../../fixtures/rc-hardening/extreme-perf/memory-thresholds.json"));
+    const mem = checkMemoryStatus();
+    const extremeMode = mem.shouldSkipExtreme ? "skipped" : mem.shouldUseSampling ? "sampled" : "full";
+    const extremeCases = [
+      { label: "132KB RAG chunks", bytes: 132009, minMemMb: 4096 },
+      { label: "218KB TypeScript", bytes: 218117, minMemMb: 4096 },
+      { label: "500KB test output", bytes: 512000, minMemMb: 8192 },
+      { label: "1MB test output", bytes: 1048576, minMemMb: 16384 },
+      { label: "604KB JSON", bytes: 604035, minMemMb: 4096 },
+    ];
+    const dir = path.resolve(__dirname, "../../reports/performance");
+    if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
+
+    const extremeReport = {
+      generated: new Date().toISOString(),
+      memory: { totalMemoryMb: mem.totalMemoryMb, freeMemoryMb: mem.freeMemoryMb, heapUsedMb: mem.heapUsedMb },
+      mode: extremeMode,
+      sampleRatio: extremeMode === "sampled" ? 0.2 : null,
+      thresholds: (() => {
+        try {
+          return JSON.parse(fs.readFileSync(path.resolve(__dirname, "../../fixtures/rc-hardening/extreme-perf/memory-thresholds.json"), "utf-8"));
+        } catch { return { note: "thresholds file not found" }; }
+      })(),
+      cases: extremeCases.map((c) => ({
+        label: c.label,
+        bytes: c.bytes,
+        minMemMb: c.minMemMb,
+        eligible: extremeMode === "skipped"
+          ? "skipped (low memory)"
+          : extremeMode === "sampled" && c.minMemMb > 8192
+            ? "skipped (too large for sampled mode)"
+            : extremeMode === "sampled"
+              ? "sampled"
+              : "full",
+      })),
+      notes: [
+        extremeMode === "skipped"
+          ? `Total memory (${mem.totalMemoryMb}MB) below skip threshold (8192MB). All extreme tests skipped.`
+          : extremeMode === "sampled"
+            ? `Total memory (${mem.totalMemoryMb}MB) below recommended (16384MB). Sampling mode would be used.`
+            : `Total memory (${mem.totalMemoryMb}MB) meets extreme recommendation. Full extreme suite available.`,
+        `PERF_TEST_EXTREME=${process.env.PERF_TEST_EXTREME ?? "not set"} — extreme tests ${process.env.PERF_TEST_EXTREME === "1" ? "enabled" : "skipped (set PERF_TEST_EXTREME=1 to enable)"}.`,
+      ],
+    };
+    fs.writeFileSync(path.join(dir, "extreme-memory-report.json"), JSON.stringify(extremeReport, null, 2), "utf-8");
+
+    let md = `# Extreme Memory Report\n\n**Generated**: ${extremeReport.generated}\n\n`;
+    md += `## Memory Status\n\n| Metric | Value |\n|---|---:|\n`;
+    md += `| Total Memory | ${mem.totalMemoryMb}MB |\n| Free Memory | ${mem.freeMemoryMb}MB |\n| Heap Used | ${mem.heapUsedMb}MB |\n`;
+    md += `| Mode | **${extremeMode.toUpperCase()}** |\n`;
+    md += `| PERF_TEST_EXTREME | ${process.env.PERF_TEST_EXTREME ?? "not set"} |\n\n`;
+    md += `## Thresholds\n\n| Threshold | Value |\n|---|---:|\n`;
+    const t = extremeReport.thresholds;
+    md += `| Standard Minimum | ${t.standardMinMemoryMb ?? "N/A"}MB |\n| Extreme Recommended | ${t.extremeRecommendedMemoryMb ?? "N/A"}MB |\n`;
+    md += `| Skip Below | ${t.skipBelowMemoryMb ?? "N/A"}MB |\n| Sample Ratio | ${t.sampleRatioWhenLowMemory ?? "N/A"} |\n\n`;
+    md += `## Case Eligibility\n\n| Case | Size | Min Mem | Status |\n|---|---:|---:|---:|\n`;
+    for (const ec of extremeReport.cases) {
+      md += `| ${ec.label} | ${ec.bytes.toLocaleString()}B | ${ec.minMemMb}MB | ${ec.eligible} |\n`;
+    }
+    md += `\n## Notes\n\n`;
+    for (const note of extremeReport.notes) { md += `- ${note}\n`; }
+    md += `\n## Running\n\n\`\`\`bash\n# Standard (always safe)\nPERF_TEST=1 npx vitest run tests/performance/\n\n# Extreme (16GB+ recommended)\nPERF_TEST=1 PERF_TEST_EXTREME=1 node --max-old-space-size=16384 node_modules/vitest/vitest.mjs run tests/performance/\n\`\`\`\n`;
+    fs.writeFileSync(path.join(dir, "extreme-memory-report.md"), md, "utf-8");
+  } catch (e) { console.warn("Extreme memory report write failed:", String(e)); }
+
   closeDb();
   try { fs.rmSync(dbDir, { recursive: true, force: true }); } catch (_e) { }
 });
@@ -127,22 +196,95 @@ perfDescribe("compress_context standard sizes", () => {
 });
 
 // 500KB+1MB only with PERF_TEST_EXTREME
+// Memory guard: auto-skip below 8GB, use sampling in 8-16GB range
 const extreme = process.env.PERF_TEST_EXTREME === "1" ? describe : describe.skip;
 extreme("compress_context extreme sizes", () => {
+  // Lazy-load memory guard
+  let memoryStatus: ReturnType<typeof import("../../src/safety/memoryGuard.js").checkMemoryStatus> | null = null;
+  let sampleRatio = 1.0;
+  let extremeMode: "full" | "sampled" | "skipped" = "full";
+
+  beforeAll(async () => {
+    // Load thresholds and check memory
+    const { loadMemoryThresholds, checkMemoryStatus, getSampleRatio } = await import("../../src/safety/memoryGuard.js");
+    loadMemoryThresholds(path.resolve(__dirname, "../../fixtures/rc-hardening/extreme-perf/memory-thresholds.json"));
+    memoryStatus = checkMemoryStatus();
+    if (memoryStatus!.shouldSkipExtreme) {
+      extremeMode = "skipped";
+    } else if (memoryStatus!.shouldUseSampling) {
+      extremeMode = "sampled";
+      sampleRatio = getSampleRatio();
+    }
+  });
+
   const cases = [
-    { label: "132KB RAG chunks", file: "content/rag-chunks.json", type: "rag_chunk", bytes: 132009 },
-    { label: "218KB TypeScript", file: "content/large-typescript-file.ts", type: "code", bytes: 218117 },
-    { label: "500KB test output", file: "performance/test-output-500kb.log", type: "test_output", bytes: 512000 },
-    { label: "1MB test output", file: "performance/test-output-1mb.log", type: "test_output", bytes: 1048576 },
-    { label: "604KB JSON", file: "content/large-json-response.json", type: "json", bytes: 604035 },
+    { label: "132KB RAG chunks", file: "content/rag-chunks.json", type: "rag_chunk", bytes: 132009, minMemMb: 4096 },
+    { label: "218KB TypeScript", file: "content/large-typescript-file.ts", type: "code", bytes: 218117, minMemMb: 4096 },
+    { label: "500KB test output", file: "performance/test-output-500kb.log", type: "test_output", bytes: 512000, minMemMb: 8192, rcFile: "../../fixtures/rc-hardening/extreme-perf/500kb-test-output.log" },
+    { label: "1MB test output", file: "performance/test-output-1mb.log", type: "test_output", bytes: 1048576, minMemMb: 16384, rcFile: "../../fixtures/rc-hardening/extreme-perf/1mb-test-output.log" },
+    { label: "604KB JSON", file: "content/large-json-response.json", type: "json", bytes: 604035, minMemMb: 4096 },
   ];
+
   for (const c of cases) {
-    it(`compresses ${c.label}`, async () => {
-      const content = loadFixture(c.file);
-      const { result, ms } = await timeIt(() => handleCompressContext(ctx, { content, contentType: c.type, scopeId: SCOPE_ID, keepOriginal: true }));
+    const testFn = c.minMemMb > 8192 && extremeMode === "sampled"
+      ? it.skip  // Skip largest cases in sampled mode
+      : extremeMode === "skipped"
+        ? it.skip
+        : it;
+
+    testFn(`compresses ${c.label} [${extremeMode}]`, async () => {
+      // Try rc-hardening fixture first, fall back to mcp-eval
+      let content: string;
+      const rcPath = (c as any).rcFile
+        ? path.resolve(__dirname, (c as any).rcFile)
+        : null;
+      if (rcPath && fs.existsSync(rcPath)) {
+        content = fs.readFileSync(rcPath, "utf-8");
+        (c as any).bytes = Buffer.byteLength(content, "utf-8");
+      } else {
+        content = loadFixture(c.file);
+      }
+
+      // Apply sampling when in low-memory mode
+      const sampleNote = extremeMode === "sampled" ? ` [sampled ${Math.round(sampleRatio * 100)}%]` : "";
+      let testContent = content;
+      if (extremeMode === "sampled") {
+        const { sampleContent } = await import("../../src/safety/memoryGuard.js");
+        testContent = sampleContent(content, sampleRatio);
+      }
+
+      const { result, ms } = await timeIt(() =>
+        handleCompressContext(ctx, {
+          content: testContent,
+          contentType: c.type as any,
+          scopeId: SCOPE_ID,
+          keepOriginal: true,
+        })
+      );
       expect(result.isError).toBeFalsy();
       const d = parseToolText(result);
-      record({ scenario: `compress/${c.label}`, sizeLabel: c.label, inputBytes: c.bytes, tokensBefore: (d.tokensBefore as number) ?? 0, tokensAfter: (d.tokensAfter as number) ?? 0, tokensSaved: (d.tokensSaved as number) ?? 0, compressionRatio: (d.compressionRatio as number) ?? 0, latencyMs: ms, cacheHit: (d.cacheHit as boolean) ?? false, receiptCreated: typeof d.receiptId === "string", runId: null, artifactCount: 1, status: (d.failed as boolean) ? "partial" : "ok", timestamp: new Date().toISOString() });
+      const status = extremeMode === "sampled"
+        ? "sampled"
+        : (d.failed as boolean)
+          ? "partial"
+          : "ok";
+      record({
+        scenario: `compress/${c.label}${sampleNote}`,
+        sizeLabel: `${c.label} [${extremeMode}]`,
+        inputBytes: (c as any).bytes ?? c.bytes,
+        tokensBefore: (d.tokensBefore as number) ?? 0,
+        tokensAfter: (d.tokensAfter as number) ?? 0,
+        tokensSaved: (d.tokensSaved as number) ?? 0,
+        compressionRatio: (d.compressionRatio as number) ?? 0,
+        latencyMs: ms,
+        cacheHit: (d.cacheHit as boolean) ?? false,
+        receiptCreated: typeof d.receiptId === "string",
+        runId: null,
+        artifactCount: 1,
+        status,
+        timestamp: new Date().toISOString(),
+      });
     });
   }
+
 });
