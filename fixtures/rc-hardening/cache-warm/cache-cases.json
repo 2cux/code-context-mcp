@@ -1,0 +1,26 @@
+{
+  "description": "Cache warm/cold benchmark cases",
+  "cases": [
+    {
+      "id": "cold-compress-100kb",
+      "input": "repeated-100kb-test-output.log",
+      "mode": "cold",
+      "iterations": 1,
+      "expected": "compress and populate cache"
+    },
+    {
+      "id": "warm-hit-same-process",
+      "input": "repeated-100kb-test-output.log",
+      "mode": "warm",
+      "iterations": 5,
+      "expected": "cache hit after first run"
+    },
+    {
+      "id": "new-process-hit",
+      "input": "repeated-100kb-test-output.log",
+      "mode": "new-process",
+      "iterations": 3,
+      "expected": "persistent cache hit via SQLite"
+    }
+  ]
+}

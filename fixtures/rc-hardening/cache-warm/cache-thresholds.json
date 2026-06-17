@@ -1,0 +1,7 @@
+{
+  "coldCacheMs": 1000,
+  "warmCacheMs": 200,
+  "sameProcessWarmCacheMs": 50,
+  "subsequentHitExpectedMs": 20,
+  "notes": "If first-run hit includes process init, classify separately as cold-start."
+}
