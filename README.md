@@ -4,7 +4,7 @@
 [![License: MIT](https://img.shields.io/badge/license-MIT-yellow)](./LICENSE)
 [![Node.js](https://img.shields.io/badge/node-%3E%3D18-green)](https://nodejs.org)
 [![MCP](https://img.shields.io/badge/MCP-compatible-purple)](https://modelcontextprotocol.io)
-[![Tests](https://img.shields.io/badge/tests-1179%20passing-brightgreen)](./tests)
+[![Tests](https://img.shields.io/badge/tests-1285%20passing-brightgreen)](./tests)
 
 > **v1.0.0** — Context Compression + Project Memory, dual-core.
 
@@ -37,36 +37,50 @@ pnpm build
 npm run build
 
 # Verify
-code-context scope
+node dist/cli/index.js scope
 ```
 
 ### MCP Configuration
 
-Add to your AI coding agent's MCP config:
+Add to your AI coding agent's MCP config. The default mode is **agent** (7 safe tools):
 
 ```json
 {
   "mcpServers": {
     "code-context": {
-      "command": "npx",
-      "args": ["-y", "code-context-mcp"]
+      "command": "node",
+      "args": ["dist/index.js"],
+      "env": {
+        "MCP_TOOL_MODE": "agent"
+      }
     }
   }
 }
 ```
 
-Or with global install:
+For full tool access during development, use `dev` mode (18 tools):
 
 ```json
 {
   "mcpServers": {
     "code-context": {
-      "command": "code-context-server",
-      "args": []
+      "command": "node",
+      "args": ["dist/index.js"],
+      "env": {
+        "MCP_TOOL_MODE": "dev"
+      }
     }
   }
 }
 ```
+
+**Tool Surface by Mode:**
+
+| Mode | Tools | Includes |
+|---|---|---|
+| `agent` | 7 | compress, retrieve, remember, recall, forget, scope, run_context_flow |
+| `dev` | 18 | All tools including dangerous (delete_original, cleanup_originals) and harness |
+| `test` | 18 | All tools, no restrictions (for schema/smoke/harness testing) |
 
 ---
 
@@ -334,7 +348,7 @@ Every operation leaves an audit trail. For a complete walkthrough, see [DEMO.md]
 | [MCP_TOOLS.md](./MCP_TOOLS.md) | All 18 MCP tools — input/output, schemas, error handling |
 | [TOOL_SURFACE.md](./docs/TOOL_SURFACE.md) | Tool surface modes — agent (7), dev (18), test (18) |
 | [TOOL_INVENTORY.md](./docs/TOOL_INVENTORY.md) | Full 18-tool inventory with module, risk, and mode assignments |
-| [PERFORMANCE.md](./reports/performance/performance-report.md) | Performance baseline report |
+| [PERFORMANCE.md](./docs/PERFORMANCE.md) | Performance guide: test tiers, memory guard, thresholds |
 | [HARNESS.md](./docs/14-harness.md) | Harness framework — flows, runner, adapters |
 | [USABILITY.md](./reports/usability/agent-usability-report.md) | Agent usability evaluation — 3-mode comparison |
 | [DATA_MODEL.md](./DATA_MODEL.md) | Data models, record types, SQLite schema |
@@ -366,7 +380,7 @@ PRD documents are in [`docs/`](./docs/INDEX.md).
 pnpm install        # Install dependencies
 pnpm build          # Build TypeScript
 npm run build       # Cross-platform build (Windows/macOS/Linux)
-pnpm test           # Run tests (1179 tests)
+pnpm test           # Run tests (1285 tests)
 pnpm test:watch     # Watch mode
 pnpm lint           # ESLint
 pnpm format         # Prettier
@@ -419,7 +433,7 @@ The real `McpAdapter` supports 4 harness MCP tools backed by in-memory SQLite:
 pnpm test
 ```
 
-Expected: **39 test files, 1179 tests, all passing.**
+Expected: **42 test files, 1285 tests, all passing.** (Performance tests run separately with `PERF_TEST=1`)
 
 ---
 

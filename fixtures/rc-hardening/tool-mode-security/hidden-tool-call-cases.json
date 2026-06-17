@@ -1,0 +1,26 @@
+{
+  "mode": "agent",
+  "mustReject": [
+    "delete_original",
+    "cleanup_originals",
+    "run_harness_flow",
+    "get_harness_run",
+    "check_harness_flow",
+    "list_harness_flows",
+    "list_failures",
+    "failure_stats",
+    "list_context",
+    "list_compressions",
+    "analyze_context"
+  ],
+  "mustAllow": [
+    "current_scope",
+    "compress_context",
+    "retrieve_original",
+    "remember_context",
+    "recall_context",
+    "forget_context",
+    "run_context_flow"
+  ],
+  "expectedErrorContains": "not allowed"
+}

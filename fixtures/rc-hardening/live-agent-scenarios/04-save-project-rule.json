@@ -1,0 +1,15 @@
+{
+  "id": "04-save-project-rule",
+  "task": "Remember that this repo uses pnpm, not npm.",
+  "inputRef": "../fixtures/logs/100kb.log",
+  "expectedTools": [
+    "remember_context"
+  ],
+  "forbiddenTools": [],
+  "mode": "agent",
+  "successCriteria": [
+    "task completed",
+    "no forbidden tools",
+    "minimal tool calls"
+  ]
+}

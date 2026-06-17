@@ -1,0 +1,17 @@
+{
+  "id": "05-recall-project-rule",
+  "task": "Before installing a package, recall project package-manager rule.",
+  "inputRef": "../fixtures/logs/100kb.log",
+  "expectedTools": [
+    "recall_context"
+  ],
+  "forbiddenTools": [
+    "list_context"
+  ],
+  "mode": "agent",
+  "successCriteria": [
+    "task completed",
+    "no forbidden tools",
+    "minimal tool calls"
+  ]
+}

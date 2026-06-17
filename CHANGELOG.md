@@ -2,6 +2,40 @@
 
 All notable changes to CodeContext MCP.
 
+## [1.0.0-rc] — 2026-06-17
+
+### Release Candidate
+
+Third major iteration after alpha (v0.1.0) and beta (v0.2.0). RC hardening phase — no new features, only quality, safety, and release readiness.
+
+### Added
+- `MCP_TOOL_MODE` env var with `agent` (7 tools), `dev` (18 tools), `test` (18 tools)
+- `run_context_flow` — unified agent-facing compression + memory pipeline
+- `analyze_context` — context decision intelligence
+- `failure_stats` / `list_failures` — failure learning diagnostics
+- Harness MCP tools (4): `run_harness_flow`, `list_harness_flows`, `check_harness_flow`, `get_harness_run`
+- Memory guard: auto-skip/sample extreme perf tests based on system memory
+- Cache warm analysis with cold/warm split thresholds
+- Schema version tracking (`PRAGMA user_version`) for migration optimization
+- Tool mode security regression test suite (60 tests)
+- Live agent validation (12 scenarios)
+- Clean install smoke test script
+- `docs/PERFORMANCE.md`, `docs/releases/v0.3.0-rc.md`
+
+### Changed
+- Default mode is `agent` (7 safe tools). Dangerous tools hidden from AI agents.
+- Real MCP adapter uses shared `toolRegistry.ts` (was stub)
+- Performance reports split into cold-start / warm categories
+- Extreme perf tests auto-degrade: skip (<8GB), sample (8–16GB), full (≥16GB)
+- `initAndMigrate()` skips redundant migration runs when schema is current
+- Tool count updated to 18 across all documentation
+
+### Fixed
+- Real MCP adapter now supports all 18 tools via shared registry
+- `describeMode` dev count corrected to 18
+- `npm pack --dry-run` verification in clean-install smoke
+- Harness tools correctly filtered from agent mode tool listing
+
 ## [1.0.0] — 2025-06-14
 
 ### Stable Release

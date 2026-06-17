@@ -1,0 +1,15 @@
+{
+  "id": "07-compress-result-to-memory",
+  "task": "Compress a test failure and remember the important failure.",
+  "inputRef": "../fixtures/logs/100kb.log",
+  "expectedTools": [
+    "run_context_flow"
+  ],
+  "forbiddenTools": [],
+  "mode": "agent",
+  "successCriteria": [
+    "task completed",
+    "no forbidden tools",
+    "minimal tool calls"
+  ]
+}

@@ -1,0 +1,17 @@
+{
+  "id": "12-analyze-context-choice",
+  "task": "Decide whether to compress/recall without exposing analyze_context by default.",
+  "inputRef": "../fixtures/logs/100kb.log",
+  "expectedTools": [
+    "run_context_flow"
+  ],
+  "forbiddenTools": [
+    "analyze_context"
+  ],
+  "mode": "agent",
+  "successCriteria": [
+    "task completed",
+    "no forbidden tools",
+    "minimal tool calls"
+  ]
+}

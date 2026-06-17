@@ -1,0 +1,20 @@
+[
+  "analyze_context",
+  "check_harness_flow",
+  "cleanup_originals",
+  "compress_context",
+  "current_scope",
+  "delete_original",
+  "failure_stats",
+  "forget_context",
+  "get_harness_run",
+  "list_compressions",
+  "list_context",
+  "list_failures",
+  "list_harness_flows",
+  "recall_context",
+  "remember_context",
+  "retrieve_original",
+  "run_context_flow",
+  "run_harness_flow"
+]

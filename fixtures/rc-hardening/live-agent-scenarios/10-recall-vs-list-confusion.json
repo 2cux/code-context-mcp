@@ -1,0 +1,17 @@
+{
+  "id": "10-recall-vs-list-confusion",
+  "task": "Find relevant memory for refresh token bug; do not list all memories.",
+  "inputRef": "../fixtures/logs/100kb.log",
+  "expectedTools": [
+    "recall_context"
+  ],
+  "forbiddenTools": [
+    "list_context"
+  ],
+  "mode": "agent",
+  "successCriteria": [
+    "task completed",
+    "no forbidden tools",
+    "minimal tool calls"
+  ]
+}

@@ -1,0 +1,16 @@
+{
+  "id": "03-large-code-file",
+  "task": "Compress this large TypeScript file conservatively.",
+  "inputRef": "../fixtures/logs/100kb.log",
+  "expectedTools": [
+    "compress_context",
+    "retrieve_original"
+  ],
+  "forbiddenTools": [],
+  "mode": "agent",
+  "successCriteria": [
+    "task completed",
+    "no forbidden tools",
+    "minimal tool calls"
+  ]
+}

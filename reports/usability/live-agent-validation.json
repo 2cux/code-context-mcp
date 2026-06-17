@@ -1,0 +1,392 @@
+{
+  "generated": "2026-06-17T02:30:36.757Z",
+  "mode": "agent",
+  "client": "Claude Code (simulated — direct handler calls with toolMode enforcement)",
+  "summary": {
+    "total": 12,
+    "passed": 12,
+    "failed": 0,
+    "totalToolCalls": 25
+  },
+  "scenarios": [
+    {
+      "id": "01-long-test-output",
+      "task": "Compress this long Vitest failure output, keep original retrievable.",
+      "mode": "agent",
+      "status": "ok",
+      "toolsCalled": [
+        {
+          "name": "compress_context",
+          "latencyMs": 336,
+          "isError": false,
+          "resultPreview": "{\n  \"ccrId\": \"ccr_mqhgeo0u_a72653_000001\",\n  \"compressed\": false,\n  \"scopeId\": \"repo_ce1c6bc9\",\n  \"contentType\": \"test_o..."
+        },
+        {
+          "name": "delete_original (rejected)",
+          "latencyMs": 0,
+          "isError": true,
+          "resultPreview": "Tool \"delete_original\" is not available in agent mode"
+        },
+        {
+          "name": "cleanup_originals (rejected)",
+          "latencyMs": 0,
+          "isError": true,
+          "resultPreview": "Tool \"cleanup_originals\" is not available in agent mode"
+        }
+      ],
+      "forbiddenToolsCalled": [],
+      "unexpectedTools": [],
+      "errors": [],
+      "totalCalls": 3,
+      "success": true,
+      "notes": [
+        "task completed",
+        "minimal tool calls"
+      ]
+    },
+    {
+      "id": "02-build-failure",
+      "task": "Analyze a build failure log and summarize root cause.",
+      "mode": "agent",
+      "status": "ok",
+      "toolsCalled": [
+        {
+          "name": "compress_context",
+          "latencyMs": 302,
+          "isError": false,
+          "resultPreview": "{\n  \"ccrId\": \"ccr_mqhgeo0u_a72653_000001\",\n  \"compressed\": false,\n  \"scopeId\": \"repo_ce1c6bc9\",\n  \"contentType\": \"test_o..."
+        },
+        {
+          "name": "delete_original (rejected)",
+          "latencyMs": 0,
+          "isError": true,
+          "resultPreview": "Tool \"delete_original\" is not available in agent mode"
+        }
+      ],
+      "forbiddenToolsCalled": [],
+      "unexpectedTools": [],
+      "errors": [],
+      "totalCalls": 2,
+      "success": true,
+      "notes": [
+        "task completed",
+        "minimal tool calls"
+      ]
+    },
+    {
+      "id": "03-large-code-file",
+      "task": "Compress this large TypeScript file conservatively.",
+      "mode": "agent",
+      "status": "ok",
+      "toolsCalled": [
+        {
+          "name": "compress_context",
+          "latencyMs": 218,
+          "isError": false,
+          "resultPreview": "{\n  \"ccrId\": \"ccr_mqhgeo0u_a72653_000001\",\n  \"compressed\": false,\n  \"scopeId\": \"repo_ce1c6bc9\",\n  \"contentType\": \"test_o..."
+        },
+        {
+          "name": "retrieve_original",
+          "latencyMs": 220,
+          "isError": true,
+          "resultPreview": "{\"scopeId\":\"repo_ce1c6bc9\",\"originalRef\":\"orig_test_ref\",\"found\":false,\"error\":\"original_not_found\",\"hint\":\"The original..."
+        }
+      ],
+      "forbiddenToolsCalled": [],
+      "unexpectedTools": [],
+      "errors": [],
+      "totalCalls": 2,
+      "success": true,
+      "notes": [
+        "task completed",
+        "minimal tool calls"
+      ]
+    },
+    {
+      "id": "04-save-project-rule",
+      "task": "Remember that this repo uses pnpm, not npm.",
+      "mode": "agent",
+      "status": "ok",
+      "toolsCalled": [
+        {
+          "name": "remember_context",
+          "latencyMs": 213,
+          "isError": false,
+          "resultPreview": "{\n  \"memoryId\": \"mem_mqhgeorm_375811_000001\",\n  \"scopeId\": \"repo_ce1c6bc9\",\n  \"type\": \"project_rule\",\n  \"status\": \"activ..."
+        }
+      ],
+      "forbiddenToolsCalled": [],
+      "unexpectedTools": [],
+      "errors": [],
+      "totalCalls": 1,
+      "success": true,
+      "notes": [
+        "task completed",
+        "minimal tool calls"
+      ]
+    },
+    {
+      "id": "05-recall-project-rule",
+      "task": "Before installing a package, recall project package-manager rule.",
+      "mode": "agent",
+      "status": "ok",
+      "toolsCalled": [
+        {
+          "name": "recall_context",
+          "latencyMs": 226,
+          "isError": false,
+          "resultPreview": "{\n  \"scopeId\": \"repo_ce1c6bc9\",\n  \"profile\": {\n    \"static\": [\n      {\n        \"id\": \"pf_mqhg7214_f8a6a8_000014\",\n      ..."
+        },
+        {
+          "name": "list_context (rejected)",
+          "latencyMs": 0,
+          "isError": true,
+          "resultPreview": "Tool \"list_context\" is not available in agent mode"
+        }
+      ],
+      "forbiddenToolsCalled": [],
+      "unexpectedTools": [],
+      "errors": [],
+      "totalCalls": 2,
+      "success": true,
+      "notes": [
+        "task completed",
+        "minimal tool calls"
+      ]
+    },
+    {
+      "id": "06-supersede-memory",
+      "task": "Replace old npm memory with pnpm memory.",
+      "mode": "agent",
+      "status": "ok",
+      "toolsCalled": [
+        {
+          "name": "forget_context",
+          "latencyMs": 0,
+          "isError": true,
+          "resultPreview": "Error: id is required."
+        },
+        {
+          "name": "remember_context",
+          "latencyMs": 213,
+          "isError": false,
+          "resultPreview": "{\n  \"memoryId\": \"mem_mqhgep4d_30175a_000002\",\n  \"scopeId\": \"repo_ce1c6bc9\",\n  \"type\": \"project_rule\",\n  \"status\": \"activ..."
+        }
+      ],
+      "forbiddenToolsCalled": [],
+      "unexpectedTools": [],
+      "errors": [],
+      "totalCalls": 2,
+      "success": true,
+      "notes": [
+        "task completed",
+        "minimal tool calls"
+      ]
+    },
+    {
+      "id": "07-compress-result-to-memory",
+      "task": "Compress a test failure and remember the important failure.",
+      "mode": "agent",
+      "status": "ok",
+      "toolsCalled": [
+        {
+          "name": "run_context_flow",
+          "latencyMs": 221,
+          "isError": false,
+          "resultPreview": "{\n  \"flow\": \"full\",\n  \"status\": \"ok\",\n  \"summary\": \"Compressed to CCR ccr_mqhgepa9_d98976_000002; 11 memories(s) process..."
+        }
+      ],
+      "forbiddenToolsCalled": [],
+      "unexpectedTools": [],
+      "errors": [],
+      "totalCalls": 1,
+      "success": true,
+      "notes": [
+        "task completed",
+        "minimal tool calls"
+      ]
+    },
+    {
+      "id": "08-full-context-flow",
+      "task": "Run full context flow for failing auth test.",
+      "mode": "agent",
+      "status": "ok",
+      "toolsCalled": [
+        {
+          "name": "run_context_flow",
+          "latencyMs": 234,
+          "isError": false,
+          "resultPreview": "{\n  \"flow\": \"full\",\n  \"status\": \"ok\",\n  \"summary\": \"Compression did not produce a CCR; 11 memories(s) processed; Profile..."
+        },
+        {
+          "name": "run_harness_flow (rejected)",
+          "latencyMs": 0,
+          "isError": true,
+          "resultPreview": "Tool \"run_harness_flow\" is not available in agent mode"
+        }
+      ],
+      "forbiddenToolsCalled": [],
+      "unexpectedTools": [],
+      "errors": [],
+      "totalCalls": 2,
+      "success": true,
+      "notes": [
+        "task completed",
+        "minimal tool calls"
+      ]
+    },
+    {
+      "id": "09-dangerous-tool-avoidance",
+      "task": "Audit available compressed contexts without deleting originals.",
+      "mode": "agent",
+      "status": "ok",
+      "toolsCalled": [
+        {
+          "name": "run_context_flow",
+          "latencyMs": 218,
+          "isError": false,
+          "resultPreview": "{\n  \"flow\": \"full\",\n  \"status\": \"ok\",\n  \"summary\": \"Compression did not produce a CCR; 11 memories(s) processed; Profile..."
+        },
+        {
+          "name": "delete_original (rejected)",
+          "latencyMs": 0,
+          "isError": true,
+          "resultPreview": "Tool \"delete_original\" is not available in agent mode"
+        },
+        {
+          "name": "cleanup_originals (rejected)",
+          "latencyMs": 0,
+          "isError": true,
+          "resultPreview": "Tool \"cleanup_originals\" is not available in agent mode"
+        }
+      ],
+      "forbiddenToolsCalled": [],
+      "unexpectedTools": [],
+      "errors": [],
+      "totalCalls": 3,
+      "success": true,
+      "notes": [
+        "task completed",
+        "minimal tool calls"
+      ]
+    },
+    {
+      "id": "10-recall-vs-list-confusion",
+      "task": "Find relevant memory for refresh token bug; do not list all memories.",
+      "mode": "agent",
+      "status": "ok",
+      "toolsCalled": [
+        {
+          "name": "recall_context",
+          "latencyMs": 208,
+          "isError": false,
+          "resultPreview": "{\n  \"scopeId\": \"repo_ce1c6bc9\",\n  \"profile\": {\n    \"static\": [\n      {\n        \"id\": \"pf_mqhg7214_f8a6a8_000014\",\n      ..."
+        },
+        {
+          "name": "list_context (rejected)",
+          "latencyMs": 0,
+          "isError": true,
+          "resultPreview": "Tool \"list_context\" is not available in agent mode"
+        }
+      ],
+      "forbiddenToolsCalled": [],
+      "unexpectedTools": [],
+      "errors": [],
+      "totalCalls": 2,
+      "success": true,
+      "notes": [
+        "task completed",
+        "minimal tool calls"
+      ]
+    },
+    {
+      "id": "11-harness-vs-run-context-flow",
+      "task": "Use agent-facing flow, not internal harness tools.",
+      "mode": "agent",
+      "status": "ok",
+      "toolsCalled": [
+        {
+          "name": "run_context_flow",
+          "latencyMs": 218,
+          "isError": false,
+          "resultPreview": "{\n  \"flow\": \"full\",\n  \"status\": \"ok\",\n  \"summary\": \"Compression did not produce a CCR; 11 memories(s) processed; Profile..."
+        },
+        {
+          "name": "run_harness_flow (rejected)",
+          "latencyMs": 0,
+          "isError": true,
+          "resultPreview": "Tool \"run_harness_flow\" is not available in agent mode"
+        },
+        {
+          "name": "list_harness_flows (rejected)",
+          "latencyMs": 0,
+          "isError": true,
+          "resultPreview": "Tool \"list_harness_flows\" is not available in agent mode"
+        }
+      ],
+      "forbiddenToolsCalled": [],
+      "unexpectedTools": [],
+      "errors": [],
+      "totalCalls": 3,
+      "success": true,
+      "notes": [
+        "task completed",
+        "minimal tool calls"
+      ]
+    },
+    {
+      "id": "12-analyze-context-choice",
+      "task": "Decide whether to compress/recall without exposing analyze_context by default.",
+      "mode": "agent",
+      "status": "ok",
+      "toolsCalled": [
+        {
+          "name": "run_context_flow",
+          "latencyMs": 218,
+          "isError": false,
+          "resultPreview": "{\n  \"flow\": \"full\",\n  \"status\": \"ok\",\n  \"summary\": \"Compression did not produce a CCR; 11 memories(s) processed; Profile..."
+        },
+        {
+          "name": "analyze_context (rejected)",
+          "latencyMs": 0,
+          "isError": true,
+          "resultPreview": "Tool \"analyze_context\" is not available in agent mode"
+        }
+      ],
+      "forbiddenToolsCalled": [],
+      "unexpectedTools": [],
+      "errors": [],
+      "totalCalls": 2,
+      "success": true,
+      "notes": [
+        "task completed",
+        "minimal tool calls"
+      ]
+    }
+  ],
+  "securityVerification": {
+    "allowedTools": [
+      "compress_context",
+      "current_scope",
+      "retrieve_original",
+      "remember_context",
+      "recall_context",
+      "forget_context",
+      "run_context_flow"
+    ],
+    "hiddenTools": [
+      "delete_original",
+      "cleanup_originals",
+      "list_compressions",
+      "analyze_context",
+      "list_context",
+      "list_failures",
+      "failure_stats",
+      "list_harness_flows",
+      "run_harness_flow",
+      "get_harness_run",
+      "check_harness_flow"
+    ],
+    "dangerousToolsNeverCalled": false
+  }
+}

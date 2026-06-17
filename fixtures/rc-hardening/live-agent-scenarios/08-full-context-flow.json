@@ -1,0 +1,17 @@
+{
+  "id": "08-full-context-flow",
+  "task": "Run full context flow for failing auth test.",
+  "inputRef": "../fixtures/logs/100kb.log",
+  "expectedTools": [
+    "run_context_flow"
+  ],
+  "forbiddenTools": [
+    "run_harness_flow"
+  ],
+  "mode": "agent",
+  "successCriteria": [
+    "task completed",
+    "no forbidden tools",
+    "minimal tool calls"
+  ]
+}

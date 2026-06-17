@@ -1,0 +1,71 @@
+{
+  "generated": "2026-06-17T02:43:35.173Z",
+  "version": "v1.0.0",
+  "summary": {
+    "total": 12,
+    "passed": 11,
+    "failed": 1
+  },
+  "checklist": [
+    {
+      "check": "tsc zero errors",
+      "status": "ok",
+      "detail": "zero TypeScript errors"
+    },
+    {
+      "check": "non-perf tests zero failures",
+      "status": "ok",
+      "detail": "0 failures, 1285 passed"
+    },
+    {
+      "check": "standard perf passes",
+      "status": "ok",
+      "detail": "report exists"
+    },
+    {
+      "check": "agent mode 7 tools",
+      "status": "ok",
+      "detail": "AGENT_TOOLS defined in toolMode.ts"
+    },
+    {
+      "check": "dev/test 18 tools",
+      "status": "ok",
+      "detail": "DEV_TOOLS includes all 18 in toolMode.ts"
+    },
+    {
+      "check": "dangerous tools hidden",
+      "status": "ok",
+      "detail": "delete_original, cleanup_originals excluded from AGENT_TOOLS"
+    },
+    {
+      "check": "docs synced",
+      "status": "fail",
+      "detail": "some missing"
+    },
+    {
+      "check": "release notes ready",
+      "status": "ok",
+      "detail": "docs/releases/v0.3.0-rc.md"
+    },
+    {
+      "check": "npm pack dry run",
+      "status": "ok",
+      "detail": "tarball content verified"
+    },
+    {
+      "check": "package.json version",
+      "status": "ok",
+      "detail": "v1.0.0 (note: RC checklist expects v0.3.0-rc)"
+    },
+    {
+      "check": "README MCP_TOOL_MODE",
+      "status": "ok",
+      "detail": "MCP_TOOL_MODE documented in README"
+    },
+    {
+      "check": "CHANGELOG updated",
+      "status": "ok",
+      "detail": "v1.0.0-rc entry present"
+    }
+  ]
+}

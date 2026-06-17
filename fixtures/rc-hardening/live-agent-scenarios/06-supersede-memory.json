@@ -1,0 +1,16 @@
+{
+  "id": "06-supersede-memory",
+  "task": "Replace old npm memory with pnpm memory.",
+  "inputRef": "../fixtures/logs/100kb.log",
+  "expectedTools": [
+    "forget_context",
+    "remember_context"
+  ],
+  "forbiddenTools": [],
+  "mode": "agent",
+  "successCriteria": [
+    "task completed",
+    "no forbidden tools",
+    "minimal tool calls"
+  ]
+}

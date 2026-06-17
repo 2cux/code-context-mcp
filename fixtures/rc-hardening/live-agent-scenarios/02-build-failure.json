@@ -1,0 +1,17 @@
+{
+  "id": "02-build-failure",
+  "task": "Analyze a build failure log and summarize root cause.",
+  "inputRef": "../fixtures/logs/100kb.log",
+  "expectedTools": [
+    "compress_context"
+  ],
+  "forbiddenTools": [
+    "delete_original"
+  ],
+  "mode": "agent",
+  "successCriteria": [
+    "task completed",
+    "no forbidden tools",
+    "minimal tool calls"
+  ]
+}

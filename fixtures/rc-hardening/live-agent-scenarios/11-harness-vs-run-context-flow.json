@@ -1,0 +1,18 @@
+{
+  "id": "11-harness-vs-run-context-flow",
+  "task": "Use agent-facing flow, not internal harness tools.",
+  "inputRef": "../fixtures/logs/100kb.log",
+  "expectedTools": [
+    "run_context_flow"
+  ],
+  "forbiddenTools": [
+    "run_harness_flow",
+    "list_harness_flows"
+  ],
+  "mode": "agent",
+  "successCriteria": [
+    "task completed",
+    "no forbidden tools",
+    "minimal tool calls"
+  ]
+}

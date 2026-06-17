@@ -1,0 +1,14 @@
+{
+  "required": [
+    "tsc zero errors",
+    "non-perf tests zero failures",
+    "standard perf passes",
+    "agent mode 7 tools",
+    "dev/test 18 tools",
+    "dangerous tools hidden",
+    "docs synced",
+    "release notes ready",
+    "npm pack dry run"
+  ],
+  "version": "v0.3.0-rc"
+}
