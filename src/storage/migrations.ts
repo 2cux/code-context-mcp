@@ -33,7 +33,35 @@ function findSchemaPath(): string {
   );
 }
 
+/** Current schema version — increment when the schema or migrations change. */
+const CURRENT_SCHEMA_VERSION = 3;
+
+/** Read the schema version stored in the database (PRAGMA user_version). */
+function getSchemaVersion(db: Database): number {
+  try {
+    const rows = db.exec("PRAGMA user_version");
+    if (rows.length > 0 && rows[0]!.values.length > 0) {
+      return Number(rows[0]!.values[0]![0] ?? 0);
+    }
+  } catch {
+    // PRAGMA failed — assume version 0 and run migrations
+  }
+  return 0;
+}
+
+/** Write the current schema version to the database. */
+function setSchemaVersion(db: Database, version: number): void {
+  db.run(`PRAGMA user_version = ${version}`);
+}
+
 export function runMigrations(db: Database): void {
+  const currentVersion = getSchemaVersion(db);
+
+  // Fast path: if schema is already current, skip all migration work.
+  // The schema.sql execution and per-migration ALTER TABLE attempts are
+  // unnecessary repeated work on already-migrated databases.
+  if (currentVersion >= CURRENT_SCHEMA_VERSION) return;
+
   const schemaPath = findSchemaPath();
   const schema = readFileSync(schemaPath, "utf-8");
   execRaw(db, schema);
@@ -48,6 +76,9 @@ export function runMigrations(db: Database): void {
 
   // CacheAligner columns (§31.2) — added in v1.1
   migrateCacheColumns(db);
+
+  // Mark migrations as applied so subsequent initAndMigrate calls skip work
+  setSchemaVersion(db, CURRENT_SCHEMA_VERSION);
 }
 
 /**

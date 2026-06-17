@@ -1,0 +1,16 @@
+{
+  "cases": [
+    {
+      "id": "500kb-test-output",
+      "file": "500kb-test-output.log",
+      "minMemoryMb": 8192,
+      "mode": "sampled-or-full"
+    },
+    {
+      "id": "1mb-test-output",
+      "file": "1mb-test-output.log",
+      "minMemoryMb": 16384,
+      "mode": "full-extreme"
+    }
+  ]
+}

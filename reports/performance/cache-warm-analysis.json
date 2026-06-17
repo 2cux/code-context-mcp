@@ -1,0 +1,112 @@
+{
+  "generated": "2026-06-17T02:03:44.945Z",
+  "thresholds": {
+    "coldCacheMs": 1000,
+    "warmCacheMs": 200,
+    "sameProcessWarmCacheMs": 50,
+    "subsequentHitExpectedMs": 20,
+    "notes": "If first-run hit includes process init, classify separately as cold-start."
+  },
+  "summary": {
+    "per-step/cold": {
+      "avgMs": 48.8,
+      "minMs": 0,
+      "maxMs": 243,
+      "count": 5,
+      "steps": {
+        "contentHash": 1,
+        "strategyResolution": 0,
+        "computeCacheKey": 0,
+        "findByCacheKey": 0,
+        "fullCompress": 243
+      }
+    },
+    "per-step/warm-same-process": {
+      "avgMs": 2,
+      "minMs": 2,
+      "maxMs": 2,
+      "count": 1,
+      "steps": {
+        "cacheHit": 2
+      }
+    },
+    "cold/cold-compress-100kb": {
+      "avgMs": 107,
+      "minMs": 107,
+      "maxMs": 107,
+      "count": 1,
+      "steps": {
+        "compress+save": 107
+      }
+    },
+    "warm/warm-hit-same-process": {
+      "avgMs": 1,
+      "minMs": 1,
+      "maxMs": 1,
+      "count": 5,
+      "steps": {
+        "hit_1": 1,
+        "hit_2": 1,
+        "hit_3": 1,
+        "hit_4": 1,
+        "hit_5": 1
+      }
+    },
+    "persistent/cold-in-first-process": {
+      "avgMs": 117,
+      "minMs": 117,
+      "maxMs": 117,
+      "count": 1,
+      "steps": {
+        "compress": 117
+      }
+    },
+    "persistent/new-process-hit": {
+      "avgMs": 77.67,
+      "minMs": 72,
+      "maxMs": 82,
+      "count": 3,
+      "steps": {
+        "hit_1": 79,
+        "hit_2": 82,
+        "hit_3": 72
+      }
+    }
+  },
+  "coldVsWarm": {
+    "cold": {
+      "avgMs": 66.86,
+      "count": 7
+    },
+    "warmSameProcess": {
+      "avgMs": 1.17,
+      "count": 6
+    },
+    "persistentNewProcess": {
+      "avgMs": 77.67,
+      "count": 3
+    }
+  },
+  "thresholdCheck": {
+    "coldCacheMs": {
+      "threshold": 1000,
+      "actual": 66.86,
+      "pass": true
+    },
+    "warmCacheMs": {
+      "threshold": 200,
+      "actual": 1.17,
+      "pass": true
+    },
+    "sameProcessWarmCacheMs": {
+      "threshold": 50,
+      "actual": 1.17,
+      "pass": true
+    },
+    "subsequentHitExpectedMs": {
+      "threshold": 20,
+      "actual": 77.67,
+      "pass": false
+    }
+  }
+}

@@ -103,7 +103,14 @@ function writeReport(): void {
     const st = s && thresh > 0 ? (s.p95Ms <= thresh ? "PASS" : "FAIL") : "N/A";
     md += `| ${tm.label} | ${thresh > 0 ? thresh + "ms" : "—"} | ${s?.scenario ?? "N/A"} | ${s?.p50Ms ?? "—"}ms | ${s?.p95Ms ?? "—"}ms | ${st} |\n`;
   }
-  md += `\n## Notes\n- In-memory SQLite for speed\n- Single run per scenario\n`;
+  md += `
+## Notes
+- In-memory SQLite for speed
+- Cold-start includes DB init (disk read, migration checks)
+- Warm same-process hits are sub-millisecond SQLite lookups
+- New-process persistent hits include DB reopen overhead (~50-90ms normal)
+- See reports/performance/cache-warm-analysis.md for detailed cold/warm breakdown
+`;
   fs.writeFileSync(path.join(dir, "performance-report.md"), md, "utf-8");
 }
 

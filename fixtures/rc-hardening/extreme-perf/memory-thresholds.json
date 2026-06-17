@@ -1,0 +1,6 @@
+{
+  "standardMinMemoryMb": 4096,
+  "extremeRecommendedMemoryMb": 16384,
+  "skipBelowMemoryMb": 8192,
+  "sampleRatioWhenLowMemory": 0.2
+}
