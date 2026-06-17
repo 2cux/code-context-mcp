@@ -68,6 +68,6 @@ reports/usability/
 
 | 模式 | 预期得分 | 预期工具选择错误 | 预期完成率 |
 |------|---------|-----------------|-----------|
-| Full (17 tools) | 较低 | Agent 被 17 个工具迷惑，可能选错 | ~70% |
-| Agent (9 tools) | 中高 | 工具集精简但仍有混淆 (analyze vs recall) | ~90% |
+| Full (18 tools) | 较低 | Agent 被 18 个工具迷惑，可能选错 | ~70% |
+| Agent (7 tools) | 高 | 最小安全表面，95% usability score | ~95% |
 | Agent+Flow (3 tools) | 最高 | run_context_flow 覆盖大部分场景 | ~95% |

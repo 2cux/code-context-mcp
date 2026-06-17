@@ -1,0 +1,802 @@
+[
+  {
+    "id": "seed-0",
+    "type": "project_rule",
+    "content": "Memory 0: project uses pnpm; auth session bug; API client rules; failure state 0",
+    "summary": "Seed memory 0",
+    "confidence": 0.7,
+    "status": "active"
+  },
+  {
+    "id": "seed-1",
+    "type": "decision",
+    "content": "Memory 1: project uses pnpm; auth session bug; API client rules; failure state 1",
+    "summary": "Seed memory 1",
+    "confidence": 0.71,
+    "status": "active"
+  },
+  {
+    "id": "seed-2",
+    "type": "bug",
+    "content": "Memory 2: project uses pnpm; auth session bug; API client rules; failure state 2",
+    "summary": "Seed memory 2",
+    "confidence": 0.72,
+    "status": "active"
+  },
+  {
+    "id": "seed-3",
+    "type": "current_task",
+    "content": "Memory 3: project uses pnpm; auth session bug; API client rules; failure state 3",
+    "summary": "Seed memory 3",
+    "confidence": 0.73,
+    "status": "active"
+  },
+  {
+    "id": "seed-4",
+    "type": "test_failure",
+    "content": "Memory 4: project uses pnpm; auth session bug; API client rules; failure state 4",
+    "summary": "Seed memory 4",
+    "confidence": 0.74,
+    "status": "active"
+  },
+  {
+    "id": "seed-5",
+    "type": "dependency",
+    "content": "Memory 5: project uses pnpm; auth session bug; API client rules; failure state 5",
+    "summary": "Seed memory 5",
+    "confidence": 0.75,
+    "status": "active"
+  },
+  {
+    "id": "seed-6",
+    "type": "api_contract",
+    "content": "Memory 6: project uses pnpm; auth session bug; API client rules; failure state 6",
+    "summary": "Seed memory 6",
+    "confidence": 0.76,
+    "status": "active"
+  },
+  {
+    "id": "seed-7",
+    "type": "project_rule",
+    "content": "Memory 7: project uses pnpm; auth session bug; API client rules; failure state 7",
+    "summary": "Seed memory 7",
+    "confidence": 0.77,
+    "status": "active"
+  },
+  {
+    "id": "seed-8",
+    "type": "decision",
+    "content": "Memory 8: project uses pnpm; auth session bug; API client rules; failure state 8",
+    "summary": "Seed memory 8",
+    "confidence": 0.7799999999999999,
+    "status": "active"
+  },
+  {
+    "id": "seed-9",
+    "type": "bug",
+    "content": "Memory 9: project uses pnpm; auth session bug; API client rules; failure state 9",
+    "summary": "Seed memory 9",
+    "confidence": 0.7899999999999999,
+    "status": "active"
+  },
+  {
+    "id": "seed-10",
+    "type": "current_task",
+    "content": "Memory 10: project uses pnpm; auth session bug; API client rules; failure state 10",
+    "summary": "Seed memory 10",
+    "confidence": 0.7999999999999999,
+    "status": "active"
+  },
+  {
+    "id": "seed-11",
+    "type": "test_failure",
+    "content": "Memory 11: project uses pnpm; auth session bug; API client rules; failure state 11",
+    "summary": "Seed memory 11",
+    "confidence": 0.8099999999999999,
+    "status": "active"
+  },
+  {
+    "id": "seed-12",
+    "type": "dependency",
+    "content": "Memory 12: project uses pnpm; auth session bug; API client rules; failure state 12",
+    "summary": "Seed memory 12",
+    "confidence": 0.82,
+    "status": "active"
+  },
+  {
+    "id": "seed-13",
+    "type": "api_contract",
+    "content": "Memory 13: project uses pnpm; auth session bug; API client rules; failure state 13",
+    "summary": "Seed memory 13",
+    "confidence": 0.83,
+    "status": "active"
+  },
+  {
+    "id": "seed-14",
+    "type": "project_rule",
+    "content": "Memory 14: project uses pnpm; auth session bug; API client rules; failure state 14",
+    "summary": "Seed memory 14",
+    "confidence": 0.84,
+    "status": "active"
+  },
+  {
+    "id": "seed-15",
+    "type": "decision",
+    "content": "Memory 15: project uses pnpm; auth session bug; API client rules; failure state 15",
+    "summary": "Seed memory 15",
+    "confidence": 0.85,
+    "status": "active"
+  },
+  {
+    "id": "seed-16",
+    "type": "bug",
+    "content": "Memory 16: project uses pnpm; auth session bug; API client rules; failure state 16",
+    "summary": "Seed memory 16",
+    "confidence": 0.86,
+    "status": "active"
+  },
+  {
+    "id": "seed-17",
+    "type": "current_task",
+    "content": "Memory 17: project uses pnpm; auth session bug; API client rules; failure state 17",
+    "summary": "Seed memory 17",
+    "confidence": 0.87,
+    "status": "active"
+  },
+  {
+    "id": "seed-18",
+    "type": "test_failure",
+    "content": "Memory 18: project uses pnpm; auth session bug; API client rules; failure state 18",
+    "summary": "Seed memory 18",
+    "confidence": 0.8799999999999999,
+    "status": "active"
+  },
+  {
+    "id": "seed-19",
+    "type": "dependency",
+    "content": "Memory 19: project uses pnpm; auth session bug; API client rules; failure state 19",
+    "summary": "Seed memory 19",
+    "confidence": 0.8899999999999999,
+    "status": "active"
+  },
+  {
+    "id": "seed-20",
+    "type": "api_contract",
+    "content": "Memory 20: project uses pnpm; auth session bug; API client rules; failure state 20",
+    "summary": "Seed memory 20",
+    "confidence": 0.8999999999999999,
+    "status": "active"
+  },
+  {
+    "id": "seed-21",
+    "type": "project_rule",
+    "content": "Memory 21: project uses pnpm; auth session bug; API client rules; failure state 21",
+    "summary": "Seed memory 21",
+    "confidence": 0.9099999999999999,
+    "status": "active"
+  },
+  {
+    "id": "seed-22",
+    "type": "decision",
+    "content": "Memory 22: project uses pnpm; auth session bug; API client rules; failure state 22",
+    "summary": "Seed memory 22",
+    "confidence": 0.9199999999999999,
+    "status": "active"
+  },
+  {
+    "id": "seed-23",
+    "type": "bug",
+    "content": "Memory 23: project uses pnpm; auth session bug; API client rules; failure state 23",
+    "summary": "Seed memory 23",
+    "confidence": 0.9299999999999999,
+    "status": "active"
+  },
+  {
+    "id": "seed-24",
+    "type": "current_task",
+    "content": "Memory 24: project uses pnpm; auth session bug; API client rules; failure state 24",
+    "summary": "Seed memory 24",
+    "confidence": 0.94,
+    "status": "active"
+  },
+  {
+    "id": "seed-25",
+    "type": "test_failure",
+    "content": "Memory 25: project uses pnpm; auth session bug; API client rules; failure state 25",
+    "summary": "Seed memory 25",
+    "confidence": 0.95,
+    "status": "active"
+  },
+  {
+    "id": "seed-26",
+    "type": "dependency",
+    "content": "Memory 26: project uses pnpm; auth session bug; API client rules; failure state 26",
+    "summary": "Seed memory 26",
+    "confidence": 0.96,
+    "status": "active"
+  },
+  {
+    "id": "seed-27",
+    "type": "api_contract",
+    "content": "Memory 27: project uses pnpm; auth session bug; API client rules; failure state 27",
+    "summary": "Seed memory 27",
+    "confidence": 0.97,
+    "status": "active"
+  },
+  {
+    "id": "seed-28",
+    "type": "project_rule",
+    "content": "Memory 28: project uses pnpm; auth session bug; API client rules; failure state 28",
+    "summary": "Seed memory 28",
+    "confidence": 0.98,
+    "status": "active"
+  },
+  {
+    "id": "seed-29",
+    "type": "decision",
+    "content": "Memory 29: project uses pnpm; auth session bug; API client rules; failure state 29",
+    "summary": "Seed memory 29",
+    "confidence": 0.99,
+    "status": "active"
+  },
+  {
+    "id": "seed-30",
+    "type": "bug",
+    "content": "Memory 30: project uses pnpm; auth session bug; API client rules; failure state 30",
+    "summary": "Seed memory 30",
+    "confidence": 0.7,
+    "status": "active"
+  },
+  {
+    "id": "seed-31",
+    "type": "current_task",
+    "content": "Memory 31: project uses pnpm; auth session bug; API client rules; failure state 31",
+    "summary": "Seed memory 31",
+    "confidence": 0.71,
+    "status": "active"
+  },
+  {
+    "id": "seed-32",
+    "type": "test_failure",
+    "content": "Memory 32: project uses pnpm; auth session bug; API client rules; failure state 32",
+    "summary": "Seed memory 32",
+    "confidence": 0.72,
+    "status": "active"
+  },
+  {
+    "id": "seed-33",
+    "type": "dependency",
+    "content": "Memory 33: project uses pnpm; auth session bug; API client rules; failure state 33",
+    "summary": "Seed memory 33",
+    "confidence": 0.73,
+    "status": "active"
+  },
+  {
+    "id": "seed-34",
+    "type": "api_contract",
+    "content": "Memory 34: project uses pnpm; auth session bug; API client rules; failure state 34",
+    "summary": "Seed memory 34",
+    "confidence": 0.74,
+    "status": "active"
+  },
+  {
+    "id": "seed-35",
+    "type": "project_rule",
+    "content": "Memory 35: project uses pnpm; auth session bug; API client rules; failure state 35",
+    "summary": "Seed memory 35",
+    "confidence": 0.75,
+    "status": "active"
+  },
+  {
+    "id": "seed-36",
+    "type": "decision",
+    "content": "Memory 36: project uses pnpm; auth session bug; API client rules; failure state 36",
+    "summary": "Seed memory 36",
+    "confidence": 0.76,
+    "status": "active"
+  },
+  {
+    "id": "seed-37",
+    "type": "bug",
+    "content": "Memory 37: project uses pnpm; auth session bug; API client rules; failure state 37",
+    "summary": "Seed memory 37",
+    "confidence": 0.77,
+    "status": "active"
+  },
+  {
+    "id": "seed-38",
+    "type": "current_task",
+    "content": "Memory 38: project uses pnpm; auth session bug; API client rules; failure state 38",
+    "summary": "Seed memory 38",
+    "confidence": 0.7799999999999999,
+    "status": "active"
+  },
+  {
+    "id": "seed-39",
+    "type": "test_failure",
+    "content": "Memory 39: project uses pnpm; auth session bug; API client rules; failure state 39",
+    "summary": "Seed memory 39",
+    "confidence": 0.7899999999999999,
+    "status": "active"
+  },
+  {
+    "id": "seed-40",
+    "type": "dependency",
+    "content": "Memory 40: project uses pnpm; auth session bug; API client rules; failure state 40",
+    "summary": "Seed memory 40",
+    "confidence": 0.7999999999999999,
+    "status": "active"
+  },
+  {
+    "id": "seed-41",
+    "type": "api_contract",
+    "content": "Memory 41: project uses pnpm; auth session bug; API client rules; failure state 41",
+    "summary": "Seed memory 41",
+    "confidence": 0.8099999999999999,
+    "status": "active"
+  },
+  {
+    "id": "seed-42",
+    "type": "project_rule",
+    "content": "Memory 42: project uses pnpm; auth session bug; API client rules; failure state 42",
+    "summary": "Seed memory 42",
+    "confidence": 0.82,
+    "status": "active"
+  },
+  {
+    "id": "seed-43",
+    "type": "decision",
+    "content": "Memory 43: project uses pnpm; auth session bug; API client rules; failure state 43",
+    "summary": "Seed memory 43",
+    "confidence": 0.83,
+    "status": "active"
+  },
+  {
+    "id": "seed-44",
+    "type": "bug",
+    "content": "Memory 44: project uses pnpm; auth session bug; API client rules; failure state 44",
+    "summary": "Seed memory 44",
+    "confidence": 0.84,
+    "status": "active"
+  },
+  {
+    "id": "seed-45",
+    "type": "current_task",
+    "content": "Memory 45: project uses pnpm; auth session bug; API client rules; failure state 45",
+    "summary": "Seed memory 45",
+    "confidence": 0.85,
+    "status": "active"
+  },
+  {
+    "id": "seed-46",
+    "type": "test_failure",
+    "content": "Memory 46: project uses pnpm; auth session bug; API client rules; failure state 46",
+    "summary": "Seed memory 46",
+    "confidence": 0.86,
+    "status": "active"
+  },
+  {
+    "id": "seed-47",
+    "type": "dependency",
+    "content": "Memory 47: project uses pnpm; auth session bug; API client rules; failure state 47",
+    "summary": "Seed memory 47",
+    "confidence": 0.87,
+    "status": "active"
+  },
+  {
+    "id": "seed-48",
+    "type": "api_contract",
+    "content": "Memory 48: project uses pnpm; auth session bug; API client rules; failure state 48",
+    "summary": "Seed memory 48",
+    "confidence": 0.8799999999999999,
+    "status": "active"
+  },
+  {
+    "id": "seed-49",
+    "type": "project_rule",
+    "content": "Memory 49: project uses pnpm; auth session bug; API client rules; failure state 49",
+    "summary": "Seed memory 49",
+    "confidence": 0.8899999999999999,
+    "status": "active"
+  },
+  {
+    "id": "seed-50",
+    "type": "decision",
+    "content": "Memory 50: project uses pnpm; auth session bug; API client rules; failure state 50",
+    "summary": "Seed memory 50",
+    "confidence": 0.8999999999999999,
+    "status": "active"
+  },
+  {
+    "id": "seed-51",
+    "type": "bug",
+    "content": "Memory 51: project uses pnpm; auth session bug; API client rules; failure state 51",
+    "summary": "Seed memory 51",
+    "confidence": 0.9099999999999999,
+    "status": "active"
+  },
+  {
+    "id": "seed-52",
+    "type": "current_task",
+    "content": "Memory 52: project uses pnpm; auth session bug; API client rules; failure state 52",
+    "summary": "Seed memory 52",
+    "confidence": 0.9199999999999999,
+    "status": "active"
+  },
+  {
+    "id": "seed-53",
+    "type": "test_failure",
+    "content": "Memory 53: project uses pnpm; auth session bug; API client rules; failure state 53",
+    "summary": "Seed memory 53",
+    "confidence": 0.9299999999999999,
+    "status": "active"
+  },
+  {
+    "id": "seed-54",
+    "type": "dependency",
+    "content": "Memory 54: project uses pnpm; auth session bug; API client rules; failure state 54",
+    "summary": "Seed memory 54",
+    "confidence": 0.94,
+    "status": "active"
+  },
+  {
+    "id": "seed-55",
+    "type": "api_contract",
+    "content": "Memory 55: project uses pnpm; auth session bug; API client rules; failure state 55",
+    "summary": "Seed memory 55",
+    "confidence": 0.95,
+    "status": "active"
+  },
+  {
+    "id": "seed-56",
+    "type": "project_rule",
+    "content": "Memory 56: project uses pnpm; auth session bug; API client rules; failure state 56",
+    "summary": "Seed memory 56",
+    "confidence": 0.96,
+    "status": "active"
+  },
+  {
+    "id": "seed-57",
+    "type": "decision",
+    "content": "Memory 57: project uses pnpm; auth session bug; API client rules; failure state 57",
+    "summary": "Seed memory 57",
+    "confidence": 0.97,
+    "status": "active"
+  },
+  {
+    "id": "seed-58",
+    "type": "bug",
+    "content": "Memory 58: project uses pnpm; auth session bug; API client rules; failure state 58",
+    "summary": "Seed memory 58",
+    "confidence": 0.98,
+    "status": "active"
+  },
+  {
+    "id": "seed-59",
+    "type": "current_task",
+    "content": "Memory 59: project uses pnpm; auth session bug; API client rules; failure state 59",
+    "summary": "Seed memory 59",
+    "confidence": 0.99,
+    "status": "active"
+  },
+  {
+    "id": "seed-60",
+    "type": "test_failure",
+    "content": "Memory 60: project uses pnpm; auth session bug; API client rules; failure state 60",
+    "summary": "Seed memory 60",
+    "confidence": 0.7,
+    "status": "active"
+  },
+  {
+    "id": "seed-61",
+    "type": "dependency",
+    "content": "Memory 61: project uses pnpm; auth session bug; API client rules; failure state 61",
+    "summary": "Seed memory 61",
+    "confidence": 0.71,
+    "status": "active"
+  },
+  {
+    "id": "seed-62",
+    "type": "api_contract",
+    "content": "Memory 62: project uses pnpm; auth session bug; API client rules; failure state 62",
+    "summary": "Seed memory 62",
+    "confidence": 0.72,
+    "status": "active"
+  },
+  {
+    "id": "seed-63",
+    "type": "project_rule",
+    "content": "Memory 63: project uses pnpm; auth session bug; API client rules; failure state 63",
+    "summary": "Seed memory 63",
+    "confidence": 0.73,
+    "status": "active"
+  },
+  {
+    "id": "seed-64",
+    "type": "decision",
+    "content": "Memory 64: project uses pnpm; auth session bug; API client rules; failure state 64",
+    "summary": "Seed memory 64",
+    "confidence": 0.74,
+    "status": "active"
+  },
+  {
+    "id": "seed-65",
+    "type": "bug",
+    "content": "Memory 65: project uses pnpm; auth session bug; API client rules; failure state 65",
+    "summary": "Seed memory 65",
+    "confidence": 0.75,
+    "status": "active"
+  },
+  {
+    "id": "seed-66",
+    "type": "current_task",
+    "content": "Memory 66: project uses pnpm; auth session bug; API client rules; failure state 66",
+    "summary": "Seed memory 66",
+    "confidence": 0.76,
+    "status": "active"
+  },
+  {
+    "id": "seed-67",
+    "type": "test_failure",
+    "content": "Memory 67: project uses pnpm; auth session bug; API client rules; failure state 67",
+    "summary": "Seed memory 67",
+    "confidence": 0.77,
+    "status": "active"
+  },
+  {
+    "id": "seed-68",
+    "type": "dependency",
+    "content": "Memory 68: project uses pnpm; auth session bug; API client rules; failure state 68",
+    "summary": "Seed memory 68",
+    "confidence": 0.7799999999999999,
+    "status": "active"
+  },
+  {
+    "id": "seed-69",
+    "type": "api_contract",
+    "content": "Memory 69: project uses pnpm; auth session bug; API client rules; failure state 69",
+    "summary": "Seed memory 69",
+    "confidence": 0.7899999999999999,
+    "status": "active"
+  },
+  {
+    "id": "seed-70",
+    "type": "project_rule",
+    "content": "Memory 70: project uses pnpm; auth session bug; API client rules; failure state 70",
+    "summary": "Seed memory 70",
+    "confidence": 0.7999999999999999,
+    "status": "active"
+  },
+  {
+    "id": "seed-71",
+    "type": "decision",
+    "content": "Memory 71: project uses pnpm; auth session bug; API client rules; failure state 71",
+    "summary": "Seed memory 71",
+    "confidence": 0.8099999999999999,
+    "status": "active"
+  },
+  {
+    "id": "seed-72",
+    "type": "bug",
+    "content": "Memory 72: project uses pnpm; auth session bug; API client rules; failure state 72",
+    "summary": "Seed memory 72",
+    "confidence": 0.82,
+    "status": "active"
+  },
+  {
+    "id": "seed-73",
+    "type": "current_task",
+    "content": "Memory 73: project uses pnpm; auth session bug; API client rules; failure state 73",
+    "summary": "Seed memory 73",
+    "confidence": 0.83,
+    "status": "active"
+  },
+  {
+    "id": "seed-74",
+    "type": "test_failure",
+    "content": "Memory 74: project uses pnpm; auth session bug; API client rules; failure state 74",
+    "summary": "Seed memory 74",
+    "confidence": 0.84,
+    "status": "active"
+  },
+  {
+    "id": "seed-75",
+    "type": "dependency",
+    "content": "Memory 75: project uses pnpm; auth session bug; API client rules; failure state 75",
+    "summary": "Seed memory 75",
+    "confidence": 0.85,
+    "status": "active"
+  },
+  {
+    "id": "seed-76",
+    "type": "api_contract",
+    "content": "Memory 76: project uses pnpm; auth session bug; API client rules; failure state 76",
+    "summary": "Seed memory 76",
+    "confidence": 0.86,
+    "status": "active"
+  },
+  {
+    "id": "seed-77",
+    "type": "project_rule",
+    "content": "Memory 77: project uses pnpm; auth session bug; API client rules; failure state 77",
+    "summary": "Seed memory 77",
+    "confidence": 0.87,
+    "status": "active"
+  },
+  {
+    "id": "seed-78",
+    "type": "decision",
+    "content": "Memory 78: project uses pnpm; auth session bug; API client rules; failure state 78",
+    "summary": "Seed memory 78",
+    "confidence": 0.8799999999999999,
+    "status": "active"
+  },
+  {
+    "id": "seed-79",
+    "type": "bug",
+    "content": "Memory 79: project uses pnpm; auth session bug; API client rules; failure state 79",
+    "summary": "Seed memory 79",
+    "confidence": 0.8899999999999999,
+    "status": "active"
+  },
+  {
+    "id": "seed-80",
+    "type": "current_task",
+    "content": "Memory 80: project uses pnpm; auth session bug; API client rules; failure state 80",
+    "summary": "Seed memory 80",
+    "confidence": 0.8999999999999999,
+    "status": "active"
+  },
+  {
+    "id": "seed-81",
+    "type": "test_failure",
+    "content": "Memory 81: project uses pnpm; auth session bug; API client rules; failure state 81",
+    "summary": "Seed memory 81",
+    "confidence": 0.9099999999999999,
+    "status": "active"
+  },
+  {
+    "id": "seed-82",
+    "type": "dependency",
+    "content": "Memory 82: project uses pnpm; auth session bug; API client rules; failure state 82",
+    "summary": "Seed memory 82",
+    "confidence": 0.9199999999999999,
+    "status": "active"
+  },
+  {
+    "id": "seed-83",
+    "type": "api_contract",
+    "content": "Memory 83: project uses pnpm; auth session bug; API client rules; failure state 83",
+    "summary": "Seed memory 83",
+    "confidence": 0.9299999999999999,
+    "status": "active"
+  },
+  {
+    "id": "seed-84",
+    "type": "project_rule",
+    "content": "Memory 84: project uses pnpm; auth session bug; API client rules; failure state 84",
+    "summary": "Seed memory 84",
+    "confidence": 0.94,
+    "status": "active"
+  },
+  {
+    "id": "seed-85",
+    "type": "decision",
+    "content": "Memory 85: project uses pnpm; auth session bug; API client rules; failure state 85",
+    "summary": "Seed memory 85",
+    "confidence": 0.95,
+    "status": "active"
+  },
+  {
+    "id": "seed-86",
+    "type": "bug",
+    "content": "Memory 86: project uses pnpm; auth session bug; API client rules; failure state 86",
+    "summary": "Seed memory 86",
+    "confidence": 0.96,
+    "status": "active"
+  },
+  {
+    "id": "seed-87",
+    "type": "current_task",
+    "content": "Memory 87: project uses pnpm; auth session bug; API client rules; failure state 87",
+    "summary": "Seed memory 87",
+    "confidence": 0.97,
+    "status": "active"
+  },
+  {
+    "id": "seed-88",
+    "type": "test_failure",
+    "content": "Memory 88: project uses pnpm; auth session bug; API client rules; failure state 88",
+    "summary": "Seed memory 88",
+    "confidence": 0.98,
+    "status": "active"
+  },
+  {
+    "id": "seed-89",
+    "type": "dependency",
+    "content": "Memory 89: project uses pnpm; auth session bug; API client rules; failure state 89",
+    "summary": "Seed memory 89",
+    "confidence": 0.99,
+    "status": "active"
+  },
+  {
+    "id": "seed-90",
+    "type": "api_contract",
+    "content": "Memory 90: project uses pnpm; auth session bug; API client rules; failure state 90",
+    "summary": "Seed memory 90",
+    "confidence": 0.7,
+    "status": "active"
+  },
+  {
+    "id": "seed-91",
+    "type": "project_rule",
+    "content": "Memory 91: project uses pnpm; auth session bug; API client rules; failure state 91",
+    "summary": "Seed memory 91",
+    "confidence": 0.71,
+    "status": "active"
+  },
+  {
+    "id": "seed-92",
+    "type": "decision",
+    "content": "Memory 92: project uses pnpm; auth session bug; API client rules; failure state 92",
+    "summary": "Seed memory 92",
+    "confidence": 0.72,
+    "status": "active"
+  },
+  {
+    "id": "seed-93",
+    "type": "bug",
+    "content": "Memory 93: project uses pnpm; auth session bug; API client rules; failure state 93",
+    "summary": "Seed memory 93",
+    "confidence": 0.73,
+    "status": "active"
+  },
+  {
+    "id": "seed-94",
+    "type": "current_task",
+    "content": "Memory 94: project uses pnpm; auth session bug; API client rules; failure state 94",
+    "summary": "Seed memory 94",
+    "confidence": 0.74,
+    "status": "active"
+  },
+  {
+    "id": "seed-95",
+    "type": "test_failure",
+    "content": "Memory 95: project uses pnpm; auth session bug; API client rules; failure state 95",
+    "summary": "Seed memory 95",
+    "confidence": 0.75,
+    "status": "active"
+  },
+  {
+    "id": "seed-96",
+    "type": "dependency",
+    "content": "Memory 96: project uses pnpm; auth session bug; API client rules; failure state 96",
+    "summary": "Seed memory 96",
+    "confidence": 0.76,
+    "status": "active"
+  },
+  {
+    "id": "seed-97",
+    "type": "api_contract",
+    "content": "Memory 97: project uses pnpm; auth session bug; API client rules; failure state 97",
+    "summary": "Seed memory 97",
+    "confidence": 0.77,
+    "status": "active"
+  },
+  {
+    "id": "seed-98",
+    "type": "project_rule",
+    "content": "Memory 98: project uses pnpm; auth session bug; API client rules; failure state 98",
+    "summary": "Seed memory 98",
+    "confidence": 0.7799999999999999,
+    "status": "active"
+  },
+  {
+    "id": "seed-99",
+    "type": "decision",
+    "content": "Memory 99: project uses pnpm; auth session bug; API client rules; failure state 99",
+    "summary": "Seed memory 99",
+    "confidence": 0.7899999999999999,
+    "status": "active"
+  }
+]

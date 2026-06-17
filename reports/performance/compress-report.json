@@ -1,14 +1,14 @@
 {
-  "generated": "2026-06-16T11:37:30.627Z",
+  "generated": "2026-06-16T12:15:04.773Z",
   "scenarios": [
     {
       "scenario": "compress/10KB test output",
       "sizeLabel": "10KB test output",
       "runs": 1,
       "inputBytes": 10240,
-      "p50Ms": 94,
-      "p95Ms": 94,
-      "maxMs": 94,
+      "p50Ms": 163,
+      "p95Ms": 163,
+      "maxMs": 163,
       "avgTokensSaved": 2707,
       "avgCompressionRatio": 0.92,
       "statuses": {
@@ -20,9 +20,9 @@
       "sizeLabel": "100KB test output",
       "runs": 1,
       "inputBytes": 102400,
-      "p50Ms": 101,
-      "p95Ms": 101,
-      "maxMs": 101,
+      "p50Ms": 142,
+      "p95Ms": 142,
+      "maxMs": 142,
       "avgTokensSaved": 28986,
       "avgCompressionRatio": 0.99,
       "statuses": {
@@ -34,9 +34,9 @@
       "sizeLabel": "100KB server log",
       "runs": 1,
       "inputBytes": 102400,
-      "p50Ms": 110,
-      "p95Ms": 110,
-      "maxMs": 110,
+      "p50Ms": 190,
+      "p95Ms": 190,
+      "maxMs": 190,
       "avgTokensSaved": 33740,
       "avgCompressionRatio": 0.94,
       "statuses": {
@@ -48,9 +48,9 @@
       "sizeLabel": "100KB build failure",
       "runs": 1,
       "inputBytes": 102400,
-      "p50Ms": 95,
-      "p95Ms": 95,
-      "maxMs": 95,
+      "p50Ms": 160,
+      "p95Ms": 160,
+      "maxMs": 160,
       "avgTokensSaved": 34748,
       "avgCompressionRatio": 0.99,
       "statuses": {

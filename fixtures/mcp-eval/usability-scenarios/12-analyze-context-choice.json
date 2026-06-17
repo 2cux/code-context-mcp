@@ -1,0 +1,30 @@
+{
+  "id": "12-analyze-context-choice",
+  "goal": "Decide whether this 100KB test log should be compressed",
+  "input": {
+    "cwd": "/tmp/codecontext-demo",
+    "content": "FAIL auth/session.test.ts > refresh token expiry clears cookie\nAssertionError: expected cookie session to be cleared\nExpected: undefined\nReceived: session=stale-token\nat tests/auth/session.test.ts:48:12\nFAIL auth/session.test.ts > refresh token expiry clears cookie\nAssertionError: expected cookie session to be cleared\nExpected: undefined\nReceived: session=stale-token\nat tests/auth/session.test.ts:48:12\nFAIL auth/session.test.ts > refresh token expiry clears cookie\nAssertionError: expected cookie session to be cleared\nExpected: undefined\nReceived: session=stale-token\nat tests/auth/session.test.ts:48:12\nFAIL auth/session.test.ts > refresh token expiry clears cookie\nAssertionError: expected cookie session to be cleared\nExpected: undefined\nReceived: session=stale-token\nat tests/auth/session.test.ts:48:12\nFAIL auth/session.test.ts > refresh token expiry clears cookie\nAssertionError: expected cookie session to be cleared\nExpected: undefined\nReceived: session=stale-token\nat tests/auth/session.test.ts:48:12\nFAIL auth/session.test.ts > refresh token expiry clears cookie\nAssertionError: expected cookie session to be cleared\nExpected: undefined\nReceived: session=stale-token\nat tests/auth/session.test.ts:48:12\nFAIL auth/session.test.ts > refresh token expiry clears cookie\nAssertionError: expected cookie session to be cleared\nExpected: undefined\nReceived: session=stale-token\nat tests/auth/session.test.ts:48:12\nFAIL auth/session.test.ts > refresh token expiry clears cookie\nAssertionError: expected cookie session to be cleared\nExpected: undefined\nReceived: session=stale-token\nat tests/auth/session.test.ts:48:12\nFAIL auth/session.test.ts > refresh token expiry clears cookie\nAssertionError: expected cookie session to be cleared\nExpected: undefined\nReceived: session=stale-token\nat tests/auth/session.test.ts:48:12\nFAIL auth/session.test.ts > refresh token expiry clears cookie\nAssertionError: expected cookie session to be cleared\nExpected: undefined\nReceived: session=stale-token\nat tests/auth/session.test.ts:48:12\nFAIL auth/session.test.ts > refresh token expiry clears cookie\nAssertionError: expected cookie session to be cleared\nExpected: undefined\nReceived: session=stale-token\nat tests/auth/session.test.ts:48:12\nFAIL auth/session.test.ts > refresh token expiry clears cookie\nAssertionError: expected cookie session to be cleared\nExpected: undefined\nReceived: session=stale-token\nat tests/auth/session.test.ts:48:12\nFAIL auth/session.test.ts > refresh token expiry clears cookie\nAssertionError: expected cookie session to be cleared\nExpected: undefined\nReceived: session=stale-token\nat tests/auth/session.test.ts:48:12\nFAIL auth/session.test.ts > refresh token expiry clears cookie\nAssertionError: expected cookie session to be cleared\nExpected: undefined\nReceived: session=stale-token\nat tests/auth/session.test.ts:48:12\nFAIL auth/session.test.ts > refresh token expiry clears cookie\nAssertionError: expected cookie session to be cleared\nExpected: undefined\nReceived: session=stale-token\nat tests/auth/session.test.ts:48:12\nFAIL auth/session.test.ts > refresh token expiry clears cookie\nAssertionError: expected cookie session to be cleared\nExpected: undefined\nReceived: session=stale-token\nat tests/auth/session.test.ts:48:12\nFAIL auth/session.test.ts > refresh token expiry clears cookie\nAssertionError: expected cookie session to be cleared\nExpected: undefined\nReceived: session=stale-token\nat tests/auth/session.test.ts:48:12\nFAIL auth/session.test.ts > refresh token expiry clears cookie\nAssertionError: expected cookie session to be cleared\nExpected: undefined\nReceived: session=stale-token\nat tests/auth/session.test.ts:48:12\nFAIL auth/session.test.ts > refresh token expiry clears cookie\nAssertionError: expected cookie session to be cleared\nExpected: undefined\nReceived: session=stale-token\nat tests/auth/session.test.ts:48:12\nFAIL auth/session.test.ts > refresh token expiry clears cookie\nAssertionError: expected cookie session to be cleared\nExpected: undefined\nReceived: session=stale-token\nat tests/auth/session.test.ts:48:12\n",
+    "query": "auth session refresh token cookie project rule",
+    "options": {
+      "keepOriginal": true,
+      "includeRecall": true
+    }
+  },
+  "expectedTools": [
+    "analyze_context",
+    "compress_context"
+  ],
+  "preferredTool": "run_context_flow or compress_context depending mode",
+  "antiPatterns": [
+    "unnecessary delete_original",
+    "use list_context instead of recall_context",
+    "call run_harness_flow for normal agent task"
+  ],
+  "notes": "analyze_context optional; should not block workflow",
+  "scoreWeights": {
+    "toolSelection": 30,
+    "taskCompletion": 30,
+    "safety": 20,
+    "efficiency": 20
+  }
+}

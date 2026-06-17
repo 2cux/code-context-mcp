@@ -331,7 +331,12 @@ Every operation leaves an audit trail. For a complete walkthrough, see [DEMO.md]
 
 | Document | Content |
 |---|---|
-| [MCP_TOOLS.md](./MCP_TOOLS.md) | All 13 MCP tools — input/output schemas, error handling |
+| [MCP_TOOLS.md](./MCP_TOOLS.md) | All 18 MCP tools — input/output, schemas, error handling |
+| [TOOL_SURFACE.md](./docs/TOOL_SURFACE.md) | Tool surface modes — agent (7), dev (18), test (18) |
+| [TOOL_INVENTORY.md](./docs/TOOL_INVENTORY.md) | Full 18-tool inventory with module, risk, and mode assignments |
+| [PERFORMANCE.md](./reports/performance/performance-report.md) | Performance baseline report |
+| [HARNESS.md](./docs/14-harness.md) | Harness framework — flows, runner, adapters |
+| [USABILITY.md](./reports/usability/agent-usability-report.md) | Agent usability evaluation — 3-mode comparison |
 | [DATA_MODEL.md](./DATA_MODEL.md) | Data models, record types, SQLite schema |
 | [ARCHITECTURE.md](./ARCHITECTURE.md) | Architecture, module responsibilities, data flows |
 | [SECURITY.md](./SECURITY.md) | Security model, data directory, privacy, encryption |

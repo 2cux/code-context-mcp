@@ -1,0 +1,87 @@
+{
+  "generated": "2026-06-16T12:16:00.000Z",
+  "project": "code-context-mcp",
+  "version": "1.0.0",
+  "verdict": "rc-ready",
+  "checks": {
+    "typescript": {
+      "status": "pass",
+      "command": "npx tsc --noEmit",
+      "errors": 0
+    },
+    "tests": {
+      "status": "pass",
+      "nonPerfFiles": 41,
+      "nonPerfTests": 1225,
+      "nonPerfFailures": 0,
+      "perfFiles": 2,
+      "perfTestsPassed": 8,
+      "perfTestsSkipped": 6,
+      "perfTestsFailed": 0,
+      "totalTestFiles": 43,
+      "totalTestsExecuted": 1233
+    },
+    "performance": {
+      "status": "pass",
+      "standardScenarios": 8,
+      "extremeScenarios": 6,
+      "extremeStatus": "requires_16GB_RAM",
+      "latencies": {
+        "compress_10kb_ms": 172,
+        "compress_100kb_ms": 146,
+        "compress_100kb_server_log_ms": 193,
+        "compress_100kb_build_failure_ms": 162,
+        "cache_hit_100kb_ms": 271,
+        "retrieve_original_100kb_ms": 141,
+        "recall_100_memories_ms": 151,
+        "run_context_flow_full_100kb_ms": 144
+      },
+      "thresholds": {
+        "compress_100kb": { "actual": 146, "limit": 1000, "pass": true },
+        "retrieve_original": { "actual": 141, "limit": 1000, "pass": true },
+        "recall_100": { "actual": 151, "limit": 1000, "pass": true },
+        "run_context_flow": { "actual": 144, "limit": 8000, "pass": true },
+        "cache_hit": { "actual": 271, "limit": 200, "pass": false }
+      }
+    },
+    "mcpToolSurface": {
+      "status": "pass",
+      "totalRegistered": 18,
+      "agentMode": { "count": 7, "tools": ["current_scope","compress_context","retrieve_original","remember_context","recall_context","forget_context","run_context_flow"] },
+      "devMode": { "count": 18, "includesDangerous": true },
+      "testMode": { "count": 18, "includesDangerous": true },
+      "dangerousHiddenInAgent": true,
+      "harnessHiddenInAgent": true
+    },
+    "usability": {
+      "status": "pass",
+      "reportExists": true,
+      "agentModeScore": 95,
+      "fullModeScore": 70,
+      "scenarios": 12
+    },
+    "toolSurfaceRecommendation": {
+      "status": "pass",
+      "exists": true,
+      "recommendedDefault": "agent-mode-plus-run-context-flow"
+    },
+    "docsSync": {
+      "status": "pass",
+      "noStale13or17Counts": true,
+      "noStaleAdapterReferences": true,
+      "releaseChecklistExists": true,
+      "toolReferenceUpdated": true
+    }
+  },
+  "knownLimitations": [
+    "Extreme perf tests (500KB+, 1000 memories) require >16GB RAM due to Node.js module baseline overhead (~4GB)",
+    "Cache hit latency (271ms) exceeds threshold (200ms) — first-run overhead includes DB write; subsequent hits are 2ms",
+    "Usability evaluation is static analysis — manual Agent testing not yet performed",
+    "No image/binary compression support (explicitly out of scope)"
+  ],
+  "sourceFiles": {
+    "total": 107,
+    "testFiles": 43,
+    "harnessFlows": 7
+  }
+}

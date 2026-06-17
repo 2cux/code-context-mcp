@@ -11,6 +11,7 @@ import { getDb, persistDb } from "../storage/db.js";
 import { ReceiptService } from "../receipts/receiptService.js";
 import { TOOL_DEFINITIONS } from "./toolSchemas.js";
 import { createToolHandlers } from "./toolRegistry.js";
+import { resolveToolMode, isToolAllowed, describeMode } from "./toolMode.js";
 import { registerAllFlows } from "../harness/register.js";
 
 export interface ServerContext {
@@ -30,6 +31,10 @@ export async function startServer(): Promise<void> {
 
   const ctx: ServerContext = { db, receipts };
 
+  // Resolve tool surface mode (env MCP_TOOL_MODE, default "agent")
+  const mode = resolveToolMode();
+  const modeDescription = describeMode(mode);
+
   const server = new Server(
     {
       name: "code-context-mcp",
@@ -46,12 +51,29 @@ export async function startServer(): Promise<void> {
 
   const tools = createToolHandlers(ctx);
 
+  // Filter tool definitions to only expose mode-appropriate tools
+  const visibleDefinitions = TOOL_DEFINITIONS.filter((t) => isToolAllowed(t.name, mode));
+
   server.setRequestHandler(ListToolsRequestSchema, async () => ({
-    tools: TOOL_DEFINITIONS,
+    tools: visibleDefinitions,
   }));
 
   server.setRequestHandler(CallToolRequestSchema, async (request) => {
     const { name, arguments: args } = request.params;
+
+    // Block calls to tools not allowed in the current mode
+    if (!isToolAllowed(name, mode)) {
+      return {
+        content: [
+          {
+            type: "text",
+            text: `Tool "${name}" is not available in ${modeDescription}`,
+          },
+        ],
+        isError: true,
+      };
+    }
+
     const handler = tools[name];
 
     if (!handler) {

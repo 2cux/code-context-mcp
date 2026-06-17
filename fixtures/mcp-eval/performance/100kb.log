@@ -1,0 +1,1874 @@
+# chunk 0
+2026-06-16T10:00:00.000Z ERROR requestId=req-123 path=/api/session refresh token expired; expected cookie clear but received stale session at src/auth/session.ts:184
+FAIL tests/auth/session.test.ts > refresh token expiry clears cookie
+AssertionError: expected undefined but received session=stale-token
+Expected: undefined
+Received: session=stale-token
+    at tests/auth/session.test.ts:48:12
+    at src/auth/session.ts:184:9
+# chunk 1
+2026-06-16T10:00:00.000Z ERROR requestId=req-123 path=/api/session refresh token expired; expected cookie clear but received stale session at src/auth/session.ts:184
+FAIL tests/auth/session.test.ts > refresh token expiry clears cookie
+AssertionError: expected undefined but received session=stale-token
+Expected: undefined
+Received: session=stale-token
+    at tests/auth/session.test.ts:48:12
+    at src/auth/session.ts:184:9
+# chunk 2
+2026-06-16T10:00:00.000Z ERROR requestId=req-123 path=/api/session refresh token expired; expected cookie clear but received stale session at src/auth/session.ts:184
+FAIL tests/auth/session.test.ts > refresh token expiry clears cookie
+AssertionError: expected undefined but received session=stale-token
+Expected: undefined
+Received: session=stale-token
+    at tests/auth/session.test.ts:48:12
+    at src/auth/session.ts:184:9
+# chunk 3
+2026-06-16T10:00:00.000Z ERROR requestId=req-123 path=/api/session refresh token expired; expected cookie clear but received stale session at src/auth/session.ts:184
+FAIL tests/auth/session.test.ts > refresh token expiry clears cookie
+AssertionError: expected undefined but received session=stale-token
+Expected: undefined
+Received: session=stale-token
+    at tests/auth/session.test.ts:48:12
+    at src/auth/session.ts:184:9
+# chunk 4
+2026-06-16T10:00:00.000Z ERROR requestId=req-123 path=/api/session refresh token expired; expected cookie clear but received stale session at src/auth/session.ts:184
+FAIL tests/auth/session.test.ts > refresh token expiry clears cookie
+AssertionError: expected undefined but received session=stale-token
+Expected: undefined
+Received: session=stale-token
+    at tests/auth/session.test.ts:48:12
+    at src/auth/session.ts:184:9
+# chunk 5
+2026-06-16T10:00:00.000Z ERROR requestId=req-123 path=/api/session refresh token expired; expected cookie clear but received stale session at src/auth/session.ts:184
+FAIL tests/auth/session.test.ts > refresh token expiry clears cookie
+AssertionError: expected undefined but received session=stale-token
+Expected: undefined
+Received: session=stale-token
+    at tests/auth/session.test.ts:48:12
+    at src/auth/session.ts:184:9
+# chunk 6
+2026-06-16T10:00:00.000Z ERROR requestId=req-123 path=/api/session refresh token expired; expected cookie clear but received stale session at src/auth/session.ts:184
+FAIL tests/auth/session.test.ts > refresh token expiry clears cookie
+AssertionError: expected undefined but received session=stale-token
+Expected: undefined
+Received: session=stale-token
+    at tests/auth/session.test.ts:48:12
+    at src/auth/session.ts:184:9
+# chunk 7
+2026-06-16T10:00:00.000Z ERROR requestId=req-123 path=/api/session refresh token expired; expected cookie clear but received stale session at src/auth/session.ts:184
+FAIL tests/auth/session.test.ts > refresh token expiry clears cookie
+AssertionError: expected undefined but received session=stale-token
+Expected: undefined
+Received: session=stale-token
+    at tests/auth/session.test.ts:48:12
+    at src/auth/session.ts:184:9
+# chunk 8
+2026-06-16T10:00:00.000Z ERROR requestId=req-123 path=/api/session refresh token expired; expected cookie clear but received stale session at src/auth/session.ts:184
+FAIL tests/auth/session.test.ts > refresh token expiry clears cookie
+AssertionError: expected undefined but received session=stale-token
+Expected: undefined
+Received: session=stale-token
+    at tests/auth/session.test.ts:48:12
+    at src/auth/session.ts:184:9
+# chunk 9
+2026-06-16T10:00:00.000Z ERROR requestId=req-123 path=/api/session refresh token expired; expected cookie clear but received stale session at src/auth/session.ts:184
+FAIL tests/auth/session.test.ts > refresh token expiry clears cookie
+AssertionError: expected undefined but received session=stale-token
+Expected: undefined
+Received: session=stale-token
+    at tests/auth/session.test.ts:48:12
+    at src/auth/session.ts:184:9
+# chunk 10
+2026-06-16T10:00:00.000Z ERROR requestId=req-123 path=/api/session refresh token expired; expected cookie clear but received stale session at src/auth/session.ts:184
+FAIL tests/auth/session.test.ts > refresh token expiry clears cookie
+AssertionError: expected undefined but received session=stale-token
+Expected: undefined
+Received: session=stale-token
+    at tests/auth/session.test.ts:48:12
+    at src/auth/session.ts:184:9
+# chunk 11
+2026-06-16T10:00:00.000Z ERROR requestId=req-123 path=/api/session refresh token expired; expected cookie clear but received stale session at src/auth/session.ts:184
+FAIL tests/auth/session.test.ts > refresh token expiry clears cookie
+AssertionError: expected undefined but received session=stale-token
+Expected: undefined
+Received: session=stale-token
+    at tests/auth/session.test.ts:48:12
+    at src/auth/session.ts:184:9
+# chunk 12
+2026-06-16T10:00:00.000Z ERROR requestId=req-123 path=/api/session refresh token expired; expected cookie clear but received stale session at src/auth/session.ts:184
+FAIL tests/auth/session.test.ts > refresh token expiry clears cookie
+AssertionError: expected undefined but received session=stale-token
+Expected: undefined
+Received: session=stale-token
+    at tests/auth/session.test.ts:48:12
+    at src/auth/session.ts:184:9
+# chunk 13
+2026-06-16T10:00:00.000Z ERROR requestId=req-123 path=/api/session refresh token expired; expected cookie clear but received stale session at src/auth/session.ts:184
+FAIL tests/auth/session.test.ts > refresh token expiry clears cookie
+AssertionError: expected undefined but received session=stale-token
+Expected: undefined
+Received: session=stale-token
+    at tests/auth/session.test.ts:48:12
+    at src/auth/session.ts:184:9
+# chunk 14
+2026-06-16T10:00:00.000Z ERROR requestId=req-123 path=/api/session refresh token expired; expected cookie clear but received stale session at src/auth/session.ts:184
+FAIL tests/auth/session.test.ts > refresh token expiry clears cookie
+AssertionError: expected undefined but received session=stale-token
+Expected: undefined
+Received: session=stale-token
+    at tests/auth/session.test.ts:48:12
+    at src/auth/session.ts:184:9
+# chunk 15
+2026-06-16T10:00:00.000Z ERROR requestId=req-123 path=/api/session refresh token expired; expected cookie clear but received stale session at src/auth/session.ts:184
+FAIL tests/auth/session.test.ts > refresh token expiry clears cookie
+AssertionError: expected undefined but received session=stale-token
+Expected: undefined
+Received: session=stale-token
+    at tests/auth/session.test.ts:48:12
+    at src/auth/session.ts:184:9
+# chunk 16
+2026-06-16T10:00:00.000Z ERROR requestId=req-123 path=/api/session refresh token expired; expected cookie clear but received stale session at src/auth/session.ts:184
+FAIL tests/auth/session.test.ts > refresh token expiry clears cookie
+AssertionError: expected undefined but received session=stale-token
+Expected: undefined
+Received: session=stale-token
+    at tests/auth/session.test.ts:48:12
+    at src/auth/session.ts:184:9
+# chunk 17
+2026-06-16T10:00:00.000Z ERROR requestId=req-123 path=/api/session refresh token expired; expected cookie clear but received stale session at src/auth/session.ts:184
+FAIL tests/auth/session.test.ts > refresh token expiry clears cookie
+AssertionError: expected undefined but received session=stale-token
+Expected: undefined
+Received: session=stale-token
+    at tests/auth/session.test.ts:48:12
+    at src/auth/session.ts:184:9
+# chunk 18
+2026-06-16T10:00:00.000Z ERROR requestId=req-123 path=/api/session refresh token expired; expected cookie clear but received stale session at src/auth/session.ts:184
+FAIL tests/auth/session.test.ts > refresh token expiry clears cookie
+AssertionError: expected undefined but received session=stale-token
+Expected: undefined
+Received: session=stale-token
+    at tests/auth/session.test.ts:48:12
+    at src/auth/session.ts:184:9
+# chunk 19
+2026-06-16T10:00:00.000Z ERROR requestId=req-123 path=/api/session refresh token expired; expected cookie clear but received stale session at src/auth/session.ts:184
+FAIL tests/auth/session.test.ts > refresh token expiry clears cookie
+AssertionError: expected undefined but received session=stale-token
+Expected: undefined
+Received: session=stale-token
+    at tests/auth/session.test.ts:48:12
+    at src/auth/session.ts:184:9
+# chunk 20
+2026-06-16T10:00:00.000Z ERROR requestId=req-123 path=/api/session refresh token expired; expected cookie clear but received stale session at src/auth/session.ts:184
+FAIL tests/auth/session.test.ts > refresh token expiry clears cookie
+AssertionError: expected undefined but received session=stale-token
+Expected: undefined
+Received: session=stale-token
+    at tests/auth/session.test.ts:48:12
+    at src/auth/session.ts:184:9
+# chunk 21
+2026-06-16T10:00:00.000Z ERROR requestId=req-123 path=/api/session refresh token expired; expected cookie clear but received stale session at src/auth/session.ts:184
+FAIL tests/auth/session.test.ts > refresh token expiry clears cookie
+AssertionError: expected undefined but received session=stale-token
+Expected: undefined
+Received: session=stale-token
+    at tests/auth/session.test.ts:48:12
+    at src/auth/session.ts:184:9
+# chunk 22
+2026-06-16T10:00:00.000Z ERROR requestId=req-123 path=/api/session refresh token expired; expected cookie clear but received stale session at src/auth/session.ts:184
+FAIL tests/auth/session.test.ts > refresh token expiry clears cookie
+AssertionError: expected undefined but received session=stale-token
+Expected: undefined
+Received: session=stale-token
+    at tests/auth/session.test.ts:48:12
+    at src/auth/session.ts:184:9
+# chunk 23
+2026-06-16T10:00:00.000Z ERROR requestId=req-123 path=/api/session refresh token expired; expected cookie clear but received stale session at src/auth/session.ts:184
+FAIL tests/auth/session.test.ts > refresh token expiry clears cookie
+AssertionError: expected undefined but received session=stale-token
+Expected: undefined
+Received: session=stale-token
+    at tests/auth/session.test.ts:48:12
+    at src/auth/session.ts:184:9
+# chunk 24
+2026-06-16T10:00:00.000Z ERROR requestId=req-123 path=/api/session refresh token expired; expected cookie clear but received stale session at src/auth/session.ts:184
+FAIL tests/auth/session.test.ts > refresh token expiry clears cookie
+AssertionError: expected undefined but received session=stale-token
+Expected: undefined
+Received: session=stale-token
+    at tests/auth/session.test.ts:48:12
+    at src/auth/session.ts:184:9
+# chunk 25
+2026-06-16T10:00:00.000Z ERROR requestId=req-123 path=/api/session refresh token expired; expected cookie clear but received stale session at src/auth/session.ts:184
+FAIL tests/auth/session.test.ts > refresh token expiry clears cookie
+AssertionError: expected undefined but received session=stale-token
+Expected: undefined
+Received: session=stale-token
+    at tests/auth/session.test.ts:48:12
+    at src/auth/session.ts:184:9
+# chunk 26
+2026-06-16T10:00:00.000Z ERROR requestId=req-123 path=/api/session refresh token expired; expected cookie clear but received stale session at src/auth/session.ts:184
+FAIL tests/auth/session.test.ts > refresh token expiry clears cookie
+AssertionError: expected undefined but received session=stale-token
+Expected: undefined
+Received: session=stale-token
+    at tests/auth/session.test.ts:48:12
+    at src/auth/session.ts:184:9
+# chunk 27
+2026-06-16T10:00:00.000Z ERROR requestId=req-123 path=/api/session refresh token expired; expected cookie clear but received stale session at src/auth/session.ts:184
+FAIL tests/auth/session.test.ts > refresh token expiry clears cookie
+AssertionError: expected undefined but received session=stale-token
+Expected: undefined
+Received: session=stale-token
+    at tests/auth/session.test.ts:48:12
+    at src/auth/session.ts:184:9
+# chunk 28
+2026-06-16T10:00:00.000Z ERROR requestId=req-123 path=/api/session refresh token expired; expected cookie clear but received stale session at src/auth/session.ts:184
+FAIL tests/auth/session.test.ts > refresh token expiry clears cookie
+AssertionError: expected undefined but received session=stale-token
+Expected: undefined
+Received: session=stale-token
+    at tests/auth/session.test.ts:48:12
+    at src/auth/session.ts:184:9
+# chunk 29
+2026-06-16T10:00:00.000Z ERROR requestId=req-123 path=/api/session refresh token expired; expected cookie clear but received stale session at src/auth/session.ts:184
+FAIL tests/auth/session.test.ts > refresh token expiry clears cookie
+AssertionError: expected undefined but received session=stale-token
+Expected: undefined
+Received: session=stale-token
+    at tests/auth/session.test.ts:48:12
+    at src/auth/session.ts:184:9
+# chunk 30
+2026-06-16T10:00:00.000Z ERROR requestId=req-123 path=/api/session refresh token expired; expected cookie clear but received stale session at src/auth/session.ts:184
+FAIL tests/auth/session.test.ts > refresh token expiry clears cookie
+AssertionError: expected undefined but received session=stale-token
+Expected: undefined
+Received: session=stale-token
+    at tests/auth/session.test.ts:48:12
+    at src/auth/session.ts:184:9
+# chunk 31
+2026-06-16T10:00:00.000Z ERROR requestId=req-123 path=/api/session refresh token expired; expected cookie clear but received stale session at src/auth/session.ts:184
+FAIL tests/auth/session.test.ts > refresh token expiry clears cookie
+AssertionError: expected undefined but received session=stale-token
+Expected: undefined
+Received: session=stale-token
+    at tests/auth/session.test.ts:48:12
+    at src/auth/session.ts:184:9
+# chunk 32
+2026-06-16T10:00:00.000Z ERROR requestId=req-123 path=/api/session refresh token expired; expected cookie clear but received stale session at src/auth/session.ts:184
+FAIL tests/auth/session.test.ts > refresh token expiry clears cookie
+AssertionError: expected undefined but received session=stale-token
+Expected: undefined
+Received: session=stale-token
+    at tests/auth/session.test.ts:48:12
+    at src/auth/session.ts:184:9
+# chunk 33
+2026-06-16T10:00:00.000Z ERROR requestId=req-123 path=/api/session refresh token expired; expected cookie clear but received stale session at src/auth/session.ts:184
+FAIL tests/auth/session.test.ts > refresh token expiry clears cookie
+AssertionError: expected undefined but received session=stale-token
+Expected: undefined
+Received: session=stale-token
+    at tests/auth/session.test.ts:48:12
+    at src/auth/session.ts:184:9
+# chunk 34
+2026-06-16T10:00:00.000Z ERROR requestId=req-123 path=/api/session refresh token expired; expected cookie clear but received stale session at src/auth/session.ts:184
+FAIL tests/auth/session.test.ts > refresh token expiry clears cookie
+AssertionError: expected undefined but received session=stale-token
+Expected: undefined
+Received: session=stale-token
+    at tests/auth/session.test.ts:48:12
+    at src/auth/session.ts:184:9
+# chunk 35
+2026-06-16T10:00:00.000Z ERROR requestId=req-123 path=/api/session refresh token expired; expected cookie clear but received stale session at src/auth/session.ts:184
+FAIL tests/auth/session.test.ts > refresh token expiry clears cookie
+AssertionError: expected undefined but received session=stale-token
+Expected: undefined
+Received: session=stale-token
+    at tests/auth/session.test.ts:48:12
+    at src/auth/session.ts:184:9
+# chunk 36
+2026-06-16T10:00:00.000Z ERROR requestId=req-123 path=/api/session refresh token expired; expected cookie clear but received stale session at src/auth/session.ts:184
+FAIL tests/auth/session.test.ts > refresh token expiry clears cookie
+AssertionError: expected undefined but received session=stale-token
+Expected: undefined
+Received: session=stale-token
+    at tests/auth/session.test.ts:48:12
+    at src/auth/session.ts:184:9
+# chunk 37
+2026-06-16T10:00:00.000Z ERROR requestId=req-123 path=/api/session refresh token expired; expected cookie clear but received stale session at src/auth/session.ts:184
+FAIL tests/auth/session.test.ts > refresh token expiry clears cookie
+AssertionError: expected undefined but received session=stale-token
+Expected: undefined
+Received: session=stale-token
+    at tests/auth/session.test.ts:48:12
+    at src/auth/session.ts:184:9
+# chunk 38
+2026-06-16T10:00:00.000Z ERROR requestId=req-123 path=/api/session refresh token expired; expected cookie clear but received stale session at src/auth/session.ts:184
+FAIL tests/auth/session.test.ts > refresh token expiry clears cookie
+AssertionError: expected undefined but received session=stale-token
+Expected: undefined
+Received: session=stale-token
+    at tests/auth/session.test.ts:48:12
+    at src/auth/session.ts:184:9
+# chunk 39
+2026-06-16T10:00:00.000Z ERROR requestId=req-123 path=/api/session refresh token expired; expected cookie clear but received stale session at src/auth/session.ts:184
+FAIL tests/auth/session.test.ts > refresh token expiry clears cookie
+AssertionError: expected undefined but received session=stale-token
+Expected: undefined
+Received: session=stale-token
+    at tests/auth/session.test.ts:48:12
+    at src/auth/session.ts:184:9
+# chunk 40
+2026-06-16T10:00:00.000Z ERROR requestId=req-123 path=/api/session refresh token expired; expected cookie clear but received stale session at src/auth/session.ts:184
+FAIL tests/auth/session.test.ts > refresh token expiry clears cookie
+AssertionError: expected undefined but received session=stale-token
+Expected: undefined
+Received: session=stale-token
+    at tests/auth/session.test.ts:48:12
+    at src/auth/session.ts:184:9
+# chunk 41
+2026-06-16T10:00:00.000Z ERROR requestId=req-123 path=/api/session refresh token expired; expected cookie clear but received stale session at src/auth/session.ts:184
+FAIL tests/auth/session.test.ts > refresh token expiry clears cookie
+AssertionError: expected undefined but received session=stale-token
+Expected: undefined
+Received: session=stale-token
+    at tests/auth/session.test.ts:48:12
+    at src/auth/session.ts:184:9
+# chunk 42
+2026-06-16T10:00:00.000Z ERROR requestId=req-123 path=/api/session refresh token expired; expected cookie clear but received stale session at src/auth/session.ts:184
+FAIL tests/auth/session.test.ts > refresh token expiry clears cookie
+AssertionError: expected undefined but received session=stale-token
+Expected: undefined
+Received: session=stale-token
+    at tests/auth/session.test.ts:48:12
+    at src/auth/session.ts:184:9
+# chunk 43
+2026-06-16T10:00:00.000Z ERROR requestId=req-123 path=/api/session refresh token expired; expected cookie clear but received stale session at src/auth/session.ts:184
+FAIL tests/auth/session.test.ts > refresh token expiry clears cookie
+AssertionError: expected undefined but received session=stale-token
+Expected: undefined
+Received: session=stale-token
+    at tests/auth/session.test.ts:48:12
+    at src/auth/session.ts:184:9
+# chunk 44
+2026-06-16T10:00:00.000Z ERROR requestId=req-123 path=/api/session refresh token expired; expected cookie clear but received stale session at src/auth/session.ts:184
+FAIL tests/auth/session.test.ts > refresh token expiry clears cookie
+AssertionError: expected undefined but received session=stale-token
+Expected: undefined
+Received: session=stale-token
+    at tests/auth/session.test.ts:48:12
+    at src/auth/session.ts:184:9
+# chunk 45
+2026-06-16T10:00:00.000Z ERROR requestId=req-123 path=/api/session refresh token expired; expected cookie clear but received stale session at src/auth/session.ts:184
+FAIL tests/auth/session.test.ts > refresh token expiry clears cookie
+AssertionError: expected undefined but received session=stale-token
+Expected: undefined
+Received: session=stale-token
+    at tests/auth/session.test.ts:48:12
+    at src/auth/session.ts:184:9
+# chunk 46
+2026-06-16T10:00:00.000Z ERROR requestId=req-123 path=/api/session refresh token expired; expected cookie clear but received stale session at src/auth/session.ts:184
+FAIL tests/auth/session.test.ts > refresh token expiry clears cookie
+AssertionError: expected undefined but received session=stale-token
+Expected: undefined
+Received: session=stale-token
+    at tests/auth/session.test.ts:48:12
+    at src/auth/session.ts:184:9
+# chunk 47
+2026-06-16T10:00:00.000Z ERROR requestId=req-123 path=/api/session refresh token expired; expected cookie clear but received stale session at src/auth/session.ts:184
+FAIL tests/auth/session.test.ts > refresh token expiry clears cookie
+AssertionError: expected undefined but received session=stale-token
+Expected: undefined
+Received: session=stale-token
+    at tests/auth/session.test.ts:48:12
+    at src/auth/session.ts:184:9
+# chunk 48
+2026-06-16T10:00:00.000Z ERROR requestId=req-123 path=/api/session refresh token expired; expected cookie clear but received stale session at src/auth/session.ts:184
+FAIL tests/auth/session.test.ts > refresh token expiry clears cookie
+AssertionError: expected undefined but received session=stale-token
+Expected: undefined
+Received: session=stale-token
+    at tests/auth/session.test.ts:48:12
+    at src/auth/session.ts:184:9
+# chunk 49
+2026-06-16T10:00:00.000Z ERROR requestId=req-123 path=/api/session refresh token expired; expected cookie clear but received stale session at src/auth/session.ts:184
+FAIL tests/auth/session.test.ts > refresh token expiry clears cookie
+AssertionError: expected undefined but received session=stale-token
+Expected: undefined
+Received: session=stale-token
+    at tests/auth/session.test.ts:48:12
+    at src/auth/session.ts:184:9
+# chunk 50
+2026-06-16T10:00:00.000Z ERROR requestId=req-123 path=/api/session refresh token expired; expected cookie clear but received stale session at src/auth/session.ts:184
+FAIL tests/auth/session.test.ts > refresh token expiry clears cookie
+AssertionError: expected undefined but received session=stale-token
+Expected: undefined
+Received: session=stale-token
+    at tests/auth/session.test.ts:48:12
+    at src/auth/session.ts:184:9
+# chunk 51
+2026-06-16T10:00:00.000Z ERROR requestId=req-123 path=/api/session refresh token expired; expected cookie clear but received stale session at src/auth/session.ts:184
+FAIL tests/auth/session.test.ts > refresh token expiry clears cookie
+AssertionError: expected undefined but received session=stale-token
+Expected: undefined
+Received: session=stale-token
+    at tests/auth/session.test.ts:48:12
+    at src/auth/session.ts:184:9
+# chunk 52
+2026-06-16T10:00:00.000Z ERROR requestId=req-123 path=/api/session refresh token expired; expected cookie clear but received stale session at src/auth/session.ts:184
+FAIL tests/auth/session.test.ts > refresh token expiry clears cookie
+AssertionError: expected undefined but received session=stale-token
+Expected: undefined
+Received: session=stale-token
+    at tests/auth/session.test.ts:48:12
+    at src/auth/session.ts:184:9
+# chunk 53
+2026-06-16T10:00:00.000Z ERROR requestId=req-123 path=/api/session refresh token expired; expected cookie clear but received stale session at src/auth/session.ts:184
+FAIL tests/auth/session.test.ts > refresh token expiry clears cookie
+AssertionError: expected undefined but received session=stale-token
+Expected: undefined
+Received: session=stale-token
+    at tests/auth/session.test.ts:48:12
+    at src/auth/session.ts:184:9
+# chunk 54
+2026-06-16T10:00:00.000Z ERROR requestId=req-123 path=/api/session refresh token expired; expected cookie clear but received stale session at src/auth/session.ts:184
+FAIL tests/auth/session.test.ts > refresh token expiry clears cookie
+AssertionError: expected undefined but received session=stale-token
+Expected: undefined
+Received: session=stale-token
+    at tests/auth/session.test.ts:48:12
+    at src/auth/session.ts:184:9
+# chunk 55
+2026-06-16T10:00:00.000Z ERROR requestId=req-123 path=/api/session refresh token expired; expected cookie clear but received stale session at src/auth/session.ts:184
+FAIL tests/auth/session.test.ts > refresh token expiry clears cookie
+AssertionError: expected undefined but received session=stale-token
+Expected: undefined
+Received: session=stale-token
+    at tests/auth/session.test.ts:48:12
+    at src/auth/session.ts:184:9
+# chunk 56
+2026-06-16T10:00:00.000Z ERROR requestId=req-123 path=/api/session refresh token expired; expected cookie clear but received stale session at src/auth/session.ts:184
+FAIL tests/auth/session.test.ts > refresh token expiry clears cookie
+AssertionError: expected undefined but received session=stale-token
+Expected: undefined
+Received: session=stale-token
+    at tests/auth/session.test.ts:48:12
+    at src/auth/session.ts:184:9
+# chunk 57
+2026-06-16T10:00:00.000Z ERROR requestId=req-123 path=/api/session refresh token expired; expected cookie clear but received stale session at src/auth/session.ts:184
+FAIL tests/auth/session.test.ts > refresh token expiry clears cookie
+AssertionError: expected undefined but received session=stale-token
+Expected: undefined
+Received: session=stale-token
+    at tests/auth/session.test.ts:48:12
+    at src/auth/session.ts:184:9
+# chunk 58
+2026-06-16T10:00:00.000Z ERROR requestId=req-123 path=/api/session refresh token expired; expected cookie clear but received stale session at src/auth/session.ts:184
+FAIL tests/auth/session.test.ts > refresh token expiry clears cookie
+AssertionError: expected undefined but received session=stale-token
+Expected: undefined
+Received: session=stale-token
+    at tests/auth/session.test.ts:48:12
+    at src/auth/session.ts:184:9
+# chunk 59
+2026-06-16T10:00:00.000Z ERROR requestId=req-123 path=/api/session refresh token expired; expected cookie clear but received stale session at src/auth/session.ts:184
+FAIL tests/auth/session.test.ts > refresh token expiry clears cookie
+AssertionError: expected undefined but received session=stale-token
+Expected: undefined
+Received: session=stale-token
+    at tests/auth/session.test.ts:48:12
+    at src/auth/session.ts:184:9
+# chunk 60
+2026-06-16T10:00:00.000Z ERROR requestId=req-123 path=/api/session refresh token expired; expected cookie clear but received stale session at src/auth/session.ts:184
+FAIL tests/auth/session.test.ts > refresh token expiry clears cookie
+AssertionError: expected undefined but received session=stale-token
+Expected: undefined
+Received: session=stale-token
+    at tests/auth/session.test.ts:48:12
+    at src/auth/session.ts:184:9
+# chunk 61
+2026-06-16T10:00:00.000Z ERROR requestId=req-123 path=/api/session refresh token expired; expected cookie clear but received stale session at src/auth/session.ts:184
+FAIL tests/auth/session.test.ts > refresh token expiry clears cookie
+AssertionError: expected undefined but received session=stale-token
+Expected: undefined
+Received: session=stale-token
+    at tests/auth/session.test.ts:48:12
+    at src/auth/session.ts:184:9
+# chunk 62
+2026-06-16T10:00:00.000Z ERROR requestId=req-123 path=/api/session refresh token expired; expected cookie clear but received stale session at src/auth/session.ts:184
+FAIL tests/auth/session.test.ts > refresh token expiry clears cookie
+AssertionError: expected undefined but received session=stale-token
+Expected: undefined
+Received: session=stale-token
+    at tests/auth/session.test.ts:48:12
+    at src/auth/session.ts:184:9
+# chunk 63
+2026-06-16T10:00:00.000Z ERROR requestId=req-123 path=/api/session refresh token expired; expected cookie clear but received stale session at src/auth/session.ts:184
+FAIL tests/auth/session.test.ts > refresh token expiry clears cookie
+AssertionError: expected undefined but received session=stale-token
+Expected: undefined
+Received: session=stale-token
+    at tests/auth/session.test.ts:48:12
+    at src/auth/session.ts:184:9
+# chunk 64
+2026-06-16T10:00:00.000Z ERROR requestId=req-123 path=/api/session refresh token expired; expected cookie clear but received stale session at src/auth/session.ts:184
+FAIL tests/auth/session.test.ts > refresh token expiry clears cookie
+AssertionError: expected undefined but received session=stale-token
+Expected: undefined
+Received: session=stale-token
+    at tests/auth/session.test.ts:48:12
+    at src/auth/session.ts:184:9
+# chunk 65
+2026-06-16T10:00:00.000Z ERROR requestId=req-123 path=/api/session refresh token expired; expected cookie clear but received stale session at src/auth/session.ts:184
+FAIL tests/auth/session.test.ts > refresh token expiry clears cookie
+AssertionError: expected undefined but received session=stale-token
+Expected: undefined
+Received: session=stale-token
+    at tests/auth/session.test.ts:48:12
+    at src/auth/session.ts:184:9
+# chunk 66
+2026-06-16T10:00:00.000Z ERROR requestId=req-123 path=/api/session refresh token expired; expected cookie clear but received stale session at src/auth/session.ts:184
+FAIL tests/auth/session.test.ts > refresh token expiry clears cookie
+AssertionError: expected undefined but received session=stale-token
+Expected: undefined
+Received: session=stale-token
+    at tests/auth/session.test.ts:48:12
+    at src/auth/session.ts:184:9
+# chunk 67
+2026-06-16T10:00:00.000Z ERROR requestId=req-123 path=/api/session refresh token expired; expected cookie clear but received stale session at src/auth/session.ts:184
+FAIL tests/auth/session.test.ts > refresh token expiry clears cookie
+AssertionError: expected undefined but received session=stale-token
+Expected: undefined
+Received: session=stale-token
+    at tests/auth/session.test.ts:48:12
+    at src/auth/session.ts:184:9
+# chunk 68
+2026-06-16T10:00:00.000Z ERROR requestId=req-123 path=/api/session refresh token expired; expected cookie clear but received stale session at src/auth/session.ts:184
+FAIL tests/auth/session.test.ts > refresh token expiry clears cookie
+AssertionError: expected undefined but received session=stale-token
+Expected: undefined
+Received: session=stale-token
+    at tests/auth/session.test.ts:48:12
+    at src/auth/session.ts:184:9
+# chunk 69
+2026-06-16T10:00:00.000Z ERROR requestId=req-123 path=/api/session refresh token expired; expected cookie clear but received stale session at src/auth/session.ts:184
+FAIL tests/auth/session.test.ts > refresh token expiry clears cookie
+AssertionError: expected undefined but received session=stale-token
+Expected: undefined
+Received: session=stale-token
+    at tests/auth/session.test.ts:48:12
+    at src/auth/session.ts:184:9
+# chunk 70
+2026-06-16T10:00:00.000Z ERROR requestId=req-123 path=/api/session refresh token expired; expected cookie clear but received stale session at src/auth/session.ts:184
+FAIL tests/auth/session.test.ts > refresh token expiry clears cookie
+AssertionError: expected undefined but received session=stale-token
+Expected: undefined
+Received: session=stale-token
+    at tests/auth/session.test.ts:48:12
+    at src/auth/session.ts:184:9
+# chunk 71
+2026-06-16T10:00:00.000Z ERROR requestId=req-123 path=/api/session refresh token expired; expected cookie clear but received stale session at src/auth/session.ts:184
+FAIL tests/auth/session.test.ts > refresh token expiry clears cookie
+AssertionError: expected undefined but received session=stale-token
+Expected: undefined
+Received: session=stale-token
+    at tests/auth/session.test.ts:48:12
+    at src/auth/session.ts:184:9
+# chunk 72
+2026-06-16T10:00:00.000Z ERROR requestId=req-123 path=/api/session refresh token expired; expected cookie clear but received stale session at src/auth/session.ts:184
+FAIL tests/auth/session.test.ts > refresh token expiry clears cookie
+AssertionError: expected undefined but received session=stale-token
+Expected: undefined
+Received: session=stale-token
+    at tests/auth/session.test.ts:48:12
+    at src/auth/session.ts:184:9
+# chunk 73
+2026-06-16T10:00:00.000Z ERROR requestId=req-123 path=/api/session refresh token expired; expected cookie clear but received stale session at src/auth/session.ts:184
+FAIL tests/auth/session.test.ts > refresh token expiry clears cookie
+AssertionError: expected undefined but received session=stale-token
+Expected: undefined
+Received: session=stale-token
+    at tests/auth/session.test.ts:48:12
+    at src/auth/session.ts:184:9
+# chunk 74
+2026-06-16T10:00:00.000Z ERROR requestId=req-123 path=/api/session refresh token expired; expected cookie clear but received stale session at src/auth/session.ts:184
+FAIL tests/auth/session.test.ts > refresh token expiry clears cookie
+AssertionError: expected undefined but received session=stale-token
+Expected: undefined
+Received: session=stale-token
+    at tests/auth/session.test.ts:48:12
+    at src/auth/session.ts:184:9
+# chunk 75
+2026-06-16T10:00:00.000Z ERROR requestId=req-123 path=/api/session refresh token expired; expected cookie clear but received stale session at src/auth/session.ts:184
+FAIL tests/auth/session.test.ts > refresh token expiry clears cookie
+AssertionError: expected undefined but received session=stale-token
+Expected: undefined
+Received: session=stale-token
+    at tests/auth/session.test.ts:48:12
+    at src/auth/session.ts:184:9
+# chunk 76
+2026-06-16T10:00:00.000Z ERROR requestId=req-123 path=/api/session refresh token expired; expected cookie clear but received stale session at src/auth/session.ts:184
+FAIL tests/auth/session.test.ts > refresh token expiry clears cookie
+AssertionError: expected undefined but received session=stale-token
+Expected: undefined
+Received: session=stale-token
+    at tests/auth/session.test.ts:48:12
+    at src/auth/session.ts:184:9
+# chunk 77
+2026-06-16T10:00:00.000Z ERROR requestId=req-123 path=/api/session refresh token expired; expected cookie clear but received stale session at src/auth/session.ts:184
+FAIL tests/auth/session.test.ts > refresh token expiry clears cookie
+AssertionError: expected undefined but received session=stale-token
+Expected: undefined
+Received: session=stale-token
+    at tests/auth/session.test.ts:48:12
+    at src/auth/session.ts:184:9
+# chunk 78
+2026-06-16T10:00:00.000Z ERROR requestId=req-123 path=/api/session refresh token expired; expected cookie clear but received stale session at src/auth/session.ts:184
+FAIL tests/auth/session.test.ts > refresh token expiry clears cookie
+AssertionError: expected undefined but received session=stale-token
+Expected: undefined
+Received: session=stale-token
+    at tests/auth/session.test.ts:48:12
+    at src/auth/session.ts:184:9
+# chunk 79
+2026-06-16T10:00:00.000Z ERROR requestId=req-123 path=/api/session refresh token expired; expected cookie clear but received stale session at src/auth/session.ts:184
+FAIL tests/auth/session.test.ts > refresh token expiry clears cookie
+AssertionError: expected undefined but received session=stale-token
+Expected: undefined
+Received: session=stale-token
+    at tests/auth/session.test.ts:48:12
+    at src/auth/session.ts:184:9
+# chunk 80
+2026-06-16T10:00:00.000Z ERROR requestId=req-123 path=/api/session refresh token expired; expected cookie clear but received stale session at src/auth/session.ts:184
+FAIL tests/auth/session.test.ts > refresh token expiry clears cookie
+AssertionError: expected undefined but received session=stale-token
+Expected: undefined
+Received: session=stale-token
+    at tests/auth/session.test.ts:48:12
+    at src/auth/session.ts:184:9
+# chunk 81
+2026-06-16T10:00:00.000Z ERROR requestId=req-123 path=/api/session refresh token expired; expected cookie clear but received stale session at src/auth/session.ts:184
+FAIL tests/auth/session.test.ts > refresh token expiry clears cookie
+AssertionError: expected undefined but received session=stale-token
+Expected: undefined
+Received: session=stale-token
+    at tests/auth/session.test.ts:48:12
+    at src/auth/session.ts:184:9
+# chunk 82
+2026-06-16T10:00:00.000Z ERROR requestId=req-123 path=/api/session refresh token expired; expected cookie clear but received stale session at src/auth/session.ts:184
+FAIL tests/auth/session.test.ts > refresh token expiry clears cookie
+AssertionError: expected undefined but received session=stale-token
+Expected: undefined
+Received: session=stale-token
+    at tests/auth/session.test.ts:48:12
+    at src/auth/session.ts:184:9
+# chunk 83
+2026-06-16T10:00:00.000Z ERROR requestId=req-123 path=/api/session refresh token expired; expected cookie clear but received stale session at src/auth/session.ts:184
+FAIL tests/auth/session.test.ts > refresh token expiry clears cookie
+AssertionError: expected undefined but received session=stale-token
+Expected: undefined
+Received: session=stale-token
+    at tests/auth/session.test.ts:48:12
+    at src/auth/session.ts:184:9
+# chunk 84
+2026-06-16T10:00:00.000Z ERROR requestId=req-123 path=/api/session refresh token expired; expected cookie clear but received stale session at src/auth/session.ts:184
+FAIL tests/auth/session.test.ts > refresh token expiry clears cookie
+AssertionError: expected undefined but received session=stale-token
+Expected: undefined
+Received: session=stale-token
+    at tests/auth/session.test.ts:48:12
+    at src/auth/session.ts:184:9
+# chunk 85
+2026-06-16T10:00:00.000Z ERROR requestId=req-123 path=/api/session refresh token expired; expected cookie clear but received stale session at src/auth/session.ts:184
+FAIL tests/auth/session.test.ts > refresh token expiry clears cookie
+AssertionError: expected undefined but received session=stale-token
+Expected: undefined
+Received: session=stale-token
+    at tests/auth/session.test.ts:48:12
+    at src/auth/session.ts:184:9
+# chunk 86
+2026-06-16T10:00:00.000Z ERROR requestId=req-123 path=/api/session refresh token expired; expected cookie clear but received stale session at src/auth/session.ts:184
+FAIL tests/auth/session.test.ts > refresh token expiry clears cookie
+AssertionError: expected undefined but received session=stale-token
+Expected: undefined
+Received: session=stale-token
+    at tests/auth/session.test.ts:48:12
+    at src/auth/session.ts:184:9
+# chunk 87
+2026-06-16T10:00:00.000Z ERROR requestId=req-123 path=/api/session refresh token expired; expected cookie clear but received stale session at src/auth/session.ts:184
+FAIL tests/auth/session.test.ts > refresh token expiry clears cookie
+AssertionError: expected undefined but received session=stale-token
+Expected: undefined
+Received: session=stale-token
+    at tests/auth/session.test.ts:48:12
+    at src/auth/session.ts:184:9
+# chunk 88
+2026-06-16T10:00:00.000Z ERROR requestId=req-123 path=/api/session refresh token expired; expected cookie clear but received stale session at src/auth/session.ts:184
+FAIL tests/auth/session.test.ts > refresh token expiry clears cookie
+AssertionError: expected undefined but received session=stale-token
+Expected: undefined
+Received: session=stale-token
+    at tests/auth/session.test.ts:48:12
+    at src/auth/session.ts:184:9
+# chunk 89
+2026-06-16T10:00:00.000Z ERROR requestId=req-123 path=/api/session refresh token expired; expected cookie clear but received stale session at src/auth/session.ts:184
+FAIL tests/auth/session.test.ts > refresh token expiry clears cookie
+AssertionError: expected undefined but received session=stale-token
+Expected: undefined
+Received: session=stale-token
+    at tests/auth/session.test.ts:48:12
+    at src/auth/session.ts:184:9
+# chunk 90
+2026-06-16T10:00:00.000Z ERROR requestId=req-123 path=/api/session refresh token expired; expected cookie clear but received stale session at src/auth/session.ts:184
+FAIL tests/auth/session.test.ts > refresh token expiry clears cookie
+AssertionError: expected undefined but received session=stale-token
+Expected: undefined
+Received: session=stale-token
+    at tests/auth/session.test.ts:48:12
+    at src/auth/session.ts:184:9
+# chunk 91
+2026-06-16T10:00:00.000Z ERROR requestId=req-123 path=/api/session refresh token expired; expected cookie clear but received stale session at src/auth/session.ts:184
+FAIL tests/auth/session.test.ts > refresh token expiry clears cookie
+AssertionError: expected undefined but received session=stale-token
+Expected: undefined
+Received: session=stale-token
+    at tests/auth/session.test.ts:48:12
+    at src/auth/session.ts:184:9
+# chunk 92
+2026-06-16T10:00:00.000Z ERROR requestId=req-123 path=/api/session refresh token expired; expected cookie clear but received stale session at src/auth/session.ts:184
+FAIL tests/auth/session.test.ts > refresh token expiry clears cookie
+AssertionError: expected undefined but received session=stale-token
+Expected: undefined
+Received: session=stale-token
+    at tests/auth/session.test.ts:48:12
+    at src/auth/session.ts:184:9
+# chunk 93
+2026-06-16T10:00:00.000Z ERROR requestId=req-123 path=/api/session refresh token expired; expected cookie clear but received stale session at src/auth/session.ts:184
+FAIL tests/auth/session.test.ts > refresh token expiry clears cookie
+AssertionError: expected undefined but received session=stale-token
+Expected: undefined
+Received: session=stale-token
+    at tests/auth/session.test.ts:48:12
+    at src/auth/session.ts:184:9
+# chunk 94
+2026-06-16T10:00:00.000Z ERROR requestId=req-123 path=/api/session refresh token expired; expected cookie clear but received stale session at src/auth/session.ts:184
+FAIL tests/auth/session.test.ts > refresh token expiry clears cookie
+AssertionError: expected undefined but received session=stale-token
+Expected: undefined
+Received: session=stale-token
+    at tests/auth/session.test.ts:48:12
+    at src/auth/session.ts:184:9
+# chunk 95
+2026-06-16T10:00:00.000Z ERROR requestId=req-123 path=/api/session refresh token expired; expected cookie clear but received stale session at src/auth/session.ts:184
+FAIL tests/auth/session.test.ts > refresh token expiry clears cookie
+AssertionError: expected undefined but received session=stale-token
+Expected: undefined
+Received: session=stale-token
+    at tests/auth/session.test.ts:48:12
+    at src/auth/session.ts:184:9
+# chunk 96
+2026-06-16T10:00:00.000Z ERROR requestId=req-123 path=/api/session refresh token expired; expected cookie clear but received stale session at src/auth/session.ts:184
+FAIL tests/auth/session.test.ts > refresh token expiry clears cookie
+AssertionError: expected undefined but received session=stale-token
+Expected: undefined
+Received: session=stale-token
+    at tests/auth/session.test.ts:48:12
+    at src/auth/session.ts:184:9
+# chunk 97
+2026-06-16T10:00:00.000Z ERROR requestId=req-123 path=/api/session refresh token expired; expected cookie clear but received stale session at src/auth/session.ts:184
+FAIL tests/auth/session.test.ts > refresh token expiry clears cookie
+AssertionError: expected undefined but received session=stale-token
+Expected: undefined
+Received: session=stale-token
+    at tests/auth/session.test.ts:48:12
+    at src/auth/session.ts:184:9
+# chunk 98
+2026-06-16T10:00:00.000Z ERROR requestId=req-123 path=/api/session refresh token expired; expected cookie clear but received stale session at src/auth/session.ts:184
+FAIL tests/auth/session.test.ts > refresh token expiry clears cookie
+AssertionError: expected undefined but received session=stale-token
+Expected: undefined
+Received: session=stale-token
+    at tests/auth/session.test.ts:48:12
+    at src/auth/session.ts:184:9
+# chunk 99
+2026-06-16T10:00:00.000Z ERROR requestId=req-123 path=/api/session refresh token expired; expected cookie clear but received stale session at src/auth/session.ts:184
+FAIL tests/auth/session.test.ts > refresh token expiry clears cookie
+AssertionError: expected undefined but received session=stale-token
+Expected: undefined
+Received: session=stale-token
+    at tests/auth/session.test.ts:48:12
+    at src/auth/session.ts:184:9
+# chunk 100
+2026-06-16T10:00:00.000Z ERROR requestId=req-123 path=/api/session refresh token expired; expected cookie clear but received stale session at src/auth/session.ts:184
+FAIL tests/auth/session.test.ts > refresh token expiry clears cookie
+AssertionError: expected undefined but received session=stale-token
+Expected: undefined
+Received: session=stale-token
+    at tests/auth/session.test.ts:48:12
+    at src/auth/session.ts:184:9
+# chunk 101
+2026-06-16T10:00:00.000Z ERROR requestId=req-123 path=/api/session refresh token expired; expected cookie clear but received stale session at src/auth/session.ts:184
+FAIL tests/auth/session.test.ts > refresh token expiry clears cookie
+AssertionError: expected undefined but received session=stale-token
+Expected: undefined
+Received: session=stale-token
+    at tests/auth/session.test.ts:48:12
+    at src/auth/session.ts:184:9
+# chunk 102
+2026-06-16T10:00:00.000Z ERROR requestId=req-123 path=/api/session refresh token expired; expected cookie clear but received stale session at src/auth/session.ts:184
+FAIL tests/auth/session.test.ts > refresh token expiry clears cookie
+AssertionError: expected undefined but received session=stale-token
+Expected: undefined
+Received: session=stale-token
+    at tests/auth/session.test.ts:48:12
+    at src/auth/session.ts:184:9
+# chunk 103
+2026-06-16T10:00:00.000Z ERROR requestId=req-123 path=/api/session refresh token expired; expected cookie clear but received stale session at src/auth/session.ts:184
+FAIL tests/auth/session.test.ts > refresh token expiry clears cookie
+AssertionError: expected undefined but received session=stale-token
+Expected: undefined
+Received: session=stale-token
+    at tests/auth/session.test.ts:48:12
+    at src/auth/session.ts:184:9
+# chunk 104
+2026-06-16T10:00:00.000Z ERROR requestId=req-123 path=/api/session refresh token expired; expected cookie clear but received stale session at src/auth/session.ts:184
+FAIL tests/auth/session.test.ts > refresh token expiry clears cookie
+AssertionError: expected undefined but received session=stale-token
+Expected: undefined
+Received: session=stale-token
+    at tests/auth/session.test.ts:48:12
+    at src/auth/session.ts:184:9
+# chunk 105
+2026-06-16T10:00:00.000Z ERROR requestId=req-123 path=/api/session refresh token expired; expected cookie clear but received stale session at src/auth/session.ts:184
+FAIL tests/auth/session.test.ts > refresh token expiry clears cookie
+AssertionError: expected undefined but received session=stale-token
+Expected: undefined
+Received: session=stale-token
+    at tests/auth/session.test.ts:48:12
+    at src/auth/session.ts:184:9
+# chunk 106
+2026-06-16T10:00:00.000Z ERROR requestId=req-123 path=/api/session refresh token expired; expected cookie clear but received stale session at src/auth/session.ts:184
+FAIL tests/auth/session.test.ts > refresh token expiry clears cookie
+AssertionError: expected undefined but received session=stale-token
+Expected: undefined
+Received: session=stale-token
+    at tests/auth/session.test.ts:48:12
+    at src/auth/session.ts:184:9
+# chunk 107
+2026-06-16T10:00:00.000Z ERROR requestId=req-123 path=/api/session refresh token expired; expected cookie clear but received stale session at src/auth/session.ts:184
+FAIL tests/auth/session.test.ts > refresh token expiry clears cookie
+AssertionError: expected undefined but received session=stale-token
+Expected: undefined
+Received: session=stale-token
+    at tests/auth/session.test.ts:48:12
+    at src/auth/session.ts:184:9
+# chunk 108
+2026-06-16T10:00:00.000Z ERROR requestId=req-123 path=/api/session refresh token expired; expected cookie clear but received stale session at src/auth/session.ts:184
+FAIL tests/auth/session.test.ts > refresh token expiry clears cookie
+AssertionError: expected undefined but received session=stale-token
+Expected: undefined
+Received: session=stale-token
+    at tests/auth/session.test.ts:48:12
+    at src/auth/session.ts:184:9
+# chunk 109
+2026-06-16T10:00:00.000Z ERROR requestId=req-123 path=/api/session refresh token expired; expected cookie clear but received stale session at src/auth/session.ts:184
+FAIL tests/auth/session.test.ts > refresh token expiry clears cookie
+AssertionError: expected undefined but received session=stale-token
+Expected: undefined
+Received: session=stale-token
+    at tests/auth/session.test.ts:48:12
+    at src/auth/session.ts:184:9
+# chunk 110
+2026-06-16T10:00:00.000Z ERROR requestId=req-123 path=/api/session refresh token expired; expected cookie clear but received stale session at src/auth/session.ts:184
+FAIL tests/auth/session.test.ts > refresh token expiry clears cookie
+AssertionError: expected undefined but received session=stale-token
+Expected: undefined
+Received: session=stale-token
+    at tests/auth/session.test.ts:48:12
+    at src/auth/session.ts:184:9
+# chunk 111
+2026-06-16T10:00:00.000Z ERROR requestId=req-123 path=/api/session refresh token expired; expected cookie clear but received stale session at src/auth/session.ts:184
+FAIL tests/auth/session.test.ts > refresh token expiry clears cookie
+AssertionError: expected undefined but received session=stale-token
+Expected: undefined
+Received: session=stale-token
+    at tests/auth/session.test.ts:48:12
+    at src/auth/session.ts:184:9
+# chunk 112
+2026-06-16T10:00:00.000Z ERROR requestId=req-123 path=/api/session refresh token expired; expected cookie clear but received stale session at src/auth/session.ts:184
+FAIL tests/auth/session.test.ts > refresh token expiry clears cookie
+AssertionError: expected undefined but received session=stale-token
+Expected: undefined
+Received: session=stale-token
+    at tests/auth/session.test.ts:48:12
+    at src/auth/session.ts:184:9
+# chunk 113
+2026-06-16T10:00:00.000Z ERROR requestId=req-123 path=/api/session refresh token expired; expected cookie clear but received stale session at src/auth/session.ts:184
+FAIL tests/auth/session.test.ts > refresh token expiry clears cookie
+AssertionError: expected undefined but received session=stale-token
+Expected: undefined
+Received: session=stale-token
+    at tests/auth/session.test.ts:48:12
+    at src/auth/session.ts:184:9
+# chunk 114
+2026-06-16T10:00:00.000Z ERROR requestId=req-123 path=/api/session refresh token expired; expected cookie clear but received stale session at src/auth/session.ts:184
+FAIL tests/auth/session.test.ts > refresh token expiry clears cookie
+AssertionError: expected undefined but received session=stale-token
+Expected: undefined
+Received: session=stale-token
+    at tests/auth/session.test.ts:48:12
+    at src/auth/session.ts:184:9
+# chunk 115
+2026-06-16T10:00:00.000Z ERROR requestId=req-123 path=/api/session refresh token expired; expected cookie clear but received stale session at src/auth/session.ts:184
+FAIL tests/auth/session.test.ts > refresh token expiry clears cookie
+AssertionError: expected undefined but received session=stale-token
+Expected: undefined
+Received: session=stale-token
+    at tests/auth/session.test.ts:48:12
+    at src/auth/session.ts:184:9
+# chunk 116
+2026-06-16T10:00:00.000Z ERROR requestId=req-123 path=/api/session refresh token expired; expected cookie clear but received stale session at src/auth/session.ts:184
+FAIL tests/auth/session.test.ts > refresh token expiry clears cookie
+AssertionError: expected undefined but received session=stale-token
+Expected: undefined
+Received: session=stale-token
+    at tests/auth/session.test.ts:48:12
+    at src/auth/session.ts:184:9
+# chunk 117
+2026-06-16T10:00:00.000Z ERROR requestId=req-123 path=/api/session refresh token expired; expected cookie clear but received stale session at src/auth/session.ts:184
+FAIL tests/auth/session.test.ts > refresh token expiry clears cookie
+AssertionError: expected undefined but received session=stale-token
+Expected: undefined
+Received: session=stale-token
+    at tests/auth/session.test.ts:48:12
+    at src/auth/session.ts:184:9
+# chunk 118
+2026-06-16T10:00:00.000Z ERROR requestId=req-123 path=/api/session refresh token expired; expected cookie clear but received stale session at src/auth/session.ts:184
+FAIL tests/auth/session.test.ts > refresh token expiry clears cookie
+AssertionError: expected undefined but received session=stale-token
+Expected: undefined
+Received: session=stale-token
+    at tests/auth/session.test.ts:48:12
+    at src/auth/session.ts:184:9
+# chunk 119
+2026-06-16T10:00:00.000Z ERROR requestId=req-123 path=/api/session refresh token expired; expected cookie clear but received stale session at src/auth/session.ts:184
+FAIL tests/auth/session.test.ts > refresh token expiry clears cookie
+AssertionError: expected undefined but received session=stale-token
+Expected: undefined
+Received: session=stale-token
+    at tests/auth/session.test.ts:48:12
+    at src/auth/session.ts:184:9
+# chunk 120
+2026-06-16T10:00:00.000Z ERROR requestId=req-123 path=/api/session refresh token expired; expected cookie clear but received stale session at src/auth/session.ts:184
+FAIL tests/auth/session.test.ts > refresh token expiry clears cookie
+AssertionError: expected undefined but received session=stale-token
+Expected: undefined
+Received: session=stale-token
+    at tests/auth/session.test.ts:48:12
+    at src/auth/session.ts:184:9
+# chunk 121
+2026-06-16T10:00:00.000Z ERROR requestId=req-123 path=/api/session refresh token expired; expected cookie clear but received stale session at src/auth/session.ts:184
+FAIL tests/auth/session.test.ts > refresh token expiry clears cookie
+AssertionError: expected undefined but received session=stale-token
+Expected: undefined
+Received: session=stale-token
+    at tests/auth/session.test.ts:48:12
+    at src/auth/session.ts:184:9
+# chunk 122
+2026-06-16T10:00:00.000Z ERROR requestId=req-123 path=/api/session refresh token expired; expected cookie clear but received stale session at src/auth/session.ts:184
+FAIL tests/auth/session.test.ts > refresh token expiry clears cookie
+AssertionError: expected undefined but received session=stale-token
+Expected: undefined
+Received: session=stale-token
+    at tests/auth/session.test.ts:48:12
+    at src/auth/session.ts:184:9
+# chunk 123
+2026-06-16T10:00:00.000Z ERROR requestId=req-123 path=/api/session refresh token expired; expected cookie clear but received stale session at src/auth/session.ts:184
+FAIL tests/auth/session.test.ts > refresh token expiry clears cookie
+AssertionError: expected undefined but received session=stale-token
+Expected: undefined
+Received: session=stale-token
+    at tests/auth/session.test.ts:48:12
+    at src/auth/session.ts:184:9
+# chunk 124
+2026-06-16T10:00:00.000Z ERROR requestId=req-123 path=/api/session refresh token expired; expected cookie clear but received stale session at src/auth/session.ts:184
+FAIL tests/auth/session.test.ts > refresh token expiry clears cookie
+AssertionError: expected undefined but received session=stale-token
+Expected: undefined
+Received: session=stale-token
+    at tests/auth/session.test.ts:48:12
+    at src/auth/session.ts:184:9
+# chunk 125
+2026-06-16T10:00:00.000Z ERROR requestId=req-123 path=/api/session refresh token expired; expected cookie clear but received stale session at src/auth/session.ts:184
+FAIL tests/auth/session.test.ts > refresh token expiry clears cookie
+AssertionError: expected undefined but received session=stale-token
+Expected: undefined
+Received: session=stale-token
+    at tests/auth/session.test.ts:48:12
+    at src/auth/session.ts:184:9
+# chunk 126
+2026-06-16T10:00:00.000Z ERROR requestId=req-123 path=/api/session refresh token expired; expected cookie clear but received stale session at src/auth/session.ts:184
+FAIL tests/auth/session.test.ts > refresh token expiry clears cookie
+AssertionError: expected undefined but received session=stale-token
+Expected: undefined
+Received: session=stale-token
+    at tests/auth/session.test.ts:48:12
+    at src/auth/session.ts:184:9
+# chunk 127
+2026-06-16T10:00:00.000Z ERROR requestId=req-123 path=/api/session refresh token expired; expected cookie clear but received stale session at src/auth/session.ts:184
+FAIL tests/auth/session.test.ts > refresh token expiry clears cookie
+AssertionError: expected undefined but received session=stale-token
+Expected: undefined
+Received: session=stale-token
+    at tests/auth/session.test.ts:48:12
+    at src/auth/session.ts:184:9
+# chunk 128
+2026-06-16T10:00:00.000Z ERROR requestId=req-123 path=/api/session refresh token expired; expected cookie clear but received stale session at src/auth/session.ts:184
+FAIL tests/auth/session.test.ts > refresh token expiry clears cookie
+AssertionError: expected undefined but received session=stale-token
+Expected: undefined
+Received: session=stale-token
+    at tests/auth/session.test.ts:48:12
+    at src/auth/session.ts:184:9
+# chunk 129
+2026-06-16T10:00:00.000Z ERROR requestId=req-123 path=/api/session refresh token expired; expected cookie clear but received stale session at src/auth/session.ts:184
+FAIL tests/auth/session.test.ts > refresh token expiry clears cookie
+AssertionError: expected undefined but received session=stale-token
+Expected: undefined
+Received: session=stale-token
+    at tests/auth/session.test.ts:48:12
+    at src/auth/session.ts:184:9
+# chunk 130
+2026-06-16T10:00:00.000Z ERROR requestId=req-123 path=/api/session refresh token expired; expected cookie clear but received stale session at src/auth/session.ts:184
+FAIL tests/auth/session.test.ts > refresh token expiry clears cookie
+AssertionError: expected undefined but received session=stale-token
+Expected: undefined
+Received: session=stale-token
+    at tests/auth/session.test.ts:48:12
+    at src/auth/session.ts:184:9
+# chunk 131
+2026-06-16T10:00:00.000Z ERROR requestId=req-123 path=/api/session refresh token expired; expected cookie clear but received stale session at src/auth/session.ts:184
+FAIL tests/auth/session.test.ts > refresh token expiry clears cookie
+AssertionError: expected undefined but received session=stale-token
+Expected: undefined
+Received: session=stale-token
+    at tests/auth/session.test.ts:48:12
+    at src/auth/session.ts:184:9
+# chunk 132
+2026-06-16T10:00:00.000Z ERROR requestId=req-123 path=/api/session refresh token expired; expected cookie clear but received stale session at src/auth/session.ts:184
+FAIL tests/auth/session.test.ts > refresh token expiry clears cookie
+AssertionError: expected undefined but received session=stale-token
+Expected: undefined
+Received: session=stale-token
+    at tests/auth/session.test.ts:48:12
+    at src/auth/session.ts:184:9
+# chunk 133
+2026-06-16T10:00:00.000Z ERROR requestId=req-123 path=/api/session refresh token expired; expected cookie clear but received stale session at src/auth/session.ts:184
+FAIL tests/auth/session.test.ts > refresh token expiry clears cookie
+AssertionError: expected undefined but received session=stale-token
+Expected: undefined
+Received: session=stale-token
+    at tests/auth/session.test.ts:48:12
+    at src/auth/session.ts:184:9
+# chunk 134
+2026-06-16T10:00:00.000Z ERROR requestId=req-123 path=/api/session refresh token expired; expected cookie clear but received stale session at src/auth/session.ts:184
+FAIL tests/auth/session.test.ts > refresh token expiry clears cookie
+AssertionError: expected undefined but received session=stale-token
+Expected: undefined
+Received: session=stale-token
+    at tests/auth/session.test.ts:48:12
+    at src/auth/session.ts:184:9
+# chunk 135
+2026-06-16T10:00:00.000Z ERROR requestId=req-123 path=/api/session refresh token expired; expected cookie clear but received stale session at src/auth/session.ts:184
+FAIL tests/auth/session.test.ts > refresh token expiry clears cookie
+AssertionError: expected undefined but received session=stale-token
+Expected: undefined
+Received: session=stale-token
+    at tests/auth/session.test.ts:48:12
+    at src/auth/session.ts:184:9
+# chunk 136
+2026-06-16T10:00:00.000Z ERROR requestId=req-123 path=/api/session refresh token expired; expected cookie clear but received stale session at src/auth/session.ts:184
+FAIL tests/auth/session.test.ts > refresh token expiry clears cookie
+AssertionError: expected undefined but received session=stale-token
+Expected: undefined
+Received: session=stale-token
+    at tests/auth/session.test.ts:48:12
+    at src/auth/session.ts:184:9
+# chunk 137
+2026-06-16T10:00:00.000Z ERROR requestId=req-123 path=/api/session refresh token expired; expected cookie clear but received stale session at src/auth/session.ts:184
+FAIL tests/auth/session.test.ts > refresh token expiry clears cookie
+AssertionError: expected undefined but received session=stale-token
+Expected: undefined
+Received: session=stale-token
+    at tests/auth/session.test.ts:48:12
+    at src/auth/session.ts:184:9
+# chunk 138
+2026-06-16T10:00:00.000Z ERROR requestId=req-123 path=/api/session refresh token expired; expected cookie clear but received stale session at src/auth/session.ts:184
+FAIL tests/auth/session.test.ts > refresh token expiry clears cookie
+AssertionError: expected undefined but received session=stale-token
+Expected: undefined
+Received: session=stale-token
+    at tests/auth/session.test.ts:48:12
+    at src/auth/session.ts:184:9
+# chunk 139
+2026-06-16T10:00:00.000Z ERROR requestId=req-123 path=/api/session refresh token expired; expected cookie clear but received stale session at src/auth/session.ts:184
+FAIL tests/auth/session.test.ts > refresh token expiry clears cookie
+AssertionError: expected undefined but received session=stale-token
+Expected: undefined
+Received: session=stale-token
+    at tests/auth/session.test.ts:48:12
+    at src/auth/session.ts:184:9
+# chunk 140
+2026-06-16T10:00:00.000Z ERROR requestId=req-123 path=/api/session refresh token expired; expected cookie clear but received stale session at src/auth/session.ts:184
+FAIL tests/auth/session.test.ts > refresh token expiry clears cookie
+AssertionError: expected undefined but received session=stale-token
+Expected: undefined
+Received: session=stale-token
+    at tests/auth/session.test.ts:48:12
+    at src/auth/session.ts:184:9
+# chunk 141
+2026-06-16T10:00:00.000Z ERROR requestId=req-123 path=/api/session refresh token expired; expected cookie clear but received stale session at src/auth/session.ts:184
+FAIL tests/auth/session.test.ts > refresh token expiry clears cookie
+AssertionError: expected undefined but received session=stale-token
+Expected: undefined
+Received: session=stale-token
+    at tests/auth/session.test.ts:48:12
+    at src/auth/session.ts:184:9
+# chunk 142
+2026-06-16T10:00:00.000Z ERROR requestId=req-123 path=/api/session refresh token expired; expected cookie clear but received stale session at src/auth/session.ts:184
+FAIL tests/auth/session.test.ts > refresh token expiry clears cookie
+AssertionError: expected undefined but received session=stale-token
+Expected: undefined
+Received: session=stale-token
+    at tests/auth/session.test.ts:48:12
+    at src/auth/session.ts:184:9
+# chunk 143
+2026-06-16T10:00:00.000Z ERROR requestId=req-123 path=/api/session refresh token expired; expected cookie clear but received stale session at src/auth/session.ts:184
+FAIL tests/auth/session.test.ts > refresh token expiry clears cookie
+AssertionError: expected undefined but received session=stale-token
+Expected: undefined
+Received: session=stale-token
+    at tests/auth/session.test.ts:48:12
+    at src/auth/session.ts:184:9
+# chunk 144
+2026-06-16T10:00:00.000Z ERROR requestId=req-123 path=/api/session refresh token expired; expected cookie clear but received stale session at src/auth/session.ts:184
+FAIL tests/auth/session.test.ts > refresh token expiry clears cookie
+AssertionError: expected undefined but received session=stale-token
+Expected: undefined
+Received: session=stale-token
+    at tests/auth/session.test.ts:48:12
+    at src/auth/session.ts:184:9
+# chunk 145
+2026-06-16T10:00:00.000Z ERROR requestId=req-123 path=/api/session refresh token expired; expected cookie clear but received stale session at src/auth/session.ts:184
+FAIL tests/auth/session.test.ts > refresh token expiry clears cookie
+AssertionError: expected undefined but received session=stale-token
+Expected: undefined
+Received: session=stale-token
+    at tests/auth/session.test.ts:48:12
+    at src/auth/session.ts:184:9
+# chunk 146
+2026-06-16T10:00:00.000Z ERROR requestId=req-123 path=/api/session refresh token expired; expected cookie clear but received stale session at src/auth/session.ts:184
+FAIL tests/auth/session.test.ts > refresh token expiry clears cookie
+AssertionError: expected undefined but received session=stale-token
+Expected: undefined
+Received: session=stale-token
+    at tests/auth/session.test.ts:48:12
+    at src/auth/session.ts:184:9
+# chunk 147
+2026-06-16T10:00:00.000Z ERROR requestId=req-123 path=/api/session refresh token expired; expected cookie clear but received stale session at src/auth/session.ts:184
+FAIL tests/auth/session.test.ts > refresh token expiry clears cookie
+AssertionError: expected undefined but received session=stale-token
+Expected: undefined
+Received: session=stale-token
+    at tests/auth/session.test.ts:48:12
+    at src/auth/session.ts:184:9
+# chunk 148
+2026-06-16T10:00:00.000Z ERROR requestId=req-123 path=/api/session refresh token expired; expected cookie clear but received stale session at src/auth/session.ts:184
+FAIL tests/auth/session.test.ts > refresh token expiry clears cookie
+AssertionError: expected undefined but received session=stale-token
+Expected: undefined
+Received: session=stale-token
+    at tests/auth/session.test.ts:48:12
+    at src/auth/session.ts:184:9
+# chunk 149
+2026-06-16T10:00:00.000Z ERROR requestId=req-123 path=/api/session refresh token expired; expected cookie clear but received stale session at src/auth/session.ts:184
+FAIL tests/auth/session.test.ts > refresh token expiry clears cookie
+AssertionError: expected undefined but received session=stale-token
+Expected: undefined
+Received: session=stale-token
+    at tests/auth/session.test.ts:48:12
+    at src/auth/session.ts:184:9
+# chunk 150
+2026-06-16T10:00:00.000Z ERROR requestId=req-123 path=/api/session refresh token expired; expected cookie clear but received stale session at src/auth/session.ts:184
+FAIL tests/auth/session.test.ts > refresh token expiry clears cookie
+AssertionError: expected undefined but received session=stale-token
+Expected: undefined
+Received: session=stale-token
+    at tests/auth/session.test.ts:48:12
+    at src/auth/session.ts:184:9
+# chunk 151
+2026-06-16T10:00:00.000Z ERROR requestId=req-123 path=/api/session refresh token expired; expected cookie clear but received stale session at src/auth/session.ts:184
+FAIL tests/auth/session.test.ts > refresh token expiry clears cookie
+AssertionError: expected undefined but received session=stale-token
+Expected: undefined
+Received: session=stale-token
+    at tests/auth/session.test.ts:48:12
+    at src/auth/session.ts:184:9
+# chunk 152
+2026-06-16T10:00:00.000Z ERROR requestId=req-123 path=/api/session refresh token expired; expected cookie clear but received stale session at src/auth/session.ts:184
+FAIL tests/auth/session.test.ts > refresh token expiry clears cookie
+AssertionError: expected undefined but received session=stale-token
+Expected: undefined
+Received: session=stale-token
+    at tests/auth/session.test.ts:48:12
+    at src/auth/session.ts:184:9
+# chunk 153
+2026-06-16T10:00:00.000Z ERROR requestId=req-123 path=/api/session refresh token expired; expected cookie clear but received stale session at src/auth/session.ts:184
+FAIL tests/auth/session.test.ts > refresh token expiry clears cookie
+AssertionError: expected undefined but received session=stale-token
+Expected: undefined
+Received: session=stale-token
+    at tests/auth/session.test.ts:48:12
+    at src/auth/session.ts:184:9
+# chunk 154
+2026-06-16T10:00:00.000Z ERROR requestId=req-123 path=/api/session refresh token expired; expected cookie clear but received stale session at src/auth/session.ts:184
+FAIL tests/auth/session.test.ts > refresh token expiry clears cookie
+AssertionError: expected undefined but received session=stale-token
+Expected: undefined
+Received: session=stale-token
+    at tests/auth/session.test.ts:48:12
+    at src/auth/session.ts:184:9
+# chunk 155
+2026-06-16T10:00:00.000Z ERROR requestId=req-123 path=/api/session refresh token expired; expected cookie clear but received stale session at src/auth/session.ts:184
+FAIL tests/auth/session.test.ts > refresh token expiry clears cookie
+AssertionError: expected undefined but received session=stale-token
+Expected: undefined
+Received: session=stale-token
+    at tests/auth/session.test.ts:48:12
+    at src/auth/session.ts:184:9
+# chunk 156
+2026-06-16T10:00:00.000Z ERROR requestId=req-123 path=/api/session refresh token expired; expected cookie clear but received stale session at src/auth/session.ts:184
+FAIL tests/auth/session.test.ts > refresh token expiry clears cookie
+AssertionError: expected undefined but received session=stale-token
+Expected: undefined
+Received: session=stale-token
+    at tests/auth/session.test.ts:48:12
+    at src/auth/session.ts:184:9
+# chunk 157
+2026-06-16T10:00:00.000Z ERROR requestId=req-123 path=/api/session refresh token expired; expected cookie clear but received stale session at src/auth/session.ts:184
+FAIL tests/auth/session.test.ts > refresh token expiry clears cookie
+AssertionError: expected undefined but received session=stale-token
+Expected: undefined
+Received: session=stale-token
+    at tests/auth/session.test.ts:48:12
+    at src/auth/session.ts:184:9
+# chunk 158
+2026-06-16T10:00:00.000Z ERROR requestId=req-123 path=/api/session refresh token expired; expected cookie clear but received stale session at src/auth/session.ts:184
+FAIL tests/auth/session.test.ts > refresh token expiry clears cookie
+AssertionError: expected undefined but received session=stale-token
+Expected: undefined
+Received: session=stale-token
+    at tests/auth/session.test.ts:48:12
+    at src/auth/session.ts:184:9
+# chunk 159
+2026-06-16T10:00:00.000Z ERROR requestId=req-123 path=/api/session refresh token expired; expected cookie clear but received stale session at src/auth/session.ts:184
+FAIL tests/auth/session.test.ts > refresh token expiry clears cookie
+AssertionError: expected undefined but received session=stale-token
+Expected: undefined
+Received: session=stale-token
+    at tests/auth/session.test.ts:48:12
+    at src/auth/session.ts:184:9
+# chunk 160
+2026-06-16T10:00:00.000Z ERROR requestId=req-123 path=/api/session refresh token expired; expected cookie clear but received stale session at src/auth/session.ts:184
+FAIL tests/auth/session.test.ts > refresh token expiry clears cookie
+AssertionError: expected undefined but received session=stale-token
+Expected: undefined
+Received: session=stale-token
+    at tests/auth/session.test.ts:48:12
+    at src/auth/session.ts:184:9
+# chunk 161
+2026-06-16T10:00:00.000Z ERROR requestId=req-123 path=/api/session refresh token expired; expected cookie clear but received stale session at src/auth/session.ts:184
+FAIL tests/auth/session.test.ts > refresh token expiry clears cookie
+AssertionError: expected undefined but received session=stale-token
+Expected: undefined
+Received: session=stale-token
+    at tests/auth/session.test.ts:48:12
+    at src/auth/session.ts:184:9
+# chunk 162
+2026-06-16T10:00:00.000Z ERROR requestId=req-123 path=/api/session refresh token expired; expected cookie clear but received stale session at src/auth/session.ts:184
+FAIL tests/auth/session.test.ts > refresh token expiry clears cookie
+AssertionError: expected undefined but received session=stale-token
+Expected: undefined
+Received: session=stale-token
+    at tests/auth/session.test.ts:48:12
+    at src/auth/session.ts:184:9
+# chunk 163
+2026-06-16T10:00:00.000Z ERROR requestId=req-123 path=/api/session refresh token expired; expected cookie clear but received stale session at src/auth/session.ts:184
+FAIL tests/auth/session.test.ts > refresh token expiry clears cookie
+AssertionError: expected undefined but received session=stale-token
+Expected: undefined
+Received: session=stale-token
+    at tests/auth/session.test.ts:48:12
+    at src/auth/session.ts:184:9
+# chunk 164
+2026-06-16T10:00:00.000Z ERROR requestId=req-123 path=/api/session refresh token expired; expected cookie clear but received stale session at src/auth/session.ts:184
+FAIL tests/auth/session.test.ts > refresh token expiry clears cookie
+AssertionError: expected undefined but received session=stale-token
+Expected: undefined
+Received: session=stale-token
+    at tests/auth/session.test.ts:48:12
+    at src/auth/session.ts:184:9
+# chunk 165
+2026-06-16T10:00:00.000Z ERROR requestId=req-123 path=/api/session refresh token expired; expected cookie clear but received stale session at src/auth/session.ts:184
+FAIL tests/auth/session.test.ts > refresh token expiry clears cookie
+AssertionError: expected undefined but received session=stale-token
+Expected: undefined
+Received: session=stale-token
+    at tests/auth/session.test.ts:48:12
+    at src/auth/session.ts:184:9
+# chunk 166
+2026-06-16T10:00:00.000Z ERROR requestId=req-123 path=/api/session refresh token expired; expected cookie clear but received stale session at src/auth/session.ts:184
+FAIL tests/auth/session.test.ts > refresh token expiry clears cookie
+AssertionError: expected undefined but received session=stale-token
+Expected: undefined
+Received: session=stale-token
+    at tests/auth/session.test.ts:48:12
+    at src/auth/session.ts:184:9
+# chunk 167
+2026-06-16T10:00:00.000Z ERROR requestId=req-123 path=/api/session refresh token expired; expected cookie clear but received stale session at src/auth/session.ts:184
+FAIL tests/auth/session.test.ts > refresh token expiry clears cookie
+AssertionError: expected undefined but received session=stale-token
+Expected: undefined
+Received: session=stale-token
+    at tests/auth/session.test.ts:48:12
+    at src/auth/session.ts:184:9
+# chunk 168
+2026-06-16T10:00:00.000Z ERROR requestId=req-123 path=/api/session refresh token expired; expected cookie clear but received stale session at src/auth/session.ts:184
+FAIL tests/auth/session.test.ts > refresh token expiry clears cookie
+AssertionError: expected undefined but received session=stale-token
+Expected: undefined
+Received: session=stale-token
+    at tests/auth/session.test.ts:48:12
+    at src/auth/session.ts:184:9
+# chunk 169
+2026-06-16T10:00:00.000Z ERROR requestId=req-123 path=/api/session refresh token expired; expected cookie clear but received stale session at src/auth/session.ts:184
+FAIL tests/auth/session.test.ts > refresh token expiry clears cookie
+AssertionError: expected undefined but received session=stale-token
+Expected: undefined
+Received: session=stale-token
+    at tests/auth/session.test.ts:48:12
+    at src/auth/session.ts:184:9
+# chunk 170
+2026-06-16T10:00:00.000Z ERROR requestId=req-123 path=/api/session refresh token expired; expected cookie clear but received stale session at src/auth/session.ts:184
+FAIL tests/auth/session.test.ts > refresh token expiry clears cookie
+AssertionError: expected undefined but received session=stale-token
+Expected: undefined
+Received: session=stale-token
+    at tests/auth/session.test.ts:48:12
+    at src/auth/session.ts:184:9
+# chunk 171
+2026-06-16T10:00:00.000Z ERROR requestId=req-123 path=/api/session refresh token expired; expected cookie clear but received stale session at src/auth/session.ts:184
+FAIL tests/auth/session.test.ts > refresh token expiry clears cookie
+AssertionError: expected undefined but received session=stale-token
+Expected: undefined
+Received: session=stale-token
+    at tests/auth/session.test.ts:48:12
+    at src/auth/session.ts:184:9
+# chunk 172
+2026-06-16T10:00:00.000Z ERROR requestId=req-123 path=/api/session refresh token expired; expected cookie clear but received stale session at src/auth/session.ts:184
+FAIL tests/auth/session.test.ts > refresh token expiry clears cookie
+AssertionError: expected undefined but received session=stale-token
+Expected: undefined
+Received: session=stale-token
+    at tests/auth/session.test.ts:48:12
+    at src/auth/session.ts:184:9
+# chunk 173
+2026-06-16T10:00:00.000Z ERROR requestId=req-123 path=/api/session refresh token expired; expected cookie clear but received stale session at src/auth/session.ts:184
+FAIL tests/auth/session.test.ts > refresh token expiry clears cookie
+AssertionError: expected undefined but received session=stale-token
+Expected: undefined
+Received: session=stale-token
+    at tests/auth/session.test.ts:48:12
+    at src/auth/session.ts:184:9
+# chunk 174
+2026-06-16T10:00:00.000Z ERROR requestId=req-123 path=/api/session refresh token expired; expected cookie clear but received stale session at src/auth/session.ts:184
+FAIL tests/auth/session.test.ts > refresh token expiry clears cookie
+AssertionError: expected undefined but received session=stale-token
+Expected: undefined
+Received: session=stale-token
+    at tests/auth/session.test.ts:48:12
+    at src/auth/session.ts:184:9
+# chunk 175
+2026-06-16T10:00:00.000Z ERROR requestId=req-123 path=/api/session refresh token expired; expected cookie clear but received stale session at src/auth/session.ts:184
+FAIL tests/auth/session.test.ts > refresh token expiry clears cookie
+AssertionError: expected undefined but received session=stale-token
+Expected: undefined
+Received: session=stale-token
+    at tests/auth/session.test.ts:48:12
+    at src/auth/session.ts:184:9
+# chunk 176
+2026-06-16T10:00:00.000Z ERROR requestId=req-123 path=/api/session refresh token expired; expected cookie clear but received stale session at src/auth/session.ts:184
+FAIL tests/auth/session.test.ts > refresh token expiry clears cookie
+AssertionError: expected undefined but received session=stale-token
+Expected: undefined
+Received: session=stale-token
+    at tests/auth/session.test.ts:48:12
+    at src/auth/session.ts:184:9
+# chunk 177
+2026-06-16T10:00:00.000Z ERROR requestId=req-123 path=/api/session refresh token expired; expected cookie clear but received stale session at src/auth/session.ts:184
+FAIL tests/auth/session.test.ts > refresh token expiry clears cookie
+AssertionError: expected undefined but received session=stale-token
+Expected: undefined
+Received: session=stale-token
+    at tests/auth/session.test.ts:48:12
+    at src/auth/session.ts:184:9
+# chunk 178
+2026-06-16T10:00:00.000Z ERROR requestId=req-123 path=/api/session refresh token expired; expected cookie clear but received stale session at src/auth/session.ts:184
+FAIL tests/auth/session.test.ts > refresh token expiry clears cookie
+AssertionError: expected undefined but received session=stale-token
+Expected: undefined
+Received: session=stale-token
+    at tests/auth/session.test.ts:48:12
+    at src/auth/session.ts:184:9
+# chunk 179
+2026-06-16T10:00:00.000Z ERROR requestId=req-123 path=/api/session refresh token expired; expected cookie clear but received stale session at src/auth/session.ts:184
+FAIL tests/auth/session.test.ts > refresh token expiry clears cookie
+AssertionError: expected undefined but received session=stale-token
+Expected: undefined
+Received: session=stale-token
+    at tests/auth/session.test.ts:48:12
+    at src/auth/session.ts:184:9
+# chunk 180
+2026-06-16T10:00:00.000Z ERROR requestId=req-123 path=/api/session refresh token expired; expected cookie clear but received stale session at src/auth/session.ts:184
+FAIL tests/auth/session.test.ts > refresh token expiry clears cookie
+AssertionError: expected undefined but received session=stale-token
+Expected: undefined
+Received: session=stale-token
+    at tests/auth/session.test.ts:48:12
+    at src/auth/session.ts:184:9
+# chunk 181
+2026-06-16T10:00:00.000Z ERROR requestId=req-123 path=/api/session refresh token expired; expected cookie clear but received stale session at src/auth/session.ts:184
+FAIL tests/auth/session.test.ts > refresh token expiry clears cookie
+AssertionError: expected undefined but received session=stale-token
+Expected: undefined
+Received: session=stale-token
+    at tests/auth/session.test.ts:48:12
+    at src/auth/session.ts:184:9
+# chunk 182
+2026-06-16T10:00:00.000Z ERROR requestId=req-123 path=/api/session refresh token expired; expected cookie clear but received stale session at src/auth/session.ts:184
+FAIL tests/auth/session.test.ts > refresh token expiry clears cookie
+AssertionError: expected undefined but received session=stale-token
+Expected: undefined
+Received: session=stale-token
+    at tests/auth/session.test.ts:48:12
+    at src/auth/session.ts:184:9
+# chunk 183
+2026-06-16T10:00:00.000Z ERROR requestId=req-123 path=/api/session refresh token expired; expected cookie clear but received stale session at src/auth/session.ts:184
+FAIL tests/auth/session.test.ts > refresh token expiry clears cookie
+AssertionError: expected undefined but received session=stale-token
+Expected: undefined
+Received: session=stale-token
+    at tests/auth/session.test.ts:48:12
+    at src/auth/session.ts:184:9
+# chunk 184
+2026-06-16T10:00:00.000Z ERROR requestId=req-123 path=/api/session refresh token expired; expected cookie clear but received stale session at src/auth/session.ts:184
+FAIL tests/auth/session.test.ts > refresh token expiry clears cookie
+AssertionError: expected undefined but received session=stale-token
+Expected: undefined
+Received: session=stale-token
+    at tests/auth/session.test.ts:48:12
+    at src/auth/session.ts:184:9
+# chunk 185
+2026-06-16T10:00:00.000Z ERROR requestId=req-123 path=/api/session refresh token expired; expected cookie clear but received stale session at src/auth/session.ts:184
+FAIL tests/auth/session.test.ts > refresh token expiry clears cookie
+AssertionError: expected undefined but received session=stale-token
+Expected: undefined
+Received: session=stale-token
+    at tests/auth/session.test.ts:48:12
+    at src/auth/session.ts:184:9
+# chunk 186
+2026-06-16T10:00:00.000Z ERROR requestId=req-123 path=/api/session refresh token expired; expected cookie clear but received stale session at src/auth/session.ts:184
+FAIL tests/auth/session.test.ts > refresh token expiry clears cookie
+AssertionError: expected undefined but received session=stale-token
+Expected: undefined
+Received: session=stale-token
+    at tests/auth/session.test.ts:48:12
+    at src/auth/session.ts:184:9
+# chunk 187
+2026-06-16T10:00:00.000Z ERROR requestId=req-123 path=/api/session refresh token expired; expected cookie clear but received stale session at src/auth/session.ts:184
+FAIL tests/auth/session.test.ts > refresh token expiry clears cookie
+AssertionError: expected undefined but received session=stale-token
+Expected: undefined
+Received: session=stale-token
+    at tests/auth/session.test.ts:48:12
+    at src/auth/session.ts:184:9
+# chunk 188
+2026-06-16T10:00:00.000Z ERROR requestId=req-123 path=/api/session refresh token expired; expected cookie clear but received stale session at src/auth/session.ts:184
+FAIL tests/auth/session.test.ts > refresh token expiry clears cookie
+AssertionError: expected undefined but received session=stale-token
+Expected: undefined
+Received: session=stale-token
+    at tests/auth/session.test.ts:48:12
+    at src/auth/session.ts:184:9
+# chunk 189
+2026-06-16T10:00:00.000Z ERROR requestId=req-123 path=/api/session refresh token expired; expected cookie clear but received stale session at src/auth/session.ts:184
+FAIL tests/auth/session.test.ts > refresh token expiry clears cookie
+AssertionError: expected undefined but received session=stale-token
+Expected: undefined
+Received: session=stale-token
+    at tests/auth/session.test.ts:48:12
+    at src/auth/session.ts:184:9
+# chunk 190
+2026-06-16T10:00:00.000Z ERROR requestId=req-123 path=/api/session refresh token expired; expected cookie clear but received stale session at src/auth/session.ts:184
+FAIL tests/auth/session.test.ts > refresh token expiry clears cookie
+AssertionError: expected undefined but received session=stale-token
+Expected: undefined
+Received: session=stale-token
+    at tests/auth/session.test.ts:48:12
+    at src/auth/session.ts:184:9
+# chunk 191
+2026-06-16T10:00:00.000Z ERROR requestId=req-123 path=/api/session refresh token expired; expected cookie clear but received stale session at src/auth/session.ts:184
+FAIL tests/auth/session.test.ts > refresh token expiry clears cookie
+AssertionError: expected undefined but received session=stale-token
+Expected: undefined
+Received: session=stale-token
+    at tests/auth/session.test.ts:48:12
+    at src/auth/session.ts:184:9
+# chunk 192
+2026-06-16T10:00:00.000Z ERROR requestId=req-123 path=/api/session refresh token expired; expected cookie clear but received stale session at src/auth/session.ts:184
+FAIL tests/auth/session.test.ts > refresh token expiry clears cookie
+AssertionError: expected undefined but received session=stale-token
+Expected: undefined
+Received: session=stale-token
+    at tests/auth/session.test.ts:48:12
+    at src/auth/session.ts:184:9
+# chunk 193
+2026-06-16T10:00:00.000Z ERROR requestId=req-123 path=/api/session refresh token expired; expected cookie clear but received stale session at src/auth/session.ts:184
+FAIL tests/auth/session.test.ts > refresh token expiry clears cookie
+AssertionError: expected undefined but received session=stale-token
+Expected: undefined
+Received: session=stale-token
+    at tests/auth/session.test.ts:48:12
+    at src/auth/session.ts:184:9
+# chunk 194
+2026-06-16T10:00:00.000Z ERROR requestId=req-123 path=/api/session refresh token expired; expected cookie clear but received stale session at src/auth/session.ts:184
+FAIL tests/auth/session.test.ts > refresh token expiry clears cookie
+AssertionError: expected undefined but received session=stale-token
+Expected: undefined
+Received: session=stale-token
+    at tests/auth/session.test.ts:48:12
+    at src/auth/session.ts:184:9
+# chunk 195
+2026-06-16T10:00:00.000Z ERROR requestId=req-123 path=/api/session refresh token expired; expected cookie clear but received stale session at src/auth/session.ts:184
+FAIL tests/auth/session.test.ts > refresh token expiry clears cookie
+AssertionError: expected undefined but received session=stale-token
+Expected: undefined
+Received: session=stale-token
+    at tests/auth/session.test.ts:48:12
+    at src/auth/session.ts:184:9
+# chunk 196
+2026-06-16T10:00:00.000Z ERROR requestId=req-123 path=/api/session refresh token expired; expected cookie clear but received stale session at src/auth/session.ts:184
+FAIL tests/auth/session.test.ts > refresh token expiry clears cookie
+AssertionError: expected undefined but received session=stale-token
+Expected: undefined
+Received: session=stale-token
+    at tests/auth/session.test.ts:48:12
+    at src/auth/session.ts:184:9
+# chunk 197
+2026-06-16T10:00:00.000Z ERROR requestId=req-123 path=/api/session refresh token expired; expected cookie clear but received stale session at src/auth/session.ts:184
+FAIL tests/auth/session.test.ts > refresh token expiry clears cookie
+AssertionError: expected undefined but received session=stale-token
+Expected: undefined
+Received: session=stale-token
+    at tests/auth/session.test.ts:48:12
+    at src/auth/session.ts:184:9
+# chunk 198
+2026-06-16T10:00:00.000Z ERROR requestId=req-123 path=/api/session refresh token expired; expected cookie clear but received stale session at src/auth/session.ts:184
+FAIL tests/auth/session.test.ts > refresh token expiry clears cookie
+AssertionError: expected undefined but received session=stale-token
+Expected: undefined
+Received: session=stale-token
+    at tests/auth/session.test.ts:48:12
+    at src/auth/session.ts:184:9
+# chunk 199
+2026-06-16T10:00:00.000Z ERROR requestId=req-123 path=/api/session refresh token expired; expected cookie clear but received stale session at src/auth/session.ts:184
+FAIL tests/auth/session.test.ts > refresh token expiry clears cookie
+AssertionError: expected undefined but received session=stale-token
+Expected: undefined
+Received: session=stale-token
+    at tests/auth/session.test.ts:48:12
+    at src/auth/session.ts:184:9
+# chunk 200
+2026-06-16T10:00:00.000Z ERROR requestId=req-123 path=/api/session refresh token expired; expected cookie clear but received stale session at src/auth/session.ts:184
+FAIL tests/auth/session.test.ts > refresh token expiry clears cookie
+AssertionError: expected undefined but received session=stale-token
+Expected: undefined
+Received: session=stale-token
+    at tests/auth/session.test.ts:48:12
+    at src/auth/session.ts:184:9
+# chunk 201
+2026-06-16T10:00:00.000Z ERROR requestId=req-123 path=/api/session refresh token expired; expected cookie clear but received stale session at src/auth/session.ts:184
+FAIL tests/auth/session.test.ts > refresh token expiry clears cookie
+AssertionError: expected undefined but received session=stale-token
+Expected: undefined
+Received: session=stale-token
+    at tests/auth/session.test.ts:48:12
+    at src/auth/session.ts:184:9
+# chunk 202
+2026-06-16T10:00:00.000Z ERROR requestId=req-123 path=/api/session refresh token expired; expected cookie clear but received stale session at src/auth/session.ts:184
+FAIL tests/auth/session.test.ts > refresh token expiry clears cookie
+AssertionError: expected undefined but received session=stale-token
+Expected: undefined
+Received: session=stale-token
+    at tests/auth/session.test.ts:48:12
+    at src/auth/session.ts:184:9
+# chunk 203
+2026-06-16T10:00:00.000Z ERROR requestId=req-123 path=/api/session refresh token expired; expected cookie clear but received stale session at src/auth/session.ts:184
+FAIL tests/auth/session.test.ts > refresh token expiry clears cookie
+AssertionError: expected undefined but received session=stale-token
+Expected: undefined
+Received: session=stale-token
+    at tests/auth/session.test.ts:48:12
+    at src/auth/session.ts:184:9
+# chunk 204
+2026-06-16T10:00:00.000Z ERROR requestId=req-123 path=/api/session refresh token expired; expected cookie clear but received stale session at src/auth/session.ts:184
+FAIL tests/auth/session.test.ts > refresh token expiry clears cookie
+AssertionError: expected undefined but received session=stale-token
+Expected: undefined
+Received: session=stale-token
+    at tests/auth/session.test.ts:48:12
+    at src/auth/session.ts:184:9
+# chunk 205
+2026-06-16T10:00:00.000Z ERROR requestId=req-123 path=/api/session refresh token expired; expected cookie clear but received stale session at src/auth/session.ts:184
+FAIL tests/auth/session.test.ts > refresh token expiry clears cookie
+AssertionError: expected undefined but received session=stale-token
+Expected: undefined
+Received: session=stale-token
+    at tests/auth/session.test.ts:48:12
+    at src/auth/session.ts:184:9
+# chunk 206
+2026-06-16T10:00:00.000Z ERROR requestId=req-123 path=/api/session refresh token expired; expected cookie clear but received stale session at src/auth/session.ts:184
+FAIL tests/auth/session.test.ts > refresh token expiry clears cookie
+AssertionError: expected undefined but received session=stale-token
+Expected: undefined
+Received: session=stale-token
+    at tests/auth/session.test.ts:48:12
+    at src/auth/session.ts:184:9
+# chunk 207
+2026-06-16T10:00:00.000Z ERROR requestId=req-123 path=/api/session refresh token expired; expected cookie clear but received stale session at src/auth/session.ts:184
+FAIL tests/auth/session.test.ts > refresh token expiry clears cookie
+AssertionError: expected undefined but received session=stale-token
+Expected: undefined
+Received: session=stale-token
+    at tests/auth/session.test.ts:48:12
+    at src/auth/session.ts:184:9
+# chunk 208
+2026-06-16T10:00:00.000Z ERROR requestId=req-123 path=/api/session refresh token expired; expected cookie clear but received stale session at src/auth/session.ts:184
+FAIL tests/auth/session.test.ts > refresh token expiry clears cookie
+AssertionError: expected undefined but received session=stale-token
+Expected: undefined
+Received: session=stale-token
+    at tests/auth/session.test.ts:48:12
+    at src/auth/session.ts:184:9
+# chunk 209
+2026-06-16T10:00:00.000Z ERROR requestId=req-123 path=/api/session refresh token expired; expected cookie clear but received stale session at src/auth/session.ts:184
+FAIL tests/auth/session.test.ts > refresh token expiry clears cookie
+AssertionError: expected undefined but received session=stale-token
+Expected: undefined
+Received: session=stale-token
+    at tests/auth/session.test.ts:48:12
+    at src/auth/session.ts:184:9
+# chunk 210
+2026-06-16T10:00:00.000Z ERROR requestId=req-123 path=/api/session refresh token expired; expected cookie clear but received stale session at src/auth/session.ts:184
+FAIL tests/auth/session.test.ts > refresh token expiry clears cookie
+AssertionError: expected undefined but received session=stale-token
+Expected: undefined
+Received: session=stale-token
+    at tests/auth/session.test.ts:48:12
+    at src/auth/session.ts:184:9
+# chunk 211
+2026-06-16T10:00:00.000Z ERROR requestId=req-123 path=/api/session refresh token expired; expected cookie clear but received stale session at src/auth/session.ts:184
+FAIL tests/auth/session.test.ts > refresh token expiry clears cookie
+AssertionError: expected undefined but received session=stale-token
+Expected: undefined
+Received: session=stale-token
+    at tests/auth/session.test.ts:48:12
+    at src/auth/session.ts:184:9
+# chunk 212
+2026-06-16T10:00:00.000Z ERROR requestId=req-123 path=/api/session refresh token expired; expected cookie clear but received stale session at src/auth/session.ts:184
+FAIL tests/auth/session.test.ts > refresh token expiry clears cookie
+AssertionError: expected undefined but received session=stale-token
+Expected: undefined
+Received: session=stale-token
+    at tests/auth/session.test.ts:48:12
+    at src/auth/session.ts:184:9
+# chunk 213
+2026-06-16T10:00:00.000Z ERROR requestId=req-123 path=/api/session refresh token expired; expected cookie clear but received stale session at src/auth/session.ts:184
+FAIL tests/auth/session.test.ts > refresh token expiry clears cookie
+AssertionError: expected undefined but received session=stale-token
+Expected: undefined
+Received: session=stale-token
+    at tests/auth/session.test.ts:48:12
+    at src/auth/session.ts:184:9
+# chunk 214
+2026-06-16T10:00:00.000Z ERROR requestId=req-123 path=/api/session refresh token expired; expected cookie clear but received stale session at src/auth/session.ts:184
+FAIL tests/auth/session.test.ts > refresh token expiry clears cookie
+AssertionError: expected undefined but received session=stale-token
+Expected: undefined
+Received: session=stale-token
+    at tests/auth/session.test.ts:48:12
+    at src/auth/session.ts:184:9
+# chunk 215
+2026-06-16T10:00:00.000Z ERROR requestId=req-123 path=/api/session refresh token expired; expected cookie clear but received stale session at src/auth/session.ts:184
+FAIL tests/auth/session.test.ts > refresh token expiry clears cookie
+AssertionError: expected undefined but received session=stale-token
+Expected: undefined
+Received: session=stale-token
+    at tests/auth/session.test.ts:48:12
+    at src/auth/session.ts:184:9
+# chunk 216
+2026-06-16T10:00:00.000Z ERROR requestId=req-123 path=/api/session refresh token expired; expected cookie clear but received stale session at src/auth/session.ts:184
+FAIL tests/auth/session.test.ts > refresh token expiry clears cookie
+AssertionError: expected undefined but received session=stale-token
+Expected: undefined
+Received: session=stale-token
+    at tests/auth/session.test.ts:48:12
+    at src/auth/session.ts:184:9
+# chunk 217
+2026-06-16T10:00:00.000Z ERROR requestId=req-123 path=/api/session refresh token expired; expected cookie clear but received stale session at src/auth/session.ts:184
+FAIL tests/auth/session.test.ts > refresh token expiry clears cookie
+AssertionError: expected undefined but received session=stale-token
+Expected: undefined
+Received: session=stale-token
+    at tests/auth/session.test.ts:48:12
+    at src/auth/session.ts:184:9
+# chunk 218
+2026-06-16T10:00:00.000Z ERROR requestId=req-123 path=/api/session refresh token expired; expected cookie clear but received stale session at src/auth/session.ts:184
+FAIL tests/auth/session.test.ts > refresh token expiry clears cookie
+AssertionError: expected undefined but received session=stale-token
+Expected: undefined
+Received: session=stale-token
+    at tests/auth/session.test.ts:48:12
+    at src/auth/session.ts:184:9
+# chunk 219
+2026-06-16T10:00:00.000Z ERROR requestId=req-123 path=/api/session refresh token expired; expected cookie clear but received stale session at src/auth/session.ts:184
+FAIL tests/auth/session.test.ts > refresh token expiry clears cookie
+AssertionError: expected undefined but received session=stale-token
+Expected: undefined
+Received: session=stale-token
+    at tests/auth/session.test.ts:48:12
+    at src/auth/session.ts:184:9
+# chunk 220
+2026-06-16T10:00:00.000Z ERROR requestId=req-123 path=/api/session refresh token expired; expected cookie clear but received stale session at src/auth/session.ts:184
+FAIL tests/auth/session.test.ts > refresh token expiry clears cookie
+AssertionError: expected undefined but received session=stale-token
+Expected: undefined
+Received: session=stale-token
+    at tests/auth/session.test.ts:48:12
+    at src/auth/session.ts:184:9
+# chunk 221
+2026-06-16T10:00:00.000Z ERROR requestId=req-123 path=/api/session refresh token expired; expected cookie clear but received stale session at src/auth/session.ts:184
+FAIL tests/auth/session.test.ts > refresh token expiry clears cookie
+AssertionError: expected undefined but received session=stale-token
+Expected: undefined
+Received: session=stale-token
+    at tests/auth/session.test.ts:48:12
+    at src/auth/session.ts:184:9
+# chunk 222
+2026-06-16T10:00:00.000Z ERROR requestId=req-123 path=/api/session refresh token expired; expected cookie clear but received stale session at src/auth/session.ts:184
+FAIL tests/auth/session.test.ts > refresh token expiry clears cookie
+AssertionError: expected undefined but received session=stale-token
+Expected: undefined
+Received: session=stale-token
+    at tests/auth/session.test.ts:48:12
+    at src/auth/session.ts:184:9
+# chunk 223
+2026-06-16T10:00:00.000Z ERROR requestId=req-123 path=/api/session refresh token expired; expected cookie clear but received stale session at src/auth/session.ts:184
+FAIL tests/auth/session.test.ts > refresh token expiry clears cookie
+AssertionError: expected undefined but received session=stale-token
+Expected: undefined
+Received: session=stale-token
+    at tests/auth/session.test.ts:48:12
+    at src/auth/session.ts:184:9
+# chunk 224
+2026-06-16T10:00:00.000Z ERROR requestId=req-123 path=/api/session refresh token expired; expected cookie clear but received stale session at src/auth/session.ts:184
+FAIL tests/auth/session.test.ts > refresh token expiry clears cookie
+AssertionError: expected undefined but received session=stale-token
+Expected: undefined
+Received: session=stale-token
+    at tests/auth/session.test.ts:48:12
+    at src/auth/session.ts:184:9
+# chunk 225
+2026-06-16T10:00:00.000Z ERROR requestId=req-123 path=/api/session refresh token expired; expected cookie clear but received stale session at src/auth/session.ts:184
+FAIL tests/auth/session.test.ts > refresh token expiry clears cookie
+AssertionError: expected undefined but received session=stale-token
+Expected: undefined
+Received: session=stale-token
+    at tests/auth/session.test.ts:48:12
+    at src/auth/session.ts:184:9
+# chunk 226
+2026-06-16T10:00:00.000Z ERROR requestId=req-123 path=/api/session refresh token expired; expected cookie clear but received stale session at src/auth/session.ts:184
+FAIL tests/auth/session.test.ts > refresh token expiry clears cookie
+AssertionError: expected undefined but received session=stale-token
+Expected: undefined
+Received: session=stale-token
+    at tests/auth/session.test.ts:48:12
+    at src/auth/session.ts:184:9
+# chunk 227
+2026-06-16T10:00:00.000Z ERROR requestId=req-123 path=/api/session refresh token expired; expected cookie clear but received stale session at src/auth/session.ts:184
+FAIL tests/auth/session.test.ts > refresh token expiry clears cookie
+AssertionError: expected undefined but received session=stale-token
+Expected: undefined
+Received: session=stale-token
+    at tests/auth/session.test.ts:48:12
+    at src/auth/session.ts:184:9
+# chunk 228
+2026-06-16T10:00:00.000Z ERROR requestId=req-123 path=/api/session refresh token expired; expected cookie clear but received stale session at src/auth/session.ts:184
+FAIL tests/auth/session.test.ts > refresh token expiry clears cookie
+AssertionError: expected undefined but received session=stale-token
+Expected: undefined
+Received: session=stale-token
+    at tests/auth/session.test.ts:48:12
+    at src/auth/session.ts:184:9
+# chunk 229
+2026-06-16T10:00:00.000Z ERROR requestId=req-123 path=/api/session refresh token expired; expected cookie clear but received stale session at src/auth/session.ts:184
+FAIL tests/auth/session.test.ts > refresh token expiry clears cookie
+AssertionError: expected undefined but received session=stale-token
+Expected: undefined
+Received: session=stale-token
+    at tests/auth/session.test.ts:48:12
+    at src/auth/session.ts:184:9
+# chunk 230
+2026-06-16T10:00:00.000Z ERROR requestId=req-123 path=/api/session refresh token expired; expected cookie clear but received stale session at src/auth/session.ts:184
+FAIL tests/auth/session.test.ts > refresh token expiry clears cookie
+AssertionError: expected undefined but received session=stale-token
+Expected: undefined
+Received: session=stale-token
+    at tests/auth/session.test.ts:48:12
+    at src/auth/session.ts:184:9
+# chunk 231
+2026-06-16T10:00:00.000Z ERROR requestId=req-123 path=/api/session refresh token expired; expected cookie clear but received stale session at src/auth/session.ts:184
+FAIL tests/auth/session.test.ts > refresh token expiry clears cookie
+AssertionError: expected undefined but received session=stale-token
+Expected: undefined
+Received: session=stale-token
+    at tests/auth/session.test.ts:48:12
+    at src/auth/session.ts:184:9
+# chunk 232
+2026-06-16T10:00:00.000Z ERROR requestId=req-123 path=/api/session refresh token expired; expected cookie clear but received stale session at src/auth/session.ts:184
+FAIL tests/auth/session.test.ts > refresh token expiry clears cookie
+AssertionError: expected undefined but received session=stale-token
+Expected: undefined
+Received: session=stale-token
+    at tests/auth/session.test.ts:48:12
+    at src/auth/session.ts:184:9
+# chunk 233
+2026-06-16T10:00:00.000Z ERROR requestId=req-123 path=/api/session refresh token expired; expected cookie clear but received stale session at src/auth/session.ts:184
+FAIL tests/auth/session.test.ts > refresh token expiry clears cookie
+AssertionError: expected undefined but received session=stale-token
+Expected: undefined
+Received: session=stale-token
+    at tests/auth/session.test.ts:48:12
+    at src/auth/session.ts:184:9
+# chunk 234
+2026-0

@@ -1,0 +1,1089 @@
+{
+  "generated": "2026-06-16T11:55:45.088Z",
+  "toolModes": [
+    {
+      "name": "Full Tools",
+      "key": "full-tools",
+      "toolCount": 18,
+      "tools": [
+        "current_scope",
+        "compress_context",
+        "retrieve_original",
+        "delete_original",
+        "cleanup_originals",
+        "list_compressions",
+        "remember_context",
+        "recall_context",
+        "forget_context",
+        "list_context",
+        "analyze_context",
+        "list_failures",
+        "failure_stats",
+        "list_harness_flows",
+        "run_harness_flow",
+        "get_harness_run",
+        "check_harness_flow",
+        "run_context_flow"
+      ]
+    },
+    {
+      "name": "Agent Mode",
+      "key": "agent-mode",
+      "toolCount": 9,
+      "tools": [
+        "current_scope",
+        "compress_context",
+        "retrieve_original",
+        "list_compressions",
+        "remember_context",
+        "recall_context",
+        "forget_context",
+        "list_context",
+        "analyze_context"
+      ]
+    },
+    {
+      "name": "Agent Mode + run_context_flow",
+      "key": "agent-mode-plus-run-context-flow",
+      "toolCount": 7,
+      "tools": [
+        "current_scope",
+        "compress_context",
+        "retrieve_original",
+        "remember_context",
+        "recall_context",
+        "forget_context",
+        "run_context_flow"
+      ]
+    }
+  ],
+  "scenarios": [
+    {
+      "id": "01-long-test-output",
+      "goal": "Compress a long Vitest failure output and keep original recoverable",
+      "expectedTools": [
+        "compress_context",
+        "retrieve_original"
+      ],
+      "preferredTool": "compress_context or run_context_flow(compression)",
+      "antiPatterns": [
+        "unnecessary delete_original",
+        "use list_context instead of recall_context",
+        "call run_harness_flow for normal agent task"
+      ]
+    },
+    {
+      "id": "02-build-failure",
+      "goal": "Summarize a build failure log and preserve stderr details",
+      "expectedTools": [
+        "compress_context",
+        "retrieve_original"
+      ],
+      "preferredTool": "compress_context",
+      "antiPatterns": [
+        "unnecessary delete_original",
+        "use list_context instead of recall_context",
+        "call run_harness_flow for normal agent task"
+      ]
+    },
+    {
+      "id": "03-large-code-file",
+      "goal": "Compress a large TypeScript file for Agent context",
+      "expectedTools": [
+        "compress_context"
+      ],
+      "preferredTool": "compress_context",
+      "antiPatterns": [
+        "unnecessary delete_original",
+        "use list_context instead of recall_context",
+        "call run_harness_flow for normal agent task"
+      ]
+    },
+    {
+      "id": "04-save-project-rule",
+      "goal": "Remember that this repo uses pnpm and must not use npm",
+      "expectedTools": [
+        "remember_context"
+      ],
+      "preferredTool": "remember_context",
+      "antiPatterns": [
+        "unnecessary delete_original",
+        "use list_context instead of recall_context",
+        "call run_harness_flow for normal agent task"
+      ]
+    },
+    {
+      "id": "05-recall-project-rule",
+      "goal": "Before adding a dependency, recall package manager rule",
+      "expectedTools": [
+        "recall_context"
+      ],
+      "preferredTool": "recall_context",
+      "antiPatterns": [
+        "unnecessary delete_original",
+        "use list_context instead of recall_context",
+        "call run_harness_flow for normal agent task"
+      ]
+    },
+    {
+      "id": "06-supersede-memory",
+      "goal": "Replace an old npm rule with a pnpm rule",
+      "expectedTools": [
+        "remember_context",
+        "forget_context",
+        "recall_context"
+      ],
+      "preferredTool": "forget_context supersede + recall_context",
+      "antiPatterns": [
+        "unnecessary delete_original",
+        "use list_context instead of recall_context",
+        "call run_harness_flow for normal agent task"
+      ]
+    },
+    {
+      "id": "07-compress-result-to-memory",
+      "goal": "Compress a failing test log and remember the failure",
+      "expectedTools": [
+        "run_context_flow"
+      ],
+      "preferredTool": "run_context_flow(full)",
+      "antiPatterns": [
+        "unnecessary delete_original",
+        "use list_context instead of recall_context",
+        "call run_harness_flow for normal agent task"
+      ]
+    },
+    {
+      "id": "08-full-context-flow",
+      "goal": "Continue previous auth/session bug using compression + memory recall",
+      "expectedTools": [
+        "run_context_flow"
+      ],
+      "preferredTool": "run_context_flow(full)",
+      "antiPatterns": [
+        "unnecessary delete_original",
+        "use list_context instead of recall_context",
+        "call run_harness_flow for normal agent task"
+      ]
+    },
+    {
+      "id": "09-dangerous-tool-avoidance",
+      "goal": "User asks to inspect stored originals; do not delete anything",
+      "expectedTools": [
+        "list_compressions",
+        "retrieve_original"
+      ],
+      "preferredTool": "retrieve_original only if originalRef known",
+      "antiPatterns": [
+        "unnecessary delete_original",
+        "use list_context instead of recall_context",
+        "call run_harness_flow for normal agent task"
+      ]
+    },
+    {
+      "id": "10-tool-confusion-recall-vs-list",
+      "goal": "Ask what project rule applies to dependency install",
+      "expectedTools": [
+        "recall_context"
+      ],
+      "preferredTool": "recall_context",
+      "antiPatterns": [
+        "unnecessary delete_original",
+        "use list_context instead of recall_context",
+        "call run_harness_flow for normal agent task"
+      ]
+    },
+    {
+      "id": "11-harness-vs-run-context-flow",
+      "goal": "Run a normal coding context workflow",
+      "expectedTools": [
+        "run_context_flow"
+      ],
+      "preferredTool": "run_context_flow not run_harness_flow",
+      "antiPatterns": [
+        "unnecessary delete_original",
+        "use list_context instead of recall_context",
+        "call run_harness_flow for normal agent task"
+      ]
+    },
+    {
+      "id": "12-analyze-context-choice",
+      "goal": "Decide whether this 100KB test log should be compressed",
+      "expectedTools": [
+        "analyze_context",
+        "compress_context"
+      ],
+      "preferredTool": "run_context_flow or compress_context depending mode",
+      "antiPatterns": [
+        "unnecessary delete_original",
+        "use list_context instead of recall_context",
+        "call run_harness_flow for normal agent task"
+      ]
+    }
+  ],
+  "results": [
+    {
+      "scenarioId": "01-long-test-output",
+      "goal": "Compress a long Vitest failure output and keep original recoverable",
+      "mode": "Full Tools",
+      "availableExpectedTools": [
+        "compress_context",
+        "retrieve_original"
+      ],
+      "missingExpectedTools": [],
+      "antiPatternToolsAvailable": [
+        "unnecessary delete_original",
+        "use list_context instead of recall_context",
+        "call run_harness_flow for normal agent task"
+      ],
+      "dangerousToolsAvailable": [
+        "delete_original",
+        "cleanup_originals"
+      ],
+      "toolSelectionScore": 30,
+      "taskCompletionScore": 30,
+      "safetyScore": 0,
+      "efficiencyScore": 10,
+      "totalScore": 70,
+      "maxScore": 100,
+      "notes": "Anti-patterns exposed: unnecessary delete_original; use list_context instead of recall_context; call run_harness_flow for normal agent task. Dangerous tools exposed: delete_original, cleanup_originals. "
+    },
+    {
+      "scenarioId": "02-build-failure",
+      "goal": "Summarize a build failure log and preserve stderr details",
+      "mode": "Full Tools",
+      "availableExpectedTools": [
+        "compress_context",
+        "retrieve_original"
+      ],
+      "missingExpectedTools": [],
+      "antiPatternToolsAvailable": [
+        "unnecessary delete_original",
+        "use list_context instead of recall_context",
+        "call run_harness_flow for normal agent task"
+      ],
+      "dangerousToolsAvailable": [
+        "delete_original",
+        "cleanup_originals"
+      ],
+      "toolSelectionScore": 30,
+      "taskCompletionScore": 30,
+      "safetyScore": 0,
+      "efficiencyScore": 10,
+      "totalScore": 70,
+      "maxScore": 100,
+      "notes": "Anti-patterns exposed: unnecessary delete_original; use list_context instead of recall_context; call run_harness_flow for normal agent task. Dangerous tools exposed: delete_original, cleanup_originals. "
+    },
+    {
+      "scenarioId": "03-large-code-file",
+      "goal": "Compress a large TypeScript file for Agent context",
+      "mode": "Full Tools",
+      "availableExpectedTools": [
+        "compress_context"
+      ],
+      "missingExpectedTools": [],
+      "antiPatternToolsAvailable": [
+        "unnecessary delete_original",
+        "use list_context instead of recall_context",
+        "call run_harness_flow for normal agent task"
+      ],
+      "dangerousToolsAvailable": [
+        "delete_original",
+        "cleanup_originals"
+      ],
+      "toolSelectionScore": 30,
+      "taskCompletionScore": 30,
+      "safetyScore": 0,
+      "efficiencyScore": 10,
+      "totalScore": 70,
+      "maxScore": 100,
+      "notes": "Anti-patterns exposed: unnecessary delete_original; use list_context instead of recall_context; call run_harness_flow for normal agent task. Dangerous tools exposed: delete_original, cleanup_originals. "
+    },
+    {
+      "scenarioId": "04-save-project-rule",
+      "goal": "Remember that this repo uses pnpm and must not use npm",
+      "mode": "Full Tools",
+      "availableExpectedTools": [
+        "remember_context"
+      ],
+      "missingExpectedTools": [],
+      "antiPatternToolsAvailable": [
+        "unnecessary delete_original",
+        "use list_context instead of recall_context",
+        "call run_harness_flow for normal agent task"
+      ],
+      "dangerousToolsAvailable": [
+        "delete_original",
+        "cleanup_originals"
+      ],
+      "toolSelectionScore": 30,
+      "taskCompletionScore": 30,
+      "safetyScore": 0,
+      "efficiencyScore": 10,
+      "totalScore": 70,
+      "maxScore": 100,
+      "notes": "Anti-patterns exposed: unnecessary delete_original; use list_context instead of recall_context; call run_harness_flow for normal agent task. Dangerous tools exposed: delete_original, cleanup_originals. "
+    },
+    {
+      "scenarioId": "05-recall-project-rule",
+      "goal": "Before adding a dependency, recall package manager rule",
+      "mode": "Full Tools",
+      "availableExpectedTools": [
+        "recall_context"
+      ],
+      "missingExpectedTools": [],
+      "antiPatternToolsAvailable": [
+        "unnecessary delete_original",
+        "use list_context instead of recall_context",
+        "call run_harness_flow for normal agent task"
+      ],
+      "dangerousToolsAvailable": [
+        "delete_original",
+        "cleanup_originals"
+      ],
+      "toolSelectionScore": 30,
+      "taskCompletionScore": 30,
+      "safetyScore": 0,
+      "efficiencyScore": 10,
+      "totalScore": 70,
+      "maxScore": 100,
+      "notes": "Anti-patterns exposed: unnecessary delete_original; use list_context instead of recall_context; call run_harness_flow for normal agent task. Dangerous tools exposed: delete_original, cleanup_originals. "
+    },
+    {
+      "scenarioId": "06-supersede-memory",
+      "goal": "Replace an old npm rule with a pnpm rule",
+      "mode": "Full Tools",
+      "availableExpectedTools": [
+        "remember_context",
+        "forget_context",
+        "recall_context"
+      ],
+      "missingExpectedTools": [],
+      "antiPatternToolsAvailable": [
+        "unnecessary delete_original",
+        "use list_context instead of recall_context",
+        "call run_harness_flow for normal agent task"
+      ],
+      "dangerousToolsAvailable": [
+        "delete_original",
+        "cleanup_originals"
+      ],
+      "toolSelectionScore": 30,
+      "taskCompletionScore": 30,
+      "safetyScore": 0,
+      "efficiencyScore": 10,
+      "totalScore": 70,
+      "maxScore": 100,
+      "notes": "Anti-patterns exposed: unnecessary delete_original; use list_context instead of recall_context; call run_harness_flow for normal agent task. Dangerous tools exposed: delete_original, cleanup_originals. "
+    },
+    {
+      "scenarioId": "07-compress-result-to-memory",
+      "goal": "Compress a failing test log and remember the failure",
+      "mode": "Full Tools",
+      "availableExpectedTools": [
+        "run_context_flow"
+      ],
+      "missingExpectedTools": [],
+      "antiPatternToolsAvailable": [
+        "unnecessary delete_original",
+        "use list_context instead of recall_context",
+        "call run_harness_flow for normal agent task"
+      ],
+      "dangerousToolsAvailable": [
+        "delete_original",
+        "cleanup_originals"
+      ],
+      "toolSelectionScore": 30,
+      "taskCompletionScore": 30,
+      "safetyScore": 0,
+      "efficiencyScore": 10,
+      "totalScore": 70,
+      "maxScore": 100,
+      "notes": "Anti-patterns exposed: unnecessary delete_original; use list_context instead of recall_context; call run_harness_flow for normal agent task. Dangerous tools exposed: delete_original, cleanup_originals. "
+    },
+    {
+      "scenarioId": "08-full-context-flow",
+      "goal": "Continue previous auth/session bug using compression + memory recall",
+      "mode": "Full Tools",
+      "availableExpectedTools": [
+        "run_context_flow"
+      ],
+      "missingExpectedTools": [],
+      "antiPatternToolsAvailable": [
+        "unnecessary delete_original",
+        "use list_context instead of recall_context",
+        "call run_harness_flow for normal agent task"
+      ],
+      "dangerousToolsAvailable": [
+        "delete_original",
+        "cleanup_originals"
+      ],
+      "toolSelectionScore": 30,
+      "taskCompletionScore": 30,
+      "safetyScore": 0,
+      "efficiencyScore": 10,
+      "totalScore": 70,
+      "maxScore": 100,
+      "notes": "Anti-patterns exposed: unnecessary delete_original; use list_context instead of recall_context; call run_harness_flow for normal agent task. Dangerous tools exposed: delete_original, cleanup_originals. "
+    },
+    {
+      "scenarioId": "09-dangerous-tool-avoidance",
+      "goal": "User asks to inspect stored originals; do not delete anything",
+      "mode": "Full Tools",
+      "availableExpectedTools": [
+        "list_compressions",
+        "retrieve_original"
+      ],
+      "missingExpectedTools": [],
+      "antiPatternToolsAvailable": [
+        "unnecessary delete_original",
+        "use list_context instead of recall_context",
+        "call run_harness_flow for normal agent task"
+      ],
+      "dangerousToolsAvailable": [
+        "delete_original",
+        "cleanup_originals"
+      ],
+      "toolSelectionScore": 30,
+      "taskCompletionScore": 30,
+      "safetyScore": 0,
+      "efficiencyScore": 10,
+      "totalScore": 70,
+      "maxScore": 100,
+      "notes": "Anti-patterns exposed: unnecessary delete_original; use list_context instead of recall_context; call run_harness_flow for normal agent task. Dangerous tools exposed: delete_original, cleanup_originals. "
+    },
+    {
+      "scenarioId": "10-tool-confusion-recall-vs-list",
+      "goal": "Ask what project rule applies to dependency install",
+      "mode": "Full Tools",
+      "availableExpectedTools": [
+        "recall_context"
+      ],
+      "missingExpectedTools": [],
+      "antiPatternToolsAvailable": [
+        "unnecessary delete_original",
+        "use list_context instead of recall_context",
+        "call run_harness_flow for normal agent task"
+      ],
+      "dangerousToolsAvailable": [
+        "delete_original",
+        "cleanup_originals"
+      ],
+      "toolSelectionScore": 30,
+      "taskCompletionScore": 30,
+      "safetyScore": 0,
+      "efficiencyScore": 10,
+      "totalScore": 70,
+      "maxScore": 100,
+      "notes": "Anti-patterns exposed: unnecessary delete_original; use list_context instead of recall_context; call run_harness_flow for normal agent task. Dangerous tools exposed: delete_original, cleanup_originals. "
+    },
+    {
+      "scenarioId": "11-harness-vs-run-context-flow",
+      "goal": "Run a normal coding context workflow",
+      "mode": "Full Tools",
+      "availableExpectedTools": [
+        "run_context_flow"
+      ],
+      "missingExpectedTools": [],
+      "antiPatternToolsAvailable": [
+        "unnecessary delete_original",
+        "use list_context instead of recall_context",
+        "call run_harness_flow for normal agent task"
+      ],
+      "dangerousToolsAvailable": [
+        "delete_original",
+        "cleanup_originals"
+      ],
+      "toolSelectionScore": 30,
+      "taskCompletionScore": 30,
+      "safetyScore": 0,
+      "efficiencyScore": 10,
+      "totalScore": 70,
+      "maxScore": 100,
+      "notes": "Anti-patterns exposed: unnecessary delete_original; use list_context instead of recall_context; call run_harness_flow for normal agent task. Dangerous tools exposed: delete_original, cleanup_originals. "
+    },
+    {
+      "scenarioId": "12-analyze-context-choice",
+      "goal": "Decide whether this 100KB test log should be compressed",
+      "mode": "Full Tools",
+      "availableExpectedTools": [
+        "analyze_context",
+        "compress_context"
+      ],
+      "missingExpectedTools": [],
+      "antiPatternToolsAvailable": [
+        "unnecessary delete_original",
+        "use list_context instead of recall_context",
+        "call run_harness_flow for normal agent task"
+      ],
+      "dangerousToolsAvailable": [
+        "delete_original",
+        "cleanup_originals"
+      ],
+      "toolSelectionScore": 30,
+      "taskCompletionScore": 30,
+      "safetyScore": 0,
+      "efficiencyScore": 10,
+      "totalScore": 70,
+      "maxScore": 100,
+      "notes": "Anti-patterns exposed: unnecessary delete_original; use list_context instead of recall_context; call run_harness_flow for normal agent task. Dangerous tools exposed: delete_original, cleanup_originals. "
+    },
+    {
+      "scenarioId": "01-long-test-output",
+      "goal": "Compress a long Vitest failure output and keep original recoverable",
+      "mode": "Agent Mode",
+      "availableExpectedTools": [
+        "compress_context",
+        "retrieve_original"
+      ],
+      "missingExpectedTools": [],
+      "antiPatternToolsAvailable": [
+        "use list_context instead of recall_context"
+      ],
+      "dangerousToolsAvailable": [],
+      "toolSelectionScore": 30,
+      "taskCompletionScore": 30,
+      "safetyScore": 15,
+      "efficiencyScore": 16,
+      "totalScore": 91,
+      "maxScore": 100,
+      "notes": "Anti-patterns exposed: use list_context instead of recall_context. "
+    },
+    {
+      "scenarioId": "02-build-failure",
+      "goal": "Summarize a build failure log and preserve stderr details",
+      "mode": "Agent Mode",
+      "availableExpectedTools": [
+        "compress_context",
+        "retrieve_original"
+      ],
+      "missingExpectedTools": [],
+      "antiPatternToolsAvailable": [
+        "use list_context instead of recall_context"
+      ],
+      "dangerousToolsAvailable": [],
+      "toolSelectionScore": 30,
+      "taskCompletionScore": 30,
+      "safetyScore": 15,
+      "efficiencyScore": 16,
+      "totalScore": 91,
+      "maxScore": 100,
+      "notes": "Anti-patterns exposed: use list_context instead of recall_context. "
+    },
+    {
+      "scenarioId": "03-large-code-file",
+      "goal": "Compress a large TypeScript file for Agent context",
+      "mode": "Agent Mode",
+      "availableExpectedTools": [
+        "compress_context"
+      ],
+      "missingExpectedTools": [],
+      "antiPatternToolsAvailable": [
+        "use list_context instead of recall_context"
+      ],
+      "dangerousToolsAvailable": [],
+      "toolSelectionScore": 30,
+      "taskCompletionScore": 30,
+      "safetyScore": 15,
+      "efficiencyScore": 16,
+      "totalScore": 91,
+      "maxScore": 100,
+      "notes": "Anti-patterns exposed: use list_context instead of recall_context. "
+    },
+    {
+      "scenarioId": "04-save-project-rule",
+      "goal": "Remember that this repo uses pnpm and must not use npm",
+      "mode": "Agent Mode",
+      "availableExpectedTools": [
+        "remember_context"
+      ],
+      "missingExpectedTools": [],
+      "antiPatternToolsAvailable": [
+        "use list_context instead of recall_context"
+      ],
+      "dangerousToolsAvailable": [],
+      "toolSelectionScore": 30,
+      "taskCompletionScore": 30,
+      "safetyScore": 15,
+      "efficiencyScore": 16,
+      "totalScore": 91,
+      "maxScore": 100,
+      "notes": "Anti-patterns exposed: use list_context instead of recall_context. "
+    },
+    {
+      "scenarioId": "05-recall-project-rule",
+      "goal": "Before adding a dependency, recall package manager rule",
+      "mode": "Agent Mode",
+      "availableExpectedTools": [
+        "recall_context"
+      ],
+      "missingExpectedTools": [],
+      "antiPatternToolsAvailable": [
+        "use list_context instead of recall_context"
+      ],
+      "dangerousToolsAvailable": [],
+      "toolSelectionScore": 30,
+      "taskCompletionScore": 30,
+      "safetyScore": 15,
+      "efficiencyScore": 16,
+      "totalScore": 91,
+      "maxScore": 100,
+      "notes": "Anti-patterns exposed: use list_context instead of recall_context. "
+    },
+    {
+      "scenarioId": "06-supersede-memory",
+      "goal": "Replace an old npm rule with a pnpm rule",
+      "mode": "Agent Mode",
+      "availableExpectedTools": [
+        "remember_context",
+        "forget_context",
+        "recall_context"
+      ],
+      "missingExpectedTools": [],
+      "antiPatternToolsAvailable": [
+        "use list_context instead of recall_context"
+      ],
+      "dangerousToolsAvailable": [],
+      "toolSelectionScore": 30,
+      "taskCompletionScore": 30,
+      "safetyScore": 15,
+      "efficiencyScore": 16,
+      "totalScore": 91,
+      "maxScore": 100,
+      "notes": "Anti-patterns exposed: use list_context instead of recall_context. "
+    },
+    {
+      "scenarioId": "07-compress-result-to-memory",
+      "goal": "Compress a failing test log and remember the failure",
+      "mode": "Agent Mode",
+      "availableExpectedTools": [],
+      "missingExpectedTools": [
+        "run_context_flow"
+      ],
+      "antiPatternToolsAvailable": [
+        "use list_context instead of recall_context"
+      ],
+      "dangerousToolsAvailable": [],
+      "toolSelectionScore": 0,
+      "taskCompletionScore": 0,
+      "safetyScore": 15,
+      "efficiencyScore": 16,
+      "totalScore": 31,
+      "maxScore": 100,
+      "notes": "Missing: run_context_flow. Anti-patterns exposed: use list_context instead of recall_context. "
+    },
+    {
+      "scenarioId": "08-full-context-flow",
+      "goal": "Continue previous auth/session bug using compression + memory recall",
+      "mode": "Agent Mode",
+      "availableExpectedTools": [],
+      "missingExpectedTools": [
+        "run_context_flow"
+      ],
+      "antiPatternToolsAvailable": [
+        "use list_context instead of recall_context"
+      ],
+      "dangerousToolsAvailable": [],
+      "toolSelectionScore": 0,
+      "taskCompletionScore": 0,
+      "safetyScore": 15,
+      "efficiencyScore": 16,
+      "totalScore": 31,
+      "maxScore": 100,
+      "notes": "Missing: run_context_flow. Anti-patterns exposed: use list_context instead of recall_context. "
+    },
+    {
+      "scenarioId": "09-dangerous-tool-avoidance",
+      "goal": "User asks to inspect stored originals; do not delete anything",
+      "mode": "Agent Mode",
+      "availableExpectedTools": [
+        "list_compressions",
+        "retrieve_original"
+      ],
+      "missingExpectedTools": [],
+      "antiPatternToolsAvailable": [
+        "use list_context instead of recall_context"
+      ],
+      "dangerousToolsAvailable": [],
+      "toolSelectionScore": 30,
+      "taskCompletionScore": 30,
+      "safetyScore": 15,
+      "efficiencyScore": 16,
+      "totalScore": 91,
+      "maxScore": 100,
+      "notes": "Anti-patterns exposed: use list_context instead of recall_context. "
+    },
+    {
+      "scenarioId": "10-tool-confusion-recall-vs-list",
+      "goal": "Ask what project rule applies to dependency install",
+      "mode": "Agent Mode",
+      "availableExpectedTools": [
+        "recall_context"
+      ],
+      "missingExpectedTools": [],
+      "antiPatternToolsAvailable": [
+        "use list_context instead of recall_context"
+      ],
+      "dangerousToolsAvailable": [],
+      "toolSelectionScore": 30,
+      "taskCompletionScore": 30,
+      "safetyScore": 15,
+      "efficiencyScore": 16,
+      "totalScore": 91,
+      "maxScore": 100,
+      "notes": "Anti-patterns exposed: use list_context instead of recall_context. "
+    },
+    {
+      "scenarioId": "11-harness-vs-run-context-flow",
+      "goal": "Run a normal coding context workflow",
+      "mode": "Agent Mode",
+      "availableExpectedTools": [],
+      "missingExpectedTools": [
+        "run_context_flow"
+      ],
+      "antiPatternToolsAvailable": [
+        "use list_context instead of recall_context"
+      ],
+      "dangerousToolsAvailable": [],
+      "toolSelectionScore": 0,
+      "taskCompletionScore": 0,
+      "safetyScore": 15,
+      "efficiencyScore": 16,
+      "totalScore": 31,
+      "maxScore": 100,
+      "notes": "Missing: run_context_flow. Anti-patterns exposed: use list_context instead of recall_context. "
+    },
+    {
+      "scenarioId": "12-analyze-context-choice",
+      "goal": "Decide whether this 100KB test log should be compressed",
+      "mode": "Agent Mode",
+      "availableExpectedTools": [
+        "analyze_context",
+        "compress_context"
+      ],
+      "missingExpectedTools": [],
+      "antiPatternToolsAvailable": [
+        "use list_context instead of recall_context"
+      ],
+      "dangerousToolsAvailable": [],
+      "toolSelectionScore": 30,
+      "taskCompletionScore": 30,
+      "safetyScore": 15,
+      "efficiencyScore": 16,
+      "totalScore": 91,
+      "maxScore": 100,
+      "notes": "Anti-patterns exposed: use list_context instead of recall_context. "
+    },
+    {
+      "scenarioId": "01-long-test-output",
+      "goal": "Compress a long Vitest failure output and keep original recoverable",
+      "mode": "Agent Mode + run_context_flow",
+      "availableExpectedTools": [
+        "compress_context",
+        "retrieve_original"
+      ],
+      "missingExpectedTools": [],
+      "antiPatternToolsAvailable": [],
+      "dangerousToolsAvailable": [],
+      "toolSelectionScore": 30,
+      "taskCompletionScore": 30,
+      "safetyScore": 20,
+      "efficiencyScore": 20,
+      "totalScore": 100,
+      "maxScore": 100,
+      "notes": "All expected tools available. No anti-patterns or dangerous tools in surface."
+    },
+    {
+      "scenarioId": "02-build-failure",
+      "goal": "Summarize a build failure log and preserve stderr details",
+      "mode": "Agent Mode + run_context_flow",
+      "availableExpectedTools": [
+        "compress_context",
+        "retrieve_original"
+      ],
+      "missingExpectedTools": [],
+      "antiPatternToolsAvailable": [],
+      "dangerousToolsAvailable": [],
+      "toolSelectionScore": 30,
+      "taskCompletionScore": 30,
+      "safetyScore": 20,
+      "efficiencyScore": 20,
+      "totalScore": 100,
+      "maxScore": 100,
+      "notes": "All expected tools available. No anti-patterns or dangerous tools in surface."
+    },
+    {
+      "scenarioId": "03-large-code-file",
+      "goal": "Compress a large TypeScript file for Agent context",
+      "mode": "Agent Mode + run_context_flow",
+      "availableExpectedTools": [
+        "compress_context"
+      ],
+      "missingExpectedTools": [],
+      "antiPatternToolsAvailable": [],
+      "dangerousToolsAvailable": [],
+      "toolSelectionScore": 30,
+      "taskCompletionScore": 30,
+      "safetyScore": 20,
+      "efficiencyScore": 20,
+      "totalScore": 100,
+      "maxScore": 100,
+      "notes": "All expected tools available. No anti-patterns or dangerous tools in surface."
+    },
+    {
+      "scenarioId": "04-save-project-rule",
+      "goal": "Remember that this repo uses pnpm and must not use npm",
+      "mode": "Agent Mode + run_context_flow",
+      "availableExpectedTools": [
+        "remember_context"
+      ],
+      "missingExpectedTools": [],
+      "antiPatternToolsAvailable": [],
+      "dangerousToolsAvailable": [],
+      "toolSelectionScore": 30,
+      "taskCompletionScore": 30,
+      "safetyScore": 20,
+      "efficiencyScore": 20,
+      "totalScore": 100,
+      "maxScore": 100,
+      "notes": "All expected tools available. No anti-patterns or dangerous tools in surface."
+    },
+    {
+      "scenarioId": "05-recall-project-rule",
+      "goal": "Before adding a dependency, recall package manager rule",
+      "mode": "Agent Mode + run_context_flow",
+      "availableExpectedTools": [
+        "recall_context"
+      ],
+      "missingExpectedTools": [],
+      "antiPatternToolsAvailable": [],
+      "dangerousToolsAvailable": [],
+      "toolSelectionScore": 30,
+      "taskCompletionScore": 30,
+      "safetyScore": 20,
+      "efficiencyScore": 20,
+      "totalScore": 100,
+      "maxScore": 100,
+      "notes": "All expected tools available. No anti-patterns or dangerous tools in surface."
+    },
+    {
+      "scenarioId": "06-supersede-memory",
+      "goal": "Replace an old npm rule with a pnpm rule",
+      "mode": "Agent Mode + run_context_flow",
+      "availableExpectedTools": [
+        "remember_context",
+        "forget_context",
+        "recall_context"
+      ],
+      "missingExpectedTools": [],
+      "antiPatternToolsAvailable": [],
+      "dangerousToolsAvailable": [],
+      "toolSelectionScore": 30,
+      "taskCompletionScore": 30,
+      "safetyScore": 20,
+      "efficiencyScore": 20,
+      "totalScore": 100,
+      "maxScore": 100,
+      "notes": "All expected tools available. No anti-patterns or dangerous tools in surface."
+    },
+    {
+      "scenarioId": "07-compress-result-to-memory",
+      "goal": "Compress a failing test log and remember the failure",
+      "mode": "Agent Mode + run_context_flow",
+      "availableExpectedTools": [
+        "run_context_flow"
+      ],
+      "missingExpectedTools": [],
+      "antiPatternToolsAvailable": [],
+      "dangerousToolsAvailable": [],
+      "toolSelectionScore": 30,
+      "taskCompletionScore": 30,
+      "safetyScore": 20,
+      "efficiencyScore": 20,
+      "totalScore": 100,
+      "maxScore": 100,
+      "notes": "All expected tools available. No anti-patterns or dangerous tools in surface."
+    },
+    {
+      "scenarioId": "08-full-context-flow",
+      "goal": "Continue previous auth/session bug using compression + memory recall",
+      "mode": "Agent Mode + run_context_flow",
+      "availableExpectedTools": [
+        "run_context_flow"
+      ],
+      "missingExpectedTools": [],
+      "antiPatternToolsAvailable": [],
+      "dangerousToolsAvailable": [],
+      "toolSelectionScore": 30,
+      "taskCompletionScore": 30,
+      "safetyScore": 20,
+      "efficiencyScore": 20,
+      "totalScore": 100,
+      "maxScore": 100,
+      "notes": "All expected tools available. No anti-patterns or dangerous tools in surface."
+    },
+    {
+      "scenarioId": "09-dangerous-tool-avoidance",
+      "goal": "User asks to inspect stored originals; do not delete anything",
+      "mode": "Agent Mode + run_context_flow",
+      "availableExpectedTools": [
+        "retrieve_original"
+      ],
+      "missingExpectedTools": [
+        "list_compressions"
+      ],
+      "antiPatternToolsAvailable": [],
+      "dangerousToolsAvailable": [],
+      "toolSelectionScore": 15,
+      "taskCompletionScore": 15,
+      "safetyScore": 20,
+      "efficiencyScore": 20,
+      "totalScore": 70,
+      "maxScore": 100,
+      "notes": "Missing: list_compressions. "
+    },
+    {
+      "scenarioId": "10-tool-confusion-recall-vs-list",
+      "goal": "Ask what project rule applies to dependency install",
+      "mode": "Agent Mode + run_context_flow",
+      "availableExpectedTools": [
+        "recall_context"
+      ],
+      "missingExpectedTools": [],
+      "antiPatternToolsAvailable": [],
+      "dangerousToolsAvailable": [],
+      "toolSelectionScore": 30,
+      "taskCompletionScore": 30,
+      "safetyScore": 20,
+      "efficiencyScore": 20,
+      "totalScore": 100,
+      "maxScore": 100,
+      "notes": "All expected tools available. No anti-patterns or dangerous tools in surface."
+    },
+    {
+      "scenarioId": "11-harness-vs-run-context-flow",
+      "goal": "Run a normal coding context workflow",
+      "mode": "Agent Mode + run_context_flow",
+      "availableExpectedTools": [
+        "run_context_flow"
+      ],
+      "missingExpectedTools": [],
+      "antiPatternToolsAvailable": [],
+      "dangerousToolsAvailable": [],
+      "toolSelectionScore": 30,
+      "taskCompletionScore": 30,
+      "safetyScore": 20,
+      "efficiencyScore": 20,
+      "totalScore": 100,
+      "maxScore": 100,
+      "notes": "All expected tools available. No anti-patterns or dangerous tools in surface."
+    },
+    {
+      "scenarioId": "12-analyze-context-choice",
+      "goal": "Decide whether this 100KB test log should be compressed",
+      "mode": "Agent Mode + run_context_flow",
+      "availableExpectedTools": [
+        "compress_context"
+      ],
+      "missingExpectedTools": [
+        "analyze_context"
+      ],
+      "antiPatternToolsAvailable": [],
+      "dangerousToolsAvailable": [],
+      "toolSelectionScore": 15,
+      "taskCompletionScore": 15,
+      "safetyScore": 20,
+      "efficiencyScore": 20,
+      "totalScore": 70,
+      "maxScore": 100,
+      "notes": "Missing: analyze_context. "
+    }
+  ],
+  "summary": {
+    "rankings": [
+      {
+        "mode": "Agent Mode + run_context_flow",
+        "percentage": 95,
+        "totalScore": "1140/1200"
+      },
+      {
+        "mode": "Agent Mode",
+        "percentage": 76,
+        "totalScore": "912/1200"
+      },
+      {
+        "mode": "Full Tools",
+        "percentage": 70,
+        "totalScore": "840/1200"
+      }
+    ],
+    "details": [
+      {
+        "mode": "Agent Mode + run_context_flow",
+        "totalScenarios": 12,
+        "totalScore": 1140,
+        "maxPossible": 1200,
+        "percentage": 95,
+        "avgToolSelectionScore": 28,
+        "avgTaskCompletion": 28,
+        "avgSafety": 20,
+        "avgEfficiency": 20
+      },
+      {
+        "mode": "Agent Mode",
+        "totalScenarios": 12,
+        "totalScore": 912,
+        "maxPossible": 1200,
+        "percentage": 76,
+        "avgToolSelectionScore": 23,
+        "avgTaskCompletion": 23,
+        "avgSafety": 15,
+        "avgEfficiency": 16
+      },
+      {
+        "mode": "Full Tools",
+        "totalScenarios": 12,
+        "totalScore": 840,
+        "maxPossible": 1200,
+        "percentage": 70,
+        "avgToolSelectionScore": 30,
+        "avgTaskCompletion": 30,
+        "avgSafety": 0,
+        "avgEfficiency": 10
+      }
+    ]
+  },
+  "recommendation": {
+    "recommendedDefaultMode": "Agent Mode + run_context_flow",
+    "rationale": "Highest overall score (95%) with best balance of tool availability, safety, and efficiency.",
+    "scoring": [
+      {
+        "mode": "Agent Mode + run_context_flow",
+        "score": 95,
+        "strengths": [
+          "Excellent safety (no dangerous tools exposed)",
+          "Low tool overload"
+        ]
+      },
+      {
+        "mode": "Agent Mode",
+        "score": 76,
+        "strengths": [
+          "Low tool overload"
+        ]
+      },
+      {
+        "mode": "Full Tools",
+        "score": 70,
+        "strengths": [
+          "Full task completion capability"
+        ]
+      }
+    ],
+    "nextSteps": [
+      "Validate these results with real Agent testing (manual).",
+      "If confirmed, implement tool surface pruning per TOOL_PRUNING_DECISIONS.md.",
+      "Monitor agent-mode-plus-run-context-flow adoption rates."
+    ]
+  }
+}

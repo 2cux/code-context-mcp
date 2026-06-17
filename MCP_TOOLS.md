@@ -1,6 +1,6 @@
 # CodeContext MCP — Tool Reference
 
-Complete reference for all 13 MCP tools. Every tool is scope-isolated and generates audit receipts.
+Complete reference for all 18 MCP tools. Every tool is scope-isolated and generates audit receipts.
 
 ---
 
@@ -18,10 +18,17 @@ Complete reference for all 13 MCP tools. Every tool is scope-isolated and genera
   - [`recall_context`](#recall_context)
   - [`forget_context`](#forget_context)
   - [`list_context`](#list_context)
+- [Unified Tools](#unified-tools)
+  - [`run_context_flow`](#run_context_flow)
 - [Analysis & Failure Tools](#analysis--failure-tools)
   - [`analyze_context`](#analyze_context)
   - [`list_failures`](#list_failures)
   - [`failure_stats`](#failure_stats)
+- [Harness Tools](#harness-tools) (dev/test only)
+  - [`list_harness_flows`](#list_harness_flows)
+  - [`check_harness_flow`](#check_harness_flow)
+  - [`run_harness_flow`](#run_harness_flow)
+  - [`get_harness_run`](#get_harness_run)
 
 ---
 
@@ -510,6 +517,58 @@ Note: unlike `recall_context`, `list_context` returns all statuses by default (u
 
 ---
 
+## Unified Tools
+
+### `run_context_flow`
+
+Unified agent-facing entry point. Wraps compression, memory, and recall into a single call — reducing tool-selection overhead for AI coding agents.
+
+**Three flow modes:**
+- `compression` — compress content, optionally save memory and recall
+- `memory` — remember and/or recall project context
+- `full` — compress → remember → recall complete chain
+
+**Input:**
+
+| Field | Type | Required | Default | Description |
+|---|---|---|---|---|
+| `flow` | `string` | **Yes** | — | `"compression"`, `"memory"`, or `"full"`. |
+| `scopeId` | `string` | No | auto-resolved | Scope id from `current_scope`. |
+| `goal` | `string` | No | — | What the agent is trying to accomplish. |
+| `content` | `string` | * | — | Required for compression/full flows. |
+| `contentType` | `string` | No | auto-detected | Content type hint. |
+| `query` | `string` | No | — | Search query for recall step. |
+| `options` | `object` | No | — | `{ keepOriginal, includeRecall, saveMemory, maxTokens }` |
+
+**Output (full flow):**
+
+```json
+{
+  "flow": "full",
+  "status": "ok",
+  "summary": "Compressed to CCR ccr_...; saved 28986 tokens; 3 memories processed",
+  "runId": "flow_lz3abc_1a2b3c4d",
+  "receiptId": "rcp_...",
+  "ccrId": "ccr_...",
+  "originalRef": "orig_...",
+  "compressedContent": "...",
+  "tokensBefore": 29250,
+  "tokensAfter": 264,
+  "tokensSaved": 28986,
+  "compressionRatio": 0.99,
+  "memories": [{ "id": "mem_...", "type": "file_summary", "status": "active" }],
+  "profile": { "static": [...], "dynamic": [...] },
+  "relatedCompressedContexts": [...],
+  "warnings": []
+}
+```
+
+All individual operations are fail-open — partial failures are reported with `status: "partial"` and warnings.
+
+**Architecture:** `run_context_flow` reuses the same domain services as individual tools (CompressedStore, MemoryService, RecallEngine, ProfileService) without duplicating business logic. See `src/mcp/tools/runContextFlow.ts` and shared handler registry at `src/mcp/toolRegistry.ts`.
+
+---
+
 ## Analysis & Failure Tools
 
 ### `analyze_context`
@@ -542,6 +601,42 @@ Return aggregate failure statistics for the current scope so agents can spot rec
 - Counts by event type
 - Counts by operation
 - Scope id for the analyzed repository
+
+---
+
+## Harness Tools
+
+> ⚠️ **Dev/Test mode only.** These tools are not exposed in default agent mode.
+> Set `MCP_TOOL_MODE=dev` or `MCP_TOOL_MODE=test` to access them.
+
+Harness tools manage CodeContext's internal test infrastructure. They inspect and execute Harness business flows for CI, smoke testing, and validation.
+
+### `list_harness_flows`
+
+List all registered Harness business-flow manifests. Returns flow id, name, description, phases, covered tools, and input schema.
+
+**Input:** `{ tag?: string, capability?: string }` (optional filters)
+
+### `check_harness_flow`
+
+Validate a harness flow manifest without executing it. Checks structure, registration, input schema conformance, and artifact declarations.
+
+**Input:** `{ flowId: string, exampleInput?: object }`
+
+### `run_harness_flow`
+
+Execute a registered Harness business flow. Runs the full pipeline: validate → setup → run → check → artifacts → receipt. Returns runId, status, and produced artifacts.
+
+**Input:** `{ flowId: string, input?: object }`
+
+### `get_harness_run`
+
+Retrieve the full state of a previous harness run by runId. Returns checkpoint results, artifacts, event logs, and associated receipts.
+
+**Input:** `{ runId: string }`
+
+**7 registered flows:**
+`compression-flow`, `originals-flow`, `memory-flow`, `profile-flow`, `full-context-flow`, `mcp-tools-smoke-flow`, `cli-smoke-flow`
 
 ---
 
