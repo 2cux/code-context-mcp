@@ -1,12 +1,12 @@
 {
   "summary": {
-    "totalCompressions": 456,
-    "totalEstimatedTokensSaved": 569580,
-    "averageCompressionRatio": 0.04033991228070175,
-    "cacheHits": 364,
-    "totalRetrieves": 370,
-    "memoriesSaved": 1118,
-    "memoriesRecalled": 760,
+    "totalCompressions": 457,
+    "totalEstimatedTokensSaved": 575442,
+    "averageCompressionRatio": 0.04214354485776805,
+    "cacheHits": 365,
+    "totalRetrieves": 371,
+    "memoriesSaved": 1119,
+    "memoriesRecalled": 761,
     "memoriesForgotten": 272
   },
   "topCompressions": [
@@ -52,6 +52,13 @@
     }
   ],
   "recentMemories": [
+    {
+      "memoryId": "mem_mr6d3vx2_e1d5cc_000001",
+      "type": "project_rule",
+      "summary": "Project coding standards: pnpm, TypeScript strict, vitest, conventional commits",
+      "createdAt": "2026-07-04T12:52:26.582Z",
+      "status": "active"
+    },
     {
       "memoryId": "mem_mr6c6sv2_76a5d5_000015",
       "type": "decision",
@@ -112,18 +119,11 @@
       "type": "decision",
       "createdAt": "2026-07-04T12:26:23.026Z",
       "status": "active"
-    },
-    {
-      "memoryId": "mem_mr6c6d2x_703374_000003",
-      "type": "current_task",
-      "summary": "CLI dev",
-      "createdAt": "2026-07-04T12:26:22.521Z",
-      "status": "active"
     }
   ],
   "localFirstNote": {
-    "dataLocation": "Local SQLite database (.codecontext.db in project root)",
+    "dataLocation": "~/.code-context-mcp/code-context.sqlite",
     "noDataUploaded": true
   },
-  "generatedAt": "2026-07-04T12:29:15.779Z"
+  "generatedAt": "2026-07-04T12:53:03.407Z"
 }

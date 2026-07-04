@@ -629,7 +629,7 @@ export async function runRetrieve(originalRef: string, opts: RetrieveOpts): Prom
     const receipts = new ReceiptService(db);
 
     const offset = opts.offset ?? 0;
-    const limit = opts.limit ?? 10000;
+    const limit = opts.limit ?? undefined; // undefined means no limit (retrieve all)
 
     const result = store.retrieve(originalRef, scope.scopeId, { offset, limit });
 
@@ -1718,6 +1718,10 @@ export interface DemoReportData {
       originalRef: string;
       contentPreview: string;
       fullLength: number;
+      originalSizeBytes: number;
+      retrievedHash: string;
+      originalHash: string;
+      proofPassed: boolean;
       error?: string;
     };
   };
@@ -1781,6 +1785,10 @@ export async function runDemo(): Promise<CliResult> {
         originalRef: "",
         contentPreview: "",
         fullLength: 0,
+        originalSizeBytes: 0,
+        retrievedHash: "",
+        originalHash: "",
+        proofPassed: false,
       },
     },
   };
@@ -1870,13 +1878,27 @@ export async function runDemo(): Promise<CliResult> {
     try {
       report.steps.retrieve.originalRef = report.steps.compress.originalRef;
 
-      const retrieveResult = await runRetrieve(report.steps.compress.originalRef, {});
+      // Read original file to compute hash
+      const logContent = readFileSync(sampleLogPath, "utf-8");
+      report.steps.retrieve.originalSizeBytes = Buffer.byteLength(logContent, "utf-8");
+      report.steps.retrieve.originalHash = contentHash(logContent);
+
+      // Retrieve WITHOUT pagination to get full content
+      const retrieveResult = await runRetrieve(report.steps.compress.originalRef, {
+        offset: 0,
+        limit: undefined, // Retrieve all content
+      });
 
       if (retrieveResult.status === "ok") {
         const d = retrieveResult.data as Record<string, unknown>;
-        report.steps.retrieve.success = true;
         const content = (d.content as string) ?? "";
+
+        report.steps.retrieve.success = true;
         report.steps.retrieve.fullLength = content.length;
+        report.steps.retrieve.retrievedHash = contentHash(content);
+        report.steps.retrieve.proofPassed =
+          report.steps.retrieve.fullLength === logContent.length &&
+          report.steps.retrieve.retrievedHash === report.steps.retrieve.originalHash;
         report.steps.retrieve.contentPreview =
           content.length > 300 ? content.slice(0, 300) + "..." : content;
       } else {
@@ -1889,11 +1911,15 @@ export async function runDemo(): Promise<CliResult> {
     report.steps.retrieve.error = "Skipped: compression step did not produce an originalRef";
   }
 
-  // ---- Step 5: Generate markdown report ----
+  // ---- Step 5: Generate markdown and JSON reports ----
   try {
     mkdirSync(reportsDir, { recursive: true });
     const md = generateDemoReport(report, now);
-    writeFileSync(report.reportPath, md, "utf-8");
+    const mdPath = report.reportPath;
+    const jsonPath = mdPath.replace(/\.md$/, ".json");
+
+    writeFileSync(mdPath, md, "utf-8");
+    writeFileSync(jsonPath, JSON.stringify(report, null, 2), "utf-8");
   } catch (err) {
     return fail(
       `Failed to write report: ${err instanceof Error ? err.message : String(err)}`,
@@ -1902,6 +1928,7 @@ export async function runDemo(): Promise<CliResult> {
 
   return ok({
     reportPath: report.reportPath,
+    jsonPath: report.reportPath.replace(/\.md$/, ".json"),
     summary: {
       compress: report.steps.compress.success
         ? `${report.steps.compress.tokensSaved} tokens saved (${(report.steps.compress.compressionRatio * 100).toFixed(1)}% ratio)`

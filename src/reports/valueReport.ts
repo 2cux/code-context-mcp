@@ -137,7 +137,7 @@ export function buildValueReport(
 
   // ---- Local-first note ----
   const localFirstNote = {
-    dataLocation: "Local SQLite database (.codecontext.db in project root)",
+    dataLocation: "~/.code-context-mcp/code-context.sqlite",
     noDataUploaded: true,
   };
 

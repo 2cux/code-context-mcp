@@ -354,6 +354,9 @@ Every operation leaves an audit trail. For a complete walkthrough, see [DEMO.md]
 | [MCP_TOOLS.md](./MCP_TOOLS.md) | All 18 MCP tools — input/output, schemas, error handling |
 | [TOOL_SURFACE.md](./docs/TOOL_SURFACE.md) | Tool surface modes — agent (7), dev (18), test (18) |
 | [TOOL_INVENTORY.md](./docs/TOOL_INVENTORY.md) | Full 18-tool inventory with module, risk, and mode assignments |
+| [VALUE_REPORT.md](./docs/VALUE_REPORT.md) | Usage value report — token savings, compression stats, memory metrics |
+| [mcp-resources-and-prompts.md](./docs/mcp-resources-and-prompts.md) | MCP resources and prompts documentation |
+| [agent-resource-usage.md](./examples/agent-resource-usage.md) | Example: agent using MCP resources |
 | [PERFORMANCE.md](./docs/PERFORMANCE.md) | Performance guide: test tiers, memory guard, thresholds |
 | [HARNESS.md](./docs/14-harness.md) | Harness framework — flows, runner, adapters |
 | [USABILITY.md](./reports/usability/agent-usability-report.md) | Agent usability evaluation — 3-mode comparison |

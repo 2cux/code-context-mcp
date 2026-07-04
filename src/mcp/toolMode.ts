@@ -6,7 +6,7 @@
  * (see reports/usability/agent-usability-report.json):
  *
  *   agent  — 7 tools. Minimal safe surface for AI coding agents.
- *   dev    — 17 tools. Full inspection + debug (no dangerous tools).
+ *   dev    — 18 tools. Full inspection + debug, includes dangerous/admin tools.
  *   test   — 18 tools. All registered tools for schema/smoke/harness tests.
  *
  * Set via MCP_TOOL_MODE env var. Defaults to "agent".
@@ -86,7 +86,7 @@ export function isToolAllowed(toolName: string, mode: ToolMode): boolean {
 export function describeMode(mode: ToolMode): string {
   switch (mode) {
     case "agent": return "Agent mode — 7 tools, safe defaults for AI coding agents.";
-    case "dev":   return "Dev mode — 17 tools, full inspection and debug, no destructive operations.";
+    case "dev":   return "Dev mode — 18 tools, full inspection and debug, includes dangerous tools.";
     case "test":  return "Test mode — 18 tools, all registered MCP tools for schema/smoke/harness testing.";
   }
 }

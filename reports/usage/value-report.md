@@ -1,16 +1,16 @@
 # CodeContext Usage Value Report
 
-Generated: 2026-07-04T12:29:15.779Z
+Generated: 2026-07-04T12:53:03.407Z
 
 ## Summary
 
-- **Total Compressions**: 456
-- **Total Estimated Tokens Saved**: 569,580
+- **Total Compressions**: 457
+- **Total Estimated Tokens Saved**: 575,442
 - **Average Compression Ratio**: 0.04
-- **Cache Hits**: 364
-- **Total Retrieves**: 370
-- **Memories Saved**: 1118
-- **Memories Recalled**: 760
+- **Cache Hits**: 365
+- **Total Retrieves**: 371
+- **Memories Saved**: 1119
+- **Memories Recalled**: 761
 - **Memories Forgotten**: 272
 
 ## Top 5 Highest Token-Saving Compressions
@@ -27,6 +27,7 @@ Generated: 2026-07-04T12:29:15.779Z
 
 | Memory ID | Type | Summary | Created At |
 |-----------|------|---------|------------|
+| mem_mr6d3vx2… | project_rule | Project coding standards: pnpm, TypeScript strict,… | 2026-07-04T12:52:26 |
 | mem_mr6c6sv2… | decision | React 18 + TS | 2026-07-04T12:26:42 |
 | mem_mr6c6rr2… | project_rule | API v2 base URL | 2026-07-04T12:26:41 |
 | mem_mr6c6mzh… | current_task | Build CLI | 2026-07-04T12:26:35 |
@@ -36,11 +37,10 @@ Generated: 2026-07-04T12:29:15.779Z
 | mem_mr6c6f93… | project_rule | ESLint config | 2026-07-04T12:26:25 |
 | mem_mr6c6e6p… | project_rule | TypeScript strict mode | 2026-07-04T12:26:23 |
 | mem_mr6c6dgy… | decision | — | 2026-07-04T12:26:23 |
-| mem_mr6c6d2x… | current_task | CLI dev | 2026-07-04T12:26:22 |
 
 ## Local-First Data
 
-- **Data Location**: Local SQLite database (.codecontext.db in project root)
+- **Data Location**: ~/.code-context-mcp/code-context.sqlite
 - **No Data Uploaded**: ✓ All data stays local
 
 ---
