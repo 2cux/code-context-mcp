@@ -30,7 +30,7 @@ describe("promptHandlers", () => {
   });
 
   describe("getPrompt", () => {
-    it("should return project_context_brief with formatted text", () => {
+    it("should return project_context_brief with formatted text under 800 tokens", () => {
       const scope = resolveScope();
       const memoryService = new MemoryService(db);
 
@@ -61,13 +61,18 @@ describe("promptHandlers", () => {
 
       const text = result.messages[0]!.content.text;
       expect(text).toContain("# CodeContext Project Brief");
-      expect(text).toContain("## Scope");
-      expect(text).toContain("## Memory");
-      expect(text).toContain("## Compression");
-      expect(text).toContain("## Agent Tips");
+      expect(text).toContain("## Current Project");
+      expect(text).toContain("## Stats");
+      expect(text).toContain("## Available Tools");
+      expect(text).toContain("Local-first constraint");
       expect(text).toContain(scope.scopeId);
       expect(text).toContain("recall_context");
       expect(text).toContain("compress_context");
+      expect(text).toContain("forget_context");
+
+      // Estimate tokens (rough: ~4 chars per token)
+      const estimatedTokens = text.length / 4;
+      expect(estimatedTokens).toBeLessThan(1000);
     });
 
     it("should handle empty project gracefully", () => {
@@ -77,6 +82,7 @@ describe("promptHandlers", () => {
       expect(text).toContain("# CodeContext Project Brief");
       expect(text).toContain("Active memories: 0");
       expect(text).toContain("Compressed contexts: 0");
+      expect(text).toContain("Local-first constraint");
     });
 
     it("should throw error for unknown prompt", () => {

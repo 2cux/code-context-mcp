@@ -37,7 +37,7 @@ describe("resourceHandlers", () => {
   });
 
   describe("readResource", () => {
-    it("should return project-profile resource with scope and stats", () => {
+    it("should return project-profile resource with enhanced structure", () => {
       const scope = resolveScope();
       const memoryService = new MemoryService(db);
 
@@ -57,15 +57,20 @@ describe("resourceHandlers", () => {
       expect(result.contents[0]!.mimeType).toBe("application/json");
 
       const data = JSON.parse(result.contents[0]!.text);
-      expect(data).toHaveProperty("scope");
-      expect(data).toHaveProperty("memory");
-      expect(data).toHaveProperty("compression");
-      expect(data).toHaveProperty("hint");
-      expect(data.scope.scopeId).toBe(scope.scopeId);
-      expect(data.memory.total).toBeGreaterThanOrEqual(1);
+      expect(data).toHaveProperty("projectIdentity");
+      expect(data).toHaveProperty("stableProjectRules");
+      expect(data).toHaveProperty("recentActivity");
+      expect(data).toHaveProperty("importantMemories");
+      expect(data).toHaveProperty("memoryOverview");
+      expect(data).toHaveProperty("compressionOverview");
+      expect(data).toHaveProperty("agentGuidance");
+      expect(data.projectIdentity.scopeId).toBe(scope.scopeId);
+      expect(data.projectIdentity.note).toContain("Local-first");
+      expect(data.agentGuidance.availableTools).toHaveLength(5);
+      expect(data.memoryOverview.total).toBeGreaterThanOrEqual(1);
     });
 
-    it("should return project-stats resource with counts", () => {
+    it("should return project-stats resource with summary counts", () => {
       const scope = resolveScope();
       const memoryService = new MemoryService(db);
       const compressedStore = new CompressedStore(db);
@@ -85,12 +90,26 @@ describe("resourceHandlers", () => {
 
       const data = JSON.parse(result.contents[0]!.text);
       expect(data).toHaveProperty("scopeId");
-      expect(data).toHaveProperty("memory");
-      expect(data).toHaveProperty("compression");
-      expect(data).toHaveProperty("tokens");
+      expect(data).toHaveProperty("compressionCount");
+      expect(data).toHaveProperty("memoryCount");
+      expect(data).toHaveProperty("recoverableOriginalsCount");
+      expect(data).toHaveProperty("totalEstimatedTokensSaved");
+      expect(data).toHaveProperty("lastUpdated");
+      expect(data).toHaveProperty("detailedStats");
       expect(data.scopeId).toBe(scope.scopeId);
-      expect(data.memory.total).toBeGreaterThanOrEqual(1);
-      expect(data.memory.active).toBeGreaterThanOrEqual(1);
+      expect(data.memoryCount).toBeGreaterThanOrEqual(1);
+      expect(data.detailedStats.memory.total).toBeGreaterThanOrEqual(1);
+    });
+
+    it("should handle empty project gracefully", () => {
+      const result = readResource("codecontext://project-profile", { db });
+      const data = JSON.parse(result.contents[0]!.text);
+
+      expect(data.projectIdentity).toBeDefined();
+      expect(data.stableProjectRules).toHaveLength(0);
+      expect(data.recentActivity).toHaveLength(0);
+      expect(data.importantMemories).toHaveLength(0);
+      expect(data.memoryOverview.total).toBe(0);
     });
 
     it("should throw error for unknown resource URI", () => {

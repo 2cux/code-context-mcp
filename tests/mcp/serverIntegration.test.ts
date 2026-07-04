@@ -50,9 +50,9 @@ describe("MCP Server Integration — Resources and Prompts", () => {
       expect(result.contents).toHaveLength(1);
 
       const data = JSON.parse(result.contents[0]!.text);
-      expect(data.scope.scopeId).toBe(scope.scopeId);
-      expect(data.memory.total).toBeGreaterThanOrEqual(1);
-      expect(data.hint).toContain("recall_context");
+      expect(data.projectIdentity.scopeId).toBe(scope.scopeId);
+      expect(data.memoryOverview.total).toBeGreaterThanOrEqual(1);
+      expect(data.agentGuidance.availableTools).toBeDefined();
     });
 
     it("should read project-stats resource without agent tool call", () => {
@@ -61,9 +61,12 @@ describe("MCP Server Integration — Resources and Prompts", () => {
 
       const data = JSON.parse(result.contents[0]!.text);
       expect(data).toHaveProperty("scopeId");
-      expect(data).toHaveProperty("memory");
-      expect(data).toHaveProperty("compression");
-      expect(data).toHaveProperty("tokens");
+      expect(data).toHaveProperty("compressionCount");
+      expect(data).toHaveProperty("memoryCount");
+      expect(data).toHaveProperty("detailedStats");
+      expect(data.detailedStats).toHaveProperty("memory");
+      expect(data.detailedStats).toHaveProperty("compression");
+      expect(data.detailedStats).toHaveProperty("tokens");
     });
   });
 

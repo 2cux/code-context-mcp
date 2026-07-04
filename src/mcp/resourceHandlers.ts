@@ -84,11 +84,11 @@ function getProjectProfile(db: Database) {
   const memoryService = new MemoryService(db);
   const compressedStore = new CompressedStore(db);
 
-  // Recent active memories (top 5 by confidence)
+  // Recent active memories (top 10 by confidence)
   const recentMemories = memoryService.list({
     scopeId: scope.scopeId,
     status: ["active"],
-    limit: 5,
+    limit: 10,
     sortBy: "confidence",
     sortOrder: "desc",
   });
@@ -131,6 +131,7 @@ function getProjectProfile(db: Database) {
        json_object(
          'type', m.type,
          'summary', m.summary,
+         'content', m.content,
          'confidence', m.confidence,
          'createdAt', m.created_at
        )
@@ -145,34 +146,85 @@ function getProjectProfile(db: Database) {
 
   const topStaticFacts = staticFacts?.["json"] ? JSON.parse(staticFacts["json"] as string) : [];
 
+  // Recent activity (dynamic profile facts, top 3)
+  const recentActivity = queryOne(
+    db,
+    `SELECT json_group_array(
+       json_object(
+         'type', m.type,
+         'summary', m.summary,
+         'confidence', m.confidence,
+         'createdAt', m.created_at
+       )
+     ) as json
+     FROM profile_facts pf
+     JOIN memories m ON pf.source_memory_id = m.id
+     WHERE pf.scope_id = ? AND pf.layer = 'dynamic' AND m.status = 'active'
+     ORDER BY m.created_at DESC
+     LIMIT 3`,
+    [scope.scopeId],
+  );
+
+  const recentDynamicFacts = recentActivity?.["json"] ? JSON.parse(recentActivity["json"] as string) : [];
+
+  // Last updated timestamp
+  const lastUpdate = queryOne(
+    db,
+    `SELECT MAX(created_at) as last_updated FROM memories WHERE scope_id = ?`,
+    [scope.scopeId],
+  );
+
+  const lastUpdated = lastUpdate?.["last_updated"] as string | null;
+
   return {
-    scope: {
+    projectIdentity: {
       scopeId: scope.scopeId,
       scopeStrategy: scope.scopeStrategy,
       gitRoot: scope.gitRoot,
       remote: scope.remote,
       branch: scope.branch,
+      note: "Local-first storage. No project code, logs, or memory uploaded.",
     },
-    memory: {
+    stableProjectRules: topStaticFacts.map((f: { type: string; summary: string | null; content: string; confidence: number; createdAt: string }) => ({
+      type: f.type,
+      summary: f.summary || f.content.slice(0, 80),
+      confidence: f.confidence,
+      createdAt: f.createdAt,
+    })),
+    recentActivity: recentDynamicFacts.map((f: { type: string; summary: string | null; confidence: number; createdAt: string }) => ({
+      type: f.type,
+      summary: f.summary,
+      confidence: f.confidence,
+      createdAt: f.createdAt,
+    })),
+    importantMemories: recentMemories.items.slice(0, 5).map((m) => ({
+      type: m.type,
+      summary: m.summary || m.content.slice(0, 80),
+      confidence: m.confidence,
+      createdAt: m.createdAt,
+    })),
+    memoryOverview: {
       total: recentMemories.total,
       active: recentMemories.items.length,
       byType: memoryByType,
-      recentSummaries: recentMemories.items.map((m) => ({
-        type: m.type,
-        summary: m.summary,
-        confidence: m.confidence,
-      })),
     },
-    compression: {
+    compressionOverview: {
       totalCompressed: ccrCount,
       recoverableOriginals: originalCount,
       tokensSaved: tokenStats.totalTokensSaved,
       compressionRatio: tokenStats.averageCompressionRatio,
     },
-    staticProfile: {
-      topRules: topStaticFacts,
+    lastUpdated,
+    agentGuidance: {
+      availableTools: [
+        "recall_context - search project memory by query",
+        "compress_context - compress long content and save tokens",
+        "remember_context - save important project facts",
+        "list_context - list all memories",
+        "forget_context - remove outdated memories",
+      ],
+      localFirstNote: "All context is scoped to this repository. Do not upload project code or logs.",
     },
-    hint: "Agent: use recall_context to search project memory, compress_context to save tokens.",
   };
 }
 
@@ -209,28 +261,48 @@ function getProjectStats(db: Database) {
   );
   const originalCount = Number(originalCountRow?.["cnt"] ?? 0);
 
+  // Last updated timestamp
+  const lastUpdate = queryOne(
+    db,
+    `SELECT MAX(updated_at) as last_updated FROM (
+       SELECT MAX(created_at) as updated_at FROM memories WHERE scope_id = ?
+       UNION ALL
+       SELECT MAX(created_at) as updated_at FROM compressed_contexts WHERE scope_id = ?
+     )`,
+    [scope.scopeId, scope.scopeId],
+  );
+
+  const lastUpdated = lastUpdate?.["last_updated"] as string | null;
+
   return {
     scopeId: scope.scopeId,
-    memory: {
-      total,
-      active,
-      superseded,
-      forgotten,
-      expired,
-    },
-    compression: {
-      totalCCRs: compressedStore.count(scope.scopeId),
-      recoverableOriginals: originalCount,
-    },
-    tokens: {
-      totalCompressions: tokenStats.totalCompressions,
-      totalRetrieves: tokenStats.totalRetrieves,
-      totalMemories: tokenStats.totalMemories,
-      totalRecalls: tokenStats.totalRecalls,
-      totalTokensBefore: tokenStats.totalTokensBefore,
-      totalTokensAfter: tokenStats.totalTokensAfter,
-      totalTokensSaved: tokenStats.totalTokensSaved,
-      averageCompressionRatio: tokenStats.averageCompressionRatio,
+    compressionCount: compressedStore.count(scope.scopeId),
+    memoryCount: active,
+    recoverableOriginalsCount: originalCount,
+    totalEstimatedTokensSaved: tokenStats.totalTokensSaved,
+    lastUpdated,
+    detailedStats: {
+      memory: {
+        total,
+        active,
+        superseded,
+        forgotten,
+        expired,
+      },
+      compression: {
+        totalCCRs: compressedStore.count(scope.scopeId),
+        recoverableOriginals: originalCount,
+        averageCompressionRatio: tokenStats.averageCompressionRatio,
+      },
+      tokens: {
+        totalCompressions: tokenStats.totalCompressions,
+        totalRetrieves: tokenStats.totalRetrieves,
+        totalMemories: tokenStats.totalMemories,
+        totalRecalls: tokenStats.totalRecalls,
+        totalTokensBefore: tokenStats.totalTokensBefore,
+        totalTokensAfter: tokenStats.totalTokensAfter,
+        totalTokensSaved: tokenStats.totalTokensSaved,
+      },
     },
   };
 }

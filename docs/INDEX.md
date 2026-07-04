@@ -25,6 +25,7 @@
 | 12 | [12-verification-demo-and-architecture.md](./12-verification-demo-and-architecture.md) | §24–28 | MVP 验收用例（7 个）、READEME 演示场景（5 个）、技术架构图、模块职责、目录结构、文档要求 |
 | 13 | [13-success-criteria-risks-and-conclusion.md](./13-success-criteria-risks-and-conclusion.md) | §29–33 | 4 类成功标准（MVP/V1/用户价值/作品集）、5 类风险分析、不做清单、最小可验证版本、最终结论 |
 | 14 | [14-harness.md](./14-harness.md) | §34 | CodeContext Harness：统一业务闭环执行框架，Manifest + Run + Run Receipt，第一版定位与设计约束 |
+| 15 | [project-context-resources.md](./project-context-resources.md) | – | MCP Resources & Prompts：project-profile、project-stats、project_context_brief 的设计与输出结构 |
 
 ---
 
@@ -35,3 +36,4 @@
 - 想看具体 MCP 工具长什么样 → [06-mcp-tool-design.md](./06-mcp-tool-design.md)
 - 想看数据模型和表结构 → [09-data-model-and-schema.md](./09-data-model-and-schema.md)
 - 想看开发路线图 → [11-performance-cli-and-development.md](./11-performance-cli-and-development.md)
+- 想了解 MCP Resource/Prompt 设计 → [project-context-resources.md](./project-context-resources.md)

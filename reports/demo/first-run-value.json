@@ -9,12 +9,12 @@
       "tokensAfter": 918,
       "tokensSaved": 5862,
       "compressionRatio": 0.8646,
-      "originalRef": "orig_mr6defoq_23f53d_000001",
+      "originalRef": "orig_mr6dx7fg_7e3186_000001",
       "ccrId": "ccr_mr6bcbie_93e838_000001"
     },
     "remember": {
       "success": true,
-      "memoryId": "mem_mr6devz8_e77d13_000010",
+      "memoryId": "mem_mr6dxtju_63eb06_000010",
       "type": "project_rule",
       "contentSizeBytes": 969
     },
@@ -27,7 +27,7 @@
     },
     "retrieve": {
       "success": true,
-      "originalRef": "orig_mr6defoq_23f53d_000001",
+      "originalRef": "orig_mr6dx7fg_7e3186_000001",
       "contentPreview": "[2026-07-04 09:12:31.421] ERROR  api-gateway  POST /api/orders failed — 500 Internal Server Error\n[2026-07-04 09:12:31.422] ERROR  api-gateway  Error: Cannot read properties of undefined (reading items)\n    at OrderService.calculateTotal (src/services/orderService.ts:142:31)\n    at OrderController.c...",
       "fullLength": 16484,
       "originalSizeBytes": 16746,

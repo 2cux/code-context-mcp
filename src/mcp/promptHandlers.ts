@@ -85,7 +85,7 @@ function buildProjectContextBrief(db: Database): string {
   const total = Number(memoryStats?.["total"] ?? 0);
   const active = Number(memoryStats?.["active"] ?? 0);
 
-  // Recent top memories by type (1 per type, top 5 types by count)
+  // Recent top memories by type
   const topMemories = memoryService.list({
     scopeId: scope.scopeId,
     status: ["active"],
@@ -94,13 +94,14 @@ function buildProjectContextBrief(db: Database): string {
     sortOrder: "desc",
   });
 
-  // Get top 5 project rules from static profile
+  // Get top 3 project rules from static profile
   const staticRules = queryOne(
     db,
     `SELECT json_group_array(
        json_object(
          'type', m.type,
          'summary', m.summary,
+         'content', m.content,
          'confidence', m.confidence
        )
      ) as json
@@ -108,63 +109,62 @@ function buildProjectContextBrief(db: Database): string {
      JOIN memories m ON pf.source_memory_id = m.id
      WHERE pf.scope_id = ? AND pf.layer = 'static' AND m.status = 'active'
      ORDER BY m.confidence DESC, m.created_at DESC
-     LIMIT 5`,
+     LIMIT 3`,
     [scope.scopeId],
   );
 
-  const topRules: Array<{ type: string; summary: string | null; confidence: number }> = staticRules?.["json"]
+  const topRules: Array<{ type: string; summary: string | null; content: string; confidence: number }> = staticRules?.["json"]
     ? JSON.parse(staticRules["json"] as string)
     : [];
 
-  // Build brief
+  // Build brief (targeting ~800 tokens)
   const lines: string[] = [];
 
   lines.push("# CodeContext Project Brief");
   lines.push("");
-  lines.push("## Scope");
-  lines.push(`- Project: \`${scope.scopeId}\``);
-  lines.push(`- Strategy: ${scope.scopeStrategy}`);
-  if (scope.gitRoot) lines.push(`- Git root: ${scope.gitRoot}`);
-  if (scope.branch) lines.push(`- Branch: ${scope.branch}`);
+  lines.push("## Current Project");
+  lines.push(`Project: \`${scope.scopeId}\``);
+  if (scope.branch) lines.push(`Branch: ${scope.branch}`);
   lines.push("");
-
-  lines.push("## Memory");
-  lines.push(`- Active memories: ${active} / ${total} total`);
-  if (topMemories.items.length > 0) {
-    lines.push("- Recent context:");
-    const seenTypes = new Set<string>();
-    for (const m of topMemories.items.slice(0, 5)) {
-      if (!seenTypes.has(m.type)) {
-        seenTypes.add(m.type);
-        const summary = m.summary || m.content.slice(0, 60);
-        lines.push(`  - [${m.type}] ${summary} (confidence: ${m.confidence.toFixed(2)})`);
-      }
-    }
-  }
-  lines.push("");
-
-  lines.push("## Compression");
-  lines.push(`- Compressed contexts: ${compressedStore.count(scope.scopeId)}`);
-  lines.push(`- Token savings: ${tokenStats.totalTokensSaved.toLocaleString()} tokens saved`);
-  if (tokenStats.averageCompressionRatio > 0) {
-    lines.push(`- Average compression: ${(tokenStats.averageCompressionRatio * 100).toFixed(1)}%`);
-  }
+  lines.push("**Local-first constraint**: Do not upload project code, logs, or memory content.");
   lines.push("");
 
   if (topRules.length > 0) {
-    lines.push("## Project Rules (Static Profile)");
+    lines.push("## Project Rules");
     for (const rule of topRules) {
-      const summary = rule.summary || "(no summary)";
+      const summary = rule.summary || rule.content.slice(0, 80);
       lines.push(`- [${rule.type}] ${summary}`);
     }
     lines.push("");
   }
 
-  lines.push("## Agent Tips");
-  lines.push("- Use `recall_context` to search project memory");
-  lines.push("- Use `compress_context` to compress long outputs and save tokens");
-  lines.push("- Use `remember_context` to save important project facts");
-  lines.push("- All context is scoped to this repository");
+  if (topMemories.items.length > 0) {
+    lines.push("## Recent Memory");
+    const seenTypes = new Set<string>();
+    for (const m of topMemories.items.slice(0, 3)) {
+      if (!seenTypes.has(m.type)) {
+        seenTypes.add(m.type);
+        const summary = m.summary || m.content.slice(0, 60);
+        lines.push(`- [${m.type}] ${summary}`);
+      }
+    }
+    lines.push("");
+  }
+
+  lines.push("## Stats");
+  lines.push(`- Active memories: ${active}`);
+  lines.push(`- Compressed contexts: ${compressedStore.count(scope.scopeId)}`);
+  lines.push(`- Token savings: ${tokenStats.totalTokensSaved.toLocaleString()}`);
+  lines.push("");
+
+  lines.push("## Available Tools");
+  lines.push("- `recall_context(query)` — search project memory");
+  lines.push("- `compress_context(content, type)` — compress long content");
+  lines.push("- `remember_context(type, content, summary)` — save project facts");
+  lines.push("- `list_context(status?, type?)` — list all memories");
+  lines.push("- `forget_context(memoryId)` — remove outdated memory");
+  lines.push("");
+  lines.push("All operations are scoped to this repository.");
 
   return lines.join("\n");
 }
