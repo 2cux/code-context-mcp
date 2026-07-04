@@ -49,9 +49,17 @@ describe("Value Report", () => {
       expect(report.summary.memoriesSaved).toBe(0);
       expect(report.summary.memoriesRecalled).toBe(0);
       expect(report.summary.memoriesForgotten).toBe(0);
+      expect(report.summary.recoverableOriginals).toBe(0);
+      expect(report.summary.lastActivityAt).toBeUndefined();
 
       expect(report.topCompressions).toHaveLength(0);
+      expect(report.topSavings).toHaveLength(0);
       expect(report.recentMemories).toHaveLength(0);
+      expect(report.retrievalTrust.originalsStored).toBe(0);
+      expect(report.retrievalTrust.originalsRetrieved).toBe(0);
+      expect(report.agentUsefulness.recentRecalledMemories).toHaveLength(0);
+      expect(report.agentUsefulness.mostUsefulProjectRules).toHaveLength(0);
+      expect(report.agentUsefulness.suggestedNextCommand).toContain("compress");
       expect(report.localFirstNote.noDataUploaded).toBe(true);
       expect(report.generatedAt).toBeTruthy();
     });
@@ -186,6 +194,18 @@ describe("Value Report", () => {
           memoriesSaved: 0,
           memoriesRecalled: 0,
           memoriesForgotten: 0,
+          recoverableOriginals: 0,
+        },
+        retrievalTrust: {
+          originalsStored: 0,
+          originalsRetrieved: 0,
+          localOnlyNote: "All originals stored locally. No data uploaded to cloud.",
+        },
+        topSavings: [],
+        agentUsefulness: {
+          recentRecalledMemories: [],
+          mostUsefulProjectRules: [],
+          suggestedNextCommand: "code-context compress <file>  # Start saving tokens",
         },
         topCompressions: [],
         recentMemories: [],
@@ -200,7 +220,8 @@ describe("Value Report", () => {
 
       expect(markdown).toContain("# CodeContext Usage Value Report");
       expect(markdown).toContain("Generated: 2026-07-04T10:00:00.000Z");
-      expect(markdown).toContain("**Total Compressions**: 0");
+      expect(markdown).toContain("No usage data yet");
+      expect(markdown).toContain("code-context compress");
       expect(markdown).toContain("_No compressions yet._");
       expect(markdown).toContain("_No active memories yet._");
       expect(markdown).toContain("✓ All data stays local");
@@ -217,6 +238,48 @@ describe("Value Report", () => {
           memoriesSaved: 8,
           memoriesRecalled: 12,
           memoriesForgotten: 2,
+          recoverableOriginals: 5,
+          lastActivityAt: "2026-07-04T10:00:00.000Z",
+        },
+        retrievalTrust: {
+          originalsStored: 5,
+          originalsRetrieved: 3,
+          latestRetrieveProof: {
+            originalRef: "orig_test123",
+            retrievedAt: "2026-07-04T09:30:00.000Z",
+            ccrId: "ccr_test456",
+          },
+          localOnlyNote: "All originals stored locally. No data uploaded to cloud.",
+        },
+        topSavings: [
+          {
+            ccrId: "ccr_abc123",
+            contentType: "log",
+            tokensBefore: 30000,
+            tokensAfter: 5000,
+            tokensSaved: 25000,
+            compressionRatio: 0.833,
+            createdAt: "2026-07-04T10:00:00.000Z",
+          },
+        ],
+        agentUsefulness: {
+          recentRecalledMemories: [
+            {
+              memoryId: "mem_recall1",
+              type: "project_rule",
+              summary: "Use pnpm",
+              recalledAt: "2026-07-04T09:45:00.000Z",
+            },
+          ],
+          mostUsefulProjectRules: [
+            {
+              memoryId: "mem_useful1",
+              content: "Always use TypeScript strict mode",
+              recallCount: 25,
+              lastRecalledAt: "2026-07-04T09:50:00.000Z",
+            },
+          ],
+          suggestedNextCommand: "code-context stats  # Review token savings over time",
         },
         topCompressions: [
           {
@@ -245,14 +308,15 @@ describe("Value Report", () => {
 
       const markdown = formatValueReportMarkdown(report);
 
-      expect(markdown).toContain("**Total Compressions**: 10");
-      expect(markdown).toContain("**Total Estimated Tokens Saved**: 50,000");
-      expect(markdown).toContain("**Average Compression Ratio**: 0.75");
-      expect(markdown).toContain("**Cache Hits**: 5");
+      expect(markdown).toContain("**Total Token Saved**: 50,000");
+      expect(markdown).toContain("**Average Compression Ratio**: 75.0%");
+      expect(markdown).toContain("**Recoverable Originals**: 5");
       expect(markdown).toContain("ccr_abc123");
-      expect(markdown).toContain("25,000");
+      expect(markdown).toContain("**25,000**");
       expect(markdown).toContain("mem_xyz789");
       expect(markdown).toContain("Use pnpm for package management");
+      expect(markdown).toContain("## Retrieval Trust");
+      expect(markdown).toContain("## Agent Usefulness");
     });
   });
 });

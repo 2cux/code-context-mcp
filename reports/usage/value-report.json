@@ -1,13 +1,162 @@
 {
   "summary": {
-    "totalCompressions": 457,
+    "totalCompressions": 467,
     "totalEstimatedTokensSaved": 575442,
-    "averageCompressionRatio": 0.04214354485776805,
-    "cacheHits": 365,
-    "totalRetrieves": 371,
-    "memoriesSaved": 1119,
-    "memoriesRecalled": 761,
-    "memoriesForgotten": 272
+    "averageCompressionRatio": 0.04124111349036402,
+    "cacheHits": 375,
+    "totalRetrieves": 381,
+    "memoriesSaved": 1151,
+    "memoriesRecalled": 777,
+    "memoriesForgotten": 280,
+    "recoverableOriginals": 2,
+    "lastActivityAt": "2026-07-04T13:01:14.478Z"
+  },
+  "retrievalTrust": {
+    "originalsStored": 2,
+    "originalsRetrieved": 74,
+    "latestRetrieveProof": {
+      "originalRef": "orig_mr6deicn_0f14e6_000001",
+      "retrievedAt": "2026-07-04T13:00:46.604Z",
+      "ccrId": ""
+    },
+    "localOnlyNote": "All originals stored locally. No data uploaded to cloud."
+  },
+  "topSavings": [
+    {
+      "ccrId": "ccr_mr6b90lv_43b886_000001",
+      "contentType": "log",
+      "tokensBefore": 52411,
+      "tokensAfter": 1315,
+      "tokensSaved": 51096,
+      "compressionRatio": 0.9749,
+      "createdAt": "2026-07-04T12:00:26.708Z",
+      "summary": "Log compressed: 0 priority lines kept, 0 INFO/DEBUG folded"
+    },
+    {
+      "ccrId": "ccr_mr6bcbie_93e838_000001",
+      "contentType": "log",
+      "tokensBefore": 6780,
+      "tokensAfter": 918,
+      "tokensSaved": 5862,
+      "compressionRatio": 0.8646,
+      "createdAt": "2026-07-04T12:03:00.806Z",
+      "summary": "Log compressed: 12 priority lines kept, 163 INFO/DEBUG folded"
+    },
+    {
+      "ccrId": "ccr_mqf8by1z_0e8dbb_000001",
+      "contentType": "command_output",
+      "tokensBefore": 291,
+      "tokensAfter": 291,
+      "tokensSaved": 0,
+      "compressionRatio": 0,
+      "createdAt": "2026-06-15T13:08:57.767Z",
+      "summary": "Command output fits within token budget"
+    },
+    {
+      "ccrId": "ccr_mqf8byds_3135f7_000002",
+      "contentType": "code",
+      "tokensBefore": 886,
+      "tokensAfter": 886,
+      "tokensSaved": 0,
+      "compressionRatio": 0,
+      "createdAt": "2026-06-15T13:08:58.192Z",
+      "summary": "Code fits within token budget"
+    },
+    {
+      "ccrId": "ccr_mqf8byps_0419f0_000003",
+      "contentType": "command_output",
+      "tokensBefore": 291,
+      "tokensAfter": 291,
+      "tokensSaved": 0,
+      "compressionRatio": 0,
+      "createdAt": "2026-06-15T13:08:58.624Z",
+      "summary": "Command output fits within token budget"
+    }
+  ],
+  "agentUsefulness": {
+    "recentRecalledMemories": [
+      {
+        "memoryId": "mem_mr6df3qf_40b41c_000014",
+        "type": "project_rule",
+        "summary": "API v2 base URL",
+        "recalledAt": "2026-07-04T13:01:10.917Z"
+      },
+      {
+        "memoryId": "mem_mr6d6ebd_2dd9d7_000014",
+        "type": "project_rule",
+        "summary": "API v2 base URL",
+        "recalledAt": "2026-07-04T13:01:10.917Z"
+      },
+      {
+        "memoryId": "mem_mr6df2k1_1a81ed_000013",
+        "type": "project_rule",
+        "summary": "API v1 base URL",
+        "recalledAt": "2026-07-04T13:01:08.899Z"
+      },
+      {
+        "memoryId": "mem_mr6d6ebd_2dd9d7_000014",
+        "type": "project_rule",
+        "summary": "API v2 base URL",
+        "recalledAt": "2026-07-04T13:01:08.899Z"
+      },
+      {
+        "memoryId": "mem_mr6depcq_e27fb5_000005",
+        "type": "project_rule",
+        "summary": "TypeScript strict mode",
+        "recalledAt": "2026-07-04T13:00:54.936Z"
+      },
+      {
+        "memoryId": "mem_mr6d6fpc_25e23b_000015",
+        "type": "decision",
+        "summary": "React 18 + TS",
+        "recalledAt": "2026-07-04T13:00:54.936Z"
+      },
+      {
+        "memoryId": "mem_mr6depcq_e27fb5_000005",
+        "type": "project_rule",
+        "summary": "TypeScript strict mode",
+        "recalledAt": "2026-07-04T13:00:54.410Z"
+      },
+      {
+        "memoryId": "mem_mr6d5pga_99f8d2_000005",
+        "type": "project_rule",
+        "summary": "TypeScript strict mode",
+        "recalledAt": "2026-07-04T13:00:54.410Z"
+      },
+      {
+        "memoryId": "mem_mr6deqy2_1aca9f_000007",
+        "type": "bug",
+        "summary": "Login bug",
+        "recalledAt": "2026-07-04T13:00:53.865Z"
+      },
+      {
+        "memoryId": "mem_mr6d5s3w_d01931_000007",
+        "type": "bug",
+        "summary": "Login bug",
+        "recalledAt": "2026-07-04T13:00:53.865Z"
+      }
+    ],
+    "mostUsefulProjectRules": [
+      {
+        "memoryId": "mem_mqhs54ar_bbec92_000010",
+        "content": "New rule: use pnpm.",
+        "recallCount": 183,
+        "lastRecalledAt": "2026-06-17T08:31:17.562Z"
+      },
+      {
+        "memoryId": "mem_mqhsdarh_83a9c9_000010",
+        "content": "New rule: use pnpm.",
+        "recallCount": 182,
+        "lastRecalledAt": "2026-06-17T08:31:17.562Z"
+      },
+      {
+        "memoryId": "mem_mqhsm1hx_a92ee9_000010",
+        "content": "New rule: use pnpm.",
+        "recallCount": 182,
+        "lastRecalledAt": "2026-06-17T08:31:17.562Z"
+      }
+    ],
+    "suggestedNextCommand": "code-context stats  # Review token savings over time"
   },
   "topCompressions": [
     {
@@ -53,71 +202,71 @@
   ],
   "recentMemories": [
     {
-      "memoryId": "mem_mr6d3vx2_e1d5cc_000001",
-      "type": "project_rule",
-      "summary": "Project coding standards: pnpm, TypeScript strict, vitest, conventional commits",
-      "createdAt": "2026-07-04T12:52:26.582Z",
-      "status": "active"
-    },
-    {
-      "memoryId": "mem_mr6c6sv2_76a5d5_000015",
+      "memoryId": "mem_mr6df4vx_7f85e1_000015",
       "type": "decision",
       "summary": "React 18 + TS",
-      "createdAt": "2026-07-04T12:26:42.975Z",
+      "createdAt": "2026-07-04T13:01:11.421Z",
       "status": "active"
     },
     {
-      "memoryId": "mem_mr6c6rr2_5d71ba_000014",
+      "memoryId": "mem_mr6df3qf_40b41c_000014",
       "type": "project_rule",
       "summary": "API v2 base URL",
-      "createdAt": "2026-07-04T12:26:41.534Z",
+      "createdAt": "2026-07-04T13:01:09.927Z",
       "status": "active"
     },
     {
-      "memoryId": "mem_mr6c6mzh_ee73a3_000012",
+      "memoryId": "mem_mr6deymk_4188fc_000012",
       "type": "current_task",
       "summary": "Build CLI",
-      "createdAt": "2026-07-04T12:26:35.357Z",
+      "createdAt": "2026-07-04T13:01:03.308Z",
       "status": "active"
     },
     {
-      "memoryId": "mem_mr6c6m7r_2e784f_000011",
+      "memoryId": "mem_mr6dexvy_486e2f_000011",
       "type": "project_rule",
       "summary": "TS Strict",
-      "createdAt": "2026-07-04T12:26:34.360Z",
+      "createdAt": "2026-07-04T13:01:02.350Z",
       "status": "active"
     },
     {
-      "memoryId": "mem_mr6c6kpx_448025_000010",
+      "memoryId": "mem_mr6dewe1_31dbbb_000010",
       "type": "project_rule",
-      "createdAt": "2026-07-04T12:26:32.421Z",
+      "createdAt": "2026-07-04T13:01:00.409Z",
       "status": "active"
     },
     {
-      "memoryId": "mem_mr6c6flr_df0aff_000007",
+      "memoryId": "mem_mr6deqy2_1aca9f_000007",
       "type": "bug",
       "summary": "Login bug",
-      "createdAt": "2026-07-04T12:26:25.791Z",
+      "createdAt": "2026-07-04T13:00:53.354Z",
       "status": "active"
     },
     {
-      "memoryId": "mem_mr6c6f93_2770ca_000006",
+      "memoryId": "mem_mr6deqkb_ff0abc_000006",
       "type": "project_rule",
       "summary": "ESLint config",
-      "createdAt": "2026-07-04T12:26:25.335Z",
+      "createdAt": "2026-07-04T13:00:52.859Z",
       "status": "active"
     },
     {
-      "memoryId": "mem_mr6c6e6p_65be1f_000005",
+      "memoryId": "mem_mr6depcq_e27fb5_000005",
       "type": "project_rule",
       "summary": "TypeScript strict mode",
-      "createdAt": "2026-07-04T12:26:23.953Z",
+      "createdAt": "2026-07-04T13:00:51.290Z",
       "status": "active"
     },
     {
-      "memoryId": "mem_mr6c6dgy_082fc3_000004",
+      "memoryId": "mem_mr6deojn_074730_000004",
       "type": "decision",
-      "createdAt": "2026-07-04T12:26:23.026Z",
+      "createdAt": "2026-07-04T13:00:50.243Z",
+      "status": "active"
+    },
+    {
+      "memoryId": "mem_mr6deo4p_613e7f_000003",
+      "type": "current_task",
+      "summary": "CLI dev",
+      "createdAt": "2026-07-04T13:00:49.705Z",
       "status": "active"
     }
   ],
@@ -125,5 +274,5 @@
     "dataLocation": "~/.code-context-mcp/code-context.sqlite",
     "noDataUploaded": true
   },
-  "generatedAt": "2026-07-04T12:53:03.407Z"
+  "generatedAt": "2026-07-04T13:06:31.272Z"
 }
