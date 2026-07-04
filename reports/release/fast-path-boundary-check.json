@@ -1,0 +1,175 @@
+{
+  "generated": "2026-06-17T08:29:36.448Z",
+  "verdict": "pass",
+  "summary": {
+    "total": 29,
+    "pass": 29,
+    "warning": 0,
+    "fail": 0
+  },
+  "checks": [
+    {
+      "check": "profile-gate: 6 fast tools defined",
+      "status": "pass",
+      "detail": "FAST_TOOLS has all 6 entries"
+    },
+    {
+      "check": "profile-gate: 4 harness tools defined",
+      "status": "pass",
+      "detail": "HARNESS_TOOLS has all 4 entries"
+    },
+    {
+      "check": "profile-gate: agent = 6 fast tools",
+      "status": "pass",
+      "detail": "Agent profile returns FAST_TOOLS"
+    },
+    {
+      "check": "profile-gate: full excludes harness",
+      "status": "pass",
+      "detail": "HARNESS_TOOLS referenced for exclusion checks"
+    },
+    {
+      "check": "profile-gate: debug = full ∪ harness",
+      "status": "pass",
+      "detail": "Debug profile returns ALL_CODEGRAPH_TOOLS"
+    },
+    {
+      "check": "profile-gate: call permissions matrix",
+      "status": "pass",
+      "detail": "All 6 entries validated"
+    },
+    {
+      "check": "fast-tools-no-harness: only runHarnessFlow imports runModule",
+      "status": "pass",
+      "detail": "Importers: runHarnessFlow.ts"
+    },
+    {
+      "check": "fast-tools-no-harness: runHarnessFlow calls runModule",
+      "status": "pass",
+      "detail": "Call site confirmed in runHarnessFlow.ts"
+    },
+    {
+      "check": "fast-tools-no-harness: 17 handlers do NOT call runModule",
+      "status": "pass",
+      "detail": "Verified 17 handlers"
+    },
+    {
+      "check": "fast-tools-no-harness: fixture expects 0 runner calls",
+      "status": "pass",
+      "detail": "Fast MCP tools must not route through HarnessRunner by default."
+    },
+    {
+      "check": "workflow-find: include_details defaults to false",
+      "status": "pass",
+      "detail": "DEFAULT_INCLUDE_DETAILS = false"
+    },
+    {
+      "check": "workflow-find: format defaults to compact",
+      "status": "pass",
+      "detail": "DEFAULT_FORMAT = 'compact'"
+    },
+    {
+      "check": "workflow-find: include_details=true triggers enrichment",
+      "status": "pass",
+      "detail": "get_symbol() enrichment logic present"
+    },
+    {
+      "check": "workflow-find: compact mode produces 0 enrichment cost",
+      "status": "pass",
+      "detail": "maxGetSymbolCalls/enrichment → 0 when include_details=false"
+    },
+    {
+      "check": "workflow-find: compact fixture expects no get_symbol",
+      "status": "pass",
+      "detail": "classification: default-fast-workflow"
+    },
+    {
+      "check": "workflow-find: details fixture expects get_symbol enrichment",
+      "status": "pass",
+      "detail": "maxGetSymbolCalls: 5"
+    },
+    {
+      "check": "benchmark: doNotFailDirectMcpBecauseHarnessIsSlow = true",
+      "status": "pass",
+      "detail": "Harness slowness will never fail direct MCP gate"
+    },
+    {
+      "check": "benchmark: markHarnessSlowAsWorkflowHeavy = true",
+      "status": "pass",
+      "detail": "Harness slow is classified correctly"
+    },
+    {
+      "check": "benchmark: markDetailsEnrichmentAsExplicitHeavyMode = true",
+      "status": "pass",
+      "detail": "Details enrichment is classified correctly"
+    },
+    {
+      "check": "benchmark: separate thresholds for direct/harness/persistence",
+      "status": "pass",
+      "detail": "directMcp p95 warning=300ms, harnessPersistence warning=100ms"
+    },
+    {
+      "check": "benchmark: harness persistence warning threshold <= 100ms",
+      "status": "pass",
+      "detail": "Currently 100ms"
+    },
+    {
+      "check": "benchmark: direct MCP p95 within threshold",
+      "status": "pass",
+      "detail": "346ms < 500ms"
+    },
+    {
+      "check": "benchmark: harness persistence within target",
+      "status": "pass",
+      "detail": "0ms < 100ms"
+    },
+    {
+      "check": "benchmark: classification notes present",
+      "status": "pass",
+      "detail": "4 notes"
+    },
+    {
+      "check": "docs: core principle documented",
+      "status": "pass",
+      "detail": "FAST_PATH_VS_HARNESS.md contains the binding rule"
+    },
+    {
+      "check": "docs: do/don't rules documented",
+      "status": "pass",
+      "detail": ""
+    },
+    {
+      "check": "fixtures: all 12 required fixtures present",
+      "status": "pass",
+      "detail": "12 files"
+    },
+    {
+      "check": "tests: all 4 boundary test files present",
+      "status": "pass",
+      "detail": "4 files"
+    },
+    {
+      "check": "vitest: boundary tests completed",
+      "status": "pass",
+      "detail": ""
+    }
+  ],
+  "verdictRules": {
+    "pass": "All checks pass. Fast path boundary is intact.",
+    "warning": "One or more checks are warnings. Review before release. Harness slowness does NOT fail the gate.",
+    "fail": "One or more checks FAILED. Do NOT release until resolved. Fast tools calling HarnessRunner, agent/full exposing harness tools, or workflow.find defaulting to include_details=true are blockers.",
+    "triggers": {
+      "failTriggers": [
+        "fast tools 调用 HarnessRunner",
+        "agent/full 暴露 harness tools",
+        "workflow.find 默认 include_details=true",
+        "direct MCP p95 超过 fail 阈值",
+        "harness persistence overhead 超过 fail 阈值"
+      ],
+      "warningTriggers": [
+        "harness workflow p95 高但 direct MCP 正常",
+        "workflow.find details 模式慢 → explicit-heavy，不是 direct MCP fail"
+      ]
+    }
+  }
+}

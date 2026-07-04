@@ -1,0 +1,322 @@
+{
+  "generated": "2026-06-17T08:31:17.564Z",
+  "summary": {
+    "totalScenarios": 9,
+    "directScenarios": 6,
+    "harnessScenarios": 3,
+    "overallDirectMcpP95Ms": 320,
+    "overallHarnessWorkflowP95Ms": 268,
+    "overallHarnessPersistenceMs": 0,
+    "classificationNotes": [
+      "Enrichment cost (compact→enriched): 2ms (ratio: 1%)",
+      "Direct MCP p95 is measured independently — NOT affected by harness workflow p95.",
+      "Harness slow scenarios are classified as 'harness-heavy' — NOT as direct MCP regressions.",
+      "Harness persistence overhead is measured separately — target < 100ms."
+    ]
+  },
+  "scenarios": [
+    {
+      "name": "repo_status",
+      "tool": "current_scope",
+      "path": "direct",
+      "iterations": 30,
+      "stats": {
+        "p50": 246,
+        "p95": 263,
+        "mean": 248,
+        "min": 231,
+        "max": 294,
+        "samples": 30
+      },
+      "overhead_ms": 0,
+      "overhead_ratio": 0,
+      "phase_breakdown": {
+        "profile_gate_ms": 0,
+        "handler_dispatch_ms": 0,
+        "direct_handler_ms": 248,
+        "harness_runner_init_ms": 0,
+        "harness_state_load_ms": 0,
+        "harness_checkpoint_ms": 0,
+        "harness_artifact_write_ms": 0,
+        "harness_report_write_ms": 0,
+        "harness_persistence_total_ms": 0,
+        "workflow_find_search_ms": 0,
+        "workflow_find_enrichment_ms": 0,
+        "workflow_find_markdown_ms": 0,
+        "total_ms": 248
+      }
+    },
+    {
+      "name": "find_compact_limit_5",
+      "tool": "recall_context",
+      "path": "direct",
+      "iterations": 30,
+      "stats": {
+        "p50": 263,
+        "p95": 296,
+        "mean": 264,
+        "min": 244,
+        "max": 306,
+        "samples": 30
+      },
+      "overhead_ms": 0,
+      "overhead_ratio": 0,
+      "phase_breakdown": {
+        "profile_gate_ms": 0,
+        "handler_dispatch_ms": 0,
+        "direct_handler_ms": 264,
+        "harness_runner_init_ms": 0,
+        "harness_state_load_ms": 0,
+        "harness_checkpoint_ms": 0,
+        "harness_artifact_write_ms": 0,
+        "harness_report_write_ms": 0,
+        "harness_persistence_total_ms": 0,
+        "workflow_find_search_ms": 264,
+        "workflow_find_enrichment_ms": 0,
+        "workflow_find_markdown_ms": 0,
+        "total_ms": 264
+      }
+    },
+    {
+      "name": "explain_symbol",
+      "tool": "compress_context",
+      "path": "direct",
+      "iterations": 20,
+      "stats": {
+        "p50": 3,
+        "p95": 128,
+        "mean": 10,
+        "min": 2,
+        "max": 128,
+        "samples": 20
+      },
+      "overhead_ms": 0,
+      "overhead_ratio": 0,
+      "phase_breakdown": {
+        "profile_gate_ms": 0,
+        "handler_dispatch_ms": 0,
+        "direct_handler_ms": 10,
+        "harness_runner_init_ms": 0,
+        "harness_state_load_ms": 0,
+        "harness_checkpoint_ms": 0,
+        "harness_artifact_write_ms": 0,
+        "harness_report_write_ms": 0,
+        "harness_persistence_total_ms": 0,
+        "workflow_find_search_ms": 0,
+        "workflow_find_enrichment_ms": 0,
+        "workflow_find_markdown_ms": 0,
+        "total_ms": 10
+      }
+    },
+    {
+      "name": "coverage_gaps",
+      "tool": "list_context",
+      "path": "direct",
+      "iterations": 20,
+      "stats": {
+        "p50": 0,
+        "p95": 2,
+        "mean": 1,
+        "min": 0,
+        "max": 2,
+        "samples": 20
+      },
+      "overhead_ms": 0,
+      "overhead_ratio": 0,
+      "phase_breakdown": {
+        "profile_gate_ms": 0,
+        "handler_dispatch_ms": 0,
+        "direct_handler_ms": 1,
+        "harness_runner_init_ms": 0,
+        "harness_state_load_ms": 0,
+        "harness_checkpoint_ms": 0,
+        "harness_artifact_write_ms": 0,
+        "harness_report_write_ms": 0,
+        "harness_persistence_total_ms": 0,
+        "workflow_find_search_ms": 0,
+        "workflow_find_enrichment_ms": 0,
+        "workflow_find_markdown_ms": 0,
+        "total_ms": 1
+      }
+    },
+    {
+      "name": "build_context_pack",
+      "tool": "run_context_flow",
+      "path": "direct",
+      "iterations": 20,
+      "stats": {
+        "p50": 251,
+        "p95": 320,
+        "mean": 257,
+        "min": 240,
+        "max": 320,
+        "samples": 20
+      },
+      "overhead_ms": 0,
+      "overhead_ratio": 0,
+      "phase_breakdown": {
+        "profile_gate_ms": 0,
+        "handler_dispatch_ms": 0,
+        "direct_handler_ms": 257,
+        "harness_runner_init_ms": 0,
+        "harness_state_load_ms": 0,
+        "harness_checkpoint_ms": 0,
+        "harness_artifact_write_ms": 0,
+        "harness_report_write_ms": 0,
+        "harness_persistence_total_ms": 0,
+        "workflow_find_search_ms": 0,
+        "workflow_find_enrichment_ms": 0,
+        "workflow_find_markdown_ms": 0,
+        "total_ms": 257
+      }
+    },
+    {
+      "name": "harness_list",
+      "tool": "list_harness_flows",
+      "path": "harness",
+      "iterations": 20,
+      "stats": {
+        "p50": 0,
+        "p95": 1,
+        "mean": 0,
+        "min": 0,
+        "max": 1,
+        "samples": 20
+      },
+      "overhead_ms": 0,
+      "overhead_ratio": 0,
+      "phase_breakdown": {
+        "profile_gate_ms": 0,
+        "handler_dispatch_ms": 0,
+        "direct_handler_ms": 0,
+        "harness_runner_init_ms": 0,
+        "harness_state_load_ms": 0,
+        "harness_checkpoint_ms": 0,
+        "harness_artifact_write_ms": 0,
+        "harness_report_write_ms": 0,
+        "harness_persistence_total_ms": 0,
+        "workflow_find_search_ms": 0,
+        "workflow_find_enrichment_ms": 0,
+        "workflow_find_markdown_ms": 0,
+        "total_ms": 0
+      }
+    },
+    {
+      "name": "harness_run_workflow_compact",
+      "tool": "run_harness_flow",
+      "path": "harness",
+      "iterations": 10,
+      "stats": {
+        "p50": 16,
+        "p95": 27,
+        "mean": 16,
+        "min": 14,
+        "max": 27,
+        "samples": 10
+      },
+      "overhead_ms": 25,
+      "overhead_ratio": 12.5,
+      "phase_breakdown": {
+        "profile_gate_ms": 0,
+        "handler_dispatch_ms": 0,
+        "direct_handler_ms": 0,
+        "harness_runner_init_ms": 1,
+        "harness_state_load_ms": 2,
+        "harness_checkpoint_ms": 1,
+        "harness_artifact_write_ms": 2,
+        "harness_report_write_ms": 2,
+        "harness_persistence_total_ms": 1,
+        "workflow_find_search_ms": 0,
+        "workflow_find_enrichment_ms": 0,
+        "workflow_find_markdown_ms": 0,
+        "total_ms": 16
+      }
+    },
+    {
+      "name": "workflow_find_compact",
+      "tool": "recall_context",
+      "path": "direct",
+      "iterations": 10,
+      "stats": {
+        "p50": 249,
+        "p95": 259,
+        "mean": 250,
+        "min": 241,
+        "max": 259,
+        "samples": 10
+      },
+      "overhead_ms": 0,
+      "overhead_ratio": 0,
+      "phase_breakdown": {
+        "profile_gate_ms": 0,
+        "handler_dispatch_ms": 0,
+        "direct_handler_ms": 0,
+        "harness_runner_init_ms": 0,
+        "harness_state_load_ms": 0,
+        "harness_checkpoint_ms": 0,
+        "harness_artifact_write_ms": 0,
+        "harness_report_write_ms": 0,
+        "harness_persistence_total_ms": 0,
+        "workflow_find_search_ms": 250,
+        "workflow_find_enrichment_ms": 0,
+        "workflow_find_markdown_ms": 0,
+        "total_ms": 250
+      }
+    },
+    {
+      "name": "workflow_find_details",
+      "tool": "recall_context",
+      "path": "harness-heavy",
+      "iterations": 5,
+      "stats": {
+        "p50": 250,
+        "p95": 268,
+        "mean": 252,
+        "min": 242,
+        "max": 268,
+        "samples": 5
+      },
+      "overhead_ms": 2,
+      "overhead_ratio": 0.01,
+      "phase_breakdown": {
+        "profile_gate_ms": 0,
+        "handler_dispatch_ms": 0,
+        "direct_handler_ms": 0,
+        "harness_runner_init_ms": 0,
+        "harness_state_load_ms": 0,
+        "harness_checkpoint_ms": 0,
+        "harness_artifact_write_ms": 0,
+        "harness_report_write_ms": 0,
+        "harness_persistence_total_ms": 0,
+        "workflow_find_search_ms": 250,
+        "workflow_find_enrichment_ms": 2,
+        "workflow_find_markdown_ms": 0,
+        "total_ms": 252
+      }
+    }
+  ],
+  "thresholds": {
+    "directMcp": {
+      "p95MsWarning": 300,
+      "p95MsFail": 500
+    },
+    "harnessWorkflow": {
+      "p95MsWarning": 3000,
+      "p95MsPerfRisk": 6000
+    },
+    "harnessPersistence": {
+      "p95MsWarning": 100,
+      "p95MsFail": 200
+    },
+    "workflowFind": {
+      "compactP95MsWarning": 2000,
+      "detailsP95MsPerfRisk": 6000,
+      "enrichmentCostRatioWarning": 0.5
+    },
+    "classificationRules": {
+      "doNotFailDirectMcpBecauseHarnessIsSlow": true,
+      "markHarnessSlowAsWorkflowHeavy": true,
+      "markDetailsEnrichmentAsExplicitHeavyMode": true
+    }
+  }
+}

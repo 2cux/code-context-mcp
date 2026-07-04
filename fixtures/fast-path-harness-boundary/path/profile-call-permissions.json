@@ -1,0 +1,34 @@
+{
+  "callPermissions": [
+    {
+      "profile": "agent",
+      "tool": "codegraph_harness_run",
+      "allowed": false
+    },
+    {
+      "profile": "full",
+      "tool": "codegraph_harness_run",
+      "allowed": false
+    },
+    {
+      "profile": "harness",
+      "tool": "codegraph_harness_run",
+      "allowed": true
+    },
+    {
+      "profile": "debug",
+      "tool": "codegraph_harness_run",
+      "allowed": true
+    },
+    {
+      "profile": "agent",
+      "tool": "codegraph_find",
+      "allowed": true
+    },
+    {
+      "profile": "full",
+      "tool": "codegraph_find",
+      "allowed": true
+    }
+  ]
+}

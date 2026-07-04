@@ -1,0 +1,9 @@
+{
+  "harnessToolsMayUseHarnessRunner": [
+    "codegraph_harness_list",
+    "codegraph_harness_run",
+    "codegraph_harness_status",
+    "codegraph_harness_artifacts"
+  ],
+  "expected": "Harness tools may call HarnessRunner because they are workflow/report/audit/debug tools."
+}

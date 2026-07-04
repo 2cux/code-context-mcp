@@ -1,0 +1,58 @@
+{
+  "scenarios": [
+    {
+      "name": "repo_status",
+      "tool": "current_scope",
+      "profile": "agent",
+      "iterations": 30,
+      "expectedPath": "direct"
+    },
+    {
+      "name": "find_compact_limit_5",
+      "tool": "recall_context",
+      "profile": "agent",
+      "iterations": 30,
+      "args": {
+        "query": "handler",
+        "limit": 5
+      },
+      "expectedPath": "direct"
+    },
+    {
+      "name": "explain_symbol",
+      "tool": "compress_context",
+      "profile": "agent",
+      "iterations": 20,
+      "args": {
+        "content": "Error: test failure\n  at handler.ts:42\n  at server.ts:18",
+        "contentType": "log"
+      },
+      "expectedPath": "direct"
+    },
+    {
+      "name": "pre_edit_check",
+      "tool": "list_compressions",
+      "profile": "agent",
+      "iterations": 20,
+      "expectedPath": "direct"
+    },
+    {
+      "name": "coverage_gaps",
+      "tool": "list_context",
+      "profile": "agent",
+      "iterations": 20,
+      "expectedPath": "direct"
+    },
+    {
+      "name": "build_context_pack",
+      "tool": "run_context_flow",
+      "profile": "agent",
+      "iterations": 20,
+      "args": {
+        "flow": "compression",
+        "content": "Sample build log output for testing compression pipeline performance"
+      },
+      "expectedPath": "direct"
+    }
+  ]
+}

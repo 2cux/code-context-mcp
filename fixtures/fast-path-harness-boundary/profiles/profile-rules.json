@@ -1,0 +1,43 @@
+{
+  "profiles": {
+    "agent": {
+      "description": "Default AI agent profile. Fast direct MCP tools only.",
+      "mustInclude": [
+        "codegraph_repo_status",
+        "codegraph_find",
+        "codegraph_explain",
+        "codegraph_pre_edit_check",
+        "codegraph_coverage_gaps",
+        "codegraph_build_context_pack"
+      ],
+      "mustExclude": [
+        "codegraph_harness_list",
+        "codegraph_harness_run",
+        "codegraph_harness_status",
+        "codegraph_harness_artifacts"
+      ]
+    },
+    "full": {
+      "description": "All non-harness tools. Harness tools remain excluded.",
+      "mustExclude": [
+        "codegraph_harness_list",
+        "codegraph_harness_run",
+        "codegraph_harness_status",
+        "codegraph_harness_artifacts"
+      ]
+    },
+    "harness": {
+      "description": "Harness workflow/report/audit/debug tools only.",
+      "mustIncludeOnly": [
+        "codegraph_harness_list",
+        "codegraph_harness_run",
+        "codegraph_harness_status",
+        "codegraph_harness_artifacts"
+      ]
+    },
+    "debug": {
+      "description": "Full profile plus harness tools.",
+      "composition": ["full", "harness"]
+    }
+  }
+}

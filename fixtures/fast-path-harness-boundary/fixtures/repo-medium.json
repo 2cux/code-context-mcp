@@ -1,0 +1,15 @@
+{
+  "repo": {
+    "name": "hypothetical-medium-project",
+    "files": 5000,
+    "symbols": 50000,
+    "edges": 200000,
+    "sizeClass": "medium"
+  },
+  "expectedTiming": {
+    "directMcpP95MsCeiling": 500,
+    "harnessWorkflowP95MsCeiling": 5000,
+    "harnessPersistenceMsCeiling": 200
+  },
+  "note": "This is a projected profile for medium-sized repos. The current CodeContext repo is small (82 files)."
+}

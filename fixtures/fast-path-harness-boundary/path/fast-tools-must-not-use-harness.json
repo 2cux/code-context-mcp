@@ -1,0 +1,12 @@
+{
+  "fastToolsMustNotUseHarnessRunner": [
+    "codegraph_repo_status",
+    "codegraph_find",
+    "codegraph_explain",
+    "codegraph_pre_edit_check",
+    "codegraph_coverage_gaps",
+    "codegraph_build_context_pack"
+  ],
+  "expectedHarnessRunnerCalls": 0,
+  "failureMessage": "Fast MCP tools must not route through HarnessRunner by default."
+}

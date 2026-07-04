@@ -1,0 +1,10 @@
+{
+  "profile": "debug",
+  "mustEqualUnionOf": ["full", "harness"],
+  "mustInclude": [
+    "codegraph_harness_list",
+    "codegraph_harness_run",
+    "codegraph_harness_status",
+    "codegraph_harness_artifacts"
+  ]
+}

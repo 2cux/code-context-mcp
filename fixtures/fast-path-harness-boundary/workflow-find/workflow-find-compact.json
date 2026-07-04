@@ -1,0 +1,16 @@
+{
+  "workflow": "workflow.find",
+  "mode": "compact",
+  "input": {
+    "query": "handler",
+    "limit": 5,
+    "include_details": false,
+    "format": "compact"
+  },
+  "expected": {
+    "callsGetSymbol": false,
+    "generatesHeavyMarkdownReport": false,
+    "responseStyle": "compact",
+    "classification": "default-fast-workflow"
+  }
+}

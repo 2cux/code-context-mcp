@@ -1,0 +1,41 @@
+{
+  "phases": {
+    "profile_gate_ms": {
+      "warning": 5
+    },
+    "handler_dispatch_ms": {
+      "warning": 10
+    },
+    "direct_handler_ms": {
+      "warning": 300
+    },
+    "harness_runner_init_ms": {
+      "warning": 100
+    },
+    "harness_state_load_ms": {
+      "warning": 100
+    },
+    "harness_checkpoint_ms": {
+      "warning": 100
+    },
+    "harness_artifact_write_ms": {
+      "warning": 200
+    },
+    "harness_report_write_ms": {
+      "warning": 300
+    },
+    "harness_persistence_total_ms": {
+      "warning": 100,
+      "fail": 200
+    },
+    "workflow_find_search_ms": {
+      "warning": 1500
+    },
+    "workflow_find_enrichment_ms": {
+      "warning": 4000
+    },
+    "workflow_find_markdown_ms": {
+      "warning": 500
+    }
+  }
+}

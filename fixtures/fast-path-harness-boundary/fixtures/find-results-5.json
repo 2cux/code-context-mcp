@@ -1,0 +1,31 @@
+{
+  "query": "handler",
+  "limit": 5,
+  "results": [
+    {
+      "symbol": "createToolHandlers",
+      "file": "src/toolRegistry.ts",
+      "score": 0.98
+    },
+    {
+      "symbol": "handleFind",
+      "file": "src/codegraph/find.ts",
+      "score": 0.91
+    },
+    {
+      "symbol": "handleExplain",
+      "file": "src/codegraph/explain.ts",
+      "score": 0.86
+    },
+    {
+      "symbol": "dispatchToolCall",
+      "file": "src/server.ts",
+      "score": 0.81
+    },
+    {
+      "symbol": "runWorkflowFind",
+      "file": "src/workflows/find.ts",
+      "score": 0.77
+    }
+  ]
+}

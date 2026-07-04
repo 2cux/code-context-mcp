@@ -1,0 +1,17 @@
+{
+  "profile": "agent",
+  "expectedTools": [
+    "codegraph_repo_status",
+    "codegraph_find",
+    "codegraph_explain",
+    "codegraph_pre_edit_check",
+    "codegraph_coverage_gaps",
+    "codegraph_build_context_pack"
+  ],
+  "mustNotInclude": [
+    "codegraph_harness_list",
+    "codegraph_harness_run",
+    "codegraph_harness_status",
+    "codegraph_harness_artifacts"
+  ]
+}

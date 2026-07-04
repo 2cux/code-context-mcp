@@ -1,0 +1,15 @@
+{
+  "baselineObservation": {
+    "directMcpP95Ms": 185,
+    "harnessMcpP95Ms": 5787,
+    "workflowFindDefaultP95Ms": 7194,
+    "harnessPersistenceMs": 100,
+    "detailsEnrichmentCostRatio": 0.77
+  },
+  "expectedInterpretation": {
+    "harnessPersistenceIsPrimaryCause": false,
+    "detailsEnrichmentIsPrimaryCause": true,
+    "ordinaryAgentToolsShouldUseHarness": false,
+    "workflowFindShouldDefaultCompact": true
+  }
+}

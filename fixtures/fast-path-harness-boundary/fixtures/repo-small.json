@@ -1,0 +1,14 @@
+{
+  "repo": {
+    "name": "code-context-small",
+    "files": 82,
+    "symbols": 811,
+    "edges": 3568,
+    "sizeClass": "small"
+  },
+  "expectedTiming": {
+    "directMcpP95MsCeiling": 300,
+    "harnessWorkflowP95MsCeiling": 3000,
+    "harnessPersistenceMsCeiling": 100
+  }
+}

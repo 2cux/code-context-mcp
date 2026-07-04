@@ -1,0 +1,17 @@
+{
+  "workflow": "workflow.find",
+  "mode": "details",
+  "input": {
+    "query": "handler",
+    "limit": 5,
+    "include_details": true,
+    "format": "report"
+  },
+  "expected": {
+    "callsGetSymbol": true,
+    "maxGetSymbolCalls": 5,
+    "generatesHeavyMarkdownReport": true,
+    "responseStyle": "detailed",
+    "classification": "explicit-heavy-workflow"
+  }
+}

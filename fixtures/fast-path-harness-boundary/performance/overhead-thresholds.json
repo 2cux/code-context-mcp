@@ -1,0 +1,24 @@
+{
+  "directMcp": {
+    "p95MsWarning": 300,
+    "p95MsFail": 500
+  },
+  "harnessWorkflow": {
+    "p95MsWarning": 3000,
+    "p95MsPerfRisk": 6000
+  },
+  "harnessPersistence": {
+    "p95MsWarning": 100,
+    "p95MsFail": 200
+  },
+  "workflowFind": {
+    "compactP95MsWarning": 2000,
+    "detailsP95MsPerfRisk": 6000,
+    "enrichmentCostRatioWarning": 0.5
+  },
+  "classificationRules": {
+    "doNotFailDirectMcpBecauseHarnessIsSlow": true,
+    "markHarnessSlowAsWorkflowHeavy": true,
+    "markDetailsEnrichmentAsExplicitHeavyMode": true
+  }
+}

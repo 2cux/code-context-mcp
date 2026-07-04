@@ -1,0 +1,30 @@
+{
+  "details": [
+    {
+      "symbol": "createToolHandlers",
+      "file": "src/toolRegistry.ts",
+      "simulatedLatencyMs": 1100
+    },
+    {
+      "symbol": "handleFind",
+      "file": "src/codegraph/find.ts",
+      "simulatedLatencyMs": 1100
+    },
+    {
+      "symbol": "handleExplain",
+      "file": "src/codegraph/explain.ts",
+      "simulatedLatencyMs": 1100
+    },
+    {
+      "symbol": "dispatchToolCall",
+      "file": "src/server.ts",
+      "simulatedLatencyMs": 1100
+    },
+    {
+      "symbol": "runWorkflowFind",
+      "file": "src/workflows/find.ts",
+      "simulatedLatencyMs": 1100
+    }
+  ],
+  "expectedTotalEnrichmentMs": 5500
+}
