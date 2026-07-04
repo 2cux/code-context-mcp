@@ -3,6 +3,10 @@ import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js"
 import {
   CallToolRequestSchema,
   ListToolsRequestSchema,
+  ListResourcesRequestSchema,
+  ReadResourceRequestSchema,
+  ListPromptsRequestSchema,
+  GetPromptRequestSchema,
   type CallToolResult,
 } from "@modelcontextprotocol/sdk/types.js";
 import type { Database } from "sql.js";
@@ -13,6 +17,8 @@ import { TOOL_DEFINITIONS } from "./toolSchemas.js";
 import { createToolHandlers } from "./toolRegistry.js";
 import { resolveToolMode, isToolAllowed, describeMode } from "./toolMode.js";
 import { registerAllFlows } from "../harness/register.js";
+import { listResources, readResource } from "./resourceHandlers.js";
+import { listPrompts, getPrompt } from "./promptHandlers.js";
 
 export interface ServerContext {
   db: Database;
@@ -43,6 +49,8 @@ export async function startServer(): Promise<void> {
     {
       capabilities: {
         tools: {},
+        resources: {},
+        prompts: {},
       },
     },
   );
@@ -102,6 +110,36 @@ export async function startServer(): Promise<void> {
         ],
         isError: true,
       };
+    }
+  });
+
+  // ---------- resource handlers ----------
+
+  server.setRequestHandler(ListResourcesRequestSchema, async () => ({
+    resources: listResources(),
+  }));
+
+  server.setRequestHandler(ReadResourceRequestSchema, async (request) => {
+    try {
+      return readResource(request.params.uri, { db });
+    } catch (err) {
+      const message = err instanceof Error ? err.message : String(err);
+      throw new Error(`Resource error: ${message}`);
+    }
+  });
+
+  // ---------- prompt handlers ----------
+
+  server.setRequestHandler(ListPromptsRequestSchema, async () => ({
+    prompts: listPrompts(),
+  }));
+
+  server.setRequestHandler(GetPromptRequestSchema, async (request) => {
+    try {
+      return getPrompt(request.params.name, { db });
+    } catch (err) {
+      const message = err instanceof Error ? err.message : String(err);
+      throw new Error(`Prompt error: ${message}`);
     }
   });
 
