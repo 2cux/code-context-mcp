@@ -1,0 +1,1 @@
+What package manager does this project use? Which testing framework is required?

@@ -7,6 +7,7 @@
  *   code-context scope                   Show current repo scope
  *   code-context stats                   Show token/stats summary
  *   code-context receipt <id>            Show a receipt by ID
+ *   code-context demo                    Run first-run value demo
  *   code-context compress <file>         Compress file content
  *   code-context retrieve <ref>          Retrieve original content
  *   code-context list-compressions       List compressed context records
@@ -37,6 +38,7 @@ import {
   runReceipts,
   runFailuresList,
   runFailuresStats,
+  runDemo,
 } from "./commands.js";
 import type { CliResult } from "./commands.js";
 
@@ -64,6 +66,8 @@ Usage:
   code-context <command> [options]
 
 Commands:
+  demo                                 Run first-run value demo
+      --json                           Output compact JSON
   scope [cwd]                          Show current repo scope
   stats                                Show token and operation stats
   receipt <receiptId>                  Show a receipt by ID
@@ -151,6 +155,7 @@ Global flags:
   --json                               Output compact JSON
 
 Examples:
+  code-context demo
   code-context scope
   code-context compress ./test-output.log --type test_output
   code-context retrieve orig_abc123
@@ -262,6 +267,14 @@ async function main(): Promise<void> {
   let result: CliResult;
 
   switch (command) {
+    // ------------------------------------------------------------------
+    // demo
+    // ------------------------------------------------------------------
+    case "demo": {
+      result = await runDemo();
+      break;
+    }
+
     // ------------------------------------------------------------------
     // scope
     // ------------------------------------------------------------------
