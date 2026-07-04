@@ -1,11 +1,11 @@
 {
-  "timestamp": "2026-07-04T12:15:10.145Z",
+  "timestamp": "2026-07-04T12:26:12.551Z",
   "totalFlows": 1,
   "flows": [
     {
       "flowId": "json-report-flow",
       "runId": "",
-      "timestamp": "2026-07-04T12:15:10.145Z",
+      "timestamp": "2026-07-04T12:26:12.550Z",
       "manifestChecks": [
         {
           "rule": "manifest.id.unique",

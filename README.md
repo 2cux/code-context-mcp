@@ -90,6 +90,12 @@ For full tool access during development, use `dev` mode (18 tools):
 # Show current repo scope
 code-context scope
 
+# Run first-run value demo
+code-context demo
+
+# Generate usage value report
+code-context value
+
 # Compress a file (auto-detect content type)
 code-context compress tests/fixtures/vitest-output.txt
 

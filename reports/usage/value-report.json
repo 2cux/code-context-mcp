@@ -1,0 +1,129 @@
+{
+  "summary": {
+    "totalCompressions": 456,
+    "totalEstimatedTokensSaved": 569580,
+    "averageCompressionRatio": 0.04033991228070175,
+    "cacheHits": 364,
+    "totalRetrieves": 370,
+    "memoriesSaved": 1118,
+    "memoriesRecalled": 760,
+    "memoriesForgotten": 272
+  },
+  "topCompressions": [
+    {
+      "ccrId": "ccr_mr6b90lv_43b886_000001",
+      "contentType": "log",
+      "tokensSaved": 51096,
+      "compressionRatio": 0.9749,
+      "createdAt": "2026-07-04T12:00:26.708Z",
+      "summary": "Log compressed: 0 priority lines kept, 0 INFO/DEBUG folded"
+    },
+    {
+      "ccrId": "ccr_mr6bcbie_93e838_000001",
+      "contentType": "log",
+      "tokensSaved": 5862,
+      "compressionRatio": 0.8646,
+      "createdAt": "2026-07-04T12:03:00.806Z",
+      "summary": "Log compressed: 12 priority lines kept, 163 INFO/DEBUG folded"
+    },
+    {
+      "ccrId": "ccr_mqf8by1z_0e8dbb_000001",
+      "contentType": "command_output",
+      "tokensSaved": 0,
+      "compressionRatio": 0,
+      "createdAt": "2026-06-15T13:08:57.767Z",
+      "summary": "Command output fits within token budget"
+    },
+    {
+      "ccrId": "ccr_mqf8byds_3135f7_000002",
+      "contentType": "code",
+      "tokensSaved": 0,
+      "compressionRatio": 0,
+      "createdAt": "2026-06-15T13:08:58.192Z",
+      "summary": "Code fits within token budget"
+    },
+    {
+      "ccrId": "ccr_mqf8byps_0419f0_000003",
+      "contentType": "command_output",
+      "tokensSaved": 0,
+      "compressionRatio": 0,
+      "createdAt": "2026-06-15T13:08:58.624Z",
+      "summary": "Command output fits within token budget"
+    }
+  ],
+  "recentMemories": [
+    {
+      "memoryId": "mem_mr6c6sv2_76a5d5_000015",
+      "type": "decision",
+      "summary": "React 18 + TS",
+      "createdAt": "2026-07-04T12:26:42.975Z",
+      "status": "active"
+    },
+    {
+      "memoryId": "mem_mr6c6rr2_5d71ba_000014",
+      "type": "project_rule",
+      "summary": "API v2 base URL",
+      "createdAt": "2026-07-04T12:26:41.534Z",
+      "status": "active"
+    },
+    {
+      "memoryId": "mem_mr6c6mzh_ee73a3_000012",
+      "type": "current_task",
+      "summary": "Build CLI",
+      "createdAt": "2026-07-04T12:26:35.357Z",
+      "status": "active"
+    },
+    {
+      "memoryId": "mem_mr6c6m7r_2e784f_000011",
+      "type": "project_rule",
+      "summary": "TS Strict",
+      "createdAt": "2026-07-04T12:26:34.360Z",
+      "status": "active"
+    },
+    {
+      "memoryId": "mem_mr6c6kpx_448025_000010",
+      "type": "project_rule",
+      "createdAt": "2026-07-04T12:26:32.421Z",
+      "status": "active"
+    },
+    {
+      "memoryId": "mem_mr6c6flr_df0aff_000007",
+      "type": "bug",
+      "summary": "Login bug",
+      "createdAt": "2026-07-04T12:26:25.791Z",
+      "status": "active"
+    },
+    {
+      "memoryId": "mem_mr6c6f93_2770ca_000006",
+      "type": "project_rule",
+      "summary": "ESLint config",
+      "createdAt": "2026-07-04T12:26:25.335Z",
+      "status": "active"
+    },
+    {
+      "memoryId": "mem_mr6c6e6p_65be1f_000005",
+      "type": "project_rule",
+      "summary": "TypeScript strict mode",
+      "createdAt": "2026-07-04T12:26:23.953Z",
+      "status": "active"
+    },
+    {
+      "memoryId": "mem_mr6c6dgy_082fc3_000004",
+      "type": "decision",
+      "createdAt": "2026-07-04T12:26:23.026Z",
+      "status": "active"
+    },
+    {
+      "memoryId": "mem_mr6c6d2x_703374_000003",
+      "type": "current_task",
+      "summary": "CLI dev",
+      "createdAt": "2026-07-04T12:26:22.521Z",
+      "status": "active"
+    }
+  ],
+  "localFirstNote": {
+    "dataLocation": "Local SQLite database (.codecontext.db in project root)",
+    "noDataUploaded": true
+  },
+  "generatedAt": "2026-07-04T12:29:15.779Z"
+}

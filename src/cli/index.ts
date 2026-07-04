@@ -39,6 +39,7 @@ import {
   runFailuresList,
   runFailuresStats,
   runDemo,
+  runValue,
 } from "./commands.js";
 import type { CliResult } from "./commands.js";
 
@@ -67,6 +68,8 @@ Usage:
 
 Commands:
   demo                                 Run first-run value demo
+      --json                           Output compact JSON
+  value                                Generate usage value report
       --json                           Output compact JSON
   scope [cwd]                          Show current repo scope
   stats                                Show token and operation stats
@@ -156,6 +159,7 @@ Global flags:
 
 Examples:
   code-context demo
+  code-context value
   code-context scope
   code-context compress ./test-output.log --type test_output
   code-context retrieve orig_abc123
@@ -272,6 +276,14 @@ async function main(): Promise<void> {
     // ------------------------------------------------------------------
     case "demo": {
       result = await runDemo();
+      break;
+    }
+
+    // ------------------------------------------------------------------
+    // value
+    // ------------------------------------------------------------------
+    case "value": {
+      result = await runValue();
       break;
     }
 
