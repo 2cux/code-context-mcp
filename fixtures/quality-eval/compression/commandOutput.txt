@@ -1,0 +1,41 @@
+/**
+ * Command Output Fixture — Quality Eval
+ *
+ * A realistic TypeScript build/test command output.
+ *
+ * Key facts to preserve:
+ *   - Command: pnpm typecheck
+ *   - Errors: 3 TS errors (TS2304, TS2554, TS2322)
+ *   - Files: src/services/userService.ts (lines 15, 42), src/utils/format.ts (line 88)
+ *   - Exit code: 2
+ *   - Warnings: 2 (deprecated String, unused variable)
+ *   - Total files: 145
+ */
+
+$ pnpm typecheck
+
+> code-context-mcp@1.0.0 typecheck /app
+> tsc --noEmit
+
+src/services/userService.ts:15:5 — error TS2304: Cannot find name 'undefinedVar'.
+  L15: undefinedVar.doSomething();
+
+src/services/userService.ts:42:18 — error TS2554: Expected 2 arguments, but got 1.
+  L42: const result = findUser("abc");
+
+src/utils/format.ts:88:7 — error TS2322: Type '"hello"' is not assignable to type 'number'.
+  L88: const x: number = "hello";
+
+
+Found 3 errors. Watching for file changes.
+
+> eslint src/ --ext .ts
+
+src/utils/format.ts:15:10 — warning: 'String' is deprecated. Use string instead. (no-restricted-globals)
+src/utils/parser.ts:33:5 — warning: 'unusedVar' is assigned but never used. (@typescript-eslint/no-unused-vars)
+
+> vitest run tests/quality
+
+No test files found in tests/quality. Skipping.
+
+Build failed with exit code 2

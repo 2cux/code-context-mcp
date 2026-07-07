@@ -1,0 +1,27 @@
+/**
+ * JSON Fixture — Quality Eval
+ *
+ * A realistic JSON API response.
+ */
+
+{
+  "status": "error",
+  "code": "RATE_LIMITED",
+  "message": "Too many requests. Please try again in 30 seconds.",
+  "retryAfter": 30,
+  "requestId": "req_abc_001",
+  "timestamp": "2026-07-07T08:15:00.000Z",
+  "details": {
+    "limit": 5,
+    "remaining": 0,
+    "resetAt": "2026-07-07T08:15:30.000Z",
+    "windowMs": 60000
+  },
+  "errors": [
+    {
+      "field": "email",
+      "code": "INVALID_FORMAT",
+      "message": "The provided email address is not valid."
+    }
+  ]
+}

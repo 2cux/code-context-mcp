@@ -1,0 +1,43 @@
+/**
+ * Test Output Fixture — Quality Eval
+ *
+ * A realistic vitest test suite output.
+ *
+ * Key facts to preserve:
+ *   - Failing tests: 3 (session logout, price calc, empty state renders)
+ *   - Passing: 12, Pending: 2
+ *   - Error types: AssertionError, TypeError
+ *   - Files: tests/unit/auth/session.test.ts, tests/unit/payment/priceCalc.test.ts, tests/functional/listEmpty.test.tsx
+ *   - Duration: 3.2s
+ */
+
+ RUN  vitest v2.0.0
+
+ ✓ tests/unit/auth/login.test.ts (2 tests) 42ms
+ ✓ tests/unit/auth/register.test.ts (1 test) 18ms
+ ✗ tests/unit/auth/session.test.ts (2/3 tests) 156ms
+   ✓ should create session on login
+   ✓ should refresh session token
+   ✗ should clear cookie on logout
+     AssertionError: expected "set-cookie" header to be "session=; Max-Age=0"
+     Expected: "session=; Max-Age=0"
+     Received: "session=invalidated; Max-Age=3600"
+     ❯ tests/unit/auth/session.test.ts:88:22
+ ✓ tests/unit/payment/refund.test.ts (3 tests) 203ms
+ ✓ tests/unit/payment/validation.test.ts (2 tests) 89ms
+ ✗ tests/unit/payment/priceCalc.test.ts (1/2 tests) 67ms
+   ✓ should calculate base price
+   ✗ should apply bulk discount correctly
+     TypeError: Cannot read properties of undefined (reading 'discount')
+     ❯ BulkDiscountCalculator.applyDiscount src/services/pricing.ts:120:18
+ ✓ tests/functional/listNormal.test.tsx (2 tests) 312ms
+ ✗ tests/functional/listEmpty.test.tsx (0/1 tests) 45ms
+   ✗ should render empty state message
+     AssertionError: expected "Loading..." to include "No items found"
+     Expected: "No items found"
+     Received: "Loading..."
+     ❯ tests/functional/listEmpty.test.tsx:34:18
+
+ Test Files:  3 failed, 6 passed (9)
+      Tests:  3 failed, 12 passed, 2 pending (17)
+   Duration:  3.20s (wall 3.20s)

@@ -1,0 +1,18 @@
+/**
+ * RAG Chunk Fixture — Quality Eval
+ *
+ * A realistic RAG retrieval chunk with metadata.
+ */
+
+{
+  "id": "chunk_auth_001",
+  "text": "The authentication service uses JWT tokens with RS256 signing. Tokens expire after 1 hour (access) or 7 days (refresh). The refresh token is stored in an HTTP-only cookie and rotated on each use to prevent replay attacks. Token revocation is handled via a server-side blocklist stored in Redis.",
+  "metadata": {
+    "source": "docs/auth/architecture.md",
+    "section": "Token Management",
+    "relevance": 0.95,
+    "chunkIndex": 3,
+    "totalChunks": 12
+  },
+  "embedding": null
+}

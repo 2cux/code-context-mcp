@@ -1,0 +1,542 @@
+{
+  "meta": {
+    "generatedAt": "2026-07-07T12:12:01.569Z",
+    "projectVersion": "1.0.0",
+    "description": "CodeContext MCP — Offline Quality Baseline"
+  },
+  "compression": {
+    "averageKeyFactRetention": 55.1,
+    "averageTokenSavings": 58.5,
+    "fixtures": [
+      {
+        "fixture": "code.ts",
+        "contentType": "code",
+        "tokensBefore": 1136,
+        "tokensAfter": 269,
+        "saved": 867,
+        "ratio": 0.7632,
+        "factsTotal": 13,
+        "factsRetained": 6,
+        "retentionRate": 0.46153846153846156,
+        "keyFacts": [
+          {
+            "fact": "PaymentRequest",
+            "retained": true
+          },
+          {
+            "fact": "PaymentResponse",
+            "retained": true
+          },
+          {
+            "fact": "PaymentError",
+            "retained": true
+          },
+          {
+            "fact": "processPayment",
+            "retained": false
+          },
+          {
+            "fact": "refundPayment",
+            "retained": false
+          },
+          {
+            "fact": "getPaymentStatus",
+            "retained": true
+          },
+          {
+            "fact": "validateCard",
+            "retained": true
+          },
+          {
+            "fact": "Luhn",
+            "retained": false
+          },
+          {
+            "fact": "RETRY_DELAY_MS",
+            "retained": false
+          },
+          {
+            "fact": "processing_error",
+            "retained": false
+          },
+          {
+            "fact": "invalid_amount",
+            "retained": false
+          },
+          {
+            "fact": "FIXME: Add rate limiting",
+            "retained": true
+          },
+          {
+            "fact": "src/services/paymentService.ts",
+            "retained": false
+          }
+        ]
+      },
+      {
+        "fixture": "log.ts",
+        "contentType": "log",
+        "tokensBefore": 2470,
+        "tokensAfter": 741,
+        "saved": 1729,
+        "ratio": 0.7,
+        "factsTotal": 10,
+        "factsRetained": 10,
+        "retentionRate": 1,
+        "keyFacts": [
+          {
+            "fact": "ERROR",
+            "retained": true
+          },
+          {
+            "fact": "FATAL",
+            "retained": true
+          },
+          {
+            "fact": "ConnectionRefusedError",
+            "retained": true
+          },
+          {
+            "fact": "OutOfMemoryError",
+            "retained": true
+          },
+          {
+            "fact": "QueryTimeoutError",
+            "retained": true
+          },
+          {
+            "fact": "req_abc001",
+            "retained": true
+          },
+          {
+            "fact": "/app/src/db/pool.ts",
+            "retained": true
+          },
+          {
+            "fact": "/app/src/worker/reaper.ts",
+            "retained": true
+          },
+          {
+            "fact": "All retries exhausted",
+            "retained": true
+          },
+          {
+            "fact": "2026-07-07",
+            "retained": true
+          }
+        ]
+      },
+      {
+        "fixture": "conversationHistory.txt",
+        "contentType": "conversation_history",
+        "tokensBefore": 2034,
+        "tokensAfter": 451,
+        "saved": 1583,
+        "ratio": 0.7783,
+        "factsTotal": 9,
+        "factsRetained": 6,
+        "retentionRate": 0.6666666666666666,
+        "keyFacts": [
+          {
+            "fact": "rate limiting",
+            "retained": true
+          },
+          {
+            "fact": "login endpoint",
+            "retained": true
+          },
+          {
+            "fact": "express-rate-limit",
+            "retained": true
+          },
+          {
+            "fact": "redis",
+            "retained": true
+          },
+          {
+            "fact": "5 requests",
+            "retained": false
+          },
+          {
+            "fact": "60 seconds",
+            "retained": false
+          },
+          {
+            "fact": "Retry-After",
+            "retained": false
+          },
+          {
+            "fact": "src/middleware/rateLimiter.ts",
+            "retained": true
+          },
+          {
+            "fact": "src/routes/auth.ts",
+            "retained": true
+          }
+        ]
+      },
+      {
+        "fixture": "commandOutput.txt",
+        "contentType": "command_output",
+        "tokensBefore": 357,
+        "tokensAfter": 178,
+        "saved": 179,
+        "ratio": 0.5014,
+        "factsTotal": 9,
+        "factsRetained": 9,
+        "retentionRate": 1,
+        "keyFacts": [
+          {
+            "fact": "typecheck",
+            "retained": true
+          },
+          {
+            "fact": "TS2304",
+            "retained": true
+          },
+          {
+            "fact": "TS2554",
+            "retained": true
+          },
+          {
+            "fact": "TS2322",
+            "retained": true
+          },
+          {
+            "fact": "src/services/userService.ts",
+            "retained": true
+          },
+          {
+            "fact": "src/utils/format.ts",
+            "retained": true
+          },
+          {
+            "fact": "Cannot find name",
+            "retained": true
+          },
+          {
+            "fact": "Expected 2 arguments",
+            "retained": true
+          },
+          {
+            "fact": "exit code 2",
+            "retained": true
+          }
+        ]
+      },
+      {
+        "fixture": "testOutput.txt",
+        "contentType": "test_output",
+        "tokensBefore": 495,
+        "tokensAfter": 178,
+        "saved": 317,
+        "ratio": 0.6404,
+        "factsTotal": 10,
+        "factsRetained": 2,
+        "retentionRate": 0.2,
+        "keyFacts": [
+          {
+            "fact": "tests/unit/auth/session.test.ts",
+            "retained": true
+          },
+          {
+            "fact": "tests/unit/payment/priceCalc.test.ts",
+            "retained": true
+          },
+          {
+            "fact": "tests/functional/listEmpty.test.tsx",
+            "retained": false
+          },
+          {
+            "fact": "should clear cookie on logout",
+            "retained": false
+          },
+          {
+            "fact": "should apply bulk discount correctly",
+            "retained": false
+          },
+          {
+            "fact": "should render empty state message",
+            "retained": false
+          },
+          {
+            "fact": "AssertionError",
+            "retained": false
+          },
+          {
+            "fact": "TypeError",
+            "retained": false
+          },
+          {
+            "fact": "3 failed",
+            "retained": false
+          },
+          {
+            "fact": "12 passed",
+            "retained": false
+          }
+        ]
+      },
+      {
+        "fixture": "markdown.md",
+        "contentType": "markdown",
+        "tokensBefore": 358,
+        "tokensAfter": 75,
+        "saved": 283,
+        "ratio": 0.7905,
+        "factsTotal": 13,
+        "factsRetained": 1,
+        "retentionRate": 0.07692307692307693,
+        "keyFacts": [
+          {
+            "fact": "CodeContext MCP",
+            "retained": true
+          },
+          {
+            "fact": "Context Compression",
+            "retained": false
+          },
+          {
+            "fact": "Project Memory",
+            "retained": false
+          },
+          {
+            "fact": "Scope Isolation",
+            "retained": false
+          },
+          {
+            "fact": "Content Router",
+            "retained": false
+          },
+          {
+            "fact": "Compression Engine",
+            "retained": false
+          },
+          {
+            "fact": "Memory Service",
+            "retained": false
+          },
+          {
+            "fact": "SQLite",
+            "retained": false
+          },
+          {
+            "fact": "compress_context",
+            "retained": false
+          },
+          {
+            "fact": "retrieve_original",
+            "retained": false
+          },
+          {
+            "fact": "remember_context",
+            "retained": false
+          },
+          {
+            "fact": "recall_context",
+            "retained": false
+          },
+          {
+            "fact": "MAX_TOKENS",
+            "retained": false
+          }
+        ]
+      },
+      {
+        "fixture": "json.json",
+        "contentType": "json",
+        "tokensBefore": 184,
+        "tokensAfter": 184,
+        "saved": 0,
+        "ratio": 0,
+        "factsTotal": 6,
+        "factsRetained": 6,
+        "retentionRate": 1,
+        "keyFacts": [
+          {
+            "fact": "RATE_LIMITED",
+            "retained": true
+          },
+          {
+            "fact": "Too many requests",
+            "retained": true
+          },
+          {
+            "fact": "retryAfter",
+            "retained": true
+          },
+          {
+            "fact": "req_abc_001",
+            "retained": true
+          },
+          {
+            "fact": "INVALID_FORMAT",
+            "retained": true
+          },
+          {
+            "fact": "email",
+            "retained": true
+          }
+        ]
+      },
+      {
+        "fixture": "ragChunk.json",
+        "contentType": "rag_chunk",
+        "tokensBefore": 159,
+        "tokensAfter": 79,
+        "saved": 80,
+        "ratio": 0.5031,
+        "factsTotal": 6,
+        "factsRetained": 0,
+        "retentionRate": 0,
+        "keyFacts": [
+          {
+            "fact": "JWT",
+            "retained": false
+          },
+          {
+            "fact": "RS256",
+            "retained": false
+          },
+          {
+            "fact": "HTTP-only cookie",
+            "retained": false
+          },
+          {
+            "fact": "Redis",
+            "retained": false
+          },
+          {
+            "fact": "docs/auth/architecture.md",
+            "retained": false
+          },
+          {
+            "fact": "Token Management",
+            "retained": false
+          }
+        ]
+      }
+    ]
+  },
+  "memory": {
+    "recallAt1": {
+      "hits": 6,
+      "total": 6,
+      "rate": 100,
+      "tests": [
+        {
+          "query": "pnpm package manager",
+          "targetContent": "Always use pnpm",
+          "rankFound": 1,
+          "inTop1": true,
+          "inTop3": true,
+          "totalResults": 2
+        },
+        {
+          "query": "TypeScript strict mode tsconfig",
+          "targetContent": "Enable TypeScript strict mode",
+          "rankFound": 1,
+          "inTop1": true,
+          "inTop3": true,
+          "totalResults": 1
+        },
+        {
+          "query": "React Router decision routing",
+          "targetContent": "React Router v6",
+          "rankFound": 1,
+          "inTop1": true,
+          "inTop3": true,
+          "totalResults": 1
+        },
+        {
+          "query": "WebSocket memory leak cleanup ChatWindow",
+          "targetContent": "WebSocket connections not being cleaned up",
+          "rankFound": 1,
+          "inTop1": true,
+          "inTop3": true,
+          "totalResults": 1
+        },
+        {
+          "query": "session logout cookie test failure",
+          "targetContent": "should clear cookie on logout",
+          "rankFound": 1,
+          "inTop1": true,
+          "inTop3": true,
+          "totalResults": 3
+        },
+        {
+          "query": "Vitest testing framework",
+          "targetContent": "vitest v2.0.0",
+          "rankFound": 1,
+          "inTop1": true,
+          "inTop3": true,
+          "totalResults": 1
+        }
+      ]
+    },
+    "recallAt3": {
+      "hits": 4,
+      "total": 4,
+      "rate": 100,
+      "tests": [
+        {
+          "query": "package manager pnpm npm",
+          "targetContent": "Always use pnpm",
+          "rankFound": 1,
+          "inTop1": true,
+          "inTop3": true,
+          "totalResults": 2
+        },
+        {
+          "query": "frontend routing framework",
+          "targetContent": "React Router v6",
+          "rankFound": 1,
+          "inTop1": true,
+          "inTop3": true,
+          "totalResults": 2
+        },
+        {
+          "query": "test failure assertion auth",
+          "targetContent": "should clear cookie on logout",
+          "rankFound": 1,
+          "inTop1": true,
+          "inTop3": true,
+          "totalResults": 4
+        },
+        {
+          "query": "build compilation type error",
+          "targetContent": "pnpm typecheck",
+          "rankFound": 1,
+          "inTop1": true,
+          "inTop3": true,
+          "totalResults": 5
+        }
+      ]
+    },
+    "scopeIsolation": {
+      "allIsolated": true,
+      "checks": [
+        {
+          "scope": "quality-eval-scope-c",
+          "count": 0,
+          "isolated": true
+        },
+        {
+          "scope": "quality-eval-scope-a",
+          "count": 0,
+          "isolated": true
+        },
+        {
+          "scope": "quality-eval-scope-b",
+          "count": 0,
+          "isolated": true
+        },
+        {
+          "scope": "quality-eval-scope-a filtered",
+          "count": 0,
+          "isolated": true
+        }
+      ]
+    }
+  }
+}
