@@ -59,18 +59,18 @@ cleanup_originals    — 批量清理过期原始内容 (开发者维护)
 
 全部 18 个已注册 MCP tool — 用于 CI schema 校验、smoke test、harness test。
 
-**包含**: Dev 模式 17 个 + `delete_original` + `cleanup_originals`
+**包含**: 全部 18 个已注册工具，与 Dev 模式相同
 
 ---
 
 ## 危险工具
 
-以下工具**永远不在 agent/dev 模式中出现**:
+以下工具**不在 agent 模式中出现，但包含在 dev/test 模式中供开发者维护使用**:
 
-| 工具 | 风险 | CLI 替代 |
-|------|------|----------|
-| `delete_original` | 不可逆删除原始内容 | `code-context retrieve <ref>` 确认后再操作 |
-| `cleanup_originals` | 批量删除过期原始内容 | `code-context cleanup` (CLI 维护命令) |
+| 工具 | 风险 | 模式 |
+|------|------|------|
+| `delete_original` | 不可逆删除原始内容 | dev/test only |
+| `cleanup_originals` | 批量删除过期原始内容 | dev/test only |
 
 ---
 

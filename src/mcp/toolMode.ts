@@ -91,7 +91,7 @@ export function describeMode(mode: ToolMode): string {
   }
 }
 
-/** Get the list of dangerous tools (never in agent or dev mode). */
+/** Get the list of dangerous tools (hidden in agent mode, available in dev/test mode). */
 export function getDangerousTools(): string[] {
   return ["delete_original", "cleanup_originals"];
 }

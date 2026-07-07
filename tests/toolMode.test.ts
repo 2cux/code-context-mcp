@@ -3,9 +3,9 @@
  *
  * Validates that:
  *   - Agent mode exposes exactly 7 tools
- *   - Dev mode exposes 17 tools (all except dangerous)
+ *   - Dev mode exposes 18 tools (includes dangerous tools for developer maintenance)
  *   - Test mode exposes all 18 tools
- *   - Dangerous tools are excluded from agent and dev
+ *   - Dangerous tools are hidden in agent mode, included in dev/test
  *   - run_context_flow is present in all three modes
  */
 

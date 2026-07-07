@@ -435,7 +435,7 @@ CodeContext MCP tools are all fast-path (direct handler dispatch). The HarnessRu
           │                                   │
   ┌───────▼────────┐                 ┌────────▼──────────┐
   │  FAST PATH      │                 │  HARNESS PATH      │
-  │  (17 tools)     │                 │  (1 tool)          │
+  │  (18 tools)     │                 │  (1 tool)          │
   │                 │                 │                    │
   │  Direct handler │                 │  run_harness_flow  │
   │       │         │                 │       │            │

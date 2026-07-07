@@ -52,5 +52,5 @@
 ## Rollback
 
 To restore full 18-tool surface: `MCP_TOOL_MODE=test`
-To restore dev surface (17 tools): `MCP_TOOL_MODE=dev`
+To restore dev surface (18 tools): `MCP_TOOL_MODE=dev`
 Default (agent, 7 tools): no env var needed.
