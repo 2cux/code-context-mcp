@@ -20,14 +20,10 @@ Agents can access project context without understanding internal storage details
 
 ```json
 {
-  "projectIdentity": {
-    "scopeId": "codecontext-mcp",
-    "scopeStrategy": "git-repo",
-    "gitRoot": "/path/to/repo",
-    "remote": "https://github.com/user/repo.git",
-    "branch": "main",
-    "note": "Local-first storage. No project code, logs, or memory uploaded."
-  },
+  "projectName": "CodeContext",
+  "projectRootName": "CodeContext",
+  "branch": "main",
+  "localFirstNote": "Local-first storage. No project code, logs, or memory uploaded.",
   "stableProjectRules": [
     {
       "type": "project_rule",
@@ -71,24 +67,34 @@ Agents can access project context without understanding internal storage details
   "lastUpdated": "2026-07-04T12:00:00.000Z",
   "agentGuidance": {
     "availableTools": [
-      "recall_context - search project memory by query",
+      "current_scope - show current repository scope",
       "compress_context - compress long content and save tokens",
+      "retrieve_original - expand compressed context",
       "remember_context - save important project facts",
-      "list_context - list all memories",
-      "forget_context - remove outdated memories"
+      "recall_context - search project memory by query",
+      "forget_context - remove outdated memories",
+      "run_context_flow - unified compression + memory flow"
     ],
     "localFirstNote": "All context is scoped to this repository. Do not upload project code or logs."
+  },
+  "_internal": {
+    "scopeId": "codecontext-mcp",
+    "scopeStrategy": "git-repo",
+    "gitRoot": "/path/to/repo",
+    "remote": "https://github.com/user/repo.git"
   }
 }
 ```
 
 **Key Features**:
 
-- **Project identity**: Clear scope + local-first note
-- **Stable rules**: Top 5 static profile facts (project conventions)
-- **Recent activity**: Last 3 dynamic events
+- **Top-level user-friendly fields**: `projectName`, `projectRootName`, `branch`, `localFirstNote`
+- **Stable rules**: Top 5 static profile facts (project conventions) - limited to prevent bloat
+- **Recent activity**: Last 3 dynamic events - limited to prevent bloat
 - **Important memories**: Top 5 memories by confidence
+- **Accurate counts**: `memoryOverview.active` shows true active memory count from database
 - **Agent guidance**: Available tools + constraints
+- **Internal fields**: Moved to `_internal` object to avoid exposing implementation details
 
 ---
 
@@ -156,7 +162,7 @@ Agents can access project context without understanding internal storage details
 # CodeContext Project Brief
 
 ## Current Project
-Project: `codecontext-mcp`
+Project: `CodeContext`
 Branch: main
 
 **Local-first constraint**: Do not upload project code, logs, or memory content.
@@ -177,11 +183,13 @@ Branch: main
 - Token savings: 45,000
 
 ## Available Tools
-- `recall_context(query)` — search project memory
+- `current_scope()` — show current repository scope
 - `compress_context(content, type)` — compress long content
+- `retrieve_original(ccrId)` — expand compressed context
 - `remember_context(type, content, summary)` — save project facts
-- `list_context(status?, type?)` — list all memories
+- `recall_context(query)` — search project memory
 - `forget_context(memoryId)` — remove outdated memory
+- `run_context_flow(flowType, payload)` — unified compression + memory flow
 
 All operations are scoped to this repository.
 ```
@@ -189,8 +197,9 @@ All operations are scoped to this repository.
 **Key Features**:
 
 - **Concise**: Targets ~800 tokens max
-- **Current rules**: Top 3 project rules shown
-- **Recent context**: 3 most relevant memories
+- **User-friendly project name**: Shows extracted project name instead of scopeId
+- **Current rules**: Top 3 project rules shown (limited to reduce token usage)
+- **Recent context**: 3 most relevant memories (limited display)
 - **Tool guidance**: Clear API signatures
 - **Constraints**: Local-first reminder
 
@@ -272,9 +281,18 @@ Potential additions (not in scope for first version):
 **project-profile**:
 ```json
 {
-  "scope": { "scopeId": "..." },
-  "memory": { "total": 15, "recentSummaries": [...] },
-  "hint": "Agent: use recall_context..."
+  "projectIdentity": {
+    "scopeId": "codecontext-mcp",
+    "scopeStrategy": "git-repo",
+    "gitRoot": "/path/to/repo",
+    "remote": "https://github.com/user/repo.git",
+    "branch": "main",
+    "note": "Local-first storage. No code uploaded."
+  },
+  "memoryOverview": {
+    "total": 15,
+    "active": 10  // Wrong: length of recent list, not true count
+  }
 }
 ```
 
@@ -283,24 +301,28 @@ Potential additions (not in scope for first version):
 **project-profile**:
 ```json
 {
-  "projectIdentity": {
-    "scopeId": "...",
-    "note": "Local-first storage. No code uploaded."
+  "projectName": "CodeContext",
+  "projectRootName": "CodeContext",
+  "branch": "main",
+  "localFirstNote": "Local-first storage. No project code, logs, or memory uploaded.",
+  "memoryOverview": {
+    "total": 15,
+    "active": 12  // Correct: actual count from database
   },
-  "stableProjectRules": [...],
-  "recentActivity": [...],
-  "importantMemories": [...],
-  "agentGuidance": {
-    "availableTools": [...],
-    "localFirstNote": "..."
+  "_internal": {
+    "scopeId": "codecontext-mcp",
+    "scopeStrategy": "git-repo",
+    "gitRoot": "/path/to/repo",
+    "remote": "https://github.com/user/repo.git"
   }
 }
 ```
 
 **Key Improvements**:
 
-1. **Structured guidance**: `agentGuidance` replaces generic hint
-2. **Rule separation**: `stableProjectRules` vs. `recentActivity`
-3. **Local-first clarity**: Explicit note in identity
-4. **Tool list**: Full tool signatures with descriptions
-5. **Activity tracking**: Recent dynamic facts highlighted
+1. **User-friendly names**: Top-level `projectName` and `projectRootName` instead of internal `scopeId`
+2. **Accurate counts**: `memoryOverview.active` now queries database directly, not limited by display list
+3. **Size limits enforced**: `stableProjectRules` max 5, `recentActivity` max 3 to prevent bloat
+4. **Internal fields hidden**: Implementation details moved to `_internal` object
+5. **Local-first clarity**: Promoted to top-level `localFirstNote` field
+6. **Optimized prompt**: `project_context_brief` stays under 800 tokens with tighter limits

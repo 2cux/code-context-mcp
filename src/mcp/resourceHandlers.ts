@@ -84,6 +84,12 @@ function getProjectProfile(db: Database) {
   const memoryService = new MemoryService(db);
   const compressedStore = new CompressedStore(db);
 
+  // Extract project name from git root or scope
+  const projectRootName = scope.gitRoot ? scope.gitRoot.split(/[/\\]/).pop() || "unknown" : "unknown";
+  const projectName = scope.remote
+    ? scope.remote.replace(/\.git$/, "").split("/").pop() || projectRootName
+    : projectRootName;
+
   // Recent active memories (top 10 by confidence)
   const recentMemories = memoryService.list({
     scopeId: scope.scopeId,
@@ -109,6 +115,22 @@ function getProjectProfile(db: Database) {
   const memoryByType = memoryCountByType?.["json"]
     ? JSON.parse(memoryCountByType["json"] as string)
     : {};
+
+  // Get actual active memory count
+  const activeMemoryCount = queryOne(
+    db,
+    `SELECT COUNT(*) as cnt FROM memories WHERE scope_id = ? AND status = 'active'`,
+    [scope.scopeId],
+  );
+  const activeCount = Number(activeMemoryCount?.["cnt"] ?? 0);
+
+  // Total memory count
+  const totalMemoryCount = queryOne(
+    db,
+    `SELECT COUNT(*) as cnt FROM memories WHERE scope_id = ?`,
+    [scope.scopeId],
+  );
+  const totalCount = Number(totalMemoryCount?.["cnt"] ?? 0);
 
   // Compression stats
   const ccrCount = compressedStore.count(scope.scopeId);
@@ -177,21 +199,17 @@ function getProjectProfile(db: Database) {
   const lastUpdated = lastUpdate?.["last_updated"] as string | null;
 
   return {
-    projectIdentity: {
-      scopeId: scope.scopeId,
-      scopeStrategy: scope.scopeStrategy,
-      gitRoot: scope.gitRoot,
-      remote: scope.remote,
-      branch: scope.branch,
-      note: "Local-first storage. No project code, logs, or memory uploaded.",
-    },
-    stableProjectRules: topStaticFacts.map((f: { type: string; summary: string | null; content: string; confidence: number; createdAt: string }) => ({
+    projectName,
+    projectRootName,
+    branch: scope.branch || null,
+    localFirstNote: "Local-first storage. No project code, logs, or memory uploaded.",
+    stableProjectRules: topStaticFacts.slice(0, 5).map((f: { type: string; summary: string | null; content: string; confidence: number; createdAt: string }) => ({
       type: f.type,
       summary: f.summary || f.content.slice(0, 80),
       confidence: f.confidence,
       createdAt: f.createdAt,
     })),
-    recentActivity: recentDynamicFacts.map((f: { type: string; summary: string | null; confidence: number; createdAt: string }) => ({
+    recentActivity: recentDynamicFacts.slice(0, 3).map((f: { type: string; summary: string | null; confidence: number; createdAt: string }) => ({
       type: f.type,
       summary: f.summary,
       confidence: f.confidence,
@@ -204,8 +222,8 @@ function getProjectProfile(db: Database) {
       createdAt: m.createdAt,
     })),
     memoryOverview: {
-      total: recentMemories.total,
-      active: recentMemories.items.length,
+      total: totalCount,
+      active: activeCount,
       byType: memoryByType,
     },
     compressionOverview: {
@@ -226,6 +244,12 @@ function getProjectProfile(db: Database) {
         "run_context_flow - unified compression + memory flow",
       ],
       localFirstNote: "All context is scoped to this repository. Do not upload project code or logs.",
+    },
+    _internal: {
+      scopeId: scope.scopeId,
+      scopeStrategy: scope.scopeStrategy,
+      gitRoot: scope.gitRoot,
+      remote: scope.remote,
     },
   };
 }

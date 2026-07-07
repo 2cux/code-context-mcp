@@ -71,6 +71,12 @@ function buildProjectContextBrief(db: Database): string {
   const compressedStore = new CompressedStore(db);
   const tokenStats = getTokenStats(db, scope.scopeId);
 
+  // Extract project name from git root or scope
+  const projectRootName = scope.gitRoot ? scope.gitRoot.split(/[/\\]/).pop() || "unknown" : "unknown";
+  const projectName = scope.remote
+    ? scope.remote.replace(/\.git$/, "").split("/").pop() || projectRootName
+    : projectRootName;
+
   // Memory counts
   const memoryStats = queryOne(
     db,
@@ -89,7 +95,7 @@ function buildProjectContextBrief(db: Database): string {
   const topMemories = memoryService.list({
     scopeId: scope.scopeId,
     status: ["active"],
-    limit: 10,
+    limit: 5,
     sortBy: "confidence",
     sortOrder: "desc",
   });
@@ -123,7 +129,7 @@ function buildProjectContextBrief(db: Database): string {
   lines.push("# CodeContext Project Brief");
   lines.push("");
   lines.push("## Current Project");
-  lines.push(`Project: \`${scope.scopeId}\``);
+  lines.push(`Project: \`${projectName}\``);
   if (scope.branch) lines.push(`Branch: ${scope.branch}`);
   lines.push("");
   lines.push("**Local-first constraint**: Do not upload project code, logs, or memory content.");
@@ -132,7 +138,7 @@ function buildProjectContextBrief(db: Database): string {
   if (topRules.length > 0) {
     lines.push("## Project Rules");
     for (const rule of topRules) {
-      const summary = rule.summary || rule.content.slice(0, 80);
+      const summary = rule.summary || rule.content.slice(0, 60);
       lines.push(`- [${rule.type}] ${summary}`);
     }
     lines.push("");
@@ -144,7 +150,7 @@ function buildProjectContextBrief(db: Database): string {
     for (const m of topMemories.items.slice(0, 3)) {
       if (!seenTypes.has(m.type)) {
         seenTypes.add(m.type);
-        const summary = m.summary || m.content.slice(0, 60);
+        const summary = m.summary || m.content.slice(0, 50);
         lines.push(`- [${m.type}] ${summary}`);
       }
     }

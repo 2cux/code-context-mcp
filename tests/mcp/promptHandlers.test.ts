@@ -65,7 +65,11 @@ describe("promptHandlers", () => {
       expect(text).toContain("## Stats");
       expect(text).toContain("## Available Tools");
       expect(text).toContain("Local-first constraint");
-      expect(text).toContain(scope.scopeId);
+
+      // Should show project name, not scopeId
+      expect(text).toContain("Project:");
+      expect(text).not.toContain(`Project: \`${scope.scopeId}\``);
+
       expect(text).toContain("recall_context");
       expect(text).toContain("compress_context");
       expect(text).toContain("forget_context");

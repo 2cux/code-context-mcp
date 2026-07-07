@@ -57,16 +57,36 @@ describe("resourceHandlers", () => {
       expect(result.contents[0]!.mimeType).toBe("application/json");
 
       const data = JSON.parse(result.contents[0]!.text);
-      expect(data).toHaveProperty("projectIdentity");
+
+      // Check top-level user-friendly fields
+      expect(data).toHaveProperty("projectName");
+      expect(data).toHaveProperty("projectRootName");
+      expect(data).toHaveProperty("branch");
+      expect(data).toHaveProperty("localFirstNote");
+      expect(data.localFirstNote).toContain("Local-first");
+
+      // Check main sections
       expect(data).toHaveProperty("stableProjectRules");
       expect(data).toHaveProperty("recentActivity");
       expect(data).toHaveProperty("importantMemories");
       expect(data).toHaveProperty("memoryOverview");
       expect(data).toHaveProperty("compressionOverview");
       expect(data).toHaveProperty("agentGuidance");
-      expect(data.projectIdentity.scopeId).toBe(scope.scopeId);
-      expect(data.projectIdentity.note).toContain("Local-first");
+
+      // Check internal section exists but is not prominent
+      expect(data).toHaveProperty("_internal");
+      expect(data._internal.scopeId).toBe(scope.scopeId);
+
+      // Verify no internal fields at top level
+      expect(data.scopeId).toBeUndefined();
+      expect(data.gitRoot).toBeUndefined();
+      expect(data.remote).toBeUndefined();
+      expect(data.scopeStrategy).toBeUndefined();
+
       expect(data.agentGuidance.availableTools).toHaveLength(7);
+
+      // Check that active count is accurate (not just recent list length)
+      expect(data.memoryOverview.active).toBe(1);
       expect(data.memoryOverview.total).toBeGreaterThanOrEqual(1);
     });
 
@@ -105,11 +125,83 @@ describe("resourceHandlers", () => {
       const result = readResource("codecontext://project-profile", { db });
       const data = JSON.parse(result.contents[0]!.text);
 
-      expect(data.projectIdentity).toBeDefined();
+      expect(data.projectName).toBeDefined();
+      expect(data.projectRootName).toBeDefined();
+      expect(data.localFirstNote).toBeDefined();
       expect(data.stableProjectRules).toHaveLength(0);
       expect(data.recentActivity).toHaveLength(0);
       expect(data.importantMemories).toHaveLength(0);
       expect(data.memoryOverview.total).toBe(0);
+      expect(data.memoryOverview.active).toBe(0);
+    });
+
+    it("should limit stableProjectRules to 5 items", () => {
+      const scope = resolveScope();
+      const memoryService = new MemoryService(db);
+
+      // Add 10 project rules
+      for (let i = 0; i < 10; i++) {
+        memoryService.remember({
+          scopeId: scope.scopeId,
+          type: "project_rule",
+          content: `Rule ${i}`,
+          summary: `Rule summary ${i}`,
+          confidence: 0.9 - i * 0.05,
+        });
+      }
+
+      const result = readResource("codecontext://project-profile", { db });
+      const data = JSON.parse(result.contents[0]!.text);
+
+      // Should only show top 5
+      expect(data.stableProjectRules.length).toBeLessThanOrEqual(5);
+    });
+
+    it("should limit recentActivity to 3 items", () => {
+      const scope = resolveScope();
+      const memoryService = new MemoryService(db);
+
+      // Add 10 recent activities
+      for (let i = 0; i < 10; i++) {
+        memoryService.remember({
+          scopeId: scope.scopeId,
+          type: "decision",
+          content: `Activity ${i}`,
+          summary: `Activity summary ${i}`,
+          confidence: 0.8,
+        });
+      }
+
+      const result = readResource("codecontext://project-profile", { db });
+      const data = JSON.parse(result.contents[0]!.text);
+
+      // Should only show top 3
+      expect(data.recentActivity.length).toBeLessThanOrEqual(3);
+    });
+
+    it("should show accurate active memory count", () => {
+      const scope = resolveScope();
+      const memoryService = new MemoryService(db);
+
+      // Add 15 active memories
+      for (let i = 0; i < 15; i++) {
+        memoryService.remember({
+          scopeId: scope.scopeId,
+          type: "project_rule",
+          content: `Memory ${i}`,
+          confidence: 0.9,
+        });
+      }
+
+      const result = readResource("codecontext://project-profile", { db });
+      const data = JSON.parse(result.contents[0]!.text);
+
+      // active count should be 15, not limited by importantMemories list
+      expect(data.memoryOverview.active).toBe(15);
+      expect(data.memoryOverview.total).toBe(15);
+
+      // But importantMemories list should be limited to 5
+      expect(data.importantMemories.length).toBeLessThanOrEqual(5);
     });
 
     it("should throw error for unknown resource URI", () => {
