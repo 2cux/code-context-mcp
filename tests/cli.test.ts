@@ -294,6 +294,28 @@ describe("retrieve command", () => {
     const data = result.data as Record<string, unknown>;
     expect(data.content).toBeTruthy();
   });
+
+  it("uses default limit of 10000 when no limit specified", async () => {
+    // Create a compress first
+    const filePath = join(TMP_DIR, "build-output.txt");
+    const compressResult = await runCompress(filePath, {});
+    expect(compressResult.status).toBe("ok");
+
+    const compData = compressResult.data as Record<string, unknown>;
+    const originalRef = compData.originalRef as string;
+
+    // Retrieve without explicit limit
+    const result = await runRetrieve(originalRef, {});
+    expect(result.status).toBe("ok");
+
+    const data = result.data as Record<string, unknown>;
+    expect(data.content).toBeTruthy();
+    expect(typeof data.content).toBe("string");
+
+    // Content should be limited to 10000 chars max (or full content if smaller)
+    const content = data.content as string;
+    expect(content.length).toBeLessThanOrEqual(10000);
+  });
 });
 
 // ---------------------------------------------------------------------------
