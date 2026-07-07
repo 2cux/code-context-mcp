@@ -88,5 +88,37 @@ describe("promptHandlers", () => {
     it("should throw error for unknown prompt", () => {
       expect(() => getPrompt("unknown_prompt", { db })).toThrow("Unknown prompt");
     });
+
+    it("should only show agent-mode tools in project_context_brief (7 tools)", () => {
+      const result = getPrompt("project_context_brief", { db });
+      const text = result.messages[0]!.content.text;
+
+      // Should include agent-mode tools
+      expect(text).toContain("current_scope");
+      expect(text).toContain("compress_context");
+      expect(text).toContain("retrieve_original");
+      expect(text).toContain("remember_context");
+      expect(text).toContain("recall_context");
+      expect(text).toContain("forget_context");
+      expect(text).toContain("run_context_flow");
+
+      // Should NOT include dev-only tools
+      expect(text).not.toContain("list_context");
+      expect(text).not.toContain("delete_original");
+      expect(text).not.toContain("cleanup_originals");
+      expect(text).not.toContain("run_harness_flow");
+      expect(text).not.toContain("list_compressions");
+      expect(text).not.toContain("analyze_context");
+      expect(text).not.toContain("list_failures");
+      expect(text).not.toContain("failure_stats");
+      expect(text).not.toContain("list_harness_flows");
+      expect(text).not.toContain("get_harness_run");
+      expect(text).not.toContain("check_harness_flow");
+
+      // Count tool mentions in "Available Tools" section
+      const toolsSection = text.split("## Available Tools")[1]?.split("##")[0] ?? "";
+      const toolLines = toolsSection.split("\n").filter(line => line.trim().startsWith("-"));
+      expect(toolLines).toHaveLength(7);
+    });
   });
 });

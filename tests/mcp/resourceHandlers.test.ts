@@ -66,7 +66,7 @@ describe("resourceHandlers", () => {
       expect(data).toHaveProperty("agentGuidance");
       expect(data.projectIdentity.scopeId).toBe(scope.scopeId);
       expect(data.projectIdentity.note).toContain("Local-first");
-      expect(data.agentGuidance.availableTools).toHaveLength(5);
+      expect(data.agentGuidance.availableTools).toHaveLength(7);
       expect(data.memoryOverview.total).toBeGreaterThanOrEqual(1);
     });
 
@@ -114,6 +114,38 @@ describe("resourceHandlers", () => {
 
     it("should throw error for unknown resource URI", () => {
       expect(() => readResource("codecontext://unknown", { db })).toThrow("Unknown resource");
+    });
+
+    it("should only show agent-mode tools in project-profile (7 tools)", () => {
+      const result = readResource("codecontext://project-profile", { db });
+      const data = JSON.parse(result.contents[0]!.text);
+
+      // Should have exactly 7 agent-mode tools
+      expect(data.agentGuidance.availableTools).toHaveLength(7);
+
+      const toolList = data.agentGuidance.availableTools.join(" ");
+
+      // Should include agent-mode tools
+      expect(toolList).toContain("current_scope");
+      expect(toolList).toContain("compress_context");
+      expect(toolList).toContain("retrieve_original");
+      expect(toolList).toContain("remember_context");
+      expect(toolList).toContain("recall_context");
+      expect(toolList).toContain("forget_context");
+      expect(toolList).toContain("run_context_flow");
+
+      // Should NOT include dev-only tools
+      expect(toolList).not.toContain("list_context");
+      expect(toolList).not.toContain("delete_original");
+      expect(toolList).not.toContain("cleanup_originals");
+      expect(toolList).not.toContain("run_harness_flow");
+      expect(toolList).not.toContain("list_compressions");
+      expect(toolList).not.toContain("analyze_context");
+      expect(toolList).not.toContain("list_failures");
+      expect(toolList).not.toContain("failure_stats");
+      expect(toolList).not.toContain("list_harness_flows");
+      expect(toolList).not.toContain("get_harness_run");
+      expect(toolList).not.toContain("check_harness_flow");
     });
   });
 });

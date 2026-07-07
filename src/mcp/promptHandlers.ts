@@ -158,11 +158,13 @@ function buildProjectContextBrief(db: Database): string {
   lines.push("");
 
   lines.push("## Available Tools");
-  lines.push("- `recall_context(query)` — search project memory");
+  lines.push("- `current_scope()` — show current repository scope");
   lines.push("- `compress_context(content, type)` — compress long content");
+  lines.push("- `retrieve_original(ccrId)` — expand compressed context");
   lines.push("- `remember_context(type, content, summary)` — save project facts");
-  lines.push("- `list_context(status?, type?)` — list all memories");
+  lines.push("- `recall_context(query)` — search project memory");
   lines.push("- `forget_context(memoryId)` — remove outdated memory");
+  lines.push("- `run_context_flow(flowType, payload)` — unified compression + memory flow");
   lines.push("");
   lines.push("All operations are scoped to this repository.");
 

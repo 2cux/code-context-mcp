@@ -217,11 +217,13 @@ function getProjectProfile(db: Database) {
     lastUpdated,
     agentGuidance: {
       availableTools: [
-        "recall_context - search project memory by query",
+        "current_scope - show current repository scope",
         "compress_context - compress long content and save tokens",
+        "retrieve_original - expand compressed context",
         "remember_context - save important project facts",
-        "list_context - list all memories",
+        "recall_context - search project memory by query",
         "forget_context - remove outdated memories",
+        "run_context_flow - unified compression + memory flow",
       ],
       localFirstNote: "All context is scoped to this repository. Do not upload project code or logs.",
     },
