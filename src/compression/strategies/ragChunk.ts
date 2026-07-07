@@ -36,6 +36,8 @@ interface ExtractedRagInfo {
   avgScore: number;
   foldedDuplicates: number;
   foldedLowScore: number;
+  /** Internal: when true, skip key facts rendering in output (used by trim) */
+  _skipKeyFacts?: boolean;
 }
 
 // ---------------------------------------------------------------------------
@@ -167,7 +169,6 @@ function extractRagInfo(allChunks: RagChunk[]): ExtractedRagInfo {
   // Deduplicate: same source + very similar content start
   const seen = new Map<string, RagChunk>();
   let foldedDuplicates = 0;
-  let foldedLowScore = 0;
 
   for (const chunk of allChunks) {
     const dedupKey = `${chunk.source}::${chunk.content.slice(0, 100).trim()}`;
@@ -184,12 +185,16 @@ function extractRagInfo(allChunks: RagChunk[]): ExtractedRagInfo {
     }
   }
 
-  // Filter low-score chunks (< 0.3) if we have many chunks
+  // Sort by score descending after dedup.  Do NOT filter by score threshold
+  // at this stage — the caller/progressive trimming layer owns budget decisions.
+  // Low-score chunks are valuable when budget allows (e.g. faq.md at 0.32).
   let keptChunks = Array.from(seen.values());
-  if (keptChunks.length > 10) {
+
+  // If there are many unique chunks, only then consider filtering
+  if (keptChunks.length > 20) {
     const before = keptChunks.length;
-    keptChunks = keptChunks.filter((c) => c.score >= 0.3);
-    foldedLowScore = before - keptChunks.length;
+    keptChunks = keptChunks.filter((c) => c.score >= 0.2);
+    // foldedLowScore is not tracked here — trimming will handle budget
   }
 
   // Sort by score descending
@@ -202,7 +207,7 @@ function extractRagInfo(allChunks: RagChunk[]): ExtractedRagInfo {
     maxScore: scores.length > 0 ? Math.max(...scores) : 0,
     avgScore: Math.round(avgScore * 100) / 100,
     foldedDuplicates,
-    foldedLowScore,
+    foldedLowScore: 0,
   };
 }
 
@@ -245,13 +250,16 @@ function buildCompressedOutput(extracted: ExtractedRagInfo): string[] {
       : chunk.content;
     parts.push(`> ${excerpt}`);
 
-    // Key facts extraction
-    const keyFacts = extractKeyFacts(chunk.content);
-    if (keyFacts.length > 0) {
-      parts.push("");
-      parts.push("**Key Facts:**");
-      for (const fact of keyFacts) {
-        parts.push(`- ${fact}`);
+    // Key facts extraction (skipped when _skipKeyFacts is set, e.g. during aggressive trimming)
+    const skipKeyFacts = (extracted as any)._skipKeyFacts === true;
+    if (!skipKeyFacts) {
+      const keyFacts = extractKeyFacts(chunk.content);
+      if (keyFacts.length > 0) {
+        parts.push("");
+        parts.push("**Key Facts:**");
+        for (const fact of keyFacts) {
+          parts.push(`- ${fact}`);
+        }
       }
     }
 
@@ -286,13 +294,25 @@ function extractKeyFacts(content: string): string[] {
 // ---------------------------------------------------------------------------
 
 function trimRagOutput(extracted: ExtractedRagInfo, maxTokens: number): string {
-  // Try keeping fewer chunks
-  for (const count of [extracted.chunks.length, Math.ceil(extracted.chunks.length / 2), 5, 3, 1]) {
+  // Progressive trimming: keep as many chunks as budget allows, drop key facts last
+  type TrimAttempt = { chunks: number; excerptLen: number; dropFacts: boolean };
+  const attempts: TrimAttempt[] = [
+    { chunks: extracted.chunks.length, excerptLen: 250, dropFacts: false },
+    { chunks: extracted.chunks.length, excerptLen: 100, dropFacts: false },
+    { chunks: extracted.chunks.length, excerptLen: 80, dropFacts: true },
+    { chunks: Math.max(3, Math.ceil(extracted.chunks.length / 2)), excerptLen: 120, dropFacts: true },
+    { chunks: 3, excerptLen: 100, dropFacts: true },
+    { chunks: 1, excerptLen: 80, dropFacts: true },
+  ];
+  for (const attempt of attempts) {
     const trimmed: ExtractedRagInfo = {
       ...extracted,
-      chunks: extracted.chunks.slice(0, count).map((c) => ({
+      _skipKeyFacts: attempt.dropFacts,
+      chunks: extracted.chunks.slice(0, Math.min(attempt.chunks, extracted.chunks.length)).map((c) => ({
         ...c,
-        content: c.content.slice(0, 150), // Shorter excerpts
+        content: c.content.length > attempt.excerptLen
+          ? c.content.slice(0, attempt.excerptLen) + "..."
+          : c.content,
       })),
     };
     const md = buildCompressedOutput(trimmed).join("\n");

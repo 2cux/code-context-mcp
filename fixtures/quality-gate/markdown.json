@@ -1,0 +1,21 @@
+{
+  "name": "markdown_readme",
+  "description": "README markdown with headings, code blocks, lists, links, and tables",
+  "contentType": "markdown",
+  "inputFile": "readme.md",
+  "mustKeep": [
+    "CodeContext MCP",
+    "Overview",
+    "Installation",
+    "Quick Start",
+    "Design Principles",
+    "Supported Content Types",
+    "Configuration",
+    "FAQ",
+    "Content Types"
+  ],
+  "mustNotInvent": [
+    "heading not in original"
+  ],
+  "minimumTokenSavingsRatio": 0.30
+}

@@ -1,0 +1,27 @@
+{
+  "name": "command_output_build",
+  "description": "Build command output with 8 TS errors across multiple files",
+  "contentType": "command_output",
+  "inputFile": "build-output.txt",
+  "mustKeep": [
+    "pnpm build",
+    "exit code",
+    "TS2304",
+    "TS2554",
+    "TS2322",
+    "TS2345",
+    "TS18046",
+    "TS2532",
+    "testOutput.ts",
+    "log.ts",
+    "code.ts",
+    "json.ts",
+    "migrations.ts",
+    "8 errors",
+    "Build failed"
+  ],
+  "mustNotInvent": [
+    "non-existent TS error code"
+  ],
+  "minimumTokenSavingsRatio": 0.30
+}

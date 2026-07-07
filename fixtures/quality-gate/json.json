@@ -1,0 +1,19 @@
+{
+  "name": "json_validation_error",
+  "description": "JSON validation error response with status, errors array, nested meta, users array, config object",
+  "contentType": "json",
+  "inputFile": "response.json",
+  "mustKeep": [
+    "status",
+    "VALIDATION_ERROR",
+    "req_8f3a",
+    "errors",
+    "INVALID_FORMAT",
+    "apiVersion",
+    "maxRetries"
+  ],
+  "mustNotInvent": [
+    "error code not in response"
+  ],
+  "minimumTokenSavingsRatio": 0.30
+}

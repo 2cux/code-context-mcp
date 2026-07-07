@@ -1,0 +1,26 @@
+{
+  "name": "log_app",
+  "description": "Application server log with ERROR, WARN, INFO, FATAL, stack traces, trace IDs",
+  "contentType": "log",
+  "inputFile": "app-log.txt",
+  "mustKeep": [
+    "ERROR",
+    "FATAL",
+    "WARN",
+    "TypeError",
+    "trc_8f3a",
+    "trc_9b2c",
+    "trc_1d5e",
+    "PaymentService",
+    "DatabasePool",
+    "shutdown",
+    "ECONNREFUSED",
+    "slow query detected",
+    "degraded response"
+  ],
+  "mustNotInvent": [
+    "non-existent error type",
+    "fabricated log line"
+  ],
+  "minimumTokenSavingsRatio": 0.30
+}

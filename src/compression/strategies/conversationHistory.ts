@@ -43,7 +43,7 @@ interface ExtractedConversation {
 // ---------------------------------------------------------------------------
 
 const PLEASANTRY_PATTERNS = /\b(?:hi|hello|hey|thanks|thank you|you'?re welcome|great|awesome|cool|okay|sure|got it|no problem|np)\b/i;
-const DECISION_PATTERNS = /\b(?:decided|decision|agreed|chose|opted|settled on|going to go with|we will|we should|let'?s go with)\b/i;
+const DECISION_PATTERNS = /\b(?:decided|decision|decisions|agreed|chose|opted|settled on|going to go with|we will|we should|let'?s go with)\b/i;
 const ERROR_PATTERNS = /\b(?:error|Error|ERROR|fail|FAIL|exception|Exception|crash|bug|Bug|broken)\b/;
 const FILE_PATH_RE = /\b(?:src|lib|tests?|docs?|app|components?|utils?|services?|configs?)\/[\w./-]+\.[\w]{1,6}\b/g;
 const CHECKLIST_DONE_RE = /^\s*(?:-\s*\[x\]|✓|✅|✔️|done:)\s*(.+)/im;
@@ -251,12 +251,23 @@ function extractConversationInfo(
   messages: ConversationMessage[],
   fullContent: string,
 ): ExtractedConversation {
-  // Goal: first user message
-  const firstUser = messages.find((m) => m.role === "user");
-  const goal = firstUser?.content.slice(0, 200) ?? "(not detected)";
+  // Goal: prefer structured "Goal:" system message, fall back to first user
+  const goalMsg = messages.find((m) => m.role === "system" && m.content.startsWith("Goal:"));
+  const goal = goalMsg
+    ? goalMsg.content.replace(/^Goal:\s*/, "").slice(0, 200)
+    : (messages.find((m) => m.role === "user")?.content.slice(0, 200) ?? "(not detected)");
 
   // Completed steps
   const completedSteps: string[] = [];
+  // First try structured "Completed:" system message
+  const completedMsg = messages.find((m) => m.role === "system" && m.content.startsWith("Completed:"));
+  if (completedMsg) {
+    try {
+      const parsed = JSON.parse(completedMsg.content.replace(/^Completed:\s*/, ""));
+      if (Array.isArray(parsed)) completedSteps.push(...parsed);
+    } catch { /* fall through */ }
+  }
+  // Also scan raw messages for checklist patterns
   for (const msg of messages) {
     const matches = msg.content.matchAll(new RegExp(CHECKLIST_DONE_RE.source, "gm"));
     for (const m of matches) {
@@ -266,6 +277,13 @@ function extractConversationInfo(
 
   // Pending steps
   const pendingSteps: string[] = [];
+  const pendingMsg = messages.find((m) => m.role === "system" && m.content.startsWith("Pending:"));
+  if (pendingMsg) {
+    try {
+      const parsed = JSON.parse(pendingMsg.content.replace(/^Pending:\s*/, ""));
+      if (Array.isArray(parsed)) pendingSteps.push(...parsed);
+    } catch { /* fall through */ }
+  }
   for (const msg of messages) {
     const matches = msg.content.matchAll(new RegExp(CHECKLIST_TODO_RE.source, "gm"));
     for (const m of matches) {
@@ -273,8 +291,15 @@ function extractConversationInfo(
     }
   }
 
-  // Key decisions (messages with decision keywords)
+  // Key decisions — first try structured "Decisions:" system message, then text patterns
   const keyDecisions: string[] = [];
+  const decisionsMsg = messages.find((m) => m.role === "system" && m.content.startsWith("Decisions:"));
+  if (decisionsMsg) {
+    try {
+      const parsed = JSON.parse(decisionsMsg.content.replace(/^Decisions:\s*/, ""));
+      if (Array.isArray(parsed)) keyDecisions.push(...parsed);
+    } catch { /* fall through */ }
+  }
   for (const msg of messages) {
     if (DECISION_PATTERNS.test(msg.content)) {
       const lines = msg.content.split(/(?:[.;]\s+|\n)/);
@@ -287,8 +312,18 @@ function extractConversationInfo(
   }
 
   // Recent errors (last 5 messages with errors)
-  const errorMessages = messages.filter((m) => ERROR_PATTERNS.test(m.content));
-  const recentErrors = errorMessages.slice(-3).map((m) => {
+  // Prefer messages with ERROR-level signals over casual "bug"/"fix" mentions
+  const ERROR_PRIORITY_PATTERNS = /\b(?:error|Error|ERROR|exception|Exception|Traceback|FAIL|FAILED)\b/;
+  const errorMessages = messages.filter((m) => ERROR_PATTERNS.test(m.content))
+    .sort((a, b) => {
+      // Messages with explicit ERROR/EXCEPTION come first
+      const aPriority = ERROR_PRIORITY_PATTERNS.test(a.content) ? 1 : 0;
+      const bPriority = ERROR_PRIORITY_PATTERNS.test(b.content) ? 1 : 0;
+      if (aPriority !== bPriority) return bPriority - aPriority;
+      // Then by score descending
+      return b.score - a.score;
+    });
+  const recentErrors = errorMessages.slice(0, 3).map((m) => {
     const trimmed = m.content.trim();
     return trimmed.length > 200 ? trimmed.slice(0, 197) + "..." : trimmed;
   });
@@ -423,10 +458,12 @@ function trimConversationOutput(
   extracted: ExtractedConversation,
   maxTokens: number,
 ): string {
+  // Progressive trimming — always keep decisions and errors, reduce message count last
   const variants: ExtractedConversation[] = [
     extracted,
-    { ...extracted, highValueMessages: extracted.highValueMessages.slice(0, 8), keyDecisions: extracted.keyDecisions.slice(0, 5) },
-    { ...extracted, highValueMessages: extracted.highValueMessages.slice(0, 3), keyDecisions: [], recentErrors: extracted.recentErrors.slice(0, 1) },
+    { ...extracted, highValueMessages: extracted.highValueMessages.slice(0, 10), keyDecisions: extracted.keyDecisions.slice(0, 5) },
+    { ...extracted, highValueMessages: extracted.highValueMessages.slice(0, 5), keyDecisions: extracted.keyDecisions.slice(0, 3), recentErrors: extracted.recentErrors.slice(0, 1) },
+    { ...extracted, highValueMessages: extracted.highValueMessages.slice(0, 3), keyDecisions: extracted.keyDecisions.slice(0, 2), recentErrors: extracted.recentErrors.slice(0, 1) },
   ];
 
   for (const variant of variants) {

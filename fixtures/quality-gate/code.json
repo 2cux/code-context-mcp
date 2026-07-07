@@ -1,0 +1,25 @@
+{
+  "name": "code_typescript",
+  "description": "TypeScript AuthService with interfaces, types, exports, functions, and TODOs",
+  "contentType": "code",
+  "inputFile": "sample.ts",
+  "mustKeep": [
+    "import",
+    "AuthConfig",
+    "AuthResult",
+    "login",
+    "refreshToken",
+    "logout",
+    "cleanupExpiredSessions",
+    "SESSION_TTL",
+    "MAX_CONCURRENT_SESSIONS",
+    "REFRESH_TOKEN_TTL",
+    "TODO",
+    "FIXME",
+    "HACK"
+  ],
+  "mustNotInvent": [
+    "function that does not exist in source"
+  ],
+  "minimumTokenSavingsRatio": 0.30
+}

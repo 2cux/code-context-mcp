@@ -177,14 +177,20 @@ function extractJsonInfo(data: unknown, path: string = "$"): ExtractedJsonInfo {
         info.foldedTextFields += nested.foldedTextFields;
       }
 
-      // Array of objects — extract nested special fields from first item
+      // Array of objects — extract nested special fields from ALL items
       if (Array.isArray(value) && value.length > 0 && typeof value[0] === "object" && value[0] !== null) {
-        for (const subKey of Object.keys(value[0] as Record<string, unknown>)) {
-          if (SPECIAL_FIELDS.has(subKey)) {
-            info.specialFields.push({
-              path: `${currentPath}[0].${subKey}`,
-              value: (value[0] as Record<string, unknown>)[subKey],
-            });
+        const seenSubKeys = new Set<string>();
+        for (let ai = 0; ai < Math.min(value.length, 5); ai++) {
+          const item = value[ai] as Record<string, unknown>;
+          if (typeof item !== "object" || item === null) continue;
+          for (const subKey of Object.keys(item)) {
+            if (SPECIAL_FIELDS.has(subKey) && !seenSubKeys.has(`${subKey}=${String(item[subKey])}`)) {
+              seenSubKeys.add(`${subKey}=${String(item[subKey])}`);
+              info.specialFields.push({
+                path: `${currentPath}[${ai}].${subKey}`,
+                value: item[subKey],
+              });
+            }
           }
         }
       }

@@ -26,6 +26,7 @@ export const codeStrategy: CompressionStrategy = {
 
 const IMPORT_RE = /^\s*(?:import\b|(?:const|let|var)\s+\w+\s*=\s*require\()/;
 const EXPORT_RE = /^\s*export\s+(?:default\s+)?(?:(?:const|let|var|function|class|interface|type|enum|abstract|async)\s+)?/;
+const EXPORT_BLOCK_RE = /^\s*export\s+\{[^}]+\}\s*;/;
 const TYPE_DEF_RE = /^\s*(?:export\s+)?(?:interface|type)\s+\w+\b/;
 const FUNCTION_SIG_RE = /^\s*(?:(?:export\s+)?(?:async\s+)?function\s+\w+|(?:(?:public|private|protected|static|async)\s+)*\s*(?:get|set)\s+\w+|[\w$]+\s*[:=]\s*(?:async\s*)?\([^)]*\)\s*(?:=>|:))/;
 const CLASS_SIG_RE = /^\s*(?:export\s+)?(?:abstract\s+)?class\s+\w+/;
@@ -35,6 +36,8 @@ const COMMENT_RE = /^\s*(?:\/\/|\/\*|\*|\*\/)/;
 const BLANK_RE = /^\s*$/;
 const BRACE_OPEN = /[{([]\s*$/;
 const BRACE_CLOSE = /^\s*[})\]]/;
+/** Preserve important config constants: const NAME = <expression> */
+const CONFIG_CONST_RE = /^\s*(?:export\s+)?(?:const|let|var)\s+\w+\s*=\s*['"`0-9(\-]/;
 
 // Relevant block keywords: error handling, auth, query, etc.
 const RELEVANT_KEYWORDS = /\b(?:try|catch|finally|throw|error|auth|login|logout|token|session|query|sql|db|database|transaction|validate|sanitize|encrypt|hash|password|secret|api|endpoint)\b/i;
@@ -203,7 +206,15 @@ function extractCodeInfo(lines: string[]): ExtractedCodeInfo {
       continue;
     }
 
-    // ---- Export statements ----
+    // ---- Export block statements (e.g. `export { foo };`) ----
+    if (EXPORT_BLOCK_RE.test(line)) {
+      info.exports.push(L(ln, line.trim()));
+      info.publicAPIs.push(L(ln, line.trim()));
+      i++;
+      continue;
+    }
+
+    // ---- Named export declarations ----
     if (EXPORT_RE.test(line) && !TYPE_DEF_RE.test(line) && !FUNCTION_SIG_RE.test(line)) {
       info.exports.push(L(ln, line.trim()));
       i++;
@@ -228,7 +239,7 @@ function extractCodeInfo(lines: string[]): ExtractedCodeInfo {
       info.functionSignatures.push(L(ln, line.trim()));
       info.publicAPIs.push(L(ln, line.trim()));
       // If function starts a block, decide whether to fold
-      if (BRACE_OPEN.test(line) || (i + 1 < lines.length && /^\s*\{/.test(lines[i + 1]!.trim()))) {
+      if (/{/.test(line) || (i + 1 < lines.length && /^\s*\{/.test(lines[i + 1]!.trim()))) {
         const { endIdx, isRelevant, todos } = consumeFunctionBody(lines, i);
         if (isRelevant) {
           // Keep relevant block lines with line numbers
@@ -246,6 +257,13 @@ function extractCodeInfo(lines: string[]): ExtractedCodeInfo {
         }
         i = endIdx;
       }
+      i++;
+      continue;
+    }
+
+    // ---- Config constants (SESSION_TTL, etc.) ----
+    if (CONFIG_CONST_RE.test(line)) {
+      info.publicAPIs.push(L(ln, line.trim()));
       i++;
       continue;
     }
@@ -280,12 +298,12 @@ function extractPublicMethods(
   let folded = 0;
   let i = classStartIdx + 1;
 
-  // Skip to opening brace
-  while (i < lines.length && !/^\s*\{/.test(lines[i]!)) {
+  // Skip to opening brace — look for ANY {
+  while (i < lines.length && !/{/.test(lines[i]!)) {
     if (TODO_FIXME_RE.test(lines[i]!)) todos.push(L(i + 1, lines[i]!));
     i++;
   }
-  if (i < lines.length) i++; // skip opening brace
+  if (i < lines.length) i++; // skip opening brace line
 
   let depth = 1;
   while (i < lines.length && depth > 0) {
@@ -304,7 +322,7 @@ function extractPublicMethods(
       const sig = line.trim().replace(/\s*\{.*/, " { /* ... */ }");
       signatures.push(L(i + 1, sig));
       // Check if body needs folding
-      if (BRACE_OPEN.test(line)) {
+      if (/{/.test(line)) {
         const { endIdx: bodyEnd, isRelevant } = consumeFunctionBody(lines, i);
         if (!isRelevant) folded++;
         i = bodyEnd - 1; // -1 because i++ at end
@@ -330,13 +348,13 @@ function consumeFunctionBody(
   const todos: string[] = [];
   let isRelevant = false;
 
-  // Find opening brace
-  while (i < lines.length && !/^\s*\{/.test(lines[i]!)) {
+  // Find opening brace — look for ANY {, not just at line start
+  while (i < lines.length && !/{/.test(lines[i]!)) {
     if (TODO_FIXME_RE.test(lines[i]!)) todos.push(L(i + 1, lines[i]!));
     if (RELEVANT_KEYWORDS.test(lines[i]!)) isRelevant = true;
     i++;
   }
-  if (i < lines.length && /^\s*\{/.test(lines[i]!)) i++; // skip brace
+  if (i < lines.length && /{/.test(lines[i]!)) i++; // skip past the brace line
 
   let depth = 1;
   while (i < lines.length && depth > 0) {

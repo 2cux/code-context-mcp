@@ -23,6 +23,7 @@ export const logStrategy: CompressionStrategy = {
 const TIMESTAMP_RE = /\b(\d{4}-\d{2}-\d{2}[T ]\d{2}:\d{2}:\d{2}(?:\.\d+)?Z?)\b/;
 const TRACE_ID_RE = /\b(?:trace[_-]?id|request[_-]?id|correlation[_-]?id)[=:]\s*(\S+)/i;
 const EXCEPTION_RE = /\b([A-Z][a-zA-Z]*(?:Error|Exception|Fault|Failure))\b/;
+const ERROR_MESSAGE_RE = /^\s*(?:Error|ERROR)[:\s]\s*(.+)/;
 const STACK_FRAME_RE = /^\s+at\s+.+?:\d+:\d+/;
 const CAUSED_BY_RE = /^\s*(?:Caused by|Triggered by):\s*/i;
 const HEARTBEAT_RE = /\b(?:heartbeat|ping|keep-?alive|healthcheck)\b/i;
@@ -63,6 +64,11 @@ export function compressLog(
     }
     if (extracted.foldedHeartbeats > 0) {
       warnings.push(`Folded ${extracted.foldedHeartbeats} heartbeat lines`);
+    }
+
+    // Emit stack trace file paths as inline hints so they aren't silently dropped
+    if (extracted.filePaths.length > 0) {
+      warnings.push(`Referenced files: ${extracted.filePaths.slice(0, 5).join(", ")}`);
     }
 
     if (resultTokens <= maxTokens) {
@@ -157,6 +163,15 @@ function extractLogInfo(lines: string[]): ExtractedLogInfo {
     if (exc && !seenExceptionTypes.has(exc[1]!) && isPriority) {
       seenExceptionTypes.add(exc[1]!);
       info.exceptionTypes.push(exc[1]!);
+    }
+
+    // ---- Error message extraction (priority lines with "Error:" prefix) ----
+    if (isPriority) {
+      const errMsg = ERROR_MESSAGE_RE.exec(line);
+      if (errMsg && !info.priorityLines.includes(line)) {
+        // Handle case where "Error: ..." is on its own line (no level prefix)
+        info.priorityLines.push(line);
+      }
     }
 
     // ---- File path extraction from error lines ----

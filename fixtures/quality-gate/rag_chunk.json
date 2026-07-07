@@ -1,0 +1,21 @@
+{
+  "name": "rag_chunks_api_ref",
+  "description": "RAG chunks from API reference, deployment guide, and FAQ with scores 0.32-0.92",
+  "contentType": "rag_chunk",
+  "inputFile": "rag-chunks.json",
+  "mustKeep": [
+    "api-reference",
+    "deployment",
+    "faq",
+    "API Reference",
+    "chk_001",
+    "chk_006",
+    "0.92",
+    "canExpand",
+    "JWT"
+  ],
+  "mustNotInvent": [
+    "source not in original chunks"
+  ],
+  "minimumTokenSavingsRatio": 0.30
+}

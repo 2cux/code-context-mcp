@@ -1,0 +1,22 @@
+{
+  "name": "conversation_history_auth_bug",
+  "description": "Conversation about fixing auth/session.ts cookie clearing bug and token refresh retry logic",
+  "contentType": "conversation_history",
+  "inputFile": "conversation.json",
+  "mustKeep": [
+    "cookie clearing bug",
+    "TOKEN_REVOKED",
+    "axios-mock-adapter",
+    "redirect to login",
+    "Token expired",
+    "session.ts",
+    "session.test.ts",
+    "token.ts",
+    "Fixed cookie clearing",
+    "should handle expired refresh token"
+  ],
+  "mustNotInvent": [
+    "step not in the conversation"
+  ],
+  "minimumTokenSavingsRatio": 0.30
+}

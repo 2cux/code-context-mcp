@@ -1,0 +1,23 @@
+{
+  "name": "test_output_vitest",
+  "description": "Vitest test runner output with 3 failed tests",
+  "contentType": "test_output",
+  "inputFile": "vitest-output.txt",
+  "mustKeep": [
+    "vitest",
+    "should clear cookie on logout",
+    "should handle expired refresh token",
+    "should timeout on slow query",
+    "session.test.ts",
+    "connection.test.ts",
+    "Expected",
+    "Received",
+    "Exit Code",
+    "3 failed",
+    "Failed Tests:"
+  ],
+  "mustNotInvent": [
+    "non-existent error code"
+  ],
+  "minimumTokenSavingsRatio": 0.30
+}
