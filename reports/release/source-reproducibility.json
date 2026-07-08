@@ -1,0 +1,63 @@
+{
+  "generated": "2026-07-08T02:33:07.310Z",
+  "environment": {
+    "node": "v24.13.0",
+    "platform": "win32",
+    "arch": "x64",
+    "cpus": 22,
+    "totalMemoryMb": 32373
+  },
+  "repository": {
+    "trackedFiles": 409,
+    "tempDir": "C:\\Users\\Lenovo\\AppData\\Local\\Temp\\codecontext-clean-1783477976731"
+  },
+  "summary": {
+    "total": 5,
+    "passed": 5,
+    "failed": 0,
+    "skipped": 0,
+    "totalMs": 10681,
+    "reproducible": true
+  },
+  "steps": [
+    {
+      "name": "Verify required source dirs are Git-tracked",
+      "status": "ok",
+      "durationMs": 101,
+      "detail": "2 dirs present (src/memory/: 7 files, fixtures/quality-eval/memory/: 2 files)",
+      "error": null
+    },
+    {
+      "name": "Copy git ls-files to temp directory",
+      "status": "ok",
+      "durationMs": 1612,
+      "detail": "409/409 files copied to C:\\Users\\Lenovo\\AppData\\Local\\Temp\\codecontext-clean-1783477976731",
+      "error": null
+    },
+    {
+      "name": "pnpm install --frozen-lockfile",
+      "status": "ok",
+      "durationMs": 2807,
+      "detail": "dependencies installed",
+      "error": null
+    },
+    {
+      "name": "Build (tsc)",
+      "status": "ok",
+      "durationMs": 3180,
+      "detail": "dist/index.js created",
+      "error": null
+    },
+    {
+      "name": "npx vitest run tests/quality",
+      "status": "ok",
+      "durationMs": 2979,
+      "detail": "3 passed (3) | 97 passed (97)",
+      "error": null
+    }
+  ],
+  "testOutput": {
+    "truncated": false,
+    "text": "\n\u001b[1m\u001b[7m\u001b[36m RUN \u001b[39m\u001b[27m\u001b[22m \u001b[36mv2.1.9 \u001b[39m\u001b[90mC:/Users/Lenovo/AppData/Local/Temp/codecontext-clean-1783477976731\u001b[39m\n\n \u001b[32m✓\u001b[39m tests/quality/memoryQuality.test.ts \u001b[2m(\u001b[22m\u001b[2m18 tests\u001b[22m\u001b[2m)\u001b[22m\u001b[90m 75\u001b[2mms\u001b[22m\u001b[39m\n\u001b[90mstdout\u001b[2m | tests/quality/recallQualityGate.test.ts\u001b[2m > \u001b[22m\u001b[2mQuality Gate — Recall@1\u001b[2m > \u001b[22m\u001b[2mRecall@1 aggregate\n\u001b[22m\u001b[39m\n  Recall@1: 20/20 = 100.0%\n  Recall@3 (precision set): 20/20 = 100.0%\n\n\u001b[90mstdout\u001b[2m | tests/quality/recallQualityGate.test.ts\u001b[2m > \u001b[22m\u001b[2mQuality Gate — Recall@3\u001b[2m > \u001b[22m\u001b[2mRecall@3 aggregate\n\u001b[22m\u001b[39m\n  Recall@3: 10/10 = 100.0%\n\n\u001b[90mstdout\u001b[2m | tests/quality/recallQualityGate.test.ts\u001b[2m > \u001b[22m\u001b[2mQuality Gate — False Recall Rate\u001b[2m > \u001b[22m\u001b[2mFalse recall aggregate\n\u001b[22m\u001b[39m\n  False recall rate: 0/5 = 0.0%\n\n\u001b[90mstdout\u001b[2m | tests/quality/recallQualityGate.test.ts\u001b[2m > \u001b[22m\u001b[2mQuality Gate — Cross-Scope Leakage\u001b[2m > \u001b[22m\u001b[2mCross-scope aggregate\n\u001b[22m\u001b[39m\n  Cross-scope leakage: 0/5 queries leaked, 0 total leaked results\n\n\u001b[90mstdout\u001b[2m | tests/quality/recallQualityGate.test.ts\u001b[2m > \u001b[22m\u001b[2mQuality Gate — Non-Active Memory Leakage\u001b[2m > \u001b[22m\u001b[2mNon-active leakage aggregate\n\u001b[22m\u001b[39m\n  Non-active leak: 0/5 targeted queries leaked, 0 unique leaked IDs\n\n\u001b[90mstdout\u001b[2m | tests/quality/recallQualityGate.test.ts\u001b[2m > \u001b[22m\u001b[2mQuality Gate — Overall Verdict\u001b[2m > \u001b[22m\u001b[2mall thresholds pass\n\u001b[22m\u001b[39m\n======================================================================\n  MEMORY RECALL QUALITY GATE — VERDICT\n======================================================================\n  Scorer config: base=0.2, weight=0.8, decay=60d, boost=0.5\n\n  Recall@1:        100.0%  ✓ (target ≥ 80%)\n  Recall@3:        100.0%  ✓ (target ≥ 95%)\n  Cross-scope:     0 hits  ✓ (target = 0)\n  Non-active leak: 0 IDs   ✓ (target = 0)\n  Duplicate IDs:   0 sets  (informational)\n======================================================================\n  OVERALL:         ✓ PASS\n======================================================================\n\n\n \u001b[32m✓\u001b[39m tests/quality/recallQualityGate.test.ts \u001b[2m(\u001b[22m\u001b[2m53 tests\u001b[22m\u001b[2m)\u001b[22m\u001b[90m 129\u001b[2mms\u001b[22m\u001b[39m\n\u001b[90mstderr\u001b[2m | tests/quality/compressionQuality.test.ts\u001b[2m > \u001b[22m\u001b[2mCompression Quality — code.ts\u001b[2m > \u001b[22m\u001b[2mrecords key fact retention\n\u001b[22m\u001b[39m  [code.ts] Missing facts: Luhn, processing_error, invalid_amount, src/services/paymentService.ts\n\n\u001b[90mstderr\u001b[2m | tests/quality/compressionQuality.test.ts\u001b[2m > \u001b[22m\u001b[2mCompression Quality — conversationHistory.txt\u001b[2m > \u001b[22m\u001b[2mrecords key fact retention\n\u001b[22m\u001b[39m  [conversationHistory.txt] Missing facts: 5 requests, 60 seconds, Retry-After\n\n\u001b[90mstderr\u001b[2m | tests/quality/compressionQuality.test.ts\u001b[2m > \u001b[22m\u001b[2mCompression Quality — testOutput.txt\u001b[2m > \u001b[22m\u001b[2mrecords key fact retention\n\u001b[22m\u001b[39m  [testOutput.txt] Missing facts: tests/functional/listEmpty.test.tsx, should clear cookie on logout, should apply bulk discount correctly, should render empty state message, AssertionError, TypeError, 3 failed, 12 passed\n\n\u001b[90mstderr\u001b[2m | tests/quality/compressionQuality.test.ts\u001b[2m > \u001b[22m\u001b[2mCompression Quality — markdown.md\u001b[2m > \u001b[22m\u001b[2mrecords key fact retention\n\u001b[22m\u001b[39m  [markdown.md] Missing facts: Context Compression, Project Memory, Scope Isolation, Content Router, Compression Engine, Memory Service, SQLite, compress_context, retrieve_original, remember_context, recall_context, MAX_TOKENS\n\n\u001b[90mstderr\u001b[2m | tests/quality/compressionQuality.test.ts\u001b[2m > \u001b[22m\u001b[2mCompression Quality — ragChunk.json\u001b[2m > \u001b[22m\u001b[2mrecords key fact retention\n\u001b[22m\u001b[39m  [ragChunk.json] Missing facts: JWT, RS256, HTTP-only cookie, Redis, docs/auth/architecture.md, Token Management\n\n\u001b[90mstdout\u001b[2m | tests/quality/compressionQuality.test.ts\u001b[2m > \u001b[22m\u001b[2mCompression Quality — Overall Baseline\u001b[2m > \u001b[22m\u001b[2mreports average retention rate\n\u001b[22m\u001b[39m  Average key fact retention: 57.9%\n\n\u001b[90mstdout\u001b[2m | tests/quality/compressionQuality.test.ts\u001b[2m > \u001b[22m\u001b[2mCompression Quality — Overall Baseline\u001b[2m > \u001b[22m\u001b[2mreports average token savings\n\u001b[22m\u001b[39m  Average token savings: 56.0%\n\n \u001b[32m✓\u001b[39m tests/quality/compressionQuality.test.ts \u001b[2m(\u001b[22m\u001b[2m26 tests\u001b[22m\u001b[2m)\u001b[22m\u001b[90m 155\u001b[2mms\u001b[22m\u001b[39m\n\n\u001b[2m Test Files \u001b[22m \u001b[1m\u001b[32m3 passed\u001b[39m\u001b[22m\u001b[90m (3)\u001b[39m\n\u001b[2m      Tests \u001b[22m \u001b[1m\u001b[32m97 passed\u001b[39m\u001b[22m\u001b[90m (97)\u001b[39m\n\u001b[2m   Start at \u001b[22m 10:33:05\n\u001b[2m   Duration \u001b[22m 1.39s\u001b[2m (transform 294ms, setup 0ms, collect 669ms, tests 358ms, environment 0ms, prepare 539ms)\u001b[22m\n\n\n"
+  }
+}

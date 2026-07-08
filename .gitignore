@@ -114,19 +114,19 @@ runs-*/
 !examples/runs/
 !examples/runs/**/README.md
 
-context/
-.context/
-context-cache/
-.context-cache/
+/context/
+/.context/
+/context-cache/
+/.context-cache/
 
-originals/
-.originals/
-compressed/
-.compressed/
-receipts/
-.receipts/
-memory/
-.memory/
+/originals/
+/.originals/
+/compressed/
+/.compressed/
+/receipts/
+/.receipts/
+/memory/
+/.memory/
 
 *.sqlite
 *.sqlite3
