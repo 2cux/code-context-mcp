@@ -5,7 +5,7 @@
 > - `v0.2.0-beta` — Context Compression + Project Memory
 > - `v0.1.0-alpha` — Context Compression only
 >
-> Stable release: `current_scope`, `compress_context`, `retrieve_original`, `delete_original`, `cleanup_originals`, `list_compressions`, `remember_context`, `recall_context`, `forget_context`, `list_context`, `analyze_context`, `list_failures`, `failure_stats`. 904 tests passing. Demo script: [demo-script-v0.2.0-beta.md](./demo-script-v0.2.0-beta.md)
+> Stable release: 18 MCP tools across agent (7) / dev (18) / test (18) modes. ~1600 tests passing. CLI with `doctor`, `demo`, `value`, and 20+ commands.
 
 > 本文档索引了 `docs/` 下所有 PRD 分篇文件，每篇对应原 PRD.md 的若干连续章节。
 

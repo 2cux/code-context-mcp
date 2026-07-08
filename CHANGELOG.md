@@ -36,7 +36,7 @@ Third major iteration after alpha (v0.1.0) and beta (v0.2.0). RC hardening phase
 - `npm pack --dry-run` verification in clean-install smoke
 - Harness tools correctly filtered from agent mode tool listing
 
-## [1.0.0] — 2025-06-14
+## [1.0.0] — 2026-06-14
 
 ### Stable Release
 
@@ -67,7 +67,7 @@ First stable release after alpha and beta cycles. Core features are production-r
 - Repository-scoped isolation via git remote + root hash
 
 ### Technical
-- 904 tests passing
+- ~1600 tests passing
 - Node.js ≥ 18.0.0
 - SQLite local storage (`~/.code-context-mcp/`)
 - MCP SDK `@modelcontextprotocol/sdk`

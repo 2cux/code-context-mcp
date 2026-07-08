@@ -41,6 +41,7 @@ import {
   runDemo,
   runValue,
 } from "./commands.js";
+import { runDoctor } from "./doctor.js";
 import type { CliResult } from "./commands.js";
 
 import {
@@ -67,6 +68,8 @@ Usage:
   code-context <command> [options]
 
 Commands:
+  doctor                               Run installation health checks
+      --json                           Output compact JSON
   demo                                 Run first-run value demo
       --json                           Output compact JSON
   value                                Generate usage value report
@@ -158,6 +161,7 @@ Global flags:
   --json                               Output compact JSON
 
 Examples:
+  code-context doctor
   code-context demo
   code-context value
   code-context scope
@@ -271,6 +275,14 @@ async function main(): Promise<void> {
   let result: CliResult;
 
   switch (command) {
+    // ------------------------------------------------------------------
+    // doctor
+    // ------------------------------------------------------------------
+    case "doctor": {
+      result = await runDoctor();
+      break;
+    }
+
     // ------------------------------------------------------------------
     // demo
     // ------------------------------------------------------------------

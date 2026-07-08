@@ -4,7 +4,7 @@
 [![License: MIT](https://img.shields.io/badge/license-MIT-yellow)](./LICENSE)
 [![Node.js](https://img.shields.io/badge/node-%3E%3D18-green)](https://nodejs.org)
 [![MCP](https://img.shields.io/badge/MCP-compatible-purple)](https://modelcontextprotocol.io)
-[![Tests](https://img.shields.io/badge/tests-1285%20passing-brightgreen)](./tests)
+[![Tests](https://img.shields.io/badge/tests-~1600%20passing-brightgreen)](./tests)
 
 > **v1.0.0** — Context Compression + Project Memory, dual-core.
 
@@ -34,10 +34,9 @@ cd code-context-mcp
 
 pnpm install
 pnpm build
-npm run build
 
 # Verify
-node dist/cli/index.js scope
+code-context doctor
 ```
 
 ### MCP Configuration
@@ -87,6 +86,9 @@ For full tool access during development, use `dev` mode (18 tools):
 ## CLI Usage
 
 ```bash
+# Run installation health checks
+code-context doctor
+
 # Show current repo scope
 code-context scope
 
@@ -388,14 +390,10 @@ PRD documents are in [`docs/`](./docs/INDEX.md).
 ```bash
 pnpm install        # Install dependencies
 pnpm build          # Build TypeScript
-npm run build       # Cross-platform build (Windows/macOS/Linux)
-pnpm test           # Run tests (1285 tests)
+pnpm test           # Run tests (~1600 tests)
 pnpm test:watch     # Watch mode
 pnpm lint           # ESLint
 pnpm format         # Prettier
-
-Windows notes:
-The build is cross-platform. `npm run build` and `pnpm build` both use a Node-based cleanup step instead of `rm -rf dist/`.
 ```
 
 ---
@@ -408,11 +406,11 @@ CodeContext uses a **Harness** — a unified business closed-loop execution and 
 
 | Layer | Location | Tests | Adapter | Purpose |
 |-------|----------|-------|---------|---------|
-| **Core Unit** | `tests/harness/*.test.ts` | ~200 | — | types, registry, runner, state store, artifact store, reporter, check, validate, checkEngine, mockAdapters |
-| **Flow Integration** | `tests/harness/*Flow.test.ts` | ~40 | real + mock | 7 business-capability closed loops |
+| **Core Unit** | `tests/harness/*.test.ts` | ~220 | — | types, registry, runner, state store, artifact store, reporter, check, validate, checkEngine, mockAdapters |
+| **Flow Integration** | `tests/harness/*Flow.test.ts` | ~45 | real + mock | 7 business-capability closed loops |
 | **MCP Tools** | `tests/harness/mcpHarness.test.ts` | 26 | mock + **real** | smoke + real adapter for harness MCP tools |
 | **CLI** | `tests/cli.test.ts` + `tests/harness/cliHarness.test.ts` | 73 | mock | CLI command smoke + integration |
-| **Regression** | `tests/phase*.test.ts` | ~500 | real in-memory DB | compression, memory, profile, acceptance |
+| **Regression** | `tests/phase*.test.ts` | ~600 | real in-memory DB | compression, memory, profile, acceptance |
 | **Schema** | `tests/mcpSchema.test.ts` | 37 | — | MCP tool schema validation |
 
 ### Adapter Strategy
@@ -442,7 +440,7 @@ The real `McpAdapter` supports 4 harness MCP tools backed by in-memory SQLite:
 pnpm test
 ```
 
-Expected: **42 test files, 1285 tests, all passing.** (Performance tests run separately with `PERF_TEST=1`)
+Expected: **58 test files, ~1600 tests, all passing.** (Performance tests run separately with `PERF_TEST=1`)
 
 ---
 

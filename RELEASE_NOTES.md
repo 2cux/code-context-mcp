@@ -1,6 +1,6 @@
-# CodeContext MCP v0.3.0-rc Release Notes
+# CodeContext MCP v1.0.0 Release Notes
 
-> See [docs/releases/v0.3.0-rc.md](./docs/releases/v0.3.0-rc.md) for full release notes.
+> See [docs/releases/v0.3.0-rc.md](./docs/releases/v0.3.0-rc.md) for release candidate notes.
 
 ## Quick Reference
 
@@ -13,8 +13,12 @@ Set via `MCP_TOOL_MODE` env var.
 ## Verification
 
 ```bash
-npx tsc --noEmit && npx vitest run
-# Expected: 42 test files, 1285 tests, zero failures
+# Type-check and run tests
+pnpm test
+# Expected: 58 test files, ~1600 tests, zero failures
+
+# Run installation health checks
+code-context doctor
 ```
 
 ## Known Limitations
