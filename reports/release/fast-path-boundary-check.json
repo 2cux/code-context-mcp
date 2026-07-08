@@ -1,5 +1,5 @@
 {
-  "generated": "2026-06-17T08:29:36.448Z",
+  "generated": "2026-07-08T02:03:25.452Z",
   "verdict": "pass",
   "summary": {
     "total": 29,
@@ -116,7 +116,7 @@
     {
       "check": "benchmark: direct MCP p95 within threshold",
       "status": "pass",
-      "detail": "346ms < 500ms"
+      "detail": "320ms < 500ms"
     },
     {
       "check": "benchmark: harness persistence within target",

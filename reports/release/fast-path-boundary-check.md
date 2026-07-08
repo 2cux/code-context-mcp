@@ -1,6 +1,6 @@
 # Fast Path Boundary Release Gate
 
-**Generated**: 2026-06-17T08:29:36.448Z
+**Generated**: 2026-07-08T02:03:25.452Z
 
 ## Verdict: **PASS** ✅
 
@@ -51,7 +51,7 @@
 | benchmark: markDetailsEnrichmentAsExplicitHeavyMode = true | ✅ pass | Details enrichment is classified correctly |
 | benchmark: separate thresholds for direct/harness/persistence | ✅ pass | directMcp p95 warning=300ms, harnessPersistence warning=100ms |
 | benchmark: harness persistence warning threshold <= 100ms | ✅ pass | Currently 100ms |
-| benchmark: direct MCP p95 within threshold | ✅ pass | 346ms < 500ms |
+| benchmark: direct MCP p95 within threshold | ✅ pass | 320ms < 500ms |
 | benchmark: harness persistence within target | ✅ pass | 0ms < 100ms |
 | benchmark: classification notes present | ✅ pass | 4 notes |
 | docs: core principle documented | ✅ pass | FAST_PATH_VS_HARNESS.md contains the binding rule |
