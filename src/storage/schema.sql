@@ -109,13 +109,15 @@ CREATE TABLE IF NOT EXISTS memories (
     expires_at    TEXT,
     superseded_by TEXT,
     tags          TEXT,  -- JSON array string
+    fingerprint   TEXT,  -- dedup: scopeId|type|normalizedContent
     FOREIGN KEY (scope_id) REFERENCES scopes(scope_id)
 );
 
-CREATE INDEX IF NOT EXISTS idx_mem_scope   ON memories(scope_id);
-CREATE INDEX IF NOT EXISTS idx_mem_type    ON memories(type);
-CREATE INDEX IF NOT EXISTS idx_mem_status  ON memories(status);
-CREATE INDEX IF NOT EXISTS idx_mem_created ON memories(created_at);
+CREATE INDEX IF NOT EXISTS idx_mem_scope       ON memories(scope_id);
+CREATE INDEX IF NOT EXISTS idx_mem_type        ON memories(type);
+CREATE INDEX IF NOT EXISTS idx_mem_status      ON memories(status);
+CREATE INDEX IF NOT EXISTS idx_mem_created     ON memories(created_at);
+-- idx_mem_fingerprint created in migrateFingerprintColumn() after ALTER TABLE
 
 -- ---------------------------------------------------------------------------
 -- 5. Memories FTS — full-text search via LIKE (Phase 5)

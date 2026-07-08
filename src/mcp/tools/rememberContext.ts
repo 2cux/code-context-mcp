@@ -30,6 +30,7 @@ import type {
   MemoryType,
   MemoryStatus,
   SaveMemoryInput,
+  RememberResult,
 } from "../../memory/types.js";
 
 // ---------------------------------------------------------------------------
@@ -360,6 +361,15 @@ export async function handleRememberContext(
     if (tags.length === 0) tags = undefined;
   }
 
+  // ---- 18.1.10: Process supersedesMemoryId ----
+  let supersedesMemoryId: string | undefined;
+  if (
+    typeof args.supersedesMemoryId === "string" &&
+    args.supersedesMemoryId.trim().length > 0
+  ) {
+    supersedesMemoryId = args.supersedesMemoryId.trim();
+  }
+
   // ==========================================================================
   // 18.2 — Memory writing
   // ==========================================================================
@@ -378,13 +388,15 @@ export async function handleRememberContext(
     profileTarget,
     expiresAt,
     tags,
+    supersedesMemoryId,
   };
 
   try {
-    const result = memoryService.remember(input);
+    const result: RememberResult = memoryService.remember(input);
 
     // Build response per PRD §11.6
     const response: Record<string, unknown> = {
+      action: result.action,
       memoryId: result.memoryId,
       scopeId: result.scopeId,
       type: result.type,
@@ -398,6 +410,7 @@ export async function handleRememberContext(
     if (ccrId) response.ccrId = ccrId;
     if (originalRefArg) response.originalRef = originalRefArg;
     if (profileTarget) response.profileTarget = profileTarget;
+    if (result.supersededMemoryId) response.supersededMemoryId = result.supersededMemoryId;
     if (warnings.length > 0) response.warnings = warnings;
 
     return {

@@ -34,7 +34,7 @@ function findSchemaPath(): string {
 }
 
 /** Current schema version — increment when the schema or migrations change. */
-const CURRENT_SCHEMA_VERSION = 3;
+const CURRENT_SCHEMA_VERSION = 4;
 
 /** Read the schema version stored in the database (PRAGMA user_version). */
 function getSchemaVersion(db: Database): number {
@@ -76,6 +76,9 @@ export function runMigrations(db: Database): void {
 
   // CacheAligner columns (§31.2) — added in v1.1
   migrateCacheColumns(db);
+
+  // Memory fingerprint column (§39) — added in v1.2
+  migrateFingerprintColumn(db);
 
   // Mark migrations as applied so subsequent initAndMigrate calls skip work
   setSchemaVersion(db, CURRENT_SCHEMA_VERSION);
@@ -206,6 +209,29 @@ function migrateCacheColumns(db: Database): void {
     db.run("ALTER TABLE receipts ADD COLUMN cache_hit INTEGER DEFAULT 0");
   } catch {
     // Column already exists
+  }
+}
+
+/**
+ * Add fingerprint column and index to memories table (§39).
+ *
+ * SQLite ALTER TABLE only supports ADD COLUMN so we add the column
+ * individually, then create the index. Both are safe to re-run
+ * (column add fails silently if already exists; IF NOT EXISTS on index).
+ */
+function migrateFingerprintColumn(db: Database): void {
+  try {
+    db.run("ALTER TABLE memories ADD COLUMN fingerprint TEXT");
+  } catch {
+    // Column already exists — safe to ignore
+  }
+
+  try {
+    db.run(
+      "CREATE INDEX IF NOT EXISTS idx_mem_fingerprint ON memories(scope_id, fingerprint)",
+    );
+  } catch {
+    // Index already exists
   }
 }
 

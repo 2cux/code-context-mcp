@@ -144,9 +144,9 @@ describe("Memory Data Layer", () => {
     });
 
     it("generates unique ids", () => {
-      const a = service.remember(makeInput());
-      const b = service.remember(makeInput());
-      const c = service.remember(makeInput());
+      const a = service.remember(makeInput({ content: "Memory A" }));
+      const b = service.remember(makeInput({ content: "Memory B" }));
+      const c = service.remember(makeInput({ content: "Memory C" }));
       expect(a.memoryId).not.toBe(b.memoryId);
       expect(b.memoryId).not.toBe(c.memoryId);
       expect(a.memoryId).not.toBe(c.memoryId);
@@ -824,9 +824,9 @@ describe("Memory Data Layer", () => {
     });
 
     it("count() returns counts correctly", () => {
-      service.remember(makeInput({ scopeId: SCOPE_A, type: "bug" }));
-      service.remember(makeInput({ scopeId: SCOPE_A, type: "bug" }));
-      service.remember(makeInput({ scopeId: SCOPE_A, type: "decision" }));
+      service.remember(makeInput({ scopeId: SCOPE_A, type: "bug", content: "Bug count 1" }));
+      service.remember(makeInput({ scopeId: SCOPE_A, type: "bug", content: "Bug count 2" }));
+      service.remember(makeInput({ scopeId: SCOPE_A, type: "decision", content: "Decision count 1" }));
 
       expect(service.count(SCOPE_A)).toBe(3);
       expect(service.count(SCOPE_A, { type: "bug" })).toBe(2);
@@ -834,6 +834,369 @@ describe("Memory Data Layer", () => {
       expect(service.count(SCOPE_A, { type: "dependency" })).toBe(0);
       expect(service.count(SCOPE_A, { status: "active" })).toBe(3);
       expect(service.count(SCOPE_B)).toBe(0);
+    });
+  });
+
+  // ==========================================================================
+  // 17.4.12 — Memory Hygiene: fingerprint, dedup, atomic supersede, rollback
+  // ==========================================================================
+
+  describe("17.4.12 — Memory Hygiene", () => {
+    // ------------------------------------------------------------------
+    // 17.4.12.1 — Exact dedup within same scope
+    // ------------------------------------------------------------------
+
+    describe("17.4.12.1 — Exact dedup", () => {
+      it("returns action=deduplicated for identical content in same scope", () => {
+        const input = makeInput({
+          scopeId: SCOPE_A,
+          type: "project_rule",
+          content: "Always use TypeScript strict mode.",
+        });
+
+        const first = service.remember(input);
+        expect(first.action).toBe("created");
+
+        const second = service.remember(input);
+        expect(second.action).toBe("deduplicated");
+        // Same memoryId returned — no new record created
+        expect(second.memoryId).toBe(first.memoryId);
+        // Still generates a receipt
+        expect(second.receiptId).toMatch(/^rcp_/);
+      });
+
+      it("returns action=deduplicated for content that normalizes to same fingerprint", () => {
+        const first = service.remember(
+          makeInput({ scopeId: SCOPE_A, type: "project_rule", content: "  Use pnpm.  " }),
+        );
+        expect(first.action).toBe("created");
+
+        // Trimmed content produces the same normalized fingerprint
+        const second = service.remember(
+          makeInput({ scopeId: SCOPE_A, type: "project_rule", content: "Use pnpm." }),
+        );
+        expect(second.action).toBe("deduplicated");
+        expect(second.memoryId).toBe(first.memoryId);
+      });
+
+      it("normalizes CRLF → LF in fingerprint", () => {
+        const first = service.remember(
+          makeInput({ scopeId: SCOPE_A, type: "decision", content: "line1\nline2\nline3" }),
+        );
+        expect(first.action).toBe("created");
+
+        const second = service.remember(
+          makeInput({ scopeId: SCOPE_A, type: "decision", content: "line1\r\nline2\r\nline3" }),
+        );
+        expect(second.action).toBe("deduplicated");
+      });
+
+      it("creates new record for different type (same scope + content)", () => {
+        const content = "This is a shared observation.";
+        const first = service.remember(
+          makeInput({ scopeId: SCOPE_A, type: "decision", content }),
+        );
+        expect(first.action).toBe("created");
+
+        const second = service.remember(
+          makeInput({ scopeId: SCOPE_A, type: "bug", content }),
+        );
+        expect(second.action).toBe("created");
+        expect(second.memoryId).not.toBe(first.memoryId);
+      });
+
+      it("creates new record for different content (same scope + type)", () => {
+        const first = service.remember(
+          makeInput({ scopeId: SCOPE_A, type: "project_rule", content: "Rule A" }),
+        );
+        const second = service.remember(
+          makeInput({ scopeId: SCOPE_A, type: "project_rule", content: "Rule B" }),
+        );
+        expect(first.action).toBe("created");
+        expect(second.action).toBe("created");
+        expect(second.memoryId).not.toBe(first.memoryId);
+      });
+
+      it("dedup only considers active memories — re-remembering after forget creates new", () => {
+        const input = makeInput({
+          scopeId: SCOPE_A,
+          type: "project_rule",
+          content: "Temporary rule that will be forgotten.",
+        });
+
+        const first = service.remember(input);
+        expect(first.action).toBe("created");
+
+        // Forget it
+        service.forget({ id: first.memoryId, scopeId: SCOPE_A, mode: "soft_forget" });
+
+        // Re-remember the same content → should create NEW (old is forgotten, not active)
+        const second = service.remember(input);
+        expect(second.action).toBe("created");
+        expect(second.memoryId).not.toBe(first.memoryId);
+      });
+    });
+
+    // ------------------------------------------------------------------
+    // 17.4.12.2 — Different scope does NOT dedup
+    // ------------------------------------------------------------------
+
+    describe("17.4.12.2 — Different scope no dedup", () => {
+      it("creates separate records for same content in different scopes", () => {
+        const content = "Use ESLint with company preset.";
+
+        const a = service.remember(
+          makeInput({ scopeId: SCOPE_A, type: "project_rule", content }),
+        );
+        const b = service.remember(
+          makeInput({ scopeId: SCOPE_B, type: "project_rule", content }),
+        );
+
+        expect(a.action).toBe("created");
+        expect(b.action).toBe("created");
+        expect(a.memoryId).not.toBe(b.memoryId);
+      });
+    });
+
+    // ------------------------------------------------------------------
+    // 17.4.12.3 — Atomic supersede
+    // ------------------------------------------------------------------
+
+    describe("17.4.12.3 — Atomic supersede", () => {
+      it("replaces old memory atomically when supersedesMemoryId is provided", () => {
+        const old = service.remember(
+          makeInput({ scopeId: SCOPE_A, type: "project_rule", content: "Old rule content." }),
+        );
+        expect(old.action).toBe("created");
+
+        const result = service.remember(
+          makeInput({
+            scopeId: SCOPE_A,
+            type: "project_rule",
+            content: "New rule content.",
+            supersedesMemoryId: old.memoryId,
+          }),
+        );
+
+        expect(result.action).toBe("replaced");
+        expect(result.memoryId).toMatch(/^mem_/);
+        expect(result.memoryId).not.toBe(old.memoryId);
+        expect(result.supersededMemoryId).toBe(old.memoryId);
+
+        // Old memory should be superseded
+        const oldRecord = service.get(old.memoryId, SCOPE_A);
+        expect(oldRecord!.status).toBe("superseded");
+        expect(oldRecord!.supersededBy).toBe(result.memoryId);
+
+        // New memory should be active and have supersedes populated
+        const newRecord = service.get(result.memoryId, SCOPE_A);
+        expect(newRecord!.status).toBe("active");
+        expect(newRecord!.supersedes).toEqual([old.memoryId]);
+      });
+
+      it("supersede generates a receipt covering both memory IDs", () => {
+        const old = service.remember(
+          makeInput({ scopeId: SCOPE_A, type: "bug", content: "Old bug report." }),
+        );
+
+        const result = service.remember(
+          makeInput({
+            scopeId: SCOPE_A,
+            type: "bug",
+            content: "Updated bug report with more details.",
+            supersedesMemoryId: old.memoryId,
+          }),
+        );
+
+        expect(result.receiptId).toMatch(/^rcp_/);
+
+        // Verify receipt exists and covers both memory IDs
+        const receipt = service["receipts"].get(result.receiptId);
+        expect(receipt).not.toBeNull();
+        expect(receipt!.memoryIds).toContain(result.memoryId);
+        expect(receipt!.memoryIds).toContain(old.memoryId);
+        expect(receipt!.operation).toBe("remember");
+      });
+
+      it("supersede preserves profile_facts for the new memory", () => {
+        const old = service.remember(
+          makeInput({
+            scopeId: SCOPE_A,
+            type: "project_rule",
+            content: "Old rule.",
+            summary: "Old summary",
+            profileTarget: "static",
+          }),
+        );
+
+        const result = service.remember(
+          makeInput({
+            scopeId: SCOPE_A,
+            type: "project_rule",
+            content: "New rule replaces old.",
+            summary: "New summary",
+            profileTarget: "static",
+            supersedesMemoryId: old.memoryId,
+          }),
+        );
+
+        expect(result.action).toBe("replaced");
+
+        // Verify profile fact exists for the new memory
+        const pfRow = queryOne(
+          db,
+          "SELECT * FROM profile_facts WHERE source_memory_id = ?",
+          [result.memoryId],
+        );
+        expect(pfRow).not.toBeNull();
+        expect(pfRow!["content"]).toBe("New summary");
+      });
+    });
+
+    // ------------------------------------------------------------------
+    // 17.4.12.4 — Rollback on failure
+    // ------------------------------------------------------------------
+
+    describe("17.4.12.4 — Rollback", () => {
+      it("throws when supersedesMemoryId does not exist", () => {
+        expect(() => {
+          service.remember(
+            makeInput({
+              scopeId: SCOPE_A,
+              type: "project_rule",
+              content: "New rule.",
+              supersedesMemoryId: "mem_nonexistent",
+            }),
+          );
+        }).toThrow(/not found/);
+
+        // Verify no new memory was created (transaction rolled back)
+        const result = service.list({ scopeId: SCOPE_A });
+        expect(result.total).toBe(0);
+      });
+
+      it("throws when supersedesMemoryId belongs to a different scope", () => {
+        const old = service.remember(
+          makeInput({ scopeId: SCOPE_A, type: "project_rule", content: "Scoped rule." }),
+        );
+
+        expect(() => {
+          service.remember(
+            makeInput({
+              scopeId: SCOPE_B,
+              type: "project_rule",
+              content: "Cross-scope supersede attempt.",
+              supersedesMemoryId: old.memoryId,
+            }),
+          );
+        }).toThrow(/not found/);
+
+        // Verify no memory was created in SCOPE_B
+        const resultB = service.list({ scopeId: SCOPE_B });
+        expect(resultB.total).toBe(0);
+
+        // Original memory in SCOPE_A should be unaffected
+        const stillActive = service.get(old.memoryId, SCOPE_A);
+        expect(stillActive!.status).toBe("active");
+      });
+
+      it("throws when supersedesMemoryId is not active (already superseded)", () => {
+        // Create a chain: A → B (B supersedes A)
+        const a = service.remember(
+          makeInput({ scopeId: SCOPE_A, type: "project_rule", content: "Version A." }),
+        );
+
+        const b = service.remember(
+          makeInput({
+            scopeId: SCOPE_A,
+            type: "project_rule",
+            content: "Version B.",
+            supersedesMemoryId: a.memoryId,
+          }),
+        );
+
+        // Now A is superseded. Try to supersede A again — should fail.
+        expect(() => {
+          service.remember(
+            makeInput({
+              scopeId: SCOPE_A,
+              type: "project_rule",
+              content: "Version C — can't supersede A because A is already superseded.",
+              supersedesMemoryId: a.memoryId,
+            }),
+          );
+        }).toThrow(/must be "active"/);
+
+        // B should still be active and unaffected by the failed attempt
+        const bRecord = service.get(b.memoryId, SCOPE_A);
+        expect(bRecord!.status).toBe("active");
+
+        // Verify only 2 memories total (A superseded, B active)
+        const all = service.list({ scopeId: SCOPE_A });
+        expect(all.total).toBe(2);
+      });
+    });
+
+    // ------------------------------------------------------------------
+    // 17.4.12.5 — Recall excludes superseded memories
+    // ------------------------------------------------------------------
+
+    describe("17.4.12.5 — Recall excludes superseded", () => {
+      it("recall does NOT return superseded memories by default", () => {
+        const old = service.remember(
+          makeInput({
+            scopeId: SCOPE_A,
+            type: "project_rule",
+            content: "Always use npm as the package manager.",
+            summary: "Use npm",
+          }),
+        );
+        expect(old.action).toBe("created");
+
+        // Verify old is active before supersede
+        const oldBefore = service.get(old.memoryId, SCOPE_A);
+        expect(oldBefore!.status).toBe("active");
+
+        // Supersede with new rule
+        const result = service.remember(
+          makeInput({
+            scopeId: SCOPE_A,
+            type: "project_rule",
+            content: "Always use pnpm as the package manager.",
+            summary: "Use pnpm",
+            supersedesMemoryId: old.memoryId,
+          }),
+        );
+        expect(result.action).toBe("replaced");
+
+        // Verify old is now superseded in DB
+        const oldAfter = service.get(old.memoryId, SCOPE_A);
+        expect(oldAfter!.status).toBe("superseded");
+        expect(oldAfter!.supersededBy).toBe(result.memoryId);
+
+        // Verify new is active
+        const newAfter = service.get(result.memoryId, SCOPE_A);
+        expect(newAfter!.status).toBe("active");
+
+        // Search for "package manager" — should only find the active (pnpm) memory
+        const results = recallEngine.search({
+          scopeId: SCOPE_A,
+          query: "package manager",
+          status: ["active"],
+          limit: 10,
+        });
+
+        // The active memory should be returned
+        const hasPnpm = results.some((r) => r.memory.content.includes("pnpm"));
+        expect(hasPnpm).toBe(true);
+
+        // The superseded memory should NOT be returned
+        const hasNpm = results.some((r) => r.memory.id === old.memoryId);
+        expect(hasNpm).toBe(false);
+
+        // Only 1 result
+        expect(results.length).toBe(1);
+      });
     });
   });
 });

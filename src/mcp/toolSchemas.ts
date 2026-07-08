@@ -219,7 +219,11 @@ export const TOOL_DEFINITIONS: Tool[] = [
       "Creates a typed memory record scoped to the current repository, " +
       "optionally writing to the project profile (static for long-term " +
       "facts, dynamic for transient context). " +
+      "Supports exact deduplication (same scope+type+content won't " +
+      "create duplicates) and atomic supersede (replace old memory " +
+      "with new in a single transaction). " +
       "Every remember operation generates an audit receipt. " +
+      "Returns action: created, deduplicated, or replaced. " +
       "Valid types: decision, bug, command, file_summary, project_rule, " +
       "user_preference, current_task, test_failure, api_contract, dependency.",
     inputSchema: {
@@ -293,6 +297,16 @@ export const TOOL_DEFINITIONS: Tool[] = [
           description:
             "Optional originalRef to link this memory to original content. " +
             "Auto-derives sourceRef as orig:<originalRef>.",
+        },
+        supersedesMemoryId: {
+          type: "string",
+          description:
+            "Optional ID of an existing active memory to replace. " +
+            "When provided, the operation is atomic: the new memory is created, " +
+            "the old memory is marked as superseded with a link to the new one, " +
+            "and a single receipt covers both actions. " +
+            "If any step fails, the entire operation is rolled back. " +
+            "Use this to explicitly replace outdated project knowledge.",
         },
       },
       required: ["type", "content"],
