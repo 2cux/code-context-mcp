@@ -18,5 +18,5 @@
   "mustNotInvent": [
     "step not in the conversation"
   ],
-  "minimumTokenSavingsRatio": 0.30
+  "minimumTokenSavingsRatio": 0.5
 }

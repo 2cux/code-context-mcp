@@ -21,5 +21,5 @@
   "mustNotInvent": [
     "function that does not exist in source"
   ],
-  "minimumTokenSavingsRatio": 0.30
+  "minimumTokenSavingsRatio": 0.45
 }

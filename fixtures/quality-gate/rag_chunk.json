@@ -17,5 +17,5 @@
   "mustNotInvent": [
     "source not in original chunks"
   ],
-  "minimumTokenSavingsRatio": 0.30
+  "minimumTokenSavingsRatio": 0.35
 }

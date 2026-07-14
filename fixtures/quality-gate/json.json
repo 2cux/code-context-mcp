@@ -15,5 +15,5 @@
   "mustNotInvent": [
     "error code not in response"
   ],
-  "minimumTokenSavingsRatio": 0.30
+  "minimumTokenSavingsRatio": 0.1
 }

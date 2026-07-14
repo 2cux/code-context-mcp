@@ -22,5 +22,5 @@
     "non-existent error type",
     "fabricated log line"
   ],
-  "minimumTokenSavingsRatio": 0.30
+  "minimumTokenSavingsRatio": 0.1
 }

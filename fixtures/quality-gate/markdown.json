@@ -17,5 +17,5 @@
   "mustNotInvent": [
     "heading not in original"
   ],
-  "minimumTokenSavingsRatio": 0.30
+  "minimumTokenSavingsRatio": 0.4
 }

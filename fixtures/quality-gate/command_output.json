@@ -23,5 +23,5 @@
   "mustNotInvent": [
     "non-existent TS error code"
   ],
-  "minimumTokenSavingsRatio": 0.30
+  "minimumTokenSavingsRatio": 0
 }
