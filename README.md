@@ -41,14 +41,14 @@ code-context doctor
 
 ### MCP Configuration
 
-Add to your AI coding agent's MCP config. The default mode is **agent** (7 safe tools):
+After installing the package globally, add this to your AI coding agent's MCP config. The default mode is **agent** (7 safe tools):
 
 ```json
 {
   "mcpServers": {
     "code-context": {
-      "command": "node",
-      "args": ["dist/index.js"],
+      "command": "code-context-server",
+      "args": [],
       "env": {
         "MCP_TOOL_MODE": "agent"
       }
@@ -63,8 +63,8 @@ For full tool access during development, use `dev` mode (18 tools):
 {
   "mcpServers": {
     "code-context": {
-      "command": "node",
-      "args": ["dist/index.js"],
+      "command": "code-context-server",
+      "args": [],
       "env": {
         "MCP_TOOL_MODE": "dev"
       }
@@ -72,6 +72,8 @@ For full tool access during development, use `dev` mode (18 tools):
   }
 }
 ```
+
+When running from a source checkout, use `node dist/index.js` with the same `MCP_TOOL_MODE` value instead.
 
 **Tool Surface by Mode:**
 

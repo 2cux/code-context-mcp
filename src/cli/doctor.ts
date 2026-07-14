@@ -41,9 +41,15 @@ export interface DoctorReport {
   checks: DoctorCheck[];
   allPass: boolean;
   mcpConfig: {
-    agent: unknown;
-    dev: unknown;
+    agent: McpServerConfig;
+    dev: McpServerConfig;
   };
+}
+
+export interface McpServerConfig {
+  command: string;
+  args: string[];
+  env: { MCP_TOOL_MODE: "agent" | "dev" };
 }
 
 // ---------------------------------------------------------------------------
@@ -307,19 +313,17 @@ function checkAgentToolCount(): DoctorCheck {
   };
 }
 
-function buildMcpConfig(): DoctorReport["mcpConfig"] {
+export function buildMcpConfig(): DoctorReport["mcpConfig"] {
   return {
     agent: {
-      command: "node",
-      args: ["dist/index.js"],
+      command: "code-context-server",
+      args: [],
       env: { MCP_TOOL_MODE: "agent" },
-      description: "7 safe tools — recommended for AI coding agents",
     },
     dev: {
-      command: "node",
-      args: ["dist/index.js"],
+      command: "code-context-server",
+      args: [],
       env: { MCP_TOOL_MODE: "dev" },
-      description: "18 tools — full inspection and debug",
     },
   };
 }
