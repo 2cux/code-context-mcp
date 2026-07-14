@@ -1,122 +1,35 @@
 {
-  "generated": "2026-07-08T05:31:46.397Z",
+  "generated": "2026-07-14T08:21:45.000Z",
   "project": "code-context-mcp",
   "version": "1.0.0",
   "verdict": "PASS",
   "summary": {
-    "total": 10,
-    "pass": 10,
+    "total": 11,
+    "pass": 11,
     "warning": 0,
     "fail": 0,
-    "mustPass": 10,
+    "mustPass": 11,
     "mustFail": 0,
-    "mustWarning": 0,
-    "totalDurationMs": 148322
+    "mustWarning": 0
   },
   "checks": [
-    {
-      "check": "1. TypeScript zero errors",
-      "status": "pass",
-      "detail": "tsc --noEmit returned zero errors",
-      "category": "build",
-      "severity": "must",
-      "durationMs": 2192
-    },
-    {
-      "check": "2. Vitest zero failures",
-      "status": "pass",
-      "detail": "1582 tests passed, 58 test files, 0 failures",
-      "category": "tests",
-      "severity": "must",
-      "durationMs": 46398
-    },
-    {
-      "check": "3. Compression Quality Gate",
-      "status": "pass",
-      "detail": "Compression quality: 8/8 passed",
-      "category": "quality",
-      "severity": "must",
-      "durationMs": 254
-    },
-    {
-      "check": "4. Memory Recall Quality Gate",
-      "status": "pass",
-      "detail": "11 memory/recall test files, 0 failures",
-      "category": "quality",
-      "severity": "must",
-      "durationMs": 45925
-    },
-    {
-      "check": "5. Fast Path Boundary Gate",
-      "status": "pass",
-      "detail": "Fast path boundary gate passed",
-      "category": "boundary",
-      "severity": "must",
-      "durationMs": 5147
-    },
-    {
-      "check": "6. Agent mode = 7 tools",
-      "status": "pass",
-      "detail": "AGENT_TOOLS has exactly 7 entries: current_scope, compress_context, retrieve_original, remember_context, recall_context, forget_context, run_context_flow",
-      "category": "tool-surface",
-      "severity": "must",
-      "durationMs": 1
-    },
-    {
-      "check": "7. Dangerous tools not in agent mode",
-      "status": "pass",
-      "detail": "Dangerous tools (delete_original, cleanup_originals) excluded from AGENT_TOOLS",
-      "category": "tool-surface",
-      "severity": "must",
-      "durationMs": 1
-    },
-    {
-      "check": "8. demo / value / doctor runnable",
-      "status": "pass",
-      "detail": "doctor: ok; demo: ok; value: ok",
-      "category": "cli",
-      "severity": "must",
-      "durationMs": 3312
-    },
-    {
-      "check": "9. npm pack install + CLI / MCP server startable",
-      "status": "pass",
-      "detail": "Pack OK (no forbidden files), dry-run clean, install OK, CLI v1.0.0, MCP server 7 tools",
-      "category": "packaging",
-      "severity": "must",
-      "durationMs": 45087
-    },
-    {
-      "check": "10. README / version / CHANGELOG consistency",
-      "status": "pass",
-      "detail": "All sources consistent at v1.0.0",
-      "category": "docs",
-      "severity": "must",
-      "durationMs": 2
-    }
+    { "id": 1, "check": "Git tracked source complete and clean-source build", "status": "pass", "severity": "must", "category": "source", "detail": "Initial git status --short was empty; 232 tracked source/doc/config files enumerated; clean archive from HEAD installed dependencies and npm run build completed successfully.", "commands": ["git status --short", "git ls-files src tests scripts package.json tsconfig.json vitest.config.ts README.md CHANGELOG.md RELEASE_NOTES.md docs | Measure-Object", "git archive --format=zip HEAD; Expand-Archive; npm install; npm run build"] },
+    { "id": 2, "check": "TypeScript zero errors", "status": "pass", "severity": "must", "category": "build", "detail": "tsc --noEmit returned zero errors.", "commands": ["node scripts/release/stable-readiness-check.mjs"] },
+    { "id": 3, "check": "Full Vitest zero failures", "status": "pass", "severity": "must", "category": "tests", "detail": "1586 tests passed, 60 test files, 0 failures.", "commands": ["node scripts/release/stable-readiness-check.mjs"] },
+    { "id": 4, "check": "Compression Quality Gate", "status": "pass", "severity": "must", "category": "quality", "detail": "Compression quality gate passed: 8/8 fixtures passed.", "commands": ["node scripts/release/stable-readiness-check.mjs", "node scripts/release/compression-quality-check.mjs"] },
+    { "id": 5, "check": "Memory Recall Quality Gate", "status": "pass", "severity": "must", "category": "quality", "detail": "Memory/recall quality gate passed: 12 memory/recall test files, 0 failures.", "commands": ["node scripts/release/stable-readiness-check.mjs"] },
+    { "id": 6, "check": "Fingerprint migration tests", "status": "pass", "severity": "must", "category": "migration", "detail": "tests/memoryFingerprintMigration.test.ts passed: 4 tests, 1 test file, 0 failures.", "commands": ["node node_modules/vitest/vitest.mjs run tests/memoryFingerprintMigration.test.ts --reporter=verbose"] },
+    { "id": 7, "check": "Fast Path Boundary Gate", "status": "pass", "severity": "must", "category": "boundary", "detail": "Fast path boundary gate passed.", "commands": ["node scripts/release/stable-readiness-check.mjs", "node scripts/release/fast-path-boundary-check.mjs"] },
+    { "id": 8, "check": "Agent mode remains 7 tools", "status": "pass", "severity": "must", "category": "tool-surface", "detail": "AGENT_TOOLS has exactly 7 entries: current_scope, compress_context, retrieve_original, remember_context, recall_context, forget_context, run_context_flow.", "commands": ["node scripts/release/stable-readiness-check.mjs"] },
+    { "id": 9, "check": "demo, value, doctor runnable", "status": "pass", "severity": "must", "category": "cli", "detail": "doctor: ok; demo: ok; value: ok.", "commands": ["node scripts/release/stable-readiness-check.mjs"] },
+    { "id": 10, "check": "npm pack CLI and MCP server startable", "status": "pass", "severity": "must", "category": "packaging", "detail": "npm pack dry-run clean; npm pack install smoke passed; CLI started and returned v1.0.0; MCP server started and exposed 7 tools.", "commands": ["node scripts/release/stable-readiness-check.mjs"] },
+    { "id": 11, "check": "Version and documentation consistency", "status": "pass", "severity": "must", "category": "docs", "detail": "package.json, CLI/server version references, README, and CHANGELOG are consistent at v1.0.0.", "commands": ["node scripts/release/stable-readiness-check.mjs"] }
   ],
-  "verdictRules": {
-    "pass": "All MUST checks pass. Ready for stable release.",
-    "warning": "All MUST checks pass but one or more SHOULD checks are warnings. Review before release.",
-    "fail": "One or more MUST checks FAILED. Do NOT release until resolved.",
-    "categories": {
-      "must": [
-        "TypeScript zero errors",
-        "Vitest zero failures (all test files)",
-        "Compression Quality Gate pass",
-        "Memory Recall Quality Gate pass",
-        "Fast Path Boundary Gate pass",
-        "Agent mode = 7 tools",
-        "Dangerous tools not in agent mode",
-        "demo / value / doctor runnable",
-        "npm pack install + CLI / MCP server startable",
-        "README / version / CHANGELOG consistency"
-      ],
-      "should": [
-        "Performance fluctuations (non-critical, does not block release)",
-        "Documentation warnings",
-        "Cache hit latency"
-      ]
-    }
-  }
+  "runs": [
+    { "name": "Stable release gate", "command": "node scripts/release/stable-readiness-check.mjs", "environment": "non-sandbox", "exitCode": 0, "durationSeconds": 157.3, "verdict": "PASS", "notes": "The first sandboxed run failed only on writes to C:\\Users\\Lenovo and npm cache. The non-sandbox run is the final release result." },
+    { "name": "Fingerprint migration focused test", "command": "node node_modules/vitest/vitest.mjs run tests/memoryFingerprintMigration.test.ts --reporter=verbose", "exitCode": 0, "result": "4 passed, 0 failed" },
+    { "name": "Clean-source build", "command": "git archive HEAD -> D:\\tmp clean tree; npm install; npm run build", "exitCode": 0, "result": "dependencies installed and tsc build passed", "tempDir": "D:\\tmp\\codecontext-clean-dfd10e2e06d544c4baa26119b1cf7c0c" }
+  ],
+  "nonScope": ["npm publish was not executed", "git tag was not created"],
+  "verdictRules": { "pass": "All MUST checks pass. Ready for stable release.", "fail": "Any MUST check failure sets verdict=FAIL." }
 }

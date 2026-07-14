@@ -1,115 +1,50 @@
-# CodeContext Stable Release Gate
+# CodeContext Stable Release Revalidation
 
-**Generated**: 2026-07-08T05:31:46.397Z
-**Project**: code-context-mcp v1.0.0
+Generated: 2026-07-14T08:21:45.000Z
 
-## Verdict: **PASS** ✅
+Project: code-context-mcp v1.0.0
+
+## Verdict: PASS
+
+All requested MUST items passed. Per release rule, any MUST failure would set `verdict=FAIL`; no MUST failures were observed in the final non-sandbox validation run plus supplemental checks.
 
 ## Summary
 
 | Metric | Count |
-|---|---|
-| ✅ Pass | 10 |
-| ⚠️ Warning | 0 |
-| ❌ Fail | 0 |
-| **Total** | **10** |
-| MUST pass | 10 |
+|---|---:|
+| MUST pass | 11 |
 | MUST fail | 0 |
-| Total duration | 148.3s |
+| Warnings | 0 |
+| Total checks | 11 |
 
-## Verdict Rules
+## MUST Results
 
-### ❌ MUST (fail = release blocked)
+| # | Check | Status | Evidence |
+|---:|---|---|---|
+| 1 | Git tracked source complete and clean-source build | PASS | Initial `git status --short` was empty; 232 tracked source/doc/config files enumerated; `git archive HEAD` clean tree ran `npm install` and `npm run build` successfully. |
+| 2 | TypeScript 0 errors | PASS | Stable gate: `tsc --noEmit` returned zero errors. |
+| 3 | Full Vitest 0 failures | PASS | Stable gate: 1586 tests passed, 60 test files, 0 failures. |
+| 4 | Compression Quality Gate real pass | PASS | Stable gate: compression quality 8/8 fixtures passed. |
+| 5 | Memory Recall Quality Gate | PASS | Stable gate: 12 memory/recall test files, 0 failures. |
+| 6 | fingerprint migration tests | PASS | `tests/memoryFingerprintMigration.test.ts`: 4 tests passed, 0 failures. |
+| 7 | Fast Path Boundary Gate | PASS | Stable gate: fast path boundary gate passed. |
+| 8 | agent mode remains 7 tools | PASS | `current_scope`, `compress_context`, `retrieve_original`, `remember_context`, `recall_context`, `forget_context`, `run_context_flow`. |
+| 9 | demo, value, doctor runnable | PASS | Stable gate: `doctor: ok; demo: ok; value: ok`. |
+| 10 | npm pack CLI and MCP server startable | PASS | npm pack dry-run clean; pack install smoke passed; CLI returned v1.0.0; MCP server started with 7 tools. |
+| 11 | Version and docs consistent | PASS | package.json, CLI/server version references, README, and CHANGELOG consistent at v1.0.0. |
 
-- TypeScript zero errors
-- Vitest zero failures (all test files)
-- Compression Quality Gate pass
-- Memory Recall Quality Gate pass
-- Fast Path Boundary Gate pass
-- Agent mode = 7 tools
-- Dangerous tools not in agent mode
-- demo / value / doctor runnable
-- npm pack install + CLI / MCP server startable
-- README / version / CHANGELOG consistency
+## Commands Run
 
-### ⚠️ SHOULD (warning only — review but do not block)
-
-- Performance fluctuations (non-critical, does not block release)
-- Documentation warnings
-- Cache hit latency
-
-## Check Results
-
-### build
-
-| # | Check | Status | Severity | Duration | Detail |
-|---|---|---|---:|---:|
-| 1 | 1. TypeScript zero errors | ✅ pass | 🔴 MUST | 2192ms | tsc --noEmit returned zero errors |
-
-### tests
-
-| # | Check | Status | Severity | Duration | Detail |
-|---|---|---|---:|---:|
-| 1 | 2. Vitest zero failures | ✅ pass | 🔴 MUST | 46398ms | 1582 tests passed, 58 test files, 0 failures |
-
-### quality
-
-| # | Check | Status | Severity | Duration | Detail |
-|---|---|---|---:|---:|
-| 1 | 3. Compression Quality Gate | ✅ pass | 🔴 MUST | 254ms | Compression quality: 8/8 passed |
-| 2 | 4. Memory Recall Quality Gate | ✅ pass | 🔴 MUST | 45925ms | 11 memory/recall test files, 0 failures |
-
-### boundary
-
-| # | Check | Status | Severity | Duration | Detail |
-|---|---|---|---:|---:|
-| 1 | 5. Fast Path Boundary Gate | ✅ pass | 🔴 MUST | 5147ms | Fast path boundary gate passed |
-
-### tool-surface
-
-| # | Check | Status | Severity | Duration | Detail |
-|---|---|---|---:|---:|
-| 1 | 6. Agent mode = 7 tools | ✅ pass | 🔴 MUST | 1ms | AGENT_TOOLS has exactly 7 entries: current_scope, compress_context, retrieve_original, remember_c... |
-| 2 | 7. Dangerous tools not in agent mode | ✅ pass | 🔴 MUST | 1ms | Dangerous tools (delete_original, cleanup_originals) excluded from AGENT_TOOLS |
-
-### cli
-
-| # | Check | Status | Severity | Duration | Detail |
-|---|---|---|---:|---:|
-| 1 | 8. demo / value / doctor runnable | ✅ pass | 🔴 MUST | 3312ms | doctor: ok; demo: ok; value: ok |
-
-### packaging
-
-| # | Check | Status | Severity | Duration | Detail |
-|---|---|---|---:|---:|
-| 1 | 9. npm pack install + CLI / MCP server startable | ✅ pass | 🔴 MUST | 45087ms | Pack OK (no forbidden files), dry-run clean, install OK, CLI v1.0.0, MCP server 7 tools |
-
-### docs
-
-| # | Check | Status | Severity | Duration | Detail |
-|---|---|---|---:|---:|
-| 1 | 10. README / version / CHANGELOG consistency | ✅ pass | 🔴 MUST | 2ms | All sources consistent at v1.0.0 |
-
-## ✅ Ready for Stable Release
-
-All checks pass. The release is ready.
-
-Next steps:
-```bash
-# 1. Review this report one final time
-# 2. Create git tag:
-git tag -a v1.0.0 -m "Release v1.0.0"
-# 3. Push tag:
-git push origin v1.0.0
-# 4. Publish to npm:
-npm publish
+```powershell
+git status --short
+node scripts\release\stable-readiness-check.mjs
+node node_modules\vitest\vitest.mjs run tests\memoryFingerprintMigration.test.ts --reporter=verbose
+git archive HEAD -> D:\tmp clean tree; npm install; npm run build
 ```
+
+The first sandboxed stable gate run failed on writes to `C:\Users\Lenovo\.code-context-mcp` and npm cache. It was rerun outside the sandbox because those failures were environment permission failures; the final non-sandbox run passed.
 
 ## Non-Scope
 
-This gate does NOT:
-- Execute `npm publish`
-- Create git tags
-- Push to remote
-- Upload to any external service
-- Check image/binary compression (explicit non-goal)
+- `npm publish` was not executed.
+- No git tag was created.
