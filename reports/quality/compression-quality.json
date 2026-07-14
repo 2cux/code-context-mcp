@@ -1,0 +1,788 @@
+{
+  "meta": {
+    "generatedAt": "2026-07-14T07:58:22.110Z",
+    "gitCommit": "36b901ce61b2c99153d2ea4ba31db120d33eb12a",
+    "gitDirty": true,
+    "generator": "tests/quality/generateBaseline.ts",
+    "command": "npm run quality:reports"
+  },
+  "fixture": {
+    "version": "compression-baseline-and-release-gate-v1",
+    "hash": "83068cc5b804f1995794f05dea9f60398384d73d2af970a25b02294b8dfde81b",
+    "paths": [
+      "fixtures/quality-eval/compression/code.ts",
+      "fixtures/quality-eval/compression/commandOutput.txt",
+      "fixtures/quality-eval/compression/conversationHistory.txt",
+      "fixtures/quality-eval/compression/json.json",
+      "fixtures/quality-eval/compression/log.ts",
+      "fixtures/quality-eval/compression/markdown.md",
+      "fixtures/quality-eval/compression/ragChunk.json",
+      "fixtures/quality-eval/compression/testOutput.txt",
+      "fixtures/quality-gate/code.json",
+      "fixtures/quality-gate/command_output.json",
+      "fixtures/quality-gate/conversation_history.json",
+      "fixtures/quality-gate/json.json",
+      "fixtures/quality-gate/log.json",
+      "fixtures/quality-gate/markdown.json",
+      "fixtures/quality-gate/rag_chunk.json",
+      "fixtures/quality-gate/test_output.json",
+      "tests/fixtures/app-log.txt",
+      "tests/fixtures/build-output.txt",
+      "tests/fixtures/conversation.json",
+      "tests/fixtures/rag-chunks.json",
+      "tests/fixtures/readme.md",
+      "tests/fixtures/response.json",
+      "tests/fixtures/sample.ts",
+      "tests/fixtures/vitest-output.txt"
+    ]
+  },
+  "baselineMeasurement": {
+    "threshold": {
+      "type": "baseline",
+      "enforced": false,
+      "note": "No baseline threshold is enforced."
+    },
+    "measured": {
+      "averageKeyFactRetention": 0.5794871794871795,
+      "averageTokenSavings": 0.5595749999999999,
+      "fixtureCount": 8
+    },
+    "verdict": "MEASURED",
+    "fixtures": [
+      {
+        "fixture": "code.ts",
+        "contentType": "code",
+        "threshold": {
+          "type": "baseline",
+          "enforced": false,
+          "note": "Baseline measurement only; not a release-gate result."
+        },
+        "measured": {
+          "tokensBefore": 1136,
+          "tokensAfter": 353,
+          "tokensSaved": 783,
+          "tokenSavingsRatio": 0.6893,
+          "factsTotal": 13,
+          "factsRetained": 9,
+          "keyFactRetentionRate": 0.6923076923076923,
+          "keyFacts": [
+            {
+              "fact": "PaymentRequest",
+              "retained": true
+            },
+            {
+              "fact": "PaymentResponse",
+              "retained": true
+            },
+            {
+              "fact": "PaymentError",
+              "retained": true
+            },
+            {
+              "fact": "processPayment",
+              "retained": true
+            },
+            {
+              "fact": "refundPayment",
+              "retained": true
+            },
+            {
+              "fact": "getPaymentStatus",
+              "retained": true
+            },
+            {
+              "fact": "validateCard",
+              "retained": true
+            },
+            {
+              "fact": "Luhn",
+              "retained": false
+            },
+            {
+              "fact": "RETRY_DELAY_MS",
+              "retained": true
+            },
+            {
+              "fact": "processing_error",
+              "retained": false
+            },
+            {
+              "fact": "invalid_amount",
+              "retained": false
+            },
+            {
+              "fact": "FIXME: Add rate limiting",
+              "retained": true
+            },
+            {
+              "fact": "src/services/paymentService.ts",
+              "retained": false
+            }
+          ]
+        },
+        "verdict": "MEASURED"
+      },
+      {
+        "fixture": "log.ts",
+        "contentType": "log",
+        "threshold": {
+          "type": "baseline",
+          "enforced": false,
+          "note": "Baseline measurement only; not a release-gate result."
+        },
+        "measured": {
+          "tokensBefore": 2470,
+          "tokensAfter": 741,
+          "tokensSaved": 1729,
+          "tokenSavingsRatio": 0.7,
+          "factsTotal": 10,
+          "factsRetained": 10,
+          "keyFactRetentionRate": 1,
+          "keyFacts": [
+            {
+              "fact": "ERROR",
+              "retained": true
+            },
+            {
+              "fact": "FATAL",
+              "retained": true
+            },
+            {
+              "fact": "ConnectionRefusedError",
+              "retained": true
+            },
+            {
+              "fact": "OutOfMemoryError",
+              "retained": true
+            },
+            {
+              "fact": "QueryTimeoutError",
+              "retained": true
+            },
+            {
+              "fact": "req_abc001",
+              "retained": true
+            },
+            {
+              "fact": "/app/src/db/pool.ts",
+              "retained": true
+            },
+            {
+              "fact": "/app/src/worker/reaper.ts",
+              "retained": true
+            },
+            {
+              "fact": "All retries exhausted",
+              "retained": true
+            },
+            {
+              "fact": "2026-07-07",
+              "retained": true
+            }
+          ]
+        },
+        "verdict": "MEASURED"
+      },
+      {
+        "fixture": "conversationHistory.txt",
+        "contentType": "conversation_history",
+        "threshold": {
+          "type": "baseline",
+          "enforced": false,
+          "note": "Baseline measurement only; not a release-gate result."
+        },
+        "measured": {
+          "tokensBefore": 2034,
+          "tokensAfter": 708,
+          "tokensSaved": 1326,
+          "tokenSavingsRatio": 0.6519,
+          "factsTotal": 9,
+          "factsRetained": 6,
+          "keyFactRetentionRate": 0.6666666666666666,
+          "keyFacts": [
+            {
+              "fact": "rate limiting",
+              "retained": true
+            },
+            {
+              "fact": "login endpoint",
+              "retained": true
+            },
+            {
+              "fact": "express-rate-limit",
+              "retained": true
+            },
+            {
+              "fact": "redis",
+              "retained": true
+            },
+            {
+              "fact": "5 requests",
+              "retained": false
+            },
+            {
+              "fact": "60 seconds",
+              "retained": false
+            },
+            {
+              "fact": "Retry-After",
+              "retained": false
+            },
+            {
+              "fact": "src/middleware/rateLimiter.ts",
+              "retained": true
+            },
+            {
+              "fact": "src/routes/auth.ts",
+              "retained": true
+            }
+          ]
+        },
+        "verdict": "MEASURED"
+      },
+      {
+        "fixture": "commandOutput.txt",
+        "contentType": "command_output",
+        "threshold": {
+          "type": "baseline",
+          "enforced": false,
+          "note": "Baseline measurement only; not a release-gate result."
+        },
+        "measured": {
+          "tokensBefore": 357,
+          "tokensAfter": 178,
+          "tokensSaved": 179,
+          "tokenSavingsRatio": 0.5014,
+          "factsTotal": 9,
+          "factsRetained": 9,
+          "keyFactRetentionRate": 1,
+          "keyFacts": [
+            {
+              "fact": "typecheck",
+              "retained": true
+            },
+            {
+              "fact": "TS2304",
+              "retained": true
+            },
+            {
+              "fact": "TS2554",
+              "retained": true
+            },
+            {
+              "fact": "TS2322",
+              "retained": true
+            },
+            {
+              "fact": "src/services/userService.ts",
+              "retained": true
+            },
+            {
+              "fact": "src/utils/format.ts",
+              "retained": true
+            },
+            {
+              "fact": "Cannot find name",
+              "retained": true
+            },
+            {
+              "fact": "Expected 2 arguments",
+              "retained": true
+            },
+            {
+              "fact": "exit code 2",
+              "retained": true
+            }
+          ]
+        },
+        "verdict": "MEASURED"
+      },
+      {
+        "fixture": "testOutput.txt",
+        "contentType": "test_output",
+        "threshold": {
+          "type": "baseline",
+          "enforced": false,
+          "note": "Baseline measurement only; not a release-gate result."
+        },
+        "measured": {
+          "tokensBefore": 495,
+          "tokensAfter": 178,
+          "tokensSaved": 317,
+          "tokenSavingsRatio": 0.6404,
+          "factsTotal": 10,
+          "factsRetained": 2,
+          "keyFactRetentionRate": 0.2,
+          "keyFacts": [
+            {
+              "fact": "tests/unit/auth/session.test.ts",
+              "retained": true
+            },
+            {
+              "fact": "tests/unit/payment/priceCalc.test.ts",
+              "retained": true
+            },
+            {
+              "fact": "tests/functional/listEmpty.test.tsx",
+              "retained": false
+            },
+            {
+              "fact": "should clear cookie on logout",
+              "retained": false
+            },
+            {
+              "fact": "should apply bulk discount correctly",
+              "retained": false
+            },
+            {
+              "fact": "should render empty state message",
+              "retained": false
+            },
+            {
+              "fact": "AssertionError",
+              "retained": false
+            },
+            {
+              "fact": "TypeError",
+              "retained": false
+            },
+            {
+              "fact": "3 failed",
+              "retained": false
+            },
+            {
+              "fact": "12 passed",
+              "retained": false
+            }
+          ]
+        },
+        "verdict": "MEASURED"
+      },
+      {
+        "fixture": "markdown.md",
+        "contentType": "markdown",
+        "threshold": {
+          "type": "baseline",
+          "enforced": false,
+          "note": "Baseline measurement only; not a release-gate result."
+        },
+        "measured": {
+          "tokensBefore": 358,
+          "tokensAfter": 75,
+          "tokensSaved": 283,
+          "tokenSavingsRatio": 0.7905,
+          "factsTotal": 13,
+          "factsRetained": 1,
+          "keyFactRetentionRate": 0.07692307692307693,
+          "keyFacts": [
+            {
+              "fact": "CodeContext MCP",
+              "retained": true
+            },
+            {
+              "fact": "Context Compression",
+              "retained": false
+            },
+            {
+              "fact": "Project Memory",
+              "retained": false
+            },
+            {
+              "fact": "Scope Isolation",
+              "retained": false
+            },
+            {
+              "fact": "Content Router",
+              "retained": false
+            },
+            {
+              "fact": "Compression Engine",
+              "retained": false
+            },
+            {
+              "fact": "Memory Service",
+              "retained": false
+            },
+            {
+              "fact": "SQLite",
+              "retained": false
+            },
+            {
+              "fact": "compress_context",
+              "retained": false
+            },
+            {
+              "fact": "retrieve_original",
+              "retained": false
+            },
+            {
+              "fact": "remember_context",
+              "retained": false
+            },
+            {
+              "fact": "recall_context",
+              "retained": false
+            },
+            {
+              "fact": "MAX_TOKENS",
+              "retained": false
+            }
+          ]
+        },
+        "verdict": "MEASURED"
+      },
+      {
+        "fixture": "json.json",
+        "contentType": "json",
+        "threshold": {
+          "type": "baseline",
+          "enforced": false,
+          "note": "Baseline measurement only; not a release-gate result."
+        },
+        "measured": {
+          "tokensBefore": 184,
+          "tokensAfter": 184,
+          "tokensSaved": 0,
+          "tokenSavingsRatio": 0,
+          "factsTotal": 6,
+          "factsRetained": 6,
+          "keyFactRetentionRate": 1,
+          "keyFacts": [
+            {
+              "fact": "RATE_LIMITED",
+              "retained": true
+            },
+            {
+              "fact": "Too many requests",
+              "retained": true
+            },
+            {
+              "fact": "retryAfter",
+              "retained": true
+            },
+            {
+              "fact": "req_abc_001",
+              "retained": true
+            },
+            {
+              "fact": "INVALID_FORMAT",
+              "retained": true
+            },
+            {
+              "fact": "email",
+              "retained": true
+            }
+          ]
+        },
+        "verdict": "MEASURED"
+      },
+      {
+        "fixture": "ragChunk.json",
+        "contentType": "rag_chunk",
+        "threshold": {
+          "type": "baseline",
+          "enforced": false,
+          "note": "Baseline measurement only; not a release-gate result."
+        },
+        "measured": {
+          "tokensBefore": 159,
+          "tokensAfter": 79,
+          "tokensSaved": 80,
+          "tokenSavingsRatio": 0.5031,
+          "factsTotal": 6,
+          "factsRetained": 0,
+          "keyFactRetentionRate": 0,
+          "keyFacts": [
+            {
+              "fact": "JWT",
+              "retained": false
+            },
+            {
+              "fact": "RS256",
+              "retained": false
+            },
+            {
+              "fact": "HTTP-only cookie",
+              "retained": false
+            },
+            {
+              "fact": "Redis",
+              "retained": false
+            },
+            {
+              "fact": "docs/auth/architecture.md",
+              "retained": false
+            },
+            {
+              "fact": "Token Management",
+              "retained": false
+            }
+          ]
+        },
+        "verdict": "MEASURED"
+      }
+    ]
+  },
+  "releaseGateResult": {
+    "threshold": {
+      "perFixture": "mustKeep all retained, mustNotInvent absent, token savings >= fixture threshold, original retrieval sha256/length proof passes"
+    },
+    "measured": {
+      "passed": 8,
+      "failed": 0,
+      "skipped": 0,
+      "total": 8
+    },
+    "verdict": "PASS",
+    "fixtures": [
+      {
+        "fixture": "test_output",
+        "file": "vitest-output.txt",
+        "contentType": "test_output",
+        "threshold": {
+          "minTokenSavingsRatio": 0.3,
+          "mustKeepCount": 11,
+          "mustNotInventCount": 1,
+          "retrievalProofRequired": true
+        },
+        "measured": {
+          "tokensBefore": 1030,
+          "tokensAfter": 685,
+          "tokensSaved": 345,
+          "tokenSavingsRatio": 0.33495145631067963,
+          "missingMustKeep": [],
+          "invented": [],
+          "retrievalProof": {
+            "ok": true,
+            "lengthOk": true,
+            "sha256Ok": true,
+            "expectedLength": 2544,
+            "actualLength": 2544,
+            "expectedSha256": "b46e1386690454c563fa3bd48c697cacb32c5be1ce73473b8ab000a51fba2ae2",
+            "actualSha256": "b46e1386690454c563fa3bd48c697cacb32c5be1ce73473b8ab000a51fba2ae2",
+            "originalRef": "orig_b46e1386"
+          },
+          "compressionFailed": false
+        },
+        "verdict": "PASS"
+      },
+      {
+        "fixture": "log",
+        "file": "app-log.txt",
+        "contentType": "log",
+        "threshold": {
+          "minTokenSavingsRatio": 0.1,
+          "mustKeepCount": 13,
+          "mustNotInventCount": 2,
+          "retrievalProofRequired": true
+        },
+        "measured": {
+          "tokensBefore": 865,
+          "tokensAfter": 778,
+          "tokensSaved": 87,
+          "tokenSavingsRatio": 0.10057803468208093,
+          "missingMustKeep": [],
+          "invented": [],
+          "retrievalProof": {
+            "ok": true,
+            "lengthOk": true,
+            "sha256Ok": true,
+            "expectedLength": 2389,
+            "actualLength": 2389,
+            "expectedSha256": "7b35451e14f8ce8ceb5f5f20a99b1108583c1c49725229d8727de8688077dc61",
+            "actualSha256": "7b35451e14f8ce8ceb5f5f20a99b1108583c1c49725229d8727de8688077dc61",
+            "originalRef": "orig_7b35451e"
+          },
+          "compressionFailed": false
+        },
+        "verdict": "PASS"
+      },
+      {
+        "fixture": "command_output",
+        "file": "build-output.txt",
+        "contentType": "command_output",
+        "threshold": {
+          "minTokenSavingsRatio": 0,
+          "mustKeepCount": 15,
+          "mustNotInventCount": 1,
+          "retrievalProofRequired": true
+        },
+        "measured": {
+          "tokensBefore": 291,
+          "tokensAfter": 291,
+          "tokensSaved": 0,
+          "tokenSavingsRatio": 0,
+          "missingMustKeep": [],
+          "invented": [],
+          "retrievalProof": {
+            "ok": true,
+            "lengthOk": true,
+            "sha256Ok": true,
+            "expectedLength": 1034,
+            "actualLength": 1034,
+            "expectedSha256": "0b94ba4ac60b6ed6f364dccf3d21233f1e3cbcfff627e71211d6f46c787f5776",
+            "actualSha256": "0b94ba4ac60b6ed6f364dccf3d21233f1e3cbcfff627e71211d6f46c787f5776",
+            "originalRef": "orig_0b94ba4a"
+          },
+          "compressionFailed": false
+        },
+        "verdict": "PASS"
+      },
+      {
+        "fixture": "code",
+        "file": "sample.ts",
+        "contentType": "code",
+        "threshold": {
+          "minTokenSavingsRatio": 0.45,
+          "mustKeepCount": 13,
+          "mustNotInventCount": 1,
+          "retrievalProofRequired": true
+        },
+        "measured": {
+          "tokensBefore": 886,
+          "tokensAfter": 415,
+          "tokensSaved": 471,
+          "tokenSavingsRatio": 0.5316027088036117,
+          "missingMustKeep": [],
+          "invented": [],
+          "retrievalProof": {
+            "ok": true,
+            "lengthOk": true,
+            "sha256Ok": true,
+            "expectedLength": 3812,
+            "actualLength": 3812,
+            "expectedSha256": "dd5cdad7536378b3e4f6a448d652932eee84d5e526d9649f38fdff381acc10ae",
+            "actualSha256": "dd5cdad7536378b3e4f6a448d652932eee84d5e526d9649f38fdff381acc10ae",
+            "originalRef": "orig_dd5cdad7"
+          },
+          "compressionFailed": false
+        },
+        "verdict": "PASS"
+      },
+      {
+        "fixture": "json",
+        "file": "response.json",
+        "contentType": "json",
+        "threshold": {
+          "minTokenSavingsRatio": 0.1,
+          "mustKeepCount": 7,
+          "mustNotInventCount": 1,
+          "retrievalProofRequired": true
+        },
+        "measured": {
+          "tokensBefore": 633,
+          "tokensAfter": 569,
+          "tokensSaved": 64,
+          "tokenSavingsRatio": 0.10110584518167456,
+          "missingMustKeep": [],
+          "invented": [],
+          "retrievalProof": {
+            "ok": true,
+            "lengthOk": true,
+            "sha256Ok": true,
+            "expectedLength": 1828,
+            "actualLength": 1828,
+            "expectedSha256": "6aac11757772cef471fa83697d6a2ea7b9340c30d2e91bb919cb0ef8f0c14848",
+            "actualSha256": "6aac11757772cef471fa83697d6a2ea7b9340c30d2e91bb919cb0ef8f0c14848",
+            "originalRef": "orig_6aac1175"
+          },
+          "compressionFailed": false
+        },
+        "verdict": "PASS"
+      },
+      {
+        "fixture": "markdown",
+        "file": "readme.md",
+        "contentType": "markdown",
+        "threshold": {
+          "minTokenSavingsRatio": 0.4,
+          "mustKeepCount": 9,
+          "mustNotInventCount": 1,
+          "retrievalProofRequired": true
+        },
+        "measured": {
+          "tokensBefore": 792,
+          "tokensAfter": 402,
+          "tokensSaved": 390,
+          "tokenSavingsRatio": 0.49242424242424243,
+          "missingMustKeep": [],
+          "invented": [],
+          "retrievalProof": {
+            "ok": true,
+            "lengthOk": true,
+            "sha256Ok": true,
+            "expectedLength": 3362,
+            "actualLength": 3362,
+            "expectedSha256": "26d43c0789737d13b63f748d09e0bf85841eedbb6500e73afac9b4bc60042c18",
+            "actualSha256": "26d43c0789737d13b63f748d09e0bf85841eedbb6500e73afac9b4bc60042c18",
+            "originalRef": "orig_26d43c07"
+          },
+          "compressionFailed": false
+        },
+        "verdict": "PASS"
+      },
+      {
+        "fixture": "rag_chunk",
+        "file": "rag-chunks.json",
+        "contentType": "rag_chunk",
+        "threshold": {
+          "minTokenSavingsRatio": 0.35,
+          "mustKeepCount": 9,
+          "mustNotInventCount": 1,
+          "retrievalProofRequired": true
+        },
+        "measured": {
+          "tokensBefore": 787,
+          "tokensAfter": 441,
+          "tokensSaved": 346,
+          "tokenSavingsRatio": 0.43964421855146124,
+          "missingMustKeep": [],
+          "invented": [],
+          "retrievalProof": {
+            "ok": true,
+            "lengthOk": true,
+            "sha256Ok": true,
+            "expectedLength": 2710,
+            "actualLength": 2710,
+            "expectedSha256": "2d382f2cbb4f9d7b75ec13e4701beda39c0bf00472548b2f19ff7eb2e3b1c9a2",
+            "actualSha256": "2d382f2cbb4f9d7b75ec13e4701beda39c0bf00472548b2f19ff7eb2e3b1c9a2",
+            "originalRef": "orig_2d382f2c"
+          },
+          "compressionFailed": false
+        },
+        "verdict": "PASS"
+      },
+      {
+        "fixture": "conversation_history",
+        "file": "conversation.json",
+        "contentType": "conversation_history",
+        "threshold": {
+          "minTokenSavingsRatio": 0.5,
+          "mustKeepCount": 10,
+          "mustNotInventCount": 1,
+          "retrievalProofRequired": true
+        },
+        "measured": {
+          "tokensBefore": 1139,
+          "tokensAfter": 484,
+          "tokensSaved": 655,
+          "tokenSavingsRatio": 0.5750658472344161,
+          "missingMustKeep": [],
+          "invented": [],
+          "retrievalProof": {
+            "ok": true,
+            "lengthOk": true,
+            "sha256Ok": true,
+            "expectedLength": 4646,
+            "actualLength": 4646,
+            "expectedSha256": "5707819af4be194af2d4e30ab7ad2c3ce1718d33d051da50cb6fcc633ca8d0d3",
+            "actualSha256": "5707819af4be194af2d4e30ab7ad2c3ce1718d33d051da50cb6fcc633ca8d0d3",
+            "originalRef": "orig_5707819a"
+          },
+          "compressionFailed": false
+        },
+        "verdict": "PASS"
+      }
+    ]
+  }
+}

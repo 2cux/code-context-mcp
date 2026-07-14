@@ -1,542 +1,1493 @@
 {
   "meta": {
-    "generatedAt": "2026-07-07T12:12:01.569Z",
-    "projectVersion": "1.0.0",
-    "description": "CodeContext MCP — Offline Quality Baseline"
+    "generatedAt": "2026-07-14T07:58:22.110Z",
+    "gitCommit": "36b901ce61b2c99153d2ea4ba31db120d33eb12a",
+    "gitDirty": true,
+    "generator": "tests/quality/generateBaseline.ts",
+    "command": "npm run quality:reports"
+  },
+  "baselineMeasurement": {
+    "threshold": {
+      "type": "baseline",
+      "enforced": false,
+      "note": "No context-level baseline threshold is enforced."
+    },
+    "measured": {
+      "compressionAverageKeyFactRetention": 0.5794871794871795,
+      "compressionAverageTokenSavings": 0.5595749999999999,
+      "recallAt1": 1,
+      "recallAt3": 1
+    },
+    "verdict": "MEASURED"
+  },
+  "releaseGateResult": {
+    "threshold": {
+      "compression": {
+        "perFixture": "mustKeep all retained, mustNotInvent absent, token savings >= fixture threshold, original retrieval sha256/length proof passes"
+      },
+      "recall": {
+        "recallAt1Min": 0.8,
+        "recallAt3Min": 0.95,
+        "crossScopeHitsMax": 0,
+        "nonActiveLeakIdsMax": 0,
+        "duplicateResultSetsMax": 0,
+        "falseRecallRate": "informational"
+      }
+    },
+    "measured": {
+      "compression": {
+        "passed": 8,
+        "failed": 0,
+        "skipped": 0,
+        "total": 8
+      },
+      "recall": {
+        "recallAt1": 1,
+        "recallAt1Hits": 20,
+        "recallAt1Total": 20,
+        "recallAt3": 1,
+        "recallAt3Hits": 10,
+        "recallAt3Total": 10,
+        "falseRecallRate": 0,
+        "falseRecallHits": 0,
+        "falseRecallTotal": 5,
+        "crossScopeHits": 0,
+        "nonActiveLeakIds": 0,
+        "duplicateResultSets": 0,
+        "fixtureMemoryCount": 37
+      }
+    },
+    "verdict": "PASS"
   },
   "compression": {
-    "averageKeyFactRetention": 55.1,
-    "averageTokenSavings": 58.5,
-    "fixtures": [
-      {
-        "fixture": "code.ts",
-        "contentType": "code",
-        "tokensBefore": 1136,
-        "tokensAfter": 269,
-        "saved": 867,
-        "ratio": 0.7632,
-        "factsTotal": 13,
-        "factsRetained": 6,
-        "retentionRate": 0.46153846153846156,
-        "keyFacts": [
-          {
-            "fact": "PaymentRequest",
-            "retained": true
-          },
-          {
-            "fact": "PaymentResponse",
-            "retained": true
-          },
-          {
-            "fact": "PaymentError",
-            "retained": true
-          },
-          {
-            "fact": "processPayment",
-            "retained": false
-          },
-          {
-            "fact": "refundPayment",
-            "retained": false
-          },
-          {
-            "fact": "getPaymentStatus",
-            "retained": true
-          },
-          {
-            "fact": "validateCard",
-            "retained": true
-          },
-          {
-            "fact": "Luhn",
-            "retained": false
-          },
-          {
-            "fact": "RETRY_DELAY_MS",
-            "retained": false
-          },
-          {
-            "fact": "processing_error",
-            "retained": false
-          },
-          {
-            "fact": "invalid_amount",
-            "retained": false
-          },
-          {
-            "fact": "FIXME: Add rate limiting",
-            "retained": true
-          },
-          {
-            "fact": "src/services/paymentService.ts",
-            "retained": false
-          }
-        ]
+    "meta": {
+      "generatedAt": "2026-07-14T07:58:22.110Z",
+      "gitCommit": "36b901ce61b2c99153d2ea4ba31db120d33eb12a",
+      "gitDirty": true,
+      "generator": "tests/quality/generateBaseline.ts",
+      "command": "npm run quality:reports"
+    },
+    "fixture": {
+      "version": "compression-baseline-and-release-gate-v1",
+      "hash": "83068cc5b804f1995794f05dea9f60398384d73d2af970a25b02294b8dfde81b",
+      "paths": [
+        "fixtures/quality-eval/compression/code.ts",
+        "fixtures/quality-eval/compression/commandOutput.txt",
+        "fixtures/quality-eval/compression/conversationHistory.txt",
+        "fixtures/quality-eval/compression/json.json",
+        "fixtures/quality-eval/compression/log.ts",
+        "fixtures/quality-eval/compression/markdown.md",
+        "fixtures/quality-eval/compression/ragChunk.json",
+        "fixtures/quality-eval/compression/testOutput.txt",
+        "fixtures/quality-gate/code.json",
+        "fixtures/quality-gate/command_output.json",
+        "fixtures/quality-gate/conversation_history.json",
+        "fixtures/quality-gate/json.json",
+        "fixtures/quality-gate/log.json",
+        "fixtures/quality-gate/markdown.json",
+        "fixtures/quality-gate/rag_chunk.json",
+        "fixtures/quality-gate/test_output.json",
+        "tests/fixtures/app-log.txt",
+        "tests/fixtures/build-output.txt",
+        "tests/fixtures/conversation.json",
+        "tests/fixtures/rag-chunks.json",
+        "tests/fixtures/readme.md",
+        "tests/fixtures/response.json",
+        "tests/fixtures/sample.ts",
+        "tests/fixtures/vitest-output.txt"
+      ]
+    },
+    "baselineMeasurement": {
+      "threshold": {
+        "type": "baseline",
+        "enforced": false,
+        "note": "No baseline threshold is enforced."
       },
-      {
-        "fixture": "log.ts",
-        "contentType": "log",
-        "tokensBefore": 2470,
-        "tokensAfter": 741,
-        "saved": 1729,
-        "ratio": 0.7,
-        "factsTotal": 10,
-        "factsRetained": 10,
-        "retentionRate": 1,
-        "keyFacts": [
-          {
-            "fact": "ERROR",
-            "retained": true
-          },
-          {
-            "fact": "FATAL",
-            "retained": true
-          },
-          {
-            "fact": "ConnectionRefusedError",
-            "retained": true
-          },
-          {
-            "fact": "OutOfMemoryError",
-            "retained": true
-          },
-          {
-            "fact": "QueryTimeoutError",
-            "retained": true
-          },
-          {
-            "fact": "req_abc001",
-            "retained": true
-          },
-          {
-            "fact": "/app/src/db/pool.ts",
-            "retained": true
-          },
-          {
-            "fact": "/app/src/worker/reaper.ts",
-            "retained": true
-          },
-          {
-            "fact": "All retries exhausted",
-            "retained": true
-          },
-          {
-            "fact": "2026-07-07",
-            "retained": true
-          }
-        ]
+      "measured": {
+        "averageKeyFactRetention": 0.5794871794871795,
+        "averageTokenSavings": 0.5595749999999999,
+        "fixtureCount": 8
       },
-      {
-        "fixture": "conversationHistory.txt",
-        "contentType": "conversation_history",
-        "tokensBefore": 2034,
-        "tokensAfter": 451,
-        "saved": 1583,
-        "ratio": 0.7783,
-        "factsTotal": 9,
-        "factsRetained": 6,
-        "retentionRate": 0.6666666666666666,
-        "keyFacts": [
-          {
-            "fact": "rate limiting",
-            "retained": true
+      "verdict": "MEASURED",
+      "fixtures": [
+        {
+          "fixture": "code.ts",
+          "contentType": "code",
+          "threshold": {
+            "type": "baseline",
+            "enforced": false,
+            "note": "Baseline measurement only; not a release-gate result."
           },
-          {
-            "fact": "login endpoint",
-            "retained": true
+          "measured": {
+            "tokensBefore": 1136,
+            "tokensAfter": 353,
+            "tokensSaved": 783,
+            "tokenSavingsRatio": 0.6893,
+            "factsTotal": 13,
+            "factsRetained": 9,
+            "keyFactRetentionRate": 0.6923076923076923,
+            "keyFacts": [
+              {
+                "fact": "PaymentRequest",
+                "retained": true
+              },
+              {
+                "fact": "PaymentResponse",
+                "retained": true
+              },
+              {
+                "fact": "PaymentError",
+                "retained": true
+              },
+              {
+                "fact": "processPayment",
+                "retained": true
+              },
+              {
+                "fact": "refundPayment",
+                "retained": true
+              },
+              {
+                "fact": "getPaymentStatus",
+                "retained": true
+              },
+              {
+                "fact": "validateCard",
+                "retained": true
+              },
+              {
+                "fact": "Luhn",
+                "retained": false
+              },
+              {
+                "fact": "RETRY_DELAY_MS",
+                "retained": true
+              },
+              {
+                "fact": "processing_error",
+                "retained": false
+              },
+              {
+                "fact": "invalid_amount",
+                "retained": false
+              },
+              {
+                "fact": "FIXME: Add rate limiting",
+                "retained": true
+              },
+              {
+                "fact": "src/services/paymentService.ts",
+                "retained": false
+              }
+            ]
           },
-          {
-            "fact": "express-rate-limit",
-            "retained": true
+          "verdict": "MEASURED"
+        },
+        {
+          "fixture": "log.ts",
+          "contentType": "log",
+          "threshold": {
+            "type": "baseline",
+            "enforced": false,
+            "note": "Baseline measurement only; not a release-gate result."
           },
-          {
-            "fact": "redis",
-            "retained": true
+          "measured": {
+            "tokensBefore": 2470,
+            "tokensAfter": 741,
+            "tokensSaved": 1729,
+            "tokenSavingsRatio": 0.7,
+            "factsTotal": 10,
+            "factsRetained": 10,
+            "keyFactRetentionRate": 1,
+            "keyFacts": [
+              {
+                "fact": "ERROR",
+                "retained": true
+              },
+              {
+                "fact": "FATAL",
+                "retained": true
+              },
+              {
+                "fact": "ConnectionRefusedError",
+                "retained": true
+              },
+              {
+                "fact": "OutOfMemoryError",
+                "retained": true
+              },
+              {
+                "fact": "QueryTimeoutError",
+                "retained": true
+              },
+              {
+                "fact": "req_abc001",
+                "retained": true
+              },
+              {
+                "fact": "/app/src/db/pool.ts",
+                "retained": true
+              },
+              {
+                "fact": "/app/src/worker/reaper.ts",
+                "retained": true
+              },
+              {
+                "fact": "All retries exhausted",
+                "retained": true
+              },
+              {
+                "fact": "2026-07-07",
+                "retained": true
+              }
+            ]
           },
-          {
-            "fact": "5 requests",
-            "retained": false
+          "verdict": "MEASURED"
+        },
+        {
+          "fixture": "conversationHistory.txt",
+          "contentType": "conversation_history",
+          "threshold": {
+            "type": "baseline",
+            "enforced": false,
+            "note": "Baseline measurement only; not a release-gate result."
           },
-          {
-            "fact": "60 seconds",
-            "retained": false
+          "measured": {
+            "tokensBefore": 2034,
+            "tokensAfter": 708,
+            "tokensSaved": 1326,
+            "tokenSavingsRatio": 0.6519,
+            "factsTotal": 9,
+            "factsRetained": 6,
+            "keyFactRetentionRate": 0.6666666666666666,
+            "keyFacts": [
+              {
+                "fact": "rate limiting",
+                "retained": true
+              },
+              {
+                "fact": "login endpoint",
+                "retained": true
+              },
+              {
+                "fact": "express-rate-limit",
+                "retained": true
+              },
+              {
+                "fact": "redis",
+                "retained": true
+              },
+              {
+                "fact": "5 requests",
+                "retained": false
+              },
+              {
+                "fact": "60 seconds",
+                "retained": false
+              },
+              {
+                "fact": "Retry-After",
+                "retained": false
+              },
+              {
+                "fact": "src/middleware/rateLimiter.ts",
+                "retained": true
+              },
+              {
+                "fact": "src/routes/auth.ts",
+                "retained": true
+              }
+            ]
           },
-          {
-            "fact": "Retry-After",
-            "retained": false
+          "verdict": "MEASURED"
+        },
+        {
+          "fixture": "commandOutput.txt",
+          "contentType": "command_output",
+          "threshold": {
+            "type": "baseline",
+            "enforced": false,
+            "note": "Baseline measurement only; not a release-gate result."
           },
-          {
-            "fact": "src/middleware/rateLimiter.ts",
-            "retained": true
+          "measured": {
+            "tokensBefore": 357,
+            "tokensAfter": 178,
+            "tokensSaved": 179,
+            "tokenSavingsRatio": 0.5014,
+            "factsTotal": 9,
+            "factsRetained": 9,
+            "keyFactRetentionRate": 1,
+            "keyFacts": [
+              {
+                "fact": "typecheck",
+                "retained": true
+              },
+              {
+                "fact": "TS2304",
+                "retained": true
+              },
+              {
+                "fact": "TS2554",
+                "retained": true
+              },
+              {
+                "fact": "TS2322",
+                "retained": true
+              },
+              {
+                "fact": "src/services/userService.ts",
+                "retained": true
+              },
+              {
+                "fact": "src/utils/format.ts",
+                "retained": true
+              },
+              {
+                "fact": "Cannot find name",
+                "retained": true
+              },
+              {
+                "fact": "Expected 2 arguments",
+                "retained": true
+              },
+              {
+                "fact": "exit code 2",
+                "retained": true
+              }
+            ]
           },
-          {
-            "fact": "src/routes/auth.ts",
-            "retained": true
-          }
-        ]
+          "verdict": "MEASURED"
+        },
+        {
+          "fixture": "testOutput.txt",
+          "contentType": "test_output",
+          "threshold": {
+            "type": "baseline",
+            "enforced": false,
+            "note": "Baseline measurement only; not a release-gate result."
+          },
+          "measured": {
+            "tokensBefore": 495,
+            "tokensAfter": 178,
+            "tokensSaved": 317,
+            "tokenSavingsRatio": 0.6404,
+            "factsTotal": 10,
+            "factsRetained": 2,
+            "keyFactRetentionRate": 0.2,
+            "keyFacts": [
+              {
+                "fact": "tests/unit/auth/session.test.ts",
+                "retained": true
+              },
+              {
+                "fact": "tests/unit/payment/priceCalc.test.ts",
+                "retained": true
+              },
+              {
+                "fact": "tests/functional/listEmpty.test.tsx",
+                "retained": false
+              },
+              {
+                "fact": "should clear cookie on logout",
+                "retained": false
+              },
+              {
+                "fact": "should apply bulk discount correctly",
+                "retained": false
+              },
+              {
+                "fact": "should render empty state message",
+                "retained": false
+              },
+              {
+                "fact": "AssertionError",
+                "retained": false
+              },
+              {
+                "fact": "TypeError",
+                "retained": false
+              },
+              {
+                "fact": "3 failed",
+                "retained": false
+              },
+              {
+                "fact": "12 passed",
+                "retained": false
+              }
+            ]
+          },
+          "verdict": "MEASURED"
+        },
+        {
+          "fixture": "markdown.md",
+          "contentType": "markdown",
+          "threshold": {
+            "type": "baseline",
+            "enforced": false,
+            "note": "Baseline measurement only; not a release-gate result."
+          },
+          "measured": {
+            "tokensBefore": 358,
+            "tokensAfter": 75,
+            "tokensSaved": 283,
+            "tokenSavingsRatio": 0.7905,
+            "factsTotal": 13,
+            "factsRetained": 1,
+            "keyFactRetentionRate": 0.07692307692307693,
+            "keyFacts": [
+              {
+                "fact": "CodeContext MCP",
+                "retained": true
+              },
+              {
+                "fact": "Context Compression",
+                "retained": false
+              },
+              {
+                "fact": "Project Memory",
+                "retained": false
+              },
+              {
+                "fact": "Scope Isolation",
+                "retained": false
+              },
+              {
+                "fact": "Content Router",
+                "retained": false
+              },
+              {
+                "fact": "Compression Engine",
+                "retained": false
+              },
+              {
+                "fact": "Memory Service",
+                "retained": false
+              },
+              {
+                "fact": "SQLite",
+                "retained": false
+              },
+              {
+                "fact": "compress_context",
+                "retained": false
+              },
+              {
+                "fact": "retrieve_original",
+                "retained": false
+              },
+              {
+                "fact": "remember_context",
+                "retained": false
+              },
+              {
+                "fact": "recall_context",
+                "retained": false
+              },
+              {
+                "fact": "MAX_TOKENS",
+                "retained": false
+              }
+            ]
+          },
+          "verdict": "MEASURED"
+        },
+        {
+          "fixture": "json.json",
+          "contentType": "json",
+          "threshold": {
+            "type": "baseline",
+            "enforced": false,
+            "note": "Baseline measurement only; not a release-gate result."
+          },
+          "measured": {
+            "tokensBefore": 184,
+            "tokensAfter": 184,
+            "tokensSaved": 0,
+            "tokenSavingsRatio": 0,
+            "factsTotal": 6,
+            "factsRetained": 6,
+            "keyFactRetentionRate": 1,
+            "keyFacts": [
+              {
+                "fact": "RATE_LIMITED",
+                "retained": true
+              },
+              {
+                "fact": "Too many requests",
+                "retained": true
+              },
+              {
+                "fact": "retryAfter",
+                "retained": true
+              },
+              {
+                "fact": "req_abc_001",
+                "retained": true
+              },
+              {
+                "fact": "INVALID_FORMAT",
+                "retained": true
+              },
+              {
+                "fact": "email",
+                "retained": true
+              }
+            ]
+          },
+          "verdict": "MEASURED"
+        },
+        {
+          "fixture": "ragChunk.json",
+          "contentType": "rag_chunk",
+          "threshold": {
+            "type": "baseline",
+            "enforced": false,
+            "note": "Baseline measurement only; not a release-gate result."
+          },
+          "measured": {
+            "tokensBefore": 159,
+            "tokensAfter": 79,
+            "tokensSaved": 80,
+            "tokenSavingsRatio": 0.5031,
+            "factsTotal": 6,
+            "factsRetained": 0,
+            "keyFactRetentionRate": 0,
+            "keyFacts": [
+              {
+                "fact": "JWT",
+                "retained": false
+              },
+              {
+                "fact": "RS256",
+                "retained": false
+              },
+              {
+                "fact": "HTTP-only cookie",
+                "retained": false
+              },
+              {
+                "fact": "Redis",
+                "retained": false
+              },
+              {
+                "fact": "docs/auth/architecture.md",
+                "retained": false
+              },
+              {
+                "fact": "Token Management",
+                "retained": false
+              }
+            ]
+          },
+          "verdict": "MEASURED"
+        }
+      ]
+    },
+    "releaseGateResult": {
+      "threshold": {
+        "perFixture": "mustKeep all retained, mustNotInvent absent, token savings >= fixture threshold, original retrieval sha256/length proof passes"
       },
-      {
-        "fixture": "commandOutput.txt",
-        "contentType": "command_output",
-        "tokensBefore": 357,
-        "tokensAfter": 178,
-        "saved": 179,
-        "ratio": 0.5014,
-        "factsTotal": 9,
-        "factsRetained": 9,
-        "retentionRate": 1,
-        "keyFacts": [
-          {
-            "fact": "typecheck",
-            "retained": true
-          },
-          {
-            "fact": "TS2304",
-            "retained": true
-          },
-          {
-            "fact": "TS2554",
-            "retained": true
-          },
-          {
-            "fact": "TS2322",
-            "retained": true
-          },
-          {
-            "fact": "src/services/userService.ts",
-            "retained": true
-          },
-          {
-            "fact": "src/utils/format.ts",
-            "retained": true
-          },
-          {
-            "fact": "Cannot find name",
-            "retained": true
-          },
-          {
-            "fact": "Expected 2 arguments",
-            "retained": true
-          },
-          {
-            "fact": "exit code 2",
-            "retained": true
-          }
-        ]
+      "measured": {
+        "passed": 8,
+        "failed": 0,
+        "skipped": 0,
+        "total": 8
       },
-      {
-        "fixture": "testOutput.txt",
-        "contentType": "test_output",
-        "tokensBefore": 495,
-        "tokensAfter": 178,
-        "saved": 317,
-        "ratio": 0.6404,
-        "factsTotal": 10,
-        "factsRetained": 2,
-        "retentionRate": 0.2,
-        "keyFacts": [
-          {
-            "fact": "tests/unit/auth/session.test.ts",
-            "retained": true
+      "verdict": "PASS",
+      "fixtures": [
+        {
+          "fixture": "test_output",
+          "file": "vitest-output.txt",
+          "contentType": "test_output",
+          "threshold": {
+            "minTokenSavingsRatio": 0.3,
+            "mustKeepCount": 11,
+            "mustNotInventCount": 1,
+            "retrievalProofRequired": true
           },
-          {
-            "fact": "tests/unit/payment/priceCalc.test.ts",
-            "retained": true
+          "measured": {
+            "tokensBefore": 1030,
+            "tokensAfter": 685,
+            "tokensSaved": 345,
+            "tokenSavingsRatio": 0.33495145631067963,
+            "missingMustKeep": [],
+            "invented": [],
+            "retrievalProof": {
+              "ok": true,
+              "lengthOk": true,
+              "sha256Ok": true,
+              "expectedLength": 2544,
+              "actualLength": 2544,
+              "expectedSha256": "b46e1386690454c563fa3bd48c697cacb32c5be1ce73473b8ab000a51fba2ae2",
+              "actualSha256": "b46e1386690454c563fa3bd48c697cacb32c5be1ce73473b8ab000a51fba2ae2",
+              "originalRef": "orig_b46e1386"
+            },
+            "compressionFailed": false
           },
-          {
-            "fact": "tests/functional/listEmpty.test.tsx",
-            "retained": false
+          "verdict": "PASS"
+        },
+        {
+          "fixture": "log",
+          "file": "app-log.txt",
+          "contentType": "log",
+          "threshold": {
+            "minTokenSavingsRatio": 0.1,
+            "mustKeepCount": 13,
+            "mustNotInventCount": 2,
+            "retrievalProofRequired": true
           },
-          {
-            "fact": "should clear cookie on logout",
-            "retained": false
+          "measured": {
+            "tokensBefore": 865,
+            "tokensAfter": 778,
+            "tokensSaved": 87,
+            "tokenSavingsRatio": 0.10057803468208093,
+            "missingMustKeep": [],
+            "invented": [],
+            "retrievalProof": {
+              "ok": true,
+              "lengthOk": true,
+              "sha256Ok": true,
+              "expectedLength": 2389,
+              "actualLength": 2389,
+              "expectedSha256": "7b35451e14f8ce8ceb5f5f20a99b1108583c1c49725229d8727de8688077dc61",
+              "actualSha256": "7b35451e14f8ce8ceb5f5f20a99b1108583c1c49725229d8727de8688077dc61",
+              "originalRef": "orig_7b35451e"
+            },
+            "compressionFailed": false
           },
-          {
-            "fact": "should apply bulk discount correctly",
-            "retained": false
+          "verdict": "PASS"
+        },
+        {
+          "fixture": "command_output",
+          "file": "build-output.txt",
+          "contentType": "command_output",
+          "threshold": {
+            "minTokenSavingsRatio": 0,
+            "mustKeepCount": 15,
+            "mustNotInventCount": 1,
+            "retrievalProofRequired": true
           },
-          {
-            "fact": "should render empty state message",
-            "retained": false
+          "measured": {
+            "tokensBefore": 291,
+            "tokensAfter": 291,
+            "tokensSaved": 0,
+            "tokenSavingsRatio": 0,
+            "missingMustKeep": [],
+            "invented": [],
+            "retrievalProof": {
+              "ok": true,
+              "lengthOk": true,
+              "sha256Ok": true,
+              "expectedLength": 1034,
+              "actualLength": 1034,
+              "expectedSha256": "0b94ba4ac60b6ed6f364dccf3d21233f1e3cbcfff627e71211d6f46c787f5776",
+              "actualSha256": "0b94ba4ac60b6ed6f364dccf3d21233f1e3cbcfff627e71211d6f46c787f5776",
+              "originalRef": "orig_0b94ba4a"
+            },
+            "compressionFailed": false
           },
-          {
-            "fact": "AssertionError",
-            "retained": false
+          "verdict": "PASS"
+        },
+        {
+          "fixture": "code",
+          "file": "sample.ts",
+          "contentType": "code",
+          "threshold": {
+            "minTokenSavingsRatio": 0.45,
+            "mustKeepCount": 13,
+            "mustNotInventCount": 1,
+            "retrievalProofRequired": true
           },
-          {
-            "fact": "TypeError",
-            "retained": false
+          "measured": {
+            "tokensBefore": 886,
+            "tokensAfter": 415,
+            "tokensSaved": 471,
+            "tokenSavingsRatio": 0.5316027088036117,
+            "missingMustKeep": [],
+            "invented": [],
+            "retrievalProof": {
+              "ok": true,
+              "lengthOk": true,
+              "sha256Ok": true,
+              "expectedLength": 3812,
+              "actualLength": 3812,
+              "expectedSha256": "dd5cdad7536378b3e4f6a448d652932eee84d5e526d9649f38fdff381acc10ae",
+              "actualSha256": "dd5cdad7536378b3e4f6a448d652932eee84d5e526d9649f38fdff381acc10ae",
+              "originalRef": "orig_dd5cdad7"
+            },
+            "compressionFailed": false
           },
-          {
-            "fact": "3 failed",
-            "retained": false
+          "verdict": "PASS"
+        },
+        {
+          "fixture": "json",
+          "file": "response.json",
+          "contentType": "json",
+          "threshold": {
+            "minTokenSavingsRatio": 0.1,
+            "mustKeepCount": 7,
+            "mustNotInventCount": 1,
+            "retrievalProofRequired": true
           },
-          {
-            "fact": "12 passed",
-            "retained": false
-          }
-        ]
-      },
-      {
-        "fixture": "markdown.md",
-        "contentType": "markdown",
-        "tokensBefore": 358,
-        "tokensAfter": 75,
-        "saved": 283,
-        "ratio": 0.7905,
-        "factsTotal": 13,
-        "factsRetained": 1,
-        "retentionRate": 0.07692307692307693,
-        "keyFacts": [
-          {
-            "fact": "CodeContext MCP",
-            "retained": true
+          "measured": {
+            "tokensBefore": 633,
+            "tokensAfter": 569,
+            "tokensSaved": 64,
+            "tokenSavingsRatio": 0.10110584518167456,
+            "missingMustKeep": [],
+            "invented": [],
+            "retrievalProof": {
+              "ok": true,
+              "lengthOk": true,
+              "sha256Ok": true,
+              "expectedLength": 1828,
+              "actualLength": 1828,
+              "expectedSha256": "6aac11757772cef471fa83697d6a2ea7b9340c30d2e91bb919cb0ef8f0c14848",
+              "actualSha256": "6aac11757772cef471fa83697d6a2ea7b9340c30d2e91bb919cb0ef8f0c14848",
+              "originalRef": "orig_6aac1175"
+            },
+            "compressionFailed": false
           },
-          {
-            "fact": "Context Compression",
-            "retained": false
+          "verdict": "PASS"
+        },
+        {
+          "fixture": "markdown",
+          "file": "readme.md",
+          "contentType": "markdown",
+          "threshold": {
+            "minTokenSavingsRatio": 0.4,
+            "mustKeepCount": 9,
+            "mustNotInventCount": 1,
+            "retrievalProofRequired": true
           },
-          {
-            "fact": "Project Memory",
-            "retained": false
+          "measured": {
+            "tokensBefore": 792,
+            "tokensAfter": 402,
+            "tokensSaved": 390,
+            "tokenSavingsRatio": 0.49242424242424243,
+            "missingMustKeep": [],
+            "invented": [],
+            "retrievalProof": {
+              "ok": true,
+              "lengthOk": true,
+              "sha256Ok": true,
+              "expectedLength": 3362,
+              "actualLength": 3362,
+              "expectedSha256": "26d43c0789737d13b63f748d09e0bf85841eedbb6500e73afac9b4bc60042c18",
+              "actualSha256": "26d43c0789737d13b63f748d09e0bf85841eedbb6500e73afac9b4bc60042c18",
+              "originalRef": "orig_26d43c07"
+            },
+            "compressionFailed": false
           },
-          {
-            "fact": "Scope Isolation",
-            "retained": false
+          "verdict": "PASS"
+        },
+        {
+          "fixture": "rag_chunk",
+          "file": "rag-chunks.json",
+          "contentType": "rag_chunk",
+          "threshold": {
+            "minTokenSavingsRatio": 0.35,
+            "mustKeepCount": 9,
+            "mustNotInventCount": 1,
+            "retrievalProofRequired": true
           },
-          {
-            "fact": "Content Router",
-            "retained": false
+          "measured": {
+            "tokensBefore": 787,
+            "tokensAfter": 441,
+            "tokensSaved": 346,
+            "tokenSavingsRatio": 0.43964421855146124,
+            "missingMustKeep": [],
+            "invented": [],
+            "retrievalProof": {
+              "ok": true,
+              "lengthOk": true,
+              "sha256Ok": true,
+              "expectedLength": 2710,
+              "actualLength": 2710,
+              "expectedSha256": "2d382f2cbb4f9d7b75ec13e4701beda39c0bf00472548b2f19ff7eb2e3b1c9a2",
+              "actualSha256": "2d382f2cbb4f9d7b75ec13e4701beda39c0bf00472548b2f19ff7eb2e3b1c9a2",
+              "originalRef": "orig_2d382f2c"
+            },
+            "compressionFailed": false
           },
-          {
-            "fact": "Compression Engine",
-            "retained": false
+          "verdict": "PASS"
+        },
+        {
+          "fixture": "conversation_history",
+          "file": "conversation.json",
+          "contentType": "conversation_history",
+          "threshold": {
+            "minTokenSavingsRatio": 0.5,
+            "mustKeepCount": 10,
+            "mustNotInventCount": 1,
+            "retrievalProofRequired": true
           },
-          {
-            "fact": "Memory Service",
-            "retained": false
+          "measured": {
+            "tokensBefore": 1139,
+            "tokensAfter": 484,
+            "tokensSaved": 655,
+            "tokenSavingsRatio": 0.5750658472344161,
+            "missingMustKeep": [],
+            "invented": [],
+            "retrievalProof": {
+              "ok": true,
+              "lengthOk": true,
+              "sha256Ok": true,
+              "expectedLength": 4646,
+              "actualLength": 4646,
+              "expectedSha256": "5707819af4be194af2d4e30ab7ad2c3ce1718d33d051da50cb6fcc633ca8d0d3",
+              "actualSha256": "5707819af4be194af2d4e30ab7ad2c3ce1718d33d051da50cb6fcc633ca8d0d3",
+              "originalRef": "orig_5707819a"
+            },
+            "compressionFailed": false
           },
-          {
-            "fact": "SQLite",
-            "retained": false
-          },
-          {
-            "fact": "compress_context",
-            "retained": false
-          },
-          {
-            "fact": "retrieve_original",
-            "retained": false
-          },
-          {
-            "fact": "remember_context",
-            "retained": false
-          },
-          {
-            "fact": "recall_context",
-            "retained": false
-          },
-          {
-            "fact": "MAX_TOKENS",
-            "retained": false
-          }
-        ]
-      },
-      {
-        "fixture": "json.json",
-        "contentType": "json",
-        "tokensBefore": 184,
-        "tokensAfter": 184,
-        "saved": 0,
-        "ratio": 0,
-        "factsTotal": 6,
-        "factsRetained": 6,
-        "retentionRate": 1,
-        "keyFacts": [
-          {
-            "fact": "RATE_LIMITED",
-            "retained": true
-          },
-          {
-            "fact": "Too many requests",
-            "retained": true
-          },
-          {
-            "fact": "retryAfter",
-            "retained": true
-          },
-          {
-            "fact": "req_abc_001",
-            "retained": true
-          },
-          {
-            "fact": "INVALID_FORMAT",
-            "retained": true
-          },
-          {
-            "fact": "email",
-            "retained": true
-          }
-        ]
-      },
-      {
-        "fixture": "ragChunk.json",
-        "contentType": "rag_chunk",
-        "tokensBefore": 159,
-        "tokensAfter": 79,
-        "saved": 80,
-        "ratio": 0.5031,
-        "factsTotal": 6,
-        "factsRetained": 0,
-        "retentionRate": 0,
-        "keyFacts": [
-          {
-            "fact": "JWT",
-            "retained": false
-          },
-          {
-            "fact": "RS256",
-            "retained": false
-          },
-          {
-            "fact": "HTTP-only cookie",
-            "retained": false
-          },
-          {
-            "fact": "Redis",
-            "retained": false
-          },
-          {
-            "fact": "docs/auth/architecture.md",
-            "retained": false
-          },
-          {
-            "fact": "Token Management",
-            "retained": false
-          }
-        ]
-      }
-    ]
+          "verdict": "PASS"
+        }
+      ]
+    }
   },
-  "memory": {
-    "recallAt1": {
-      "hits": 6,
-      "total": 6,
-      "rate": 100,
-      "tests": [
+  "recall": {
+    "meta": {
+      "generatedAt": "2026-07-14T07:58:22.110Z",
+      "gitCommit": "36b901ce61b2c99153d2ea4ba31db120d33eb12a",
+      "gitDirty": true,
+      "generator": "tests/quality/generateBaseline.ts",
+      "command": "npm run quality:reports"
+    },
+    "fixture": {
+      "version": "recall-quality-gate-v1",
+      "hash": "b1a9dbd3ef2d43eb5c557bf4fe62c527d33c151aacd4b16513281d1ec8f3fe6a",
+      "paths": [
+        "fixtures/quality-eval/memory/qualityGateFixtures.ts"
+      ]
+    },
+    "baselineMeasurement": {
+      "threshold": {
+        "type": "baseline",
+        "enforced": false,
+        "note": "Baseline measurement only; release gate verdict is separate."
+      },
+      "measured": {
+        "recallAt1": 1,
+        "recallAt1Hits": 20,
+        "recallAt1Total": 20,
+        "recallAt3": 1,
+        "recallAt3Hits": 10,
+        "recallAt3Total": 10,
+        "falseRecallRate": 0,
+        "falseRecallHits": 0,
+        "falseRecallTotal": 5,
+        "crossScopeHits": 0,
+        "nonActiveLeakIds": 0,
+        "duplicateResultSets": 0,
+        "fixtureMemoryCount": 37
+      },
+      "verdict": "MEASURED"
+    },
+    "releaseGateResult": {
+      "threshold": {
+        "recallAt1Min": 0.8,
+        "recallAt3Min": 0.95,
+        "crossScopeHitsMax": 0,
+        "nonActiveLeakIdsMax": 0,
+        "duplicateResultSetsMax": 0,
+        "falseRecallRate": "informational"
+      },
+      "measured": {
+        "recallAt1": 1,
+        "recallAt1Hits": 20,
+        "recallAt1Total": 20,
+        "recallAt3": 1,
+        "recallAt3Hits": 10,
+        "recallAt3Total": 10,
+        "falseRecallRate": 0,
+        "falseRecallHits": 0,
+        "falseRecallTotal": 5,
+        "crossScopeHits": 0,
+        "nonActiveLeakIds": 0,
+        "duplicateResultSets": 0,
+        "fixtureMemoryCount": 37
+      },
+      "verdict": "PASS"
+    },
+    "details": {
+      "recallAt1": [
         {
-          "query": "pnpm package manager",
+          "query": "pnpm package manager lock file",
+          "label": "project_rule: pnpm package manager",
           "targetContent": "Always use pnpm",
-          "rankFound": 1,
-          "inTop1": true,
-          "inTop3": true,
-          "totalResults": 2
-        },
-        {
-          "query": "TypeScript strict mode tsconfig",
-          "targetContent": "Enable TypeScript strict mode",
-          "rankFound": 1,
-          "inTop1": true,
-          "inTop3": true,
-          "totalResults": 1
-        },
-        {
-          "query": "React Router decision routing",
-          "targetContent": "React Router v6",
-          "rankFound": 1,
-          "inTop1": true,
-          "inTop3": true,
-          "totalResults": 1
-        },
-        {
-          "query": "WebSocket memory leak cleanup ChatWindow",
-          "targetContent": "WebSocket connections not being cleaned up",
-          "rankFound": 1,
-          "inTop1": true,
-          "inTop3": true,
-          "totalResults": 1
-        },
-        {
-          "query": "session logout cookie test failure",
-          "targetContent": "should clear cookie on logout",
           "rankFound": 1,
           "inTop1": true,
           "inTop3": true,
           "totalResults": 3
         },
         {
-          "query": "Vitest testing framework",
-          "targetContent": "vitest v2.0.0",
-          "rankFound": 1,
-          "inTop1": true,
-          "inTop3": true,
-          "totalResults": 1
-        }
-      ]
-    },
-    "recallAt3": {
-      "hits": 4,
-      "total": 4,
-      "rate": 100,
-      "tests": [
-        {
-          "query": "package manager pnpm npm",
-          "targetContent": "Always use pnpm",
-          "rankFound": 1,
-          "inTop1": true,
-          "inTop3": true,
-          "totalResults": 2
-        },
-        {
-          "query": "frontend routing framework",
-          "targetContent": "React Router v6",
-          "rankFound": 1,
-          "inTop1": true,
-          "inTop3": true,
-          "totalResults": 2
-        },
-        {
-          "query": "test failure assertion auth",
-          "targetContent": "should clear cookie on logout",
+          "query": "TypeScript strict mode tsconfig noUncheckedIndexAccess",
+          "label": "project_rule: TS strict config",
+          "targetContent": "Enable TypeScript strict mode",
           "rankFound": 1,
           "inTop1": true,
           "inTop3": true,
           "totalResults": 4
         },
         {
-          "query": "build compilation type error",
-          "targetContent": "pnpm typecheck",
+          "query": "ESLint flat config eslint.config.mjs",
+          "label": "project_rule: ESLint flat config",
+          "targetContent": "Use ESLint flat config",
+          "rankFound": 1,
+          "inTop1": true,
+          "inTop3": true,
+          "totalResults": 6
+        },
+        {
+          "query": "React Router v6 lazy loading client-side routing",
+          "label": "decision: React Router v6",
+          "targetContent": "Decided to use React Router v6",
           "rankFound": 1,
           "inTop1": true,
           "inTop3": true,
           "totalResults": 5
+        },
+        {
+          "query": "SQLite sql.js WASM storage architecture decision",
+          "label": "decision: SQLite storage",
+          "targetContent": "Architecture decision: use SQLite",
+          "rankFound": 1,
+          "inTop1": true,
+          "inTop3": true,
+          "totalResults": 2
+        },
+        {
+          "query": "Vitest test runner Jest alternative decision",
+          "label": "decision: Vitest over Jest",
+          "targetContent": "Decided to use Vitest as the test runner",
+          "rankFound": 1,
+          "inTop1": true,
+          "inTop3": true,
+          "totalResults": 10
+        },
+        {
+          "query": "WebSocket connections not cleaned up memory leak ChatWindow",
+          "label": "bug: WebSocket memory leak",
+          "targetContent": "WebSocket connections not being cleaned up",
+          "rankFound": 1,
+          "inTop1": true,
+          "inTop3": true,
+          "totalResults": 6
+        },
+        {
+          "query": "race condition PaymentService double charge concurrent",
+          "label": "bug: race condition double-charge",
+          "targetContent": "race condition in PaymentService.processPayment",
+          "rankFound": 1,
+          "inTop1": true,
+          "inTop3": true,
+          "totalResults": 2
+        },
+        {
+          "query": "N+1 query UserList SELECT roles performance",
+          "label": "bug: N+1 query performance",
+          "targetContent": "N+1 query in UserList",
+          "rankFound": 1,
+          "inTop1": true,
+          "inTop3": true,
+          "totalResults": 2
+        },
+        {
+          "query": "auth redirect loop token expired interceptor 401",
+          "label": "bug: auth redirect loop",
+          "targetContent": "auth redirect loop when token expires",
+          "rankFound": 1,
+          "inTop1": true,
+          "inTop3": true,
+          "totalResults": 2
+        },
+        {
+          "query": "quality eval baseline memory recall benchmark",
+          "label": "current_task: quality eval",
+          "targetContent": "Building offline quality eval baseline",
+          "rankFound": 1,
+          "inTop1": true,
+          "inTop3": true,
+          "totalResults": 2
+        },
+        {
+          "query": "API refactor express fastify zod validation",
+          "label": "current_task: API refactor",
+          "targetContent": "Refactoring the REST API layer: migrating from express to fastify",
+          "rankFound": 1,
+          "inTop1": true,
+          "inTop3": true,
+          "totalResults": 4
+        },
+        {
+          "query": "vitest v2.0 jsdom v8 coverage test framework",
+          "label": "dependency: vitest v2",
+          "targetContent": "vitest v2.0.0 — test runner",
+          "rankFound": 1,
+          "inTop1": true,
+          "inTop3": true,
+          "totalResults": 8
+        },
+        {
+          "query": "zod v3.23 schema validation runtime type inference",
+          "label": "dependency: zod v3.23",
+          "targetContent": "zod v3.23.8 — schema validation",
+          "rankFound": 1,
+          "inTop1": true,
+          "inTop3": true,
+          "totalResults": 5
+        },
+        {
+          "query": "express-rate-limit v7 Redis store middleware",
+          "label": "dependency: express-rate-limit",
+          "targetContent": "express-rate-limit v7.2.0",
+          "rankFound": 1,
+          "inTop1": true,
+          "inTop3": true,
+          "totalResults": 1
+        },
+        {
+          "query": "React 18.3 concurrent useTransition useDeferredValue",
+          "label": "dependency: React 18.3",
+          "targetContent": "react v18.3.1 + react-dom v18.3.1",
+          "rankFound": 1,
+          "inTop1": true,
+          "inTop3": true,
+          "totalResults": 3
+        },
+        {
+          "query": "session logout cookie Max-Age test failure AssertionError",
+          "label": "test_failure: session logout cookie",
+          "targetContent": "should clear cookie on logout",
+          "rankFound": 1,
+          "inTop1": true,
+          "inTop3": true,
+          "totalResults": 9
+        },
+        {
+          "query": "avatar URL CDN prefix uploads test failure",
+          "label": "test_failure: avatar CDN URL",
+          "targetContent": "expected avatar URL to start with 'https://cdn.example.com'",
+          "rankFound": 1,
+          "inTop1": true,
+          "inTop3": true,
+          "totalResults": 8
+        },
+        {
+          "query": "E2E checkout timeout element not visible flaky CI",
+          "label": "test_failure: E2E checkout timeout",
+          "targetContent": "TimeoutError: Test exceeded 30000ms",
+          "rankFound": 1,
+          "inTop1": true,
+          "inTop3": true,
+          "totalResults": 10
+        },
+        {
+          "query": "bulk tiered discount price calculation AssertionError 10000",
+          "label": "test_failure: bulk discount calculation",
+          "targetContent": "should apply tiered discount for bulk orders",
+          "rankFound": 1,
+          "inTop1": true,
+          "inTop3": true,
+          "totalResults": 3
+        }
+      ],
+      "recallAt3": [
+        {
+          "query": "package manager lock file dependencies",
+          "label": "broad: package manager",
+          "targetContent": "Always use pnpm",
+          "rankFound": 1,
+          "inTop1": true,
+          "inTop3": true,
+          "totalResults": 3
+        },
+        {
+          "query": "frontend routing framework decision architecture",
+          "label": "broad: routing decision",
+          "targetContent": "Decided to use React Router v6",
+          "rankFound": 1,
+          "inTop1": true,
+          "inTop3": true,
+          "totalResults": 4
+        },
+        {
+          "query": "memory leak performance cleanup component bug",
+          "label": "broad: memory leaks",
+          "targetContent": "WebSocket connections not being cleaned up",
+          "rankFound": 1,
+          "inTop1": true,
+          "inTop3": true,
+          "totalResults": 5
+        },
+        {
+          "query": "test runner framework coverage vitest",
+          "label": "broad: test framework",
+          "targetContent": "vitest v2.0.0",
+          "rankFound": 1,
+          "inTop1": true,
+          "inTop3": true,
+          "totalResults": 5
+        },
+        {
+          "query": "API refactor migration backend framework",
+          "label": "broad: backend refactor",
+          "targetContent": "Refactoring the REST API layer",
+          "rankFound": 1,
+          "inTop1": true,
+          "inTop3": true,
+          "totalResults": 5
+        },
+        {
+          "query": "test failure assertion logout cookie session",
+          "label": "broad: auth test failure",
+          "targetContent": "should clear cookie on logout",
+          "rankFound": 1,
+          "inTop1": true,
+          "inTop3": true,
+          "totalResults": 5
+        },
+        {
+          "query": "type safety TypeScript config strict settings",
+          "label": "broad: TS config rules",
+          "targetContent": "Enable TypeScript strict mode",
+          "rankFound": 1,
+          "inTop1": true,
+          "inTop3": true,
+          "totalResults": 5
+        },
+        {
+          "query": "validation schema runtime type checking",
+          "label": "broad: schema validation",
+          "targetContent": "zod v3.23.8",
+          "rankFound": 1,
+          "inTop1": true,
+          "inTop3": true,
+          "totalResults": 5
+        },
+        {
+          "query": "architecture decision storage database local",
+          "label": "broad: storage architecture",
+          "targetContent": "Architecture decision: use SQLite",
+          "rankFound": 1,
+          "inTop1": true,
+          "inTop3": true,
+          "totalResults": 2
+        },
+        {
+          "query": "pricing calculation discount order bulk failure",
+          "label": "broad: pricing test failure",
+          "targetContent": "should apply tiered discount",
+          "rankFound": 1,
+          "inTop1": true,
+          "inTop3": true,
+          "totalResults": 3
+        }
+      ],
+      "falseRecall": [
+        {
+          "query": "GraphQL subscription stitching federation",
+          "label": "GraphQL (not in scope)",
+          "totalResults": 0,
+          "leakedIds": []
+        },
+        {
+          "query": "gRPC protobuf bidirectional streaming deadline",
+          "label": "gRPC (not in scope)",
+          "totalResults": 0,
+          "leakedIds": []
+        },
+        {
+          "query": "SolidJS signals reactivity createResource",
+          "label": "SolidJS (not in scope)",
+          "totalResults": 0,
+          "leakedIds": []
+        },
+        {
+          "query": "RabbitMQ amqp091 exchange deadletter",
+          "label": "RabbitMQ (not in scope)",
+          "totalResults": 0,
+          "leakedIds": []
+        },
+        {
+          "query": "Terraform hcl2 provider plugin for_each",
+          "label": "Terraform (not in scope)",
+          "totalResults": 0,
+          "leakedIds": []
+        }
+      ],
+      "crossScope": [
+        {
+          "query": "npm workspaces package-lock.json monorepo",
+          "label": "Scope B: npm workspaces (should NOT leak to A)",
+          "totalResults": 1,
+          "leakedIds": []
+        },
+        {
+          "query": "Vue 3 Composition API Pinia state management",
+          "label": "Scope B: Vue 3 (should NOT leak to A)",
+          "totalResults": 9,
+          "leakedIds": []
+        },
+        {
+          "query": "Nuxt 3 auto-imports file-based routing useFetch",
+          "label": "Scope B: Nuxt 3 (should NOT leak to A)",
+          "totalResults": 6,
+          "leakedIds": []
+        },
+        {
+          "query": "Jest v29 Vue test utils jsdom",
+          "label": "Scope B: Jest (should NOT leak to A)",
+          "totalResults": 8,
+          "leakedIds": []
+        },
+        {
+          "query": "Vite plugin SVG sprite HMR dev mode",
+          "label": "Scope B: Vite HMR bug (should NOT leak to A)",
+          "totalResults": 5,
+          "leakedIds": []
+        }
+      ],
+      "nonActiveLeak": [
+        {
+          "query": "npm package manager lock file",
+          "label": "superseded old npm rule",
+          "totalResults": 3,
+          "leakedIds": []
+        },
+        {
+          "query": "React Router v5",
+          "label": "superseded old React Router v5",
+          "totalResults": 2,
+          "leakedIds": []
+        },
+        {
+          "query": "user registration email verification",
+          "label": "forgotten registration flow",
+          "totalResults": 1,
+          "leakedIds": []
+        },
+        {
+          "query": "console.log spam production",
+          "label": "forgotten console spam bug",
+          "totalResults": 0,
+          "leakedIds": []
+        },
+        {
+          "query": "webpack bundler migrate Vite",
+          "label": "expired webpack dependency",
+          "totalResults": 2,
+          "leakedIds": []
+        }
+      ],
+      "duplicateIds": [
+        {
+          "query": "pnpm package manager lock file",
+          "label": "duplicate result id check",
+          "totalResults": 3,
+          "duplicateIds": []
+        },
+        {
+          "query": "TypeScript strict mode tsconfig noUncheckedIndexAccess",
+          "label": "duplicate result id check",
+          "totalResults": 4,
+          "duplicateIds": []
+        },
+        {
+          "query": "ESLint flat config eslint.config.mjs",
+          "label": "duplicate result id check",
+          "totalResults": 6,
+          "duplicateIds": []
+        },
+        {
+          "query": "React Router v6 lazy loading client-side routing",
+          "label": "duplicate result id check",
+          "totalResults": 5,
+          "duplicateIds": []
+        },
+        {
+          "query": "SQLite sql.js WASM storage architecture decision",
+          "label": "duplicate result id check",
+          "totalResults": 2,
+          "duplicateIds": []
+        },
+        {
+          "query": "Vitest test runner Jest alternative decision",
+          "label": "duplicate result id check",
+          "totalResults": 10,
+          "duplicateIds": []
+        },
+        {
+          "query": "WebSocket connections not cleaned up memory leak ChatWindow",
+          "label": "duplicate result id check",
+          "totalResults": 6,
+          "duplicateIds": []
+        },
+        {
+          "query": "race condition PaymentService double charge concurrent",
+          "label": "duplicate result id check",
+          "totalResults": 2,
+          "duplicateIds": []
+        },
+        {
+          "query": "N+1 query UserList SELECT roles performance",
+          "label": "duplicate result id check",
+          "totalResults": 2,
+          "duplicateIds": []
+        },
+        {
+          "query": "auth redirect loop token expired interceptor 401",
+          "label": "duplicate result id check",
+          "totalResults": 2,
+          "duplicateIds": []
+        },
+        {
+          "query": "quality eval baseline memory recall benchmark",
+          "label": "duplicate result id check",
+          "totalResults": 2,
+          "duplicateIds": []
+        },
+        {
+          "query": "API refactor express fastify zod validation",
+          "label": "duplicate result id check",
+          "totalResults": 4,
+          "duplicateIds": []
+        },
+        {
+          "query": "vitest v2.0 jsdom v8 coverage test framework",
+          "label": "duplicate result id check",
+          "totalResults": 8,
+          "duplicateIds": []
+        },
+        {
+          "query": "zod v3.23 schema validation runtime type inference",
+          "label": "duplicate result id check",
+          "totalResults": 5,
+          "duplicateIds": []
+        },
+        {
+          "query": "express-rate-limit v7 Redis store middleware",
+          "label": "duplicate result id check",
+          "totalResults": 1,
+          "duplicateIds": []
+        },
+        {
+          "query": "React 18.3 concurrent useTransition useDeferredValue",
+          "label": "duplicate result id check",
+          "totalResults": 3,
+          "duplicateIds": []
+        },
+        {
+          "query": "session logout cookie Max-Age test failure AssertionError",
+          "label": "duplicate result id check",
+          "totalResults": 9,
+          "duplicateIds": []
+        },
+        {
+          "query": "avatar URL CDN prefix uploads test failure",
+          "label": "duplicate result id check",
+          "totalResults": 8,
+          "duplicateIds": []
+        },
+        {
+          "query": "E2E checkout timeout element not visible flaky CI",
+          "label": "duplicate result id check",
+          "totalResults": 10,
+          "duplicateIds": []
+        },
+        {
+          "query": "bulk tiered discount price calculation AssertionError 10000",
+          "label": "duplicate result id check",
+          "totalResults": 3,
+          "duplicateIds": []
+        },
+        {
+          "query": "package manager lock file dependencies",
+          "label": "duplicate result id check",
+          "totalResults": 3,
+          "duplicateIds": []
+        },
+        {
+          "query": "frontend routing framework decision architecture",
+          "label": "duplicate result id check",
+          "totalResults": 4,
+          "duplicateIds": []
+        },
+        {
+          "query": "memory leak performance cleanup component bug",
+          "label": "duplicate result id check",
+          "totalResults": 8,
+          "duplicateIds": []
+        },
+        {
+          "query": "test runner framework coverage vitest",
+          "label": "duplicate result id check",
+          "totalResults": 8,
+          "duplicateIds": []
+        },
+        {
+          "query": "API refactor migration backend framework",
+          "label": "duplicate result id check",
+          "totalResults": 5,
+          "duplicateIds": []
+        },
+        {
+          "query": "test failure assertion logout cookie session",
+          "label": "duplicate result id check",
+          "totalResults": 9,
+          "duplicateIds": []
+        },
+        {
+          "query": "type safety TypeScript config strict settings",
+          "label": "duplicate result id check",
+          "totalResults": 8,
+          "duplicateIds": []
+        },
+        {
+          "query": "validation schema runtime type checking",
+          "label": "duplicate result id check",
+          "totalResults": 5,
+          "duplicateIds": []
+        },
+        {
+          "query": "architecture decision storage database local",
+          "label": "duplicate result id check",
+          "totalResults": 2,
+          "duplicateIds": []
+        },
+        {
+          "query": "pricing calculation discount order bulk failure",
+          "label": "duplicate result id check",
+          "totalResults": 3,
+          "duplicateIds": []
+        },
+        {
+          "query": "project package manager",
+          "label": "duplicate result id check",
+          "totalResults": 3,
+          "duplicateIds": []
+        },
+        {
+          "query": "test failure",
+          "label": "duplicate result id check",
+          "totalResults": 8,
+          "duplicateIds": []
+        },
+        {
+          "query": "bug",
+          "label": "duplicate result id check",
+          "totalResults": 4,
+          "duplicateIds": []
         }
       ]
     },
-    "scopeIsolation": {
-      "allIsolated": true,
-      "checks": [
-        {
-          "scope": "quality-eval-scope-c",
-          "count": 0,
-          "isolated": true
-        },
-        {
-          "scope": "quality-eval-scope-a",
-          "count": 0,
-          "isolated": true
-        },
-        {
-          "scope": "quality-eval-scope-b",
-          "count": 0,
-          "isolated": true
-        },
-        {
-          "scope": "quality-eval-scope-a filtered",
-          "count": 0,
-          "isolated": true
-        }
-      ]
+    "scorerConfig": {
+      "confidenceBase": 0.2,
+      "confidenceWeight": 0.8,
+      "recencyDecayDays": 60,
+      "recencyMaxBoost": 0.5
     }
   }
 }

@@ -1,0 +1,643 @@
+{
+  "meta": {
+    "generatedAt": "2026-07-14T07:58:22.110Z",
+    "gitCommit": "36b901ce61b2c99153d2ea4ba31db120d33eb12a",
+    "gitDirty": true,
+    "generator": "tests/quality/generateBaseline.ts",
+    "command": "npm run quality:reports"
+  },
+  "fixture": {
+    "version": "recall-quality-gate-v1",
+    "hash": "b1a9dbd3ef2d43eb5c557bf4fe62c527d33c151aacd4b16513281d1ec8f3fe6a",
+    "paths": [
+      "fixtures/quality-eval/memory/qualityGateFixtures.ts"
+    ]
+  },
+  "baselineMeasurement": {
+    "threshold": {
+      "type": "baseline",
+      "enforced": false,
+      "note": "Baseline measurement only; release gate verdict is separate."
+    },
+    "measured": {
+      "recallAt1": 1,
+      "recallAt1Hits": 20,
+      "recallAt1Total": 20,
+      "recallAt3": 1,
+      "recallAt3Hits": 10,
+      "recallAt3Total": 10,
+      "falseRecallRate": 0,
+      "falseRecallHits": 0,
+      "falseRecallTotal": 5,
+      "crossScopeHits": 0,
+      "nonActiveLeakIds": 0,
+      "duplicateResultSets": 0,
+      "fixtureMemoryCount": 37
+    },
+    "verdict": "MEASURED"
+  },
+  "releaseGateResult": {
+    "threshold": {
+      "recallAt1Min": 0.8,
+      "recallAt3Min": 0.95,
+      "crossScopeHitsMax": 0,
+      "nonActiveLeakIdsMax": 0,
+      "duplicateResultSetsMax": 0,
+      "falseRecallRate": "informational"
+    },
+    "measured": {
+      "recallAt1": 1,
+      "recallAt1Hits": 20,
+      "recallAt1Total": 20,
+      "recallAt3": 1,
+      "recallAt3Hits": 10,
+      "recallAt3Total": 10,
+      "falseRecallRate": 0,
+      "falseRecallHits": 0,
+      "falseRecallTotal": 5,
+      "crossScopeHits": 0,
+      "nonActiveLeakIds": 0,
+      "duplicateResultSets": 0,
+      "fixtureMemoryCount": 37
+    },
+    "verdict": "PASS"
+  },
+  "details": {
+    "recallAt1": [
+      {
+        "query": "pnpm package manager lock file",
+        "label": "project_rule: pnpm package manager",
+        "targetContent": "Always use pnpm",
+        "rankFound": 1,
+        "inTop1": true,
+        "inTop3": true,
+        "totalResults": 3
+      },
+      {
+        "query": "TypeScript strict mode tsconfig noUncheckedIndexAccess",
+        "label": "project_rule: TS strict config",
+        "targetContent": "Enable TypeScript strict mode",
+        "rankFound": 1,
+        "inTop1": true,
+        "inTop3": true,
+        "totalResults": 4
+      },
+      {
+        "query": "ESLint flat config eslint.config.mjs",
+        "label": "project_rule: ESLint flat config",
+        "targetContent": "Use ESLint flat config",
+        "rankFound": 1,
+        "inTop1": true,
+        "inTop3": true,
+        "totalResults": 6
+      },
+      {
+        "query": "React Router v6 lazy loading client-side routing",
+        "label": "decision: React Router v6",
+        "targetContent": "Decided to use React Router v6",
+        "rankFound": 1,
+        "inTop1": true,
+        "inTop3": true,
+        "totalResults": 5
+      },
+      {
+        "query": "SQLite sql.js WASM storage architecture decision",
+        "label": "decision: SQLite storage",
+        "targetContent": "Architecture decision: use SQLite",
+        "rankFound": 1,
+        "inTop1": true,
+        "inTop3": true,
+        "totalResults": 2
+      },
+      {
+        "query": "Vitest test runner Jest alternative decision",
+        "label": "decision: Vitest over Jest",
+        "targetContent": "Decided to use Vitest as the test runner",
+        "rankFound": 1,
+        "inTop1": true,
+        "inTop3": true,
+        "totalResults": 10
+      },
+      {
+        "query": "WebSocket connections not cleaned up memory leak ChatWindow",
+        "label": "bug: WebSocket memory leak",
+        "targetContent": "WebSocket connections not being cleaned up",
+        "rankFound": 1,
+        "inTop1": true,
+        "inTop3": true,
+        "totalResults": 6
+      },
+      {
+        "query": "race condition PaymentService double charge concurrent",
+        "label": "bug: race condition double-charge",
+        "targetContent": "race condition in PaymentService.processPayment",
+        "rankFound": 1,
+        "inTop1": true,
+        "inTop3": true,
+        "totalResults": 2
+      },
+      {
+        "query": "N+1 query UserList SELECT roles performance",
+        "label": "bug: N+1 query performance",
+        "targetContent": "N+1 query in UserList",
+        "rankFound": 1,
+        "inTop1": true,
+        "inTop3": true,
+        "totalResults": 2
+      },
+      {
+        "query": "auth redirect loop token expired interceptor 401",
+        "label": "bug: auth redirect loop",
+        "targetContent": "auth redirect loop when token expires",
+        "rankFound": 1,
+        "inTop1": true,
+        "inTop3": true,
+        "totalResults": 2
+      },
+      {
+        "query": "quality eval baseline memory recall benchmark",
+        "label": "current_task: quality eval",
+        "targetContent": "Building offline quality eval baseline",
+        "rankFound": 1,
+        "inTop1": true,
+        "inTop3": true,
+        "totalResults": 2
+      },
+      {
+        "query": "API refactor express fastify zod validation",
+        "label": "current_task: API refactor",
+        "targetContent": "Refactoring the REST API layer: migrating from express to fastify",
+        "rankFound": 1,
+        "inTop1": true,
+        "inTop3": true,
+        "totalResults": 4
+      },
+      {
+        "query": "vitest v2.0 jsdom v8 coverage test framework",
+        "label": "dependency: vitest v2",
+        "targetContent": "vitest v2.0.0 — test runner",
+        "rankFound": 1,
+        "inTop1": true,
+        "inTop3": true,
+        "totalResults": 8
+      },
+      {
+        "query": "zod v3.23 schema validation runtime type inference",
+        "label": "dependency: zod v3.23",
+        "targetContent": "zod v3.23.8 — schema validation",
+        "rankFound": 1,
+        "inTop1": true,
+        "inTop3": true,
+        "totalResults": 5
+      },
+      {
+        "query": "express-rate-limit v7 Redis store middleware",
+        "label": "dependency: express-rate-limit",
+        "targetContent": "express-rate-limit v7.2.0",
+        "rankFound": 1,
+        "inTop1": true,
+        "inTop3": true,
+        "totalResults": 1
+      },
+      {
+        "query": "React 18.3 concurrent useTransition useDeferredValue",
+        "label": "dependency: React 18.3",
+        "targetContent": "react v18.3.1 + react-dom v18.3.1",
+        "rankFound": 1,
+        "inTop1": true,
+        "inTop3": true,
+        "totalResults": 3
+      },
+      {
+        "query": "session logout cookie Max-Age test failure AssertionError",
+        "label": "test_failure: session logout cookie",
+        "targetContent": "should clear cookie on logout",
+        "rankFound": 1,
+        "inTop1": true,
+        "inTop3": true,
+        "totalResults": 9
+      },
+      {
+        "query": "avatar URL CDN prefix uploads test failure",
+        "label": "test_failure: avatar CDN URL",
+        "targetContent": "expected avatar URL to start with 'https://cdn.example.com'",
+        "rankFound": 1,
+        "inTop1": true,
+        "inTop3": true,
+        "totalResults": 8
+      },
+      {
+        "query": "E2E checkout timeout element not visible flaky CI",
+        "label": "test_failure: E2E checkout timeout",
+        "targetContent": "TimeoutError: Test exceeded 30000ms",
+        "rankFound": 1,
+        "inTop1": true,
+        "inTop3": true,
+        "totalResults": 10
+      },
+      {
+        "query": "bulk tiered discount price calculation AssertionError 10000",
+        "label": "test_failure: bulk discount calculation",
+        "targetContent": "should apply tiered discount for bulk orders",
+        "rankFound": 1,
+        "inTop1": true,
+        "inTop3": true,
+        "totalResults": 3
+      }
+    ],
+    "recallAt3": [
+      {
+        "query": "package manager lock file dependencies",
+        "label": "broad: package manager",
+        "targetContent": "Always use pnpm",
+        "rankFound": 1,
+        "inTop1": true,
+        "inTop3": true,
+        "totalResults": 3
+      },
+      {
+        "query": "frontend routing framework decision architecture",
+        "label": "broad: routing decision",
+        "targetContent": "Decided to use React Router v6",
+        "rankFound": 1,
+        "inTop1": true,
+        "inTop3": true,
+        "totalResults": 4
+      },
+      {
+        "query": "memory leak performance cleanup component bug",
+        "label": "broad: memory leaks",
+        "targetContent": "WebSocket connections not being cleaned up",
+        "rankFound": 1,
+        "inTop1": true,
+        "inTop3": true,
+        "totalResults": 5
+      },
+      {
+        "query": "test runner framework coverage vitest",
+        "label": "broad: test framework",
+        "targetContent": "vitest v2.0.0",
+        "rankFound": 1,
+        "inTop1": true,
+        "inTop3": true,
+        "totalResults": 5
+      },
+      {
+        "query": "API refactor migration backend framework",
+        "label": "broad: backend refactor",
+        "targetContent": "Refactoring the REST API layer",
+        "rankFound": 1,
+        "inTop1": true,
+        "inTop3": true,
+        "totalResults": 5
+      },
+      {
+        "query": "test failure assertion logout cookie session",
+        "label": "broad: auth test failure",
+        "targetContent": "should clear cookie on logout",
+        "rankFound": 1,
+        "inTop1": true,
+        "inTop3": true,
+        "totalResults": 5
+      },
+      {
+        "query": "type safety TypeScript config strict settings",
+        "label": "broad: TS config rules",
+        "targetContent": "Enable TypeScript strict mode",
+        "rankFound": 1,
+        "inTop1": true,
+        "inTop3": true,
+        "totalResults": 5
+      },
+      {
+        "query": "validation schema runtime type checking",
+        "label": "broad: schema validation",
+        "targetContent": "zod v3.23.8",
+        "rankFound": 1,
+        "inTop1": true,
+        "inTop3": true,
+        "totalResults": 5
+      },
+      {
+        "query": "architecture decision storage database local",
+        "label": "broad: storage architecture",
+        "targetContent": "Architecture decision: use SQLite",
+        "rankFound": 1,
+        "inTop1": true,
+        "inTop3": true,
+        "totalResults": 2
+      },
+      {
+        "query": "pricing calculation discount order bulk failure",
+        "label": "broad: pricing test failure",
+        "targetContent": "should apply tiered discount",
+        "rankFound": 1,
+        "inTop1": true,
+        "inTop3": true,
+        "totalResults": 3
+      }
+    ],
+    "falseRecall": [
+      {
+        "query": "GraphQL subscription stitching federation",
+        "label": "GraphQL (not in scope)",
+        "totalResults": 0,
+        "leakedIds": []
+      },
+      {
+        "query": "gRPC protobuf bidirectional streaming deadline",
+        "label": "gRPC (not in scope)",
+        "totalResults": 0,
+        "leakedIds": []
+      },
+      {
+        "query": "SolidJS signals reactivity createResource",
+        "label": "SolidJS (not in scope)",
+        "totalResults": 0,
+        "leakedIds": []
+      },
+      {
+        "query": "RabbitMQ amqp091 exchange deadletter",
+        "label": "RabbitMQ (not in scope)",
+        "totalResults": 0,
+        "leakedIds": []
+      },
+      {
+        "query": "Terraform hcl2 provider plugin for_each",
+        "label": "Terraform (not in scope)",
+        "totalResults": 0,
+        "leakedIds": []
+      }
+    ],
+    "crossScope": [
+      {
+        "query": "npm workspaces package-lock.json monorepo",
+        "label": "Scope B: npm workspaces (should NOT leak to A)",
+        "totalResults": 1,
+        "leakedIds": []
+      },
+      {
+        "query": "Vue 3 Composition API Pinia state management",
+        "label": "Scope B: Vue 3 (should NOT leak to A)",
+        "totalResults": 9,
+        "leakedIds": []
+      },
+      {
+        "query": "Nuxt 3 auto-imports file-based routing useFetch",
+        "label": "Scope B: Nuxt 3 (should NOT leak to A)",
+        "totalResults": 6,
+        "leakedIds": []
+      },
+      {
+        "query": "Jest v29 Vue test utils jsdom",
+        "label": "Scope B: Jest (should NOT leak to A)",
+        "totalResults": 8,
+        "leakedIds": []
+      },
+      {
+        "query": "Vite plugin SVG sprite HMR dev mode",
+        "label": "Scope B: Vite HMR bug (should NOT leak to A)",
+        "totalResults": 5,
+        "leakedIds": []
+      }
+    ],
+    "nonActiveLeak": [
+      {
+        "query": "npm package manager lock file",
+        "label": "superseded old npm rule",
+        "totalResults": 3,
+        "leakedIds": []
+      },
+      {
+        "query": "React Router v5",
+        "label": "superseded old React Router v5",
+        "totalResults": 2,
+        "leakedIds": []
+      },
+      {
+        "query": "user registration email verification",
+        "label": "forgotten registration flow",
+        "totalResults": 1,
+        "leakedIds": []
+      },
+      {
+        "query": "console.log spam production",
+        "label": "forgotten console spam bug",
+        "totalResults": 0,
+        "leakedIds": []
+      },
+      {
+        "query": "webpack bundler migrate Vite",
+        "label": "expired webpack dependency",
+        "totalResults": 2,
+        "leakedIds": []
+      }
+    ],
+    "duplicateIds": [
+      {
+        "query": "pnpm package manager lock file",
+        "label": "duplicate result id check",
+        "totalResults": 3,
+        "duplicateIds": []
+      },
+      {
+        "query": "TypeScript strict mode tsconfig noUncheckedIndexAccess",
+        "label": "duplicate result id check",
+        "totalResults": 4,
+        "duplicateIds": []
+      },
+      {
+        "query": "ESLint flat config eslint.config.mjs",
+        "label": "duplicate result id check",
+        "totalResults": 6,
+        "duplicateIds": []
+      },
+      {
+        "query": "React Router v6 lazy loading client-side routing",
+        "label": "duplicate result id check",
+        "totalResults": 5,
+        "duplicateIds": []
+      },
+      {
+        "query": "SQLite sql.js WASM storage architecture decision",
+        "label": "duplicate result id check",
+        "totalResults": 2,
+        "duplicateIds": []
+      },
+      {
+        "query": "Vitest test runner Jest alternative decision",
+        "label": "duplicate result id check",
+        "totalResults": 10,
+        "duplicateIds": []
+      },
+      {
+        "query": "WebSocket connections not cleaned up memory leak ChatWindow",
+        "label": "duplicate result id check",
+        "totalResults": 6,
+        "duplicateIds": []
+      },
+      {
+        "query": "race condition PaymentService double charge concurrent",
+        "label": "duplicate result id check",
+        "totalResults": 2,
+        "duplicateIds": []
+      },
+      {
+        "query": "N+1 query UserList SELECT roles performance",
+        "label": "duplicate result id check",
+        "totalResults": 2,
+        "duplicateIds": []
+      },
+      {
+        "query": "auth redirect loop token expired interceptor 401",
+        "label": "duplicate result id check",
+        "totalResults": 2,
+        "duplicateIds": []
+      },
+      {
+        "query": "quality eval baseline memory recall benchmark",
+        "label": "duplicate result id check",
+        "totalResults": 2,
+        "duplicateIds": []
+      },
+      {
+        "query": "API refactor express fastify zod validation",
+        "label": "duplicate result id check",
+        "totalResults": 4,
+        "duplicateIds": []
+      },
+      {
+        "query": "vitest v2.0 jsdom v8 coverage test framework",
+        "label": "duplicate result id check",
+        "totalResults": 8,
+        "duplicateIds": []
+      },
+      {
+        "query": "zod v3.23 schema validation runtime type inference",
+        "label": "duplicate result id check",
+        "totalResults": 5,
+        "duplicateIds": []
+      },
+      {
+        "query": "express-rate-limit v7 Redis store middleware",
+        "label": "duplicate result id check",
+        "totalResults": 1,
+        "duplicateIds": []
+      },
+      {
+        "query": "React 18.3 concurrent useTransition useDeferredValue",
+        "label": "duplicate result id check",
+        "totalResults": 3,
+        "duplicateIds": []
+      },
+      {
+        "query": "session logout cookie Max-Age test failure AssertionError",
+        "label": "duplicate result id check",
+        "totalResults": 9,
+        "duplicateIds": []
+      },
+      {
+        "query": "avatar URL CDN prefix uploads test failure",
+        "label": "duplicate result id check",
+        "totalResults": 8,
+        "duplicateIds": []
+      },
+      {
+        "query": "E2E checkout timeout element not visible flaky CI",
+        "label": "duplicate result id check",
+        "totalResults": 10,
+        "duplicateIds": []
+      },
+      {
+        "query": "bulk tiered discount price calculation AssertionError 10000",
+        "label": "duplicate result id check",
+        "totalResults": 3,
+        "duplicateIds": []
+      },
+      {
+        "query": "package manager lock file dependencies",
+        "label": "duplicate result id check",
+        "totalResults": 3,
+        "duplicateIds": []
+      },
+      {
+        "query": "frontend routing framework decision architecture",
+        "label": "duplicate result id check",
+        "totalResults": 4,
+        "duplicateIds": []
+      },
+      {
+        "query": "memory leak performance cleanup component bug",
+        "label": "duplicate result id check",
+        "totalResults": 8,
+        "duplicateIds": []
+      },
+      {
+        "query": "test runner framework coverage vitest",
+        "label": "duplicate result id check",
+        "totalResults": 8,
+        "duplicateIds": []
+      },
+      {
+        "query": "API refactor migration backend framework",
+        "label": "duplicate result id check",
+        "totalResults": 5,
+        "duplicateIds": []
+      },
+      {
+        "query": "test failure assertion logout cookie session",
+        "label": "duplicate result id check",
+        "totalResults": 9,
+        "duplicateIds": []
+      },
+      {
+        "query": "type safety TypeScript config strict settings",
+        "label": "duplicate result id check",
+        "totalResults": 8,
+        "duplicateIds": []
+      },
+      {
+        "query": "validation schema runtime type checking",
+        "label": "duplicate result id check",
+        "totalResults": 5,
+        "duplicateIds": []
+      },
+      {
+        "query": "architecture decision storage database local",
+        "label": "duplicate result id check",
+        "totalResults": 2,
+        "duplicateIds": []
+      },
+      {
+        "query": "pricing calculation discount order bulk failure",
+        "label": "duplicate result id check",
+        "totalResults": 3,
+        "duplicateIds": []
+      },
+      {
+        "query": "project package manager",
+        "label": "duplicate result id check",
+        "totalResults": 3,
+        "duplicateIds": []
+      },
+      {
+        "query": "test failure",
+        "label": "duplicate result id check",
+        "totalResults": 8,
+        "duplicateIds": []
+      },
+      {
+        "query": "bug",
+        "label": "duplicate result id check",
+        "totalResults": 4,
+        "duplicateIds": []
+      }
+    ]
+  },
+  "scorerConfig": {
+    "confidenceBase": 0.2,
+    "confidenceWeight": 0.8,
+    "recencyDecayDays": 60,
+    "recencyMaxBoost": 0.5
+  }
+}
