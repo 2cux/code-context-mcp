@@ -1,8 +1,9 @@
 import { readFileSync, existsSync } from "node:fs";
 import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
-import { execRaw, initDb } from "./db.js";
+import { execRaw, initDb, persistDb } from "./db.js";
 import type { Database } from "sql.js";
+import { computeMemoryFingerprint } from "../memory/fingerprint.js";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
@@ -34,7 +35,22 @@ function findSchemaPath(): string {
 }
 
 /** Current schema version — increment when the schema or migrations change. */
-const CURRENT_SCHEMA_VERSION = 4;
+const CURRENT_SCHEMA_VERSION = 5;
+
+export interface MemoryFingerprintMigrationSummary {
+  eligibleRows: number;
+  backfilledRows: number;
+  preservedRows: number;
+  activeDuplicateGroups: number;
+  activeDuplicateRows: number;
+}
+
+export interface MigrationSummary {
+  fromVersion: number;
+  toVersion: number;
+  skipped: boolean;
+  memoryFingerprint: MemoryFingerprintMigrationSummary;
+}
 
 /** Read the schema version stored in the database (PRAGMA user_version). */
 function getSchemaVersion(db: Database): number {
@@ -54,36 +70,46 @@ function setSchemaVersion(db: Database, version: number): void {
   db.run(`PRAGMA user_version = ${version}`);
 }
 
-export function runMigrations(db: Database): void {
+export function runMigrations(db: Database): MigrationSummary {
   const currentVersion = getSchemaVersion(db);
+  const summary: MigrationSummary = {
+    fromVersion: currentVersion,
+    toVersion: CURRENT_SCHEMA_VERSION,
+    skipped: false,
+    memoryFingerprint: emptyMemoryFingerprintSummary(),
+  };
 
   // Fast path: if schema is already current, skip all migration work.
   // The schema.sql execution and per-migration ALTER TABLE attempts are
   // unnecessary repeated work on already-migrated databases.
-  if (currentVersion >= CURRENT_SCHEMA_VERSION) return;
+  if (currentVersion >= CURRENT_SCHEMA_VERSION) {
+    summary.skipped = true;
+    return summary;
+  }
 
   const schemaPath = findSchemaPath();
   const schema = readFileSync(schemaPath, "utf-8");
   execRaw(db, schema);
 
   // Post-schema migrations for constraint changes that SQLite can't ALTER.
-  // Safe to run on fresh databases — checks table state before acting.
+  // Safe to run on fresh databases; checks table state before acting.
   //
   // Order matters: migrateReceiptsRunFields adds the new columns first,
   // then migrateReceiptsConstraint can safely rebuild with all columns.
   migrateReceiptsRunFields(db);
   migrateReceiptsConstraint(db);
 
-  // CacheAligner columns (§31.2) — added in v1.1
+  // CacheAligner columns added in v1.1.
   migrateCacheColumns(db);
 
-  // Memory fingerprint column (§39) — added in v1.2
+  // Memory fingerprint column added in v1.2, backfilled in v1.3.
   migrateFingerprintColumn(db);
+  summary.memoryFingerprint = migrateMemoryFingerprintBackfill(db);
 
-  // Mark migrations as applied so subsequent initAndMigrate calls skip work
+  // Mark migrations as applied so subsequent initAndMigrate calls skip work.
   setSchemaVersion(db, CURRENT_SCHEMA_VERSION);
+  return summary;
 }
-
 /**
  * Ensure the receipts.operation CHECK constraint includes the full set of
  * operation types.  SQLite cannot ALTER a CHECK constraint, so on databases
@@ -235,6 +261,98 @@ function migrateFingerprintColumn(db: Database): void {
   }
 }
 
+function emptyMemoryFingerprintSummary(): MemoryFingerprintMigrationSummary {
+  return {
+    eligibleRows: 0,
+    backfilledRows: 0,
+    preservedRows: 0,
+    activeDuplicateGroups: 0,
+    activeDuplicateRows: 0,
+  };
+}
+
+function scalarNumber(db: Database, sql: string): number {
+  const rows = db.exec(sql);
+  if (!rows.length || !rows[0]!.values.length) return 0;
+  return Number(rows[0]!.values[0]![0] ?? 0);
+}
+
+function migrateMemoryFingerprintBackfill(db: Database): MemoryFingerprintMigrationSummary {
+  const summary = emptyMemoryFingerprintSummary();
+
+  summary.preservedRows = scalarNumber(
+    db,
+    "SELECT COUNT(*) FROM memories WHERE fingerprint IS NOT NULL AND fingerprint <> ''",
+  );
+
+  const stmt = db.prepare(
+    `SELECT id, scope_id, type, content
+     FROM memories
+     WHERE fingerprint IS NULL OR fingerprint = ''`,
+  );
+
+  const rows: Array<{ id: string; scopeId: string; type: string; content: string }> = [];
+  try {
+    while (stmt.step()) {
+      const row = stmt.getAsObject() as Record<string, unknown>;
+      rows.push({
+        id: String(row["id"]),
+        scopeId: String(row["scope_id"]),
+        type: String(row["type"]),
+        content: String(row["content"] ?? ""),
+      });
+    }
+  } finally {
+    stmt.free();
+  }
+
+  summary.eligibleRows = rows.length;
+
+  if (rows.length > 0) {
+    try {
+      db.run("BEGIN TRANSACTION");
+      for (const row of rows) {
+        const fingerprint = computeMemoryFingerprint(row.scopeId, row.type, row.content);
+        db.run(
+          "UPDATE memories SET fingerprint = ? WHERE id = ? AND (fingerprint IS NULL OR fingerprint = '')",
+          [fingerprint, row.id],
+        );
+        summary.backfilledRows += 1;
+      }
+      db.run("COMMIT");
+    } catch (err) {
+      try { db.run("ROLLBACK"); } catch { /* best effort */ }
+      throw err;
+    }
+  }
+
+  const duplicateRows = db.exec(
+    `SELECT COUNT(*) AS duplicate_groups, COALESCE(SUM(group_count), 0) AS duplicate_rows
+     FROM (
+       SELECT COUNT(*) AS group_count
+       FROM memories
+       WHERE status = 'active' AND fingerprint IS NOT NULL AND fingerprint <> ''
+       GROUP BY scope_id, type, fingerprint
+       HAVING COUNT(*) > 1
+     )`,
+  );
+  if (duplicateRows.length && duplicateRows[0]!.values.length) {
+    summary.activeDuplicateGroups = Number(duplicateRows[0]!.values[0]![0] ?? 0);
+    summary.activeDuplicateRows = Number(duplicateRows[0]!.values[0]![1] ?? 0);
+  }
+
+  return summary;
+}
+
+export function formatMigrationSummary(summary: MigrationSummary): string {
+  const fp = summary.memoryFingerprint;
+  return [
+    "Migration summary",
+    `schema: ${summary.fromVersion} -> ${summary.toVersion}${summary.skipped ? " (skipped)" : ""}`,
+    `memory fingerprint: eligible=${fp.eligibleRows}, backfilled=${fp.backfilledRows}, preserved=${fp.preservedRows}`,
+    `active exact duplicate groups: groups=${fp.activeDuplicateGroups}, rows=${fp.activeDuplicateRows}`,
+  ].join("\n");
+}
 /**
  * Add run receipt fields to the receipts table (§34).
  *
@@ -350,8 +468,23 @@ function migrateReceiptsRunFields(db: Database): void {
   }
 }
 
+export let lastMigrationSummary: MigrationSummary | null = null;
+
 export async function initAndMigrate(dbPath?: string): Promise<Database> {
   const db = await initDb(dbPath);
-  runMigrations(db);
+  lastMigrationSummary = runMigrations(db);
   return db;
+}
+
+if (process.argv[1] && fileURLToPath(import.meta.url) === process.argv[1]) {
+  initDb()
+    .then((db) => {
+      const summary = runMigrations(db);
+      persistDb();
+      console.log(formatMigrationSummary(summary));
+    })
+    .catch((err) => {
+      console.error(err instanceof Error ? err.message : String(err));
+      process.exitCode = 1;
+    });
 }

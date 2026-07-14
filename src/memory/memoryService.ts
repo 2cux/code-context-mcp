@@ -15,10 +15,10 @@ import { randomBytes } from "node:crypto";
 import type { Database } from "sql.js";
 import { queryAll, queryOne, runStmt, type SqlValue } from "../storage/db.js";
 import { nowISO } from "../utils/time.js";
-import { fullHash } from "../utils/hash.js";
 import { ReceiptService } from "../receipts/receiptService.js";
 import { isValidTransition } from "./lifecycle.js";
 import { MemoryFtsIndex } from "./memoryFts.js";
+import { computeMemoryFingerprint } from "./fingerprint.js";
 import type {
   MemoryType,
   MemoryStatus,
@@ -44,49 +44,6 @@ function generateMemoryId(): string {
   const ts = Date.now().toString(36);
   const rand = randomBytes(3).toString("hex");
   return `mem_${ts}_${rand}_${seq}`;
-}
-
-// ---------------------------------------------------------------------------
-// Fingerprint
-// ---------------------------------------------------------------------------
-
-/**
- * Normalize content for fingerprinting — conservative, no semantic analysis.
- *
- * Operations:
- *   1. Trim leading/trailing whitespace.
- *   2. Normalize line endings: CRLF → LF, standalone CR → LF.
- *   3. Collapse multiple consecutive blank lines into one.
- *
- * This is intentionally NOT semantic — same content with different formatting
- * will produce different fingerprints.  Only byte-identical (after normalization)
- * content is considered a duplicate.
- */
-function normalizeContent(raw: string): string {
-  return raw
-    .trim()
-    .replace(/\r\n/g, "\n")
-    .replace(/\r/g, "\n")
-    .replace(/\n{3,}/g, "\n\n");
-}
-
-/**
- * Compute a content fingerprint for dedup.
- *
- * Fingerprint = SHA-256(scopeId + "|" + type + "|" + normalizedContent)
- *
- * Only scopeId, type, and normalized content are used — summary, tags,
- * confidence, and other metadata are intentionally excluded so that
- * re-remembering the same core fact with different metadata still dedups.
- */
-function computeFingerprint(
-  scopeId: string,
-  type: string,
-  content: string,
-): string {
-  const normalized = normalizeContent(content);
-  const payload = `${scopeId}|${type}|${normalized}`;
-  return fullHash(payload);
 }
 
 // ---------------------------------------------------------------------------
@@ -129,7 +86,7 @@ export class MemoryService {
    * Always creates a receipt.
    */
   remember(params: SaveMemoryInput): RememberResult {
-    const fingerprint = computeFingerprint(
+    const fingerprint = computeMemoryFingerprint(
       params.scopeId,
       params.type,
       params.content,
