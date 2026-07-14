@@ -6,17 +6,18 @@
  * Meta-gate that orchestrates all release-quality checks and produces
  * a single verdict: pass (all MUST checks pass) or fail (any MUST check fails).
  *
- * Checks (10 categories):
- *   1. TypeScript zero errors        [MUST]  tsc --noEmit
- *   2. Vitest zero failures           [MUST]  vitest run (all test files)
- *   3. Compression Quality Gate       [MUST]  node scripts/release/compression-quality-check.mjs
- *   4. Memory Recall Quality Gate     [MUST]  run recall-related vitest tests + source analysis
- *   5. Fast Path Boundary Gate        [MUST]  node scripts/release/fast-path-boundary-check.mjs
- *   6. Agent mode = 7 tools           [MUST]  verify AGENT_TOOLS in toolMode.ts
- *   7. Dangerous tools not in agent   [MUST]  verify no dangerous tools in AGENT_TOOLS
- *   8. demo / value / doctor runnable [MUST]  spawn CLI and verify success
- *   9. npm pack install + smoke       [MUST]  build → pack → install → CLI + MCP server start
- *  10. README / version / CHANGELOG  [MUST]  cross-reference version strings
+ * Checks (11 categories):
+ *   1. Source reproducibility          [MUST]  clean tracked-source build + quality tests
+ *   2. TypeScript                      [MUST]  tsc --noEmit
+ *   3. Vitest                          [MUST]  vitest run (all test files)
+ *   4. Compression Quality Gate        [MUST]  compression-quality-check.mjs
+ *   5. Memory Recall Quality Gate      [MUST]  focused recall quality test
+ *   6. Fingerprint migration tests     [MUST]  memoryFingerprintMigration.test.ts
+ *   7. Fast Path Boundary Gate         [MUST]  fast-path-boundary-check.mjs
+ *   8. Agent tools and dangerous tools [MUST]  verify the source tool surface
+ *   9. Fresh npm install smoke          [MUST]  clean pack/install/CLI/MCP smoke
+ *  10. demo / value / doctor            [MUST]  run all three CLI commands
+ *  11. Version and documentation       [MUST]  cross-reference release metadata
  *
  * Non-critical performance fluctuations produce WARNINGs but do NOT fail the gate.
  * Warnings must never mask a Direct MCP regression.
@@ -56,6 +57,8 @@ const SRC = path.join(ROOT, "src");
 
 /** @type {CheckResult[]} */
 const checks = [];
+/** @type {Array<{command: string, exitCode: number, ok: boolean, output: string}>} */
+const commandOutputs = [];
 
 /** @type {Array<{file: string, testName: string, assertion: string, error: string}>} */
 let vitestFailures = [];
@@ -98,6 +101,36 @@ function fileExists(relativePath) {
   return fs.existsSync(path.join(ROOT, relativePath));
 }
 
+function isolatedHomeEnv(prefix) {
+  const home = fs.mkdtempSync(path.join(tmpdir(), prefix));
+  const appData = path.join(home, "AppData", "Roaming");
+  const localAppData = path.join(home, "AppData", "Local");
+  fs.mkdirSync(appData, { recursive: true });
+  fs.mkdirSync(localAppData, { recursive: true });
+  return {
+    HOME: home,
+    USERPROFILE: home,
+    APPDATA: appData,
+    LOCALAPPDATA: localAppData,
+    MCP_TOOL_MODE: "agent",
+  };
+}
+
+function summarizeOutput(stdout = "", stderr = "") {
+  const text = `${stdout}\n${stderr}`.replace(/\x1b\[[0-?]*[ -\/]*[@-~]/g, "").trim();
+  if (text.length <= 1200) return text;
+  return `${text.slice(0, 600)}\n… [output truncated] …\n${text.slice(-600)}`;
+}
+
+function recordCommand(command, result) {
+  commandOutputs.push({
+    command,
+    exitCode: result.exitCode ?? result.code ?? (result.ok ? 0 : 1),
+    ok: Boolean(result.ok),
+    output: summarizeOutput(result.stdout, result.stderr || result.error || ""),
+  });
+}
+
 /**
  * Run a command, return { ok, stdout, stderr, exitCode }.
  * @param {string} cmd
@@ -115,15 +148,19 @@ function run(cmd, opts = {}) {
       stdio: ["pipe", "pipe", "pipe"],
       maxBuffer: 10 * 1024 * 1024,
     });
-    return { ok: true, stdout: out, stderr: "", exitCode: 0 };
+    const result = { ok: true, stdout: out, stderr: "", exitCode: 0 };
+    recordCommand(cmd, result);
+    return result;
   } catch (err) {
-    return {
+    const result = {
       ok: false,
       stdout: err.stdout || "",
       stderr: err.stderr || "",
       exitCode: err.status || 1,
       error: err.message,
     };
+    recordCommand(cmd, result);
+    return result;
   }
 }
 
@@ -145,15 +182,19 @@ function runNodeScript(scriptPath, args = [], opts = {}) {
       stdio: ["pipe", "pipe", "pipe"],
       maxBuffer: 10 * 1024 * 1024,
     });
-    return { ok: true, stdout: out, stderr: "", exitCode: 0 };
+    const result = { ok: true, stdout: out, stderr: "", exitCode: 0 };
+    recordCommand(`node ${scriptPath} ${args.join(" ")}`.trim(), result);
+    return result;
   } catch (err) {
-    return {
+    const result = {
       ok: false,
       stdout: err.stdout || "",
       stderr: err.stderr || "",
       exitCode: err.status || 1,
       error: err.message,
     };
+    recordCommand(`node ${scriptPath} ${args.join(" ")}`.trim(), result);
+    return result;
   }
 }
 
@@ -176,10 +217,12 @@ function spawnAndCollect(cmd, args, opts = {}) {
     child.stderr.on("data", (d) => { stderr += d.toString(); });
 
     child.on("close", (code) => {
+      recordCommand([cmd, ...(args || [])].join(" "), { ok: code === 0, code, stdout, stderr });
       resolve({ ok: code === 0, code, stdout, stderr });
     });
 
     child.on("error", (err) => {
+      recordCommand([cmd, ...(args || [])].join(" "), { ok: false, code: -1, stdout, stderr, error: err.message });
       resolve({ ok: false, code: -1, stdout, stderr, error: err.message });
     });
   });
@@ -244,6 +287,22 @@ function extractJson(text) {
   return extractLastJson(text);
 }
 
+function collectVitestFailures(json) {
+  if (!json?.testResults) return;
+  for (const tr of json.testResults) {
+    for (const ar of tr.assertionResults || []) {
+      if (ar.status === "failed") {
+        vitestFailures.push({
+          file: tr.name || "unknown",
+          testName: ar.fullName || [...(ar.ancestorTitles || []), ar.title].join(" > "),
+          assertion: ar.title || "",
+          error: (ar.failureMessages || []).join("\n").slice(0, 1000),
+        });
+      }
+    }
+  }
+}
+
 // ---------------------------------------------------------------------------
 // Timing wrapper
 // ---------------------------------------------------------------------------
@@ -270,11 +329,35 @@ async function timed(checkName, category, severity, fn) {
 }
 
 // ---------------------------------------------------------------------------
-// Check 1: TypeScript zero errors
+// Check 1: Source reproducibility
+// ---------------------------------------------------------------------------
+
+async function checkSourceReproducibility() {
+  const checkName = "1. Source reproducibility";
+  const category = "reproducibility";
+  const severity = "must";
+
+  await timed(checkName, category, severity, async () => {
+    const scriptPath = "scripts/release/source-reproducibility.mjs";
+    if (!fileExists(scriptPath)) {
+      fail(checkName, `Script not found: ${scriptPath}`, category, severity);
+      return;
+    }
+    const r = runNodeScript(scriptPath, [], { timeout: 600000 });
+    if (r.exitCode === 0) {
+      pass(checkName, "clean tracked-source build and quality tests passed", category, severity);
+    } else {
+      fail(checkName, `source reproducibility failed (exit ${r.exitCode})`, category, severity);
+    }
+  });
+}
+
+// ---------------------------------------------------------------------------
+// Check 2: TypeScript zero errors
 // ---------------------------------------------------------------------------
 
 async function checkTypeScript() {
-  const checkName = "1. TypeScript zero errors";
+  const checkName = "2. TypeScript zero errors";
   const category = "build";
   const severity = "must";
 
@@ -290,16 +373,19 @@ async function checkTypeScript() {
 }
 
 // ---------------------------------------------------------------------------
-// Check 2: Vitest zero failures (all test files)
+// Check 3: Vitest zero failures (all test files)
 // ---------------------------------------------------------------------------
 
 async function checkVitest() {
-  const checkName = "2. Vitest zero failures";
+  const checkName = "3. Vitest zero failures";
   const category = "tests";
   const severity = "must";
 
   await timed(checkName, category, severity, async () => {
-    const r = run("npx vitest run --reporter=json 2>&1", { timeout: 300000 });
+    const r = run("npx vitest run --reporter=json 2>&1", {
+      timeout: 300000,
+      env: isolatedHomeEnv("cc-stable-vitest-"),
+    });
 
     // vitest writes JSON to stdout
     const json = extractJson(r.stdout);
@@ -349,11 +435,11 @@ async function checkVitest() {
 }
 
 // ---------------------------------------------------------------------------
-// Check 3: Compression Quality Gate
+// Check 4: Compression Quality Gate
 // ---------------------------------------------------------------------------
 
 async function checkCompressionQuality() {
-  const checkName = "3. Compression Quality Gate";
+  const checkName = "4. Compression Quality Gate";
   const category = "quality";
   const severity = "must";
 
@@ -381,24 +467,24 @@ async function checkCompressionQuality() {
 }
 
 // ---------------------------------------------------------------------------
-// Check 4: Memory Recall Quality Gate
+// Check 5: Memory Recall Quality Gate
 // ---------------------------------------------------------------------------
 
 async function checkMemoryRecallQuality() {
-  const checkName = "4. Memory Recall Quality Gate";
+  const checkName = "5. Memory Recall Quality Gate";
   const category = "quality";
   const severity = "must";
 
   await timed(checkName, category, severity, async () => {
-    // Run memory recall tests specifically
-    const r = run("npx vitest run tests/ --reporter=json 2>&1", { timeout: 300000 });
+    // Run the dedicated quality gate. The full Vitest run is a separate MUST check.
+    const r = run("npx vitest run tests/quality/recallQualityGate.test.ts --reporter=json 2>&1", { timeout: 180000 });
     const json = extractJson(r.stdout);
 
     // Count memory-related test failures
     if (json && json.testResults) {
       const memoryTestFiles = json.testResults.filter((tr) => {
         const name = (tr.name || "").toLowerCase();
-        return name.includes("memory") || name.includes("recall") || name.includes("remember") || name.includes("forget") || name.includes("profile");
+        return name.includes("recallqualitygate");
       });
 
       const failures = memoryTestFiles.reduce((sum, tr) => {
@@ -413,10 +499,7 @@ async function checkMemoryRecallQuality() {
       }
     } else {
       // Fallback: run focused recall tests
-      const focused = run(
-        "npx vitest run --grep \"recall|remember|memory\" --reporter=verbose 2>&1",
-        { timeout: 120000 },
-      );
+      const focused = run("npx vitest run tests/quality/recallQualityGate.test.ts --reporter=verbose 2>&1", { timeout: 180000 });
       if (focused.exitCode === 0 && !focused.stdout.includes("FAIL")) {
         pass(checkName, "Memory/recall focused tests pass", category, severity);
       } else if (focused.exitCode !== 0) {
@@ -436,11 +519,39 @@ async function checkMemoryRecallQuality() {
 }
 
 // ---------------------------------------------------------------------------
-// Check 5: Fast Path Boundary Gate
+// Check 6: Fingerprint migration tests
+// ---------------------------------------------------------------------------
+
+async function checkFingerprintMigration() {
+  const checkName = "6. Fingerprint migration tests";
+  const category = "migration";
+  const severity = "must";
+
+  await timed(checkName, category, severity, async () => {
+    const testFile = "tests/memoryFingerprintMigration.test.ts";
+    if (!fileExists(testFile)) {
+      fail(checkName, `Test file not found: ${testFile}`, category, severity);
+      return;
+    }
+    const r = run("npx vitest run tests/memoryFingerprintMigration.test.ts --reporter=json 2>&1", { timeout: 180000 });
+    const json = extractJson(r.stdout);
+    const failed = json?.numFailedTests ?? (r.exitCode === 0 ? 0 : 1);
+    const passed = json?.numPassedTests ?? 0;
+    if (r.exitCode === 0 && failed === 0) {
+      pass(checkName, `${passed} fingerprint migration tests passed`, category, severity);
+    } else {
+      fail(checkName, `fingerprint migration tests failed: ${failed} failure(s)`, category, severity);
+      collectVitestFailures(json);
+    }
+  });
+}
+
+// ---------------------------------------------------------------------------
+// Check 7: Fast Path Boundary Gate
 // ---------------------------------------------------------------------------
 
 async function checkFastPathBoundary() {
-  const checkName = "5. Fast Path Boundary Gate";
+  const checkName = "7. Fast Path Boundary Gate";
   const category = "boundary";
   const severity = "must";
 
@@ -461,11 +572,11 @@ async function checkFastPathBoundary() {
 }
 
 // ---------------------------------------------------------------------------
-// Check 6: Agent mode = 7 tools
+// Check 8: Agent mode = 7 tools
 // ---------------------------------------------------------------------------
 
 async function checkAgentModeToolCount() {
-  const checkName = "6. Agent mode = 7 tools";
+  const checkName = "8. Agent mode = 7 tools";
   const category = "tool-surface";
   const severity = "must";
 
@@ -491,11 +602,11 @@ async function checkAgentModeToolCount() {
 }
 
 // ---------------------------------------------------------------------------
-// Check 7: Dangerous tools not in agent mode
+// Check 9: Dangerous tools not in agent mode
 // ---------------------------------------------------------------------------
 
 async function checkDangerousToolsHidden() {
-  const checkName = "7. Dangerous tools not in agent mode";
+  const checkName = "8. Dangerous tools not in agent mode";
   const category = "tool-surface";
   const severity = "must";
 
@@ -533,11 +644,11 @@ async function checkDangerousToolsHidden() {
 }
 
 // ---------------------------------------------------------------------------
-// Check 8: demo / value / doctor runnable
+// Check 10: demo / value / doctor runnable
 // ---------------------------------------------------------------------------
 
 async function checkCliCommandsRunnable() {
-  const checkName = "8. demo / value / doctor runnable";
+  const checkName = "10. demo / value / doctor runnable";
   const category = "cli";
   const severity = "must";
 
@@ -556,10 +667,21 @@ async function checkCliCommandsRunnable() {
 
     let allOk = true;
     const details = [];
+    const cliHome = fs.mkdtempSync(path.join(tmpdir(), "cc-stable-cli-"));
+    const cliEnv = {
+      HOME: cliHome,
+      USERPROFILE: cliHome,
+      APPDATA: path.join(cliHome, "AppData", "Roaming"),
+      LOCALAPPDATA: path.join(cliHome, "AppData", "Local"),
+      MCP_TOOL_MODE: "agent",
+    };
+    fs.mkdirSync(cliEnv.APPDATA, { recursive: true });
+    fs.mkdirSync(cliEnv.LOCALAPPDATA, { recursive: true });
 
     for (const cmd of commands) {
       const r = await spawnAndCollect("node", ["dist/cli/index.js", ...cmd.args], {
         timeout: 30000,
+        env: cliEnv,
       });
       if (cmd.name === "doctor") {
         // Doctor's exit status is derived from the report. Parse and verify
@@ -601,11 +723,23 @@ async function checkCliCommandsRunnable() {
 // ---------------------------------------------------------------------------
 
 async function checkNpmPackSmoke() {
-  const checkName = "9. npm pack install + CLI / MCP server startable";
+  const checkName = "9. Fresh npm install smoke";
   const category = "packaging";
   const severity = "must";
 
-  await timed(checkName, category, severity, async () => {
+ await timed(checkName, category, severity, async () => {
+    const smokeScript = "scripts/release/clean-install-smoke.mjs";
+    if (!fileExists(smokeScript)) {
+      fail(checkName, "Script not found: " + smokeScript, category, severity);
+      return;
+    }
+    const smoke = runNodeScript(smokeScript, [], { timeout: 600000 });
+    if (smoke.exitCode === 0) {
+      pass(checkName, "fresh HOME npm pack/install/CLI/MCP smoke passed", category, severity);
+    } else {
+      fail(checkName, "fresh npm install smoke failed (exit " + smoke.exitCode + ")", category, severity);
+    }
+    return;
     // Step 1: Ensure dist exists
     if (!fileExists("dist/index.js")) {
       fail(checkName, "dist/index.js not found — run build first", category, severity);
@@ -803,11 +937,11 @@ async function checkNpmPackSmoke() {
 }
 
 // ---------------------------------------------------------------------------
-// Check 10: README / version / CHANGELOG consistency
+// Check 11: README / version / CHANGELOG consistency
 // ---------------------------------------------------------------------------
 
 async function checkVersionConsistency() {
-  const checkName = "10. README / version / CHANGELOG consistency";
+  const checkName = "11. Version and documentation consistency";
   const category = "docs";
   const severity = "must";
 
@@ -881,6 +1015,15 @@ async function checkVersionConsistency() {
 // Report generator
 // ---------------------------------------------------------------------------
 
+function getGitMetadata() {
+  const commit = run("git rev-parse HEAD", { timeout: 15000 });
+  const dirty = run("git status --porcelain", { timeout: 15000 });
+  return {
+    commit: commit.ok ? commit.stdout.trim() : "unknown",
+    dirty: dirty.ok ? dirty.stdout.trim().length > 0 : true,
+  };
+}
+
 function buildJsonReport(verdict, startTime) {
   const totalMs = Math.round(performance.now() - startTime);
 
@@ -888,7 +1031,9 @@ function buildJsonReport(verdict, startTime) {
   const shouldChecks = checks.filter((c) => c.severity === "should");
 
   return {
+    generatedAt: new Date().toISOString(),
     generated: new Date().toISOString(),
+    git: getGitMetadata(),
     project: "code-context-mcp",
     version: (() => {
       try { return readJson("package.json").version; } catch { return "unknown"; }
@@ -905,6 +1050,7 @@ function buildJsonReport(verdict, startTime) {
       totalDurationMs: totalMs,
     },
     checks,
+    commandOutputs,
     testFailures: vitestFailures.length > 0 ? vitestFailures : undefined,
     verdictRules: {
       pass: "All MUST checks pass. Ready for stable release.",
@@ -912,16 +1058,18 @@ function buildJsonReport(verdict, startTime) {
       fail: "One or more MUST checks FAILED. Do NOT release until resolved.",
       categories: {
         must: [
+          "Source reproducibility",
           "TypeScript zero errors",
           "Vitest zero failures (all test files)",
           "Compression Quality Gate pass",
           "Memory Recall Quality Gate pass",
+          "Fingerprint migration tests",
           "Fast Path Boundary Gate pass",
           "Agent mode = 7 tools",
           "Dangerous tools not in agent mode",
+          "Fresh npm install smoke",
           "demo / value / doctor runnable",
-          "npm pack install + CLI / MCP server startable",
-          "README / version / CHANGELOG consistency",
+          "Version and documentation consistency",
         ],
         should: [
           "Performance fluctuations (non-critical, does not block release)",
@@ -939,7 +1087,9 @@ function buildMarkdownReport(report) {
 
   lines.push("# CodeContext Stable Release Gate");
   lines.push("");
-  lines.push(`**Generated**: ${report.generated}`);
+  lines.push(`**GeneratedAt**: ${report.generatedAt}`);
+  lines.push(`**Git commit**: ${report.git.commit}`);
+  lines.push(`**Git dirty**: ${report.git.dirty}`);
   lines.push(`**Project**: ${report.project} v${report.version}`);
   lines.push("");
   lines.push(`## Verdict: **${report.verdict}** ${statusIcon[report.verdict.toLowerCase()] || (report.verdict === "PASS" ? "✅" : "❌")}`);
@@ -1010,8 +1160,18 @@ function buildMarkdownReport(report) {
     lines.push("");
   }
 
-  // Detailed check results (for failures)
-  const failedChecks = report.checks.filter((c) => c.status === "fail");
+ // Detailed check results (for failures)
+  lines.push("## Subcommand Output Summaries");
+  lines.push("");
+  lines.push("| Command | Exit | Status | Output summary |");
+  lines.push("|---|---:|---|---|");
+  for (const command of report.commandOutputs) {
+    const output = (command.output || "").replace(/\r?\n/g, " ").replace(/\|/g, "\\|");
+    lines.push(`| ${command.command} | ${command.exitCode} | ${command.ok ? "PASS" : "FAIL"} | ${output.slice(0, 240)} |`);
+  }
+  lines.push("");
+
+ const failedChecks = report.checks.filter((c) => c.status === "fail");
   if (failedChecks.length > 0) {
     lines.push("## ❌ Failed Checks (Detail)");
     lines.push("");
@@ -1091,17 +1251,19 @@ async function main() {
   console.log("═══════════════════════════════════════════");
   console.log("");
 
-  // Run all checks sequentially so output is readable
-  await checkTypeScript();             // 1
-  await checkVitest();                 // 2
-  await checkCompressionQuality();     // 3
-  await checkMemoryRecallQuality();    // 4
-  await checkFastPathBoundary();       // 5
-  await checkAgentModeToolCount();     // 6
-  await checkDangerousToolsHidden();   // 7
-  await checkCliCommandsRunnable();    // 8
+ // Run all checks sequentially so output is readable
+  await checkSourceReproducibility(); // 1
+ await checkTypeScript();             // 1
+  await checkVitest();                 // 3
+  await checkCompressionQuality();     // 4
+  await checkMemoryRecallQuality();    // 5
+  await checkFingerprintMigration();  // 6
+  await checkFastPathBoundary();       // 7
+  await checkAgentModeToolCount();     // 8
+  await checkDangerousToolsHidden();   // 9
   await checkNpmPackSmoke();           // 9
-  await checkVersionConsistency();     // 10
+  await checkCliCommandsRunnable();    // 10
+  await checkVersionConsistency();     // 11
 
   // Print per-check results
   console.log("");

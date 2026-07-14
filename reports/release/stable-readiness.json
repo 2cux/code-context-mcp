@@ -1,35 +1,225 @@
 {
-  "generated": "2026-07-14T08:21:45.000Z",
+  "generatedAt": "2026-07-14T09:34:14.681Z",
+  "generated": "2026-07-14T09:34:14.684Z",
+  "git": {
+    "commit": "2e0a5f21f157762db581d17e6b92ee0f537dd987",
+    "dirty": true
+  },
   "project": "code-context-mcp",
   "version": "1.0.0",
   "verdict": "PASS",
   "summary": {
-    "total": 11,
-    "pass": 11,
+    "total": 12,
+    "pass": 12,
     "warning": 0,
     "fail": 0,
-    "mustPass": 11,
+    "mustPass": 12,
     "mustFail": 0,
-    "mustWarning": 0
+    "mustWarning": 0,
+    "totalDurationMs": 122295
   },
   "checks": [
-    { "id": 1, "check": "Git tracked source complete and clean-source build", "status": "pass", "severity": "must", "category": "source", "detail": "Initial git status --short was empty; 232 tracked source/doc/config files enumerated; clean archive from HEAD installed dependencies and npm run build completed successfully.", "commands": ["git status --short", "git ls-files src tests scripts package.json tsconfig.json vitest.config.ts README.md CHANGELOG.md RELEASE_NOTES.md docs | Measure-Object", "git archive --format=zip HEAD; Expand-Archive; npm install; npm run build"] },
-    { "id": 2, "check": "TypeScript zero errors", "status": "pass", "severity": "must", "category": "build", "detail": "tsc --noEmit returned zero errors.", "commands": ["node scripts/release/stable-readiness-check.mjs"] },
-    { "id": 3, "check": "Full Vitest zero failures", "status": "pass", "severity": "must", "category": "tests", "detail": "1586 tests passed, 60 test files, 0 failures.", "commands": ["node scripts/release/stable-readiness-check.mjs"] },
-    { "id": 4, "check": "Compression Quality Gate", "status": "pass", "severity": "must", "category": "quality", "detail": "Compression quality gate passed: 8/8 fixtures passed.", "commands": ["node scripts/release/stable-readiness-check.mjs", "node scripts/release/compression-quality-check.mjs"] },
-    { "id": 5, "check": "Memory Recall Quality Gate", "status": "pass", "severity": "must", "category": "quality", "detail": "Memory/recall quality gate passed: 12 memory/recall test files, 0 failures.", "commands": ["node scripts/release/stable-readiness-check.mjs"] },
-    { "id": 6, "check": "Fingerprint migration tests", "status": "pass", "severity": "must", "category": "migration", "detail": "tests/memoryFingerprintMigration.test.ts passed: 4 tests, 1 test file, 0 failures.", "commands": ["node node_modules/vitest/vitest.mjs run tests/memoryFingerprintMigration.test.ts --reporter=verbose"] },
-    { "id": 7, "check": "Fast Path Boundary Gate", "status": "pass", "severity": "must", "category": "boundary", "detail": "Fast path boundary gate passed.", "commands": ["node scripts/release/stable-readiness-check.mjs", "node scripts/release/fast-path-boundary-check.mjs"] },
-    { "id": 8, "check": "Agent mode remains 7 tools", "status": "pass", "severity": "must", "category": "tool-surface", "detail": "AGENT_TOOLS has exactly 7 entries: current_scope, compress_context, retrieve_original, remember_context, recall_context, forget_context, run_context_flow.", "commands": ["node scripts/release/stable-readiness-check.mjs"] },
-    { "id": 9, "check": "demo, value, doctor runnable", "status": "pass", "severity": "must", "category": "cli", "detail": "doctor: ok; demo: ok; value: ok.", "commands": ["node scripts/release/stable-readiness-check.mjs"] },
-    { "id": 10, "check": "npm pack CLI and MCP server startable", "status": "pass", "severity": "must", "category": "packaging", "detail": "npm pack dry-run clean; npm pack install smoke passed; CLI started and returned v1.0.0; MCP server started and exposed 7 tools.", "commands": ["node scripts/release/stable-readiness-check.mjs"] },
-    { "id": 11, "check": "Version and documentation consistency", "status": "pass", "severity": "must", "category": "docs", "detail": "package.json, CLI/server version references, README, and CHANGELOG are consistent at v1.0.0.", "commands": ["node scripts/release/stable-readiness-check.mjs"] }
+    {
+      "check": "1. Source reproducibility",
+      "status": "pass",
+      "detail": "clean tracked-source build and quality tests passed",
+      "category": "reproducibility",
+      "severity": "must",
+      "durationMs": 15769
+    },
+    {
+      "check": "2. TypeScript zero errors",
+      "status": "pass",
+      "detail": "tsc --noEmit returned zero errors",
+      "category": "build",
+      "severity": "must",
+      "durationMs": 2415
+    },
+    {
+      "check": "3. Vitest zero failures",
+      "status": "pass",
+      "detail": "1596 tests passed, 63 test files, 0 failures",
+      "category": "tests",
+      "severity": "must",
+      "durationMs": 51349
+    },
+    {
+      "check": "4. Compression Quality Gate",
+      "status": "pass",
+      "detail": "Compression quality: 8/8 passed",
+      "category": "quality",
+      "severity": "must",
+      "durationMs": 348
+    },
+    {
+      "check": "5. Memory Recall Quality Gate",
+      "status": "pass",
+      "detail": "1 memory/recall test files, 0 failures",
+      "category": "quality",
+      "severity": "must",
+      "durationMs": 2724
+    },
+    {
+      "check": "6. Fingerprint migration tests",
+      "status": "pass",
+      "detail": "4 fingerprint migration tests passed",
+      "category": "migration",
+      "severity": "must",
+      "durationMs": 2700
+    },
+    {
+      "check": "7. Fast Path Boundary Gate",
+      "status": "pass",
+      "detail": "Fast path boundary gate passed",
+      "category": "boundary",
+      "severity": "must",
+      "durationMs": 5557
+    },
+    {
+      "check": "8. Agent mode = 7 tools",
+      "status": "pass",
+      "detail": "AGENT_TOOLS has exactly 7 entries: current_scope, compress_context, retrieve_original, remember_context, recall_context, forget_context, run_context_flow",
+      "category": "tool-surface",
+      "severity": "must",
+      "durationMs": 1
+    },
+    {
+      "check": "8. Dangerous tools not in agent mode",
+      "status": "pass",
+      "detail": "Dangerous tools (delete_original, cleanup_originals) excluded from AGENT_TOOLS",
+      "category": "tool-surface",
+      "severity": "must",
+      "durationMs": 1
+    },
+    {
+      "check": "9. Fresh npm install smoke",
+      "status": "pass",
+      "detail": "fresh HOME npm pack/install/CLI/MCP smoke passed",
+      "category": "packaging",
+      "severity": "must",
+      "durationMs": 37883
+    },
+    {
+      "check": "10. demo / value / doctor runnable",
+      "status": "pass",
+      "detail": "doctor: allPass=true; demo: ok; value: ok",
+      "category": "cli",
+      "severity": "must",
+      "durationMs": 3542
+    },
+    {
+      "check": "11. Version and documentation consistency",
+      "status": "pass",
+      "detail": "All sources consistent at v1.0.0",
+      "category": "docs",
+      "severity": "must",
+      "durationMs": 3
+    }
   ],
-  "runs": [
-    { "name": "Stable release gate", "command": "node scripts/release/stable-readiness-check.mjs", "environment": "non-sandbox", "exitCode": 0, "durationSeconds": 157.3, "verdict": "PASS", "notes": "The first sandboxed run failed only on writes to C:\\Users\\Lenovo and npm cache. The non-sandbox run is the final release result." },
-    { "name": "Fingerprint migration focused test", "command": "node node_modules/vitest/vitest.mjs run tests/memoryFingerprintMigration.test.ts --reporter=verbose", "exitCode": 0, "result": "4 passed, 0 failed" },
-    { "name": "Clean-source build", "command": "git archive HEAD -> D:\\tmp clean tree; npm install; npm run build", "exitCode": 0, "result": "dependencies installed and tsc build passed", "tempDir": "D:\\tmp\\codecontext-clean-dfd10e2e06d544c4baa26119b1cf7c0c" }
+  "commandOutputs": [
+    {
+      "command": "node scripts/release/source-reproducibility.mjs",
+      "exitCode": 0,
+      "ok": true,
+      "output": "CodeContext MCP — Source Reproducibility Check\n\n  Verify required source dirs are Git-tracked... ✅ 107ms\n  Copy git ls-files to temp directory... ✅ 1998ms\n  pnpm install --frozen-lockfile... ✅ 2914ms\n  Build (tsc)... ✅ 3182ms\n  npx vitest run tests/quality... ✅ 3143ms\n\n5 passed, 0 failed\nCleaned up C:\\Users\\Lenovo\\AppData\\Local\\Temp\\codecontext-clean-1784021532602"
+    },
+    {
+      "command": "npx tsc --noEmit",
+      "exitCode": 0,
+      "ok": true,
+      "output": ""
+    },
+    {
+      "command": "npx vitest run --reporter=json 2>&1",
+      "exitCode": 0,
+      "ok": true,
+      "output": "{\"numTotalTestSuites\":543,\"numPassedTestSuites\":543,\"numFailedTestSuites\":0,\"numPendingTestSuites\":0,\"numTotalTests\":1624,\"numPassedTests\":1596,\"numFailedTests\":0,\"numPendingTests\":28,\"numTodoTests\":0,\"snapshot\":{\"added\":0,\"failure\":false,\"filesAdded\":0,\"filesRemoved\":0,\"filesRemovedList\":[],\"filesUnmatched\":0,\"filesUpdated\":0,\"matched\":0,\"total\":0,\"unchecked\":0,\"uncheckedKeysByFile\":[],\"unmatched\":0,\"updated\":0,\"didUpdate\":false},\"startTime\":1784021552018,\"success\":true,\"testResults\":[{\"assertionResults\":[{\"ancestorTitles\":[\"scope command\"],\"fullName\":\"scope command returns a valid scopeId fo\n… [output truncated] …\n Fast Path — No Tool Mode Impact resources and prompts work independently of tool mode\",\"status\":\"passed\",\"title\":\"resources and prompts work independently of tool mode\",\"duration\":10.777399999999943,\"failureMessages\":[],\"meta\":{}}],\"startTime\":1784021558107,\"endTime\":1784021561917.7773,\"status\":\"passed\",\"message\":\"\",\"name\":\"D:/project/CodeContext/tests/mcp/serverIntegration.test.ts\"}]}\nnpm notice\nnpm notice New minor version of npm available! 11.6.2 -> 11.18.0\nnpm notice Changelog: https://github.com/npm/cli/releases/tag/v11.18.0\nnpm notice To update run: npm install -g npm@11.18.0\nnpm notice"
+    },
+    {
+      "command": "node scripts/release/compression-quality-check.mjs",
+      "exitCode": 0,
+      "ok": true,
+      "output": "PASS test_output\n  key facts:       PASS 11/11\n  no invention:    PASS 0 invented\n  token savings:   PASS ratio=0.335 need>=0.300 (345/1030 tokens)\n  retrieval proof: PASS length=2544/2544 sha256=PASS\nPASS log\n  key facts:       PASS 13/13\n  no invention:    PASS 0 invented\n  token savings:   PASS ratio=0.101 need>=0.100 (87/865 tokens)\n  retrieval proof: PASS length=2389/2389 sha256=PASS\nPASS command_output\n  key facts:       PASS 15/15\n  no invention:    PASS 0 invented\n  token savings:   PASS ratio=0.000 need>=0.000 (0/291 tokens)\n  retrieval proof: PASS length=1034/1034 sha256=PASS\nPASS co\n… [output truncated] …\ns:       PASS 9/9\n  no invention:    PASS 0 invented\n  token savings:   PASS ratio=0.492 need>=0.400 (390/792 tokens)\n  retrieval proof: PASS length=3362/3362 sha256=PASS\nPASS rag_chunk\n  key facts:       PASS 9/9\n  no invention:    PASS 0 invented\n  token savings:   PASS ratio=0.440 need>=0.350 (346/787 tokens)\n  retrieval proof: PASS length=2710/2710 sha256=PASS\nPASS conversation_history\n  key facts:       PASS 10/10\n  no invention:    PASS 0 invented\n  token savings:   PASS ratio=0.575 need>=0.500 (655/1139 tokens)\n  retrieval proof: PASS length=4646/4646 sha256=PASS\n\n8/8 passed, 0/8 failed"
+    },
+    {
+      "command": "npx vitest run tests/quality/recallQualityGate.test.ts --reporter=json 2>&1",
+      "exitCode": 0,
+      "ok": true,
+      "output": "{\"numTotalTestSuites\":8,\"numPassedTestSuites\":8,\"numFailedTestSuites\":0,\"numPendingTestSuites\":0,\"numTotalTests\":53,\"numPassedTests\":53,\"numFailedTests\":0,\"numPendingTests\":0,\"numTodoTests\":0,\"snapshot\":{\"added\":0,\"failure\":false,\"filesAdded\":0,\"filesRemoved\":0,\"filesRemovedList\":[],\"filesUnmatched\":0,\"filesUpdated\":0,\"matched\":0,\"total\":0,\"unchecked\":0,\"uncheckedKeysByFile\":[],\"unmatched\":0,\"updated\":0,\"didUpdate\":false},\"startTime\":1784021603713,\"success\":true,\"testResults\":[{\"assertionResults\":[{\"ancestorTitles\":[\"Quality Gate — Recall@1\"],\"fullName\":\"Quality Gate — Recall@1 \\\"project_rule:\n… [output truncated] …\n\"Quality Gate — Duplicate Result IDs no duplicate memory IDs in any result set\",\"status\":\"passed\",\"title\":\"no duplicate memory IDs in any result set\",\"duration\":11.416799999999967,\"failureMessages\":[],\"meta\":{}},{\"ancestorTitles\":[\"Quality Gate — Overall Verdict\"],\"fullName\":\"Quality Gate — Overall Verdict all thresholds pass\",\"status\":\"passed\",\"title\":\"all thresholds pass\",\"duration\":0.45909999999980755,\"failureMessages\":[],\"meta\":{}}],\"startTime\":1784021604833,\"endTime\":1784021604877.459,\"status\":\"passed\",\"message\":\"\",\"name\":\"D:/project/CodeContext/tests/quality/recallQualityGate.test.ts\"}]}"
+    },
+    {
+      "command": "npx vitest run tests/memoryFingerprintMigration.test.ts --reporter=json 2>&1",
+      "exitCode": 0,
+      "ok": true,
+      "output": "{\"numTotalTestSuites\":2,\"numPassedTestSuites\":2,\"numFailedTestSuites\":0,\"numPendingTestSuites\":0,\"numTotalTests\":4,\"numPassedTests\":4,\"numFailedTests\":0,\"numPendingTests\":0,\"numTodoTests\":0,\"snapshot\":{\"added\":0,\"failure\":false,\"filesAdded\":0,\"filesRemoved\":0,\"filesRemovedList\":[],\"filesUnmatched\":0,\"filesUpdated\":0,\"matched\":0,\"total\":0,\"unchecked\":0,\"uncheckedKeysByFile\":[],\"unmatched\":0,\"updated\":0,\"didUpdate\":false},\"startTime\":1784021606468,\"success\":true,\"testResults\":[{\"assertionResults\":[{\"ancestorTitles\":[\"Memory fingerprint migration\"],\"fullName\":\"Memory fingerprint migration upgrade\n… [output truncated] …\ns\":\"passed\",\"title\":\"does not overwrite an existing fingerprint\",\"duration\":8.827200000000062,\"failureMessages\":[],\"meta\":{}},{\"ancestorTitles\":[\"Memory fingerprint migration\"],\"fullName\":\"Memory fingerprint migration lets new remember calls deduplicate against upgraded old records\",\"status\":\"passed\",\"title\":\"lets new remember calls deduplicate against upgraded old records\",\"duration\":8.593599999999924,\"failureMessages\":[],\"meta\":{}}],\"startTime\":1784021607498,\"endTime\":1784021607574.5935,\"status\":\"passed\",\"message\":\"\",\"name\":\"D:/project/CodeContext/tests/memoryFingerprintMigration.test.ts\"}]}"
+    },
+    {
+      "command": "node scripts/release/fast-path-boundary-check.mjs",
+      "exitCode": 0,
+      "ok": true,
+      "output": "═══════════════════════════════════════════\n  Fast Path Boundary Release Gate\n  Verdict: PASS\n  Pass: 29  Warning: 0  Fail: 0\n═══════════════════════════════════════════\n  Report: reports\\release\\fast-path-boundary-check.json\n  Report: reports\\release\\fast-path-boundary-check.md\n═══════════════════════════════════════════"
+    },
+    {
+      "command": "node scripts/release/clean-install-smoke.mjs",
+      "exitCode": 0,
+      "ok": true,
+      "output": "CodeContext MCP - Fresh Install Package Smoke\n\n  Build package artifacts... OK 3521ms\n  npm pack... OK 1850ms\n  Install packed tgz in temporary project... OK 29660ms\n  Isolation preflight: fresh HOME and empty database directory... OK 1ms\n  code-context --version... OK 250ms\n  code-context doctor --json... OK 582ms\n  code-context demo --json... OK 1068ms\n  code-context value --json... OK 392ms\n  code-context-server first startup... OK 429ms\n  Isolation postflight: database created only under fresh HOME... OK 1ms\n\n10 passed, 0 failed"
+    },
+    {
+      "command": "node dist/cli/index.js doctor",
+      "exitCode": 0,
+      "ok": true,
+      "output": "{\n  \"timestamp\": \"2026-07-14T09:34:11.808Z\",\n  \"nodeVersion\": \"v24.13.0\",\n  \"platform\": \"win32 x64\",\n  \"checks\": [\n    {\n      \"name\": \"node-version\",\n      \"label\": \"Node version\",\n      \"status\": \"pass\",\n      \"message\": \"v24.13.0 (>= 18.0.0)\"\n    },\n    {\n      \"name\": \"db-dir-writable\",\n      \"label\": \"Database directory writable\",\n      \"status\": \"pass\",\n      \"message\": \"C:\\\\Users\\\\Lenovo\\\\AppData\\\\Local\\\\Temp\\\\cc-stable-cli-aqb23K\\\\.code-context-mcp\"\n    },\n    {\n      \"name\": \"migration\",\n      \"label\": \"Schema migration\",\n      \"status\": \"pass\",\n      \"message\": \"7 tables (scopes, com\n… [output truncated] …\n\n      \"name\": \"agent-tools\",\n      \"label\": \"Agent mode tool count\",\n      \"status\": \"pass\",\n      \"message\": \"7 tools exposed in agent mode\",\n      \"detail\": \"compress_context, current_scope, forget_context, recall_context, remember_context, retrieve_original, run_context_flow\"\n    }\n  ],\n  \"allPass\": true,\n  \"mcpConfig\": {\n    \"agent\": {\n      \"command\": \"code-context-server\",\n      \"args\": [],\n      \"env\": {\n        \"MCP_TOOL_MODE\": \"agent\"\n      }\n    },\n    \"dev\": {\n      \"command\": \"code-context-server\",\n      \"args\": [],\n      \"env\": {\n        \"MCP_TOOL_MODE\": \"dev\"\n      }\n    }\n  }\n}"
+    },
+    {
+      "command": "node dist/cli/index.js demo",
+      "exitCode": 0,
+      "ok": true,
+      "output": "{\n  \"reportPath\": \"D:\\\\project\\\\CodeContext\\\\reports\\\\demo\\\\first-run-value.md\",\n  \"jsonPath\": \"D:\\\\project\\\\CodeContext\\\\reports\\\\demo\\\\first-run-value.json\",\n  \"summary\": {\n    \"compress\": \"5862 tokens saved (86.5% ratio)\",\n    \"remember\": \"saved memory mem_mrkgfhna_e31b4a_000001\",\n    \"recall\": \"found 1 result(s) for \\\"What package manager does this project use? Which \\\"\",\n    \"retrieve\": \"recovered 16484 chars from original\"\n  }\n}"
+    },
+    {
+      "command": "node dist/cli/index.js value",
+      "exitCode": 0,
+      "ok": true,
+      "output": "{\n  \"scopeId\": \"repo_ce1c6bc9\",\n  \"summary\": {\n    \"totalCompressions\": 1,\n    \"totalEstimatedTokensSaved\": 5862,\n    \"averageCompressionRatio\": 0.8646,\n    \"cacheHits\": 0,\n    \"totalRetrieves\": 0,\n    \"memoriesSaved\": 1,\n    \"memoriesRecalled\": 1,\n    \"memoriesForgotten\": 0,\n    \"recoverableOriginals\": 1,\n    \"lastActivityAt\": \"2026-07-14T09:34:13.820Z\"\n  },\n  \"reportPaths\": {\n    \"markdown\": \"D:\\\\project\\\\CodeContext\\\\reports\\\\usage\\\\value-report.md\",\n    \"json\": \"D:\\\\project\\\\CodeContext\\\\reports\\\\usage\\\\value-report.json\"\n  },\n  \"message\": \"Value report generated. Total tokens saved: 5,862\"\n}"
+    },
+    {
+      "command": "git rev-parse HEAD",
+      "exitCode": 0,
+      "ok": true,
+      "output": "2e0a5f21f157762db581d17e6b92ee0f537dd987"
+    },
+    {
+      "command": "git status --porcelain",
+      "exitCode": 0,
+      "ok": true,
+      "output": "M artifacts/check-report.json\n M artifacts/check-report.md\n M reports/demo/first-run-value.json\n M reports/demo/first-run-value.md\n M reports/release/fast-path-boundary-check.json\n M reports/release/fast-path-boundary-check.md\n M reports/release/fresh-install-smoke.json\n M reports/release/fresh-install-smoke.md\n M reports/release/source-reproducibility.json\n M reports/release/source-reproducibility.md\n M reports/release/stable-readiness.json\n M reports/release/stable-readiness.md\n M reports/usage/value-report.json\n M reports/usage/value-report.md\n M scripts/release/stable-readiness-check.mjs"
+    }
   ],
-  "nonScope": ["npm publish was not executed", "git tag was not created"],
-  "verdictRules": { "pass": "All MUST checks pass. Ready for stable release.", "fail": "Any MUST check failure sets verdict=FAIL." }
+  "verdictRules": {
+    "pass": "All MUST checks pass. Ready for stable release.",
+    "warning": "All MUST checks pass but one or more SHOULD checks are warnings. Review before release.",
+    "fail": "One or more MUST checks FAILED. Do NOT release until resolved.",
+    "categories": {
+      "must": [
+        "Source reproducibility",
+        "TypeScript zero errors",
+        "Vitest zero failures (all test files)",
+        "Compression Quality Gate pass",
+        "Memory Recall Quality Gate pass",
+        "Fingerprint migration tests",
+        "Fast Path Boundary Gate pass",
+        "Agent mode = 7 tools",
+        "Dangerous tools not in agent mode",
+        "Fresh npm install smoke",
+        "demo / value / doctor runnable",
+        "Version and documentation consistency"
+      ],
+      "should": [
+        "Performance fluctuations (non-critical, does not block release)",
+        "Documentation warnings",
+        "Cache hit latency"
+      ]
+    }
+  }
 }
