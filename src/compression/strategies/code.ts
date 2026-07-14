@@ -417,6 +417,17 @@ function buildCompressedOutput(extracted: ExtractedCodeInfo): string[] {
   parts.push("```");
   parts.push("");
 
+  // TODO / FIXME / HACK — must appear before types so they survive token trimming
+  if (extracted.todoFixmes.length > 0) {
+    parts.push("### TODO / FIXME / HACK");
+    parts.push("```");
+    for (const td of unique(extracted.todoFixmes).slice(0, 15)) {
+      parts.push(td);
+    }
+    parts.push("```");
+    parts.push("");
+  }
+
   // Types / Interfaces
   parts.push("### Types / Interfaces");
   parts.push("```ts");
@@ -449,17 +460,6 @@ function buildCompressedOutput(extracted: ExtractedCodeInfo): string[] {
   parts.push("```");
   parts.push("");
 
-  // TODO/FIXME
-  if (extracted.todoFixmes.length > 0) {
-    parts.push("### TODO / FIXME / HACK");
-    parts.push("```");
-    for (const td of unique(extracted.todoFixmes).slice(0, 15)) {
-      parts.push(td);
-    }
-    parts.push("```");
-    parts.push("");
-  }
-
   // Relevant Blocks (error handling, auth, etc.)
   if (extracted.relevantBlocks.length > 0) {
     parts.push("### Relevant Blocks (error handling / auth / queries)");
@@ -486,12 +486,18 @@ function buildCompressedOutput(extracted: ExtractedCodeInfo): string[] {
 // ---------------------------------------------------------------------------
 
 function trimCodeOutput(extracted: ExtractedCodeInfo, maxTokens: number): string {
+  // Pre-compute unique deduplicated arrays so slicing picks representative items
+  // instead of just the first N raw entries (which may all be the same category).
+  const uPublicAPIs = unique(extracted.publicAPIs);
+  const uTodoFixmes = unique(extracted.todoFixmes);
+  const uImports = unique(extracted.imports);
+
   // Progressively trim less-essential sections, but always keep types, TODOs, and function signatures
   const strategies = [
     extracted,
-    { ...extracted, imports: extracted.imports.slice(0, 10), publicAPIs: extracted.publicAPIs.slice(0, 15), relevantBlocks: [] },
-    { ...extracted, imports: extracted.imports.slice(0, 5), publicAPIs: extracted.publicAPIs.slice(0, 8), typeDefs: extracted.typeDefs.slice(0, 5), relevantBlocks: [] },
-    { ...extracted, imports: extracted.imports.slice(0, 3), publicAPIs: extracted.publicAPIs.slice(0, 3), typeDefs: extracted.typeDefs.slice(0, 2), todoFixmes: extracted.todoFixmes.slice(0, 3), relevantBlocks: [] },
+    { ...extracted, imports: uImports.slice(0, 10), publicAPIs: uPublicAPIs.slice(0, 15), todoFixmes: uTodoFixmes, relevantBlocks: [] },
+    { ...extracted, imports: uImports.slice(0, 5), publicAPIs: uPublicAPIs.slice(0, 8), typeDefs: extracted.typeDefs.slice(0, 5), todoFixmes: uTodoFixmes.slice(0, 6), relevantBlocks: [] },
+    { ...extracted, imports: uImports.slice(0, 3), publicAPIs: uPublicAPIs.slice(0, 5), typeDefs: extracted.typeDefs.slice(0, 2), todoFixmes: uTodoFixmes.slice(0, 4), relevantBlocks: [] },
   ];
 
   for (const strategy of strategies) {

@@ -1,55 +1,55 @@
 # CodeContext Usage Value Report
 
-Generated: 2026-07-08T02:03:28.537Z
+Generated: 2026-07-08T05:31:01.272Z
 
 ## Value Summary
 
-- **Total Token Saved**: 175,860
-- **Average Compression Ratio**: 24.7%
+- **Total Token Saved**: 35,172
+- **Average Compression Ratio**: 28.8%
 - **Recoverable Originals**: 3
-- **Memory Count**: 252 saved, 141 recalled
-- **Last Activity**: 2026-07-08 02:03:27
+- **Memory Count**: 63 saved, 33 recalled
+- **Last Activity**: 2026-07-08 05:31:00
 
 ## Retrieval Trust
 
 - **Original Records Count**: 3
-- **Retrieved Records Count**: 13
-- **Latest Retrieve Proof**: `orig_mrbfns7s_4d6484_000001` retrieved at 2026-07-08 02:02:51
+- **Retrieved Records Count**: 3
+- **Latest Retrieve Proof**: `orig_mrbn2r12_3bed81_000003` retrieved at 2026-07-08 05:30:22
 - **All originals stored locally. No data uploaded to cloud.**
 
 ## Top 5 Highest Token-Saving Compressions
 
 | CCR ID | Content Type | Before Tokens | After Tokens | Saved Tokens | Ratio |
 |--------|--------------|---------------|--------------|--------------|-------|
-| ccr_mrbega0v… | log | 6,780 | 918 | **5,862** | 86.5% |
-| ccr_mrbebszw… | command_output | 291 | 291 | **0** | 0.0% |
-| ccr_mrbegcet… | command_output | 291 | 291 | **0** | 0.0% |
-| ccr_mrbewvsc… | code | 886 | 886 | **0** | 0.0% |
-| ccr_mrbez0z5… | log | 17 | 17 | **0** | 0.0% |
+| ccr_mrbn0fkm… | log | 6,780 | 918 | **5,862** | 86.5% |
+| ccr_mrbn0k4n… | command_output | 291 | 291 | **0** | 0.0% |
+| ccr_mrbn1oig… | code | 886 | 886 | **0** | 0.0% |
+| ccr_mrbn1oxq… | command_output | 291 | 291 | **0** | 0.0% |
+| ccr_mrbn3ilf… | log | 17 | 17 | **0** | 0.0% |
 
 ## Agent Usefulness
 
 ### Recent Recalled Memories
 
-- `mem_mrbegatl…` (project_rule) — Project coding standards: pnpm, TypeScript strict, vitest, c…
-  _Recalled: 2026-07-08 02:03:27_
-- `mem_mrbec5wt…` (project_rule)
-  _Recalled: 2026-07-08 02:03:27_
-- `mem_mrbegatl…` (project_rule) — Project coding standards: pnpm, TypeScript strict, vitest, c…
-  _Recalled: 2026-07-08 02:03:24_
-- `mem_mrbebydl…` (decision)
-  _Recalled: 2026-07-08 02:03:24_
-- `mem_mrbegatl…` (project_rule) — Project coding standards: pnpm, TypeScript strict, vitest, c…
-  _Recalled: 2026-07-08 02:03:24_
+- `mem_mrbn0gd2…` (project_rule) — Project coding standards: pnpm, TypeScript strict, vitest, c…
+  _Recalled: 2026-07-08 05:31:00_
+- `mem_mrbn0mym…` (project_rule) — Use pnpm
+  _Recalled: 2026-07-08 05:31:00_
+- `mem_mrbn0gd2…` (project_rule) — Project coding standards: pnpm, TypeScript strict, vitest, c…
+  _Recalled: 2026-07-08 05:30:56_
+- `mem_mrbn0o60…` (decision)
+  _Recalled: 2026-07-08 05:30:56_
+- `mem_mrbn0gd2…` (project_rule) — Project coding standards: pnpm, TypeScript strict, vitest, c…
+  _Recalled: 2026-07-08 05:30:56_
 
 ### Most Useful Project Rules
 
-- `mem_mrbegatl…` (recalled 83× — last: 2026-07-08)
+- `mem_mrbn0gd2…` (recalled 19× — last: 2026-07-08)
   _"# Project Rules  ## Package Manager This project uses **pnpm** as its package ma…"_
-- `mem_mrbebzmb…` (recalled 49× — last: 2026-07-08)
+- `mem_mrbmubgm…` (recalled 12× — last: 2026-07-08)
+  _"Use TypeScript strict mode."_
+- `mem_mrbn0oyb…` (recalled 12× — last: 2026-07-08)
   _"Always use TypeScript strict mode for all new files."_
-- `mem_mrbec670…` (recalled 45× — last: 2026-07-08)
-  _"Language: TypeScript 5.x"_
 
 ### Suggested Next Command
 
@@ -61,16 +61,16 @@ code-context stats  # Review token savings over time
 
 | Memory ID | Type | Summary | Created At |
 |-----------|------|---------|------------|
-| mem_mrbegatl… | project_rule | Project coding standards: pnpm, TypeScript strict,… | 2026-07-08T01:28:56 |
-| mem_mrbeciwl… | decision | React 18 + TS | 2026-07-08T01:26:00 |
-| mem_mrbechjg… | project_rule | API v2 base URL | 2026-07-08T01:25:58 |
-| mem_mrbecbxu… | current_task | Build CLI | 2026-07-08T01:25:51 |
-| mem_mrbecb1e… | project_rule | TS Strict | 2026-07-08T01:25:49 |
-| mem_mrbec95n… | project_rule | — | 2026-07-08T01:25:47 |
-| mem_mrbec671… | current_task | — | 2026-07-08T01:25:43 |
-| mem_mrbec670… | project_rule | — | 2026-07-08T01:25:43 |
-| mem_mrbec670… | project_rule | — | 2026-07-08T01:25:43 |
-| mem_mrbec5wt… | project_rule | — | 2026-07-08T01:25:43 |
+| mem_mrbn0qjl… | bug | Login bug | 2026-07-08T05:28:46 |
+| mem_mrbn0q50… | project_rule | ESLint config | 2026-07-08T05:28:46 |
+| mem_mrbn0oyb… | project_rule | TypeScript strict mode | 2026-07-08T05:28:44 |
+| mem_mrbn0o60… | decision | — | 2026-07-08T05:28:43 |
+| mem_mrbn0ns3… | current_task | CLI dev | 2026-07-08T05:28:43 |
+| mem_mrbn0nd5… | project_rule | Don't modify generated | 2026-07-08T05:28:42 |
+| mem_mrbn0mym… | project_rule | Use pnpm | 2026-07-08T05:28:42 |
+| mem_mrbn0gd2… | project_rule | Project coding standards: pnpm, TypeScript strict,… | 2026-07-08T05:28:33 |
+| mem_mrbmujgg… | decision | React 18 + TS | 2026-07-08T05:23:57 |
+| mem_mrbmui3o… | project_rule | API v2 base URL | 2026-07-08T05:23:55 |
 
 ## Local-First Data
 

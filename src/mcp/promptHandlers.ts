@@ -131,6 +131,7 @@ function buildProjectContextBrief(db: Database): string {
   lines.push("## Current Project");
   lines.push(`Project: \`${projectName}\``);
   if (scope.branch) lines.push(`Branch: ${scope.branch}`);
+  lines.push(`Scope: \`${scope.scopeId}\``);
   lines.push("");
   lines.push("**Local-first constraint**: Do not upload project code, logs, or memory content.");
   lines.push("");

@@ -57,6 +57,9 @@ const SRC = path.join(ROOT, "src");
 /** @type {CheckResult[]} */
 const checks = [];
 
+/** @type {Array<{file: string, testName: string, assertion: string, error: string}>} */
+let vitestFailures = [];
+
 /**
  * @param {string} check
  * @param {string} detail
@@ -307,10 +310,30 @@ async function checkVitest() {
       // numTotalTestSuites counts describe blocks; count unique test file names instead
       const testFiles = json.testResults ? new Set(json.testResults.map((tr) => tr.name)).size : (json.numTotalTestSuites || 0);
 
+      // Extract failure details for the report
+      vitestFailures = [];
+      if (json.testResults) {
+        for (const tr of json.testResults) {
+          if (tr.status === "failed" || (tr.assertionResults || []).some((a) => a.status === "failed")) {
+            for (const ar of tr.assertionResults || []) {
+              if (ar.status === "failed") {
+                vitestFailures.push({
+                  file: tr.name,
+                  testName: ar.fullName || (ar.ancestorTitles || []).concat(ar.title).join(" > "),
+                  assertion: ar.title || "",
+                  error: (ar.failureMessages || []).join("\n").slice(0, 500),
+                });
+              }
+            }
+          }
+        }
+      }
+
       if (failed === 0) {
         pass(checkName, `${passed} tests passed, ${testFiles} test files, 0 failures`, category, severity);
       } else {
-        fail(checkName, `${failed} failures out of ${total} tests, ${testFiles} test files`, category, severity);
+        const detail = `${failed} failures out of ${total} tests, ${testFiles} test files`;
+        fail(checkName, detail, category, severity);
       }
     } else if (r.exitCode === 0) {
       // Fallback: check text output
@@ -870,6 +893,7 @@ function buildJsonReport(verdict, startTime) {
       totalDurationMs: totalMs,
     },
     checks,
+    testFailures: vitestFailures.length > 0 ? vitestFailures : undefined,
     verdictRules: {
       pass: "All MUST checks pass. Ready for stable release.",
       warning: "All MUST checks pass but one or more SHOULD checks are warnings. Review before release.",
@@ -956,6 +980,21 @@ function buildMarkdownReport(report) {
       lines.push(`| ${idx} | ${c.check} | ${icon} ${c.status} | ${severity} | ${c.durationMs}ms | ${detail} |`);
       idx++;
     }
+    lines.push("");
+  }
+
+  // Test failure details (from vitest)
+  if (report.testFailures && report.testFailures.length > 0) {
+    lines.push("## ❌ Test Failure Details");
+    lines.push("");
+    lines.push(`| # | Test File | Test Name | Assertion | Error |`);
+    lines.push("|---|---:|---|---:|---|");
+    report.testFailures.forEach((f, i) => {
+      const errorSnippet = f.error.replace(/\n/g, " // ").slice(0, 150);
+      const testName = f.testName.length > 60 ? f.testName.slice(0, 57) + "..." : f.testName;
+      const fileShort = f.file.replace(/\\/g, "/").split("/").slice(-2).join("/");
+      lines.push(`| ${i + 1} | \`${fileShort}\` | ${testName} | ${f.assertion} | ${errorSnippet} |`);
+    });
     lines.push("");
   }
 

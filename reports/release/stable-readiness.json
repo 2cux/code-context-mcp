@@ -1,17 +1,17 @@
 {
-  "generated": "2026-07-08T02:07:33.384Z",
+  "generated": "2026-07-08T05:31:46.397Z",
   "project": "code-context-mcp",
   "version": "1.0.0",
-  "verdict": "FAIL",
+  "verdict": "PASS",
   "summary": {
     "total": 10,
-    "pass": 9,
+    "pass": 10,
     "warning": 0,
-    "fail": 1,
-    "mustPass": 9,
-    "mustFail": 1,
+    "fail": 0,
+    "mustPass": 10,
+    "mustFail": 0,
     "mustWarning": 0,
-    "totalDurationMs": 364450
+    "totalDurationMs": 148322
   },
   "checks": [
     {
@@ -20,15 +20,15 @@
       "detail": "tsc --noEmit returned zero errors",
       "category": "build",
       "severity": "must",
-      "durationMs": 2242
+      "durationMs": 2192
     },
     {
       "check": "2. Vitest zero failures",
-      "status": "fail",
-      "detail": "4 failures out of 1609 tests, 58 test files",
+      "status": "pass",
+      "detail": "1582 tests passed, 58 test files, 0 failures",
       "category": "tests",
       "severity": "must",
-      "durationMs": 54291
+      "durationMs": 46398
     },
     {
       "check": "3. Compression Quality Gate",
@@ -36,7 +36,7 @@
       "detail": "Compression quality: 8/8 passed",
       "category": "quality",
       "severity": "must",
-      "durationMs": 285
+      "durationMs": 254
     },
     {
       "check": "4. Memory Recall Quality Gate",
@@ -44,7 +44,7 @@
       "detail": "11 memory/recall test files, 0 failures",
       "category": "quality",
       "severity": "must",
-      "durationMs": 53954
+      "durationMs": 45925
     },
     {
       "check": "5. Fast Path Boundary Gate",
@@ -52,7 +52,7 @@
       "detail": "Fast path boundary gate passed",
       "category": "boundary",
       "severity": "must",
-      "durationMs": 5766
+      "durationMs": 5147
     },
     {
       "check": "6. Agent mode = 7 tools",
@@ -76,7 +76,7 @@
       "detail": "doctor: ok; demo: ok; value: ok",
       "category": "cli",
       "severity": "must",
-      "durationMs": 3100
+      "durationMs": 3312
     },
     {
       "check": "9. npm pack install + CLI / MCP server startable",
@@ -84,7 +84,7 @@
       "detail": "Pack OK (no forbidden files), dry-run clean, install OK, CLI v1.0.0, MCP server 7 tools",
       "category": "packaging",
       "severity": "must",
-      "durationMs": 244805
+      "durationMs": 45087
     },
     {
       "check": "10. README / version / CHANGELOG consistency",
@@ -92,7 +92,7 @@
       "detail": "All sources consistent at v1.0.0",
       "category": "docs",
       "severity": "must",
-      "durationMs": 3
+      "durationMs": 2
     }
   ],
   "verdictRules": {

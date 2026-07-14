@@ -50,7 +50,7 @@ describe("MCP Server Integration — Resources and Prompts", () => {
       expect(result.contents).toHaveLength(1);
 
       const data = JSON.parse(result.contents[0]!.text);
-      expect(data.projectIdentity.scopeId).toBe(scope.scopeId);
+      expect(data._internal.scopeId).toBe(scope.scopeId);
       expect(data.memoryOverview.total).toBeGreaterThanOrEqual(1);
       expect(data.agentGuidance.availableTools).toBeDefined();
     });

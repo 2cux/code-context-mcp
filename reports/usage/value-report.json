@@ -1,260 +1,265 @@
 {
   "summary": {
-    "totalCompressions": 105,
-    "totalEstimatedTokensSaved": 175860,
-    "averageCompressionRatio": 0.24702857142857146,
-    "cacheHits": 93,
-    "totalRetrieves": 70,
-    "memoriesSaved": 252,
-    "memoriesRecalled": 141,
-    "memoriesForgotten": 60,
+    "totalCompressions": 18,
+    "totalEstimatedTokensSaved": 35172,
+    "averageCompressionRatio": 0.2882,
+    "cacheHits": 12,
+    "totalRetrieves": 14,
+    "memoriesSaved": 63,
+    "memoriesRecalled": 33,
+    "memoriesForgotten": 16,
     "recoverableOriginals": 3,
-    "lastActivityAt": "2026-07-08T02:03:27.809Z"
+    "lastActivityAt": "2026-07-08T05:31:00.525Z"
   },
   "retrievalTrust": {
     "originalsStored": 3,
-    "originalsRetrieved": 13,
+    "originalsRetrieved": 3,
     "latestRetrieveProof": {
-      "originalRef": "orig_mrbfns7s_4d6484_000001",
-      "retrievedAt": "2026-07-08T02:02:51.973Z",
+      "originalRef": "orig_mrbn2r12_3bed81_000003",
+      "retrievedAt": "2026-07-08T05:30:22.195Z",
       "ccrId": ""
     },
     "localOnlyNote": "All originals stored locally. No data uploaded to cloud."
   },
   "topSavings": [
     {
-      "ccrId": "ccr_mrbega0v_a24743_000001",
+      "ccrId": "ccr_mrbn0fkm_970543_000001",
       "contentType": "log",
       "tokensBefore": 6780,
       "tokensAfter": 918,
       "tokensSaved": 5862,
       "compressionRatio": 0.8646,
-      "createdAt": "2026-07-08T01:28:55.232Z",
+      "createdAt": "2026-07-08T05:28:32.470Z",
       "summary": "Log compressed: 12 priority lines kept, 163 INFO/DEBUG folded"
     },
     {
-      "ccrId": "ccr_mrbebszw_081df4_000001",
+      "ccrId": "ccr_mrbn0k4n_38728b_000004",
       "contentType": "command_output",
       "tokensBefore": 291,
       "tokensAfter": 291,
       "tokensSaved": 0,
       "compressionRatio": 0,
-      "createdAt": "2026-07-08T01:25:26.540Z",
+      "createdAt": "2026-07-08T05:28:38.375Z",
       "summary": "Command output fits within token budget"
     },
     {
-      "ccrId": "ccr_mrbegcet_ceb6ef_000002",
-      "contentType": "command_output",
-      "tokensBefore": 291,
-      "tokensAfter": 291,
-      "tokensSaved": 0,
-      "compressionRatio": 0,
-      "createdAt": "2026-07-08T01:28:58.325Z",
-      "summary": "Command output fits within token budget"
-    },
-    {
-      "ccrId": "ccr_mrbewvsc_2df4fe_000001",
+      "ccrId": "ccr_mrbn1oig_2a7c2e_000001",
       "contentType": "code",
       "tokensBefore": 886,
       "tokensAfter": 886,
       "tokensSaved": 0,
       "compressionRatio": 0,
-      "createdAt": "2026-07-08T01:41:49.932Z",
+      "createdAt": "2026-07-08T05:29:30.712Z",
       "summary": "Code fits within token budget"
     },
     {
-      "ccrId": "ccr_mrbez0z5_fd18ac_000001",
+      "ccrId": "ccr_mrbn1oxq_5c810d_000002",
+      "contentType": "command_output",
+      "tokensBefore": 291,
+      "tokensAfter": 291,
+      "tokensSaved": 0,
+      "compressionRatio": 0,
+      "createdAt": "2026-07-08T05:29:31.262Z",
+      "summary": "Command output fits within token budget"
+    },
+    {
+      "ccrId": "ccr_mrbn3ilf_512664_000001",
       "contentType": "log",
       "tokensBefore": 17,
       "tokensAfter": 17,
       "tokensSaved": 0,
       "compressionRatio": 0,
-      "createdAt": "2026-07-08T01:43:29.969Z",
+      "createdAt": "2026-07-08T05:30:56.355Z",
       "summary": "Log fits within token budget"
     }
   ],
   "agentUsefulness": {
     "recentRecalledMemories": [
       {
-        "memoryId": "mem_mrbegatl_abc21b_000001",
+        "memoryId": "mem_mrbn0gd2_08e416_000001",
         "type": "project_rule",
         "summary": "Project coding standards: pnpm, TypeScript strict, vitest, conventional commits",
-        "recalledAt": "2026-07-08T02:03:27.809Z"
+        "recalledAt": "2026-07-08T05:31:00.525Z"
       },
       {
-        "memoryId": "mem_mrbec5wt_766ee9_000001",
+        "memoryId": "mem_mrbn0mym_d20bdc_000001",
         "type": "project_rule",
-        "recalledAt": "2026-07-08T02:03:27.809Z"
+        "summary": "Use pnpm",
+        "recalledAt": "2026-07-08T05:31:00.525Z"
       },
       {
-        "memoryId": "mem_mrbegatl_abc21b_000001",
+        "memoryId": "mem_mrbn0gd2_08e416_000001",
         "type": "project_rule",
         "summary": "Project coding standards: pnpm, TypeScript strict, vitest, conventional commits",
-        "recalledAt": "2026-07-08T02:03:24.581Z"
+        "recalledAt": "2026-07-08T05:30:56.908Z"
       },
       {
-        "memoryId": "mem_mrbebydl_f7a8e5_000004",
+        "memoryId": "mem_mrbn0o60_01f450_000004",
         "type": "decision",
-        "recalledAt": "2026-07-08T02:03:24.581Z"
+        "recalledAt": "2026-07-08T05:30:56.908Z"
       },
       {
-        "memoryId": "mem_mrbegatl_abc21b_000001",
+        "memoryId": "mem_mrbn0gd2_08e416_000001",
         "type": "project_rule",
         "summary": "Project coding standards: pnpm, TypeScript strict, vitest, conventional commits",
-        "recalledAt": "2026-07-08T02:03:24.309Z"
+        "recalledAt": "2026-07-08T05:30:56.617Z"
       },
       {
-        "memoryId": "mem_mrbec5wt_766ee9_000001",
-        "type": "project_rule",
-        "recalledAt": "2026-07-08T02:03:24.309Z"
+        "memoryId": "mem_mrbn0o60_01f450_000004",
+        "type": "decision",
+        "recalledAt": "2026-07-08T05:30:56.617Z"
       },
       {
-        "memoryId": "mem_mrbechjg_452cc9_000014",
+        "memoryId": "mem_mrbmui3o_3dced9_000007",
         "type": "project_rule",
         "summary": "API v2 base URL",
-        "recalledAt": "2026-07-08T02:03:16.344Z"
+        "recalledAt": "2026-07-08T05:30:48.512Z"
       },
       {
-        "memoryId": "mem_mrbfoeps_3723d4_000003",
+        "memoryId": "mem_mrbn3a4x_ceeddd_000003",
         "type": "project_rule",
         "summary": "API v1 base URL",
-        "recalledAt": "2026-07-08T02:03:14.631Z"
+        "recalledAt": "2026-07-08T05:30:45.957Z"
       },
       {
-        "memoryId": "mem_mrbechjg_452cc9_000014",
+        "memoryId": "mem_mrbmui3o_3dced9_000007",
         "type": "project_rule",
         "summary": "API v2 base URL",
-        "recalledAt": "2026-07-08T02:03:14.631Z"
+        "recalledAt": "2026-07-08T05:30:45.957Z"
       }
     ],
     "mostUsefulProjectRules": [
       {
-        "memoryId": "mem_mrbegatl_abc21b_000001",
+        "memoryId": "mem_mrbn0gd2_08e416_000001",
         "content": "# Project Rules\n\n## Package Manager\nThis project uses **pnpm** as its package manager. Never use npm or yarn.\nRun `pnpm install` to install dependencies and `pnpm run build` to compile.\n\n## Code Style\n- Use TypeScript strict mode for all new files.\n- Prefer `interface` over `type` for object shapes.\n- Use explicit return types on public functions.\n- Naming: camelCase for variables, PascalCase for classes/components.\n\n## Testing\n- Every new feature must include unit tests using vitest.\n- Test files live in `tests/` and mirror the `src/` structure.\n- Run `pnpm test` before pushing any commit.\n\n## Error Handling\n- Never swallow errors silently. Always log with context.\n- Use structured error types, not plain strings.\n- Compression failures must return original content (fail-open).\n\n## Git\n- Use conventional commits: `feat:`, `fix:`, `chore:`, `docs:`, `test:`.\n- Branch naming: `feature/description`, `fix/description`.\n- Always squash before merging to main.\n",
-        "recallCount": 83,
-        "lastRecalledAt": "2026-07-08T02:03:27.809Z"
+        "recallCount": 19,
+        "lastRecalledAt": "2026-07-08T05:31:00.525Z"
       },
       {
-        "memoryId": "mem_mrbebzmb_bbcc74_000005",
+        "memoryId": "mem_mrbmubgm_3bf30e_000004",
+        "content": "Use TypeScript strict mode.",
+        "recallCount": 12,
+        "lastRecalledAt": "2026-07-08T05:30:30.613Z"
+      },
+      {
+        "memoryId": "mem_mrbn0oyb_f2c901_000005",
         "content": "Always use TypeScript strict mode for all new files.",
-        "recallCount": 49,
-        "lastRecalledAt": "2026-07-08T02:03:01.087Z"
-      },
-      {
-        "memoryId": "mem_mrbec670_023598_000002",
-        "content": "Language: TypeScript 5.x",
-        "recallCount": 45,
-        "lastRecalledAt": "2026-07-08T02:03:01.087Z"
+        "recallCount": 12,
+        "lastRecalledAt": "2026-07-08T05:30:30.613Z"
       }
     ],
     "suggestedNextCommand": "code-context stats  # Review token savings over time"
   },
   "topCompressions": [
     {
-      "ccrId": "ccr_mrbega0v_a24743_000001",
+      "ccrId": "ccr_mrbn0fkm_970543_000001",
       "contentType": "log",
       "tokensSaved": 5862,
       "compressionRatio": 0.8646,
-      "createdAt": "2026-07-08T01:28:55.232Z",
+      "createdAt": "2026-07-08T05:28:32.470Z",
       "summary": "Log compressed: 12 priority lines kept, 163 INFO/DEBUG folded"
     },
     {
-      "ccrId": "ccr_mrbebszw_081df4_000001",
+      "ccrId": "ccr_mrbn0k4n_38728b_000004",
       "contentType": "command_output",
       "tokensSaved": 0,
       "compressionRatio": 0,
-      "createdAt": "2026-07-08T01:25:26.540Z",
+      "createdAt": "2026-07-08T05:28:38.375Z",
       "summary": "Command output fits within token budget"
     },
     {
-      "ccrId": "ccr_mrbegcet_ceb6ef_000002",
-      "contentType": "command_output",
-      "tokensSaved": 0,
-      "compressionRatio": 0,
-      "createdAt": "2026-07-08T01:28:58.325Z",
-      "summary": "Command output fits within token budget"
-    },
-    {
-      "ccrId": "ccr_mrbewvsc_2df4fe_000001",
+      "ccrId": "ccr_mrbn1oig_2a7c2e_000001",
       "contentType": "code",
       "tokensSaved": 0,
       "compressionRatio": 0,
-      "createdAt": "2026-07-08T01:41:49.932Z",
+      "createdAt": "2026-07-08T05:29:30.712Z",
       "summary": "Code fits within token budget"
     },
     {
-      "ccrId": "ccr_mrbez0z5_fd18ac_000001",
+      "ccrId": "ccr_mrbn1oxq_5c810d_000002",
+      "contentType": "command_output",
+      "tokensSaved": 0,
+      "compressionRatio": 0,
+      "createdAt": "2026-07-08T05:29:31.262Z",
+      "summary": "Command output fits within token budget"
+    },
+    {
+      "ccrId": "ccr_mrbn3ilf_512664_000001",
       "contentType": "log",
       "tokensSaved": 0,
       "compressionRatio": 0,
-      "createdAt": "2026-07-08T01:43:29.969Z",
+      "createdAt": "2026-07-08T05:30:56.355Z",
       "summary": "Log fits within token budget"
     }
   ],
   "recentMemories": [
     {
-      "memoryId": "mem_mrbegatl_abc21b_000001",
+      "memoryId": "mem_mrbn0qjl_e2ea07_000007",
+      "type": "bug",
+      "summary": "Login bug",
+      "createdAt": "2026-07-08T05:28:46.689Z",
+      "status": "active"
+    },
+    {
+      "memoryId": "mem_mrbn0q50_fdd92a_000006",
+      "type": "project_rule",
+      "summary": "ESLint config",
+      "createdAt": "2026-07-08T05:28:46.164Z",
+      "status": "active"
+    },
+    {
+      "memoryId": "mem_mrbn0oyb_f2c901_000005",
+      "type": "project_rule",
+      "summary": "TypeScript strict mode",
+      "createdAt": "2026-07-08T05:28:44.627Z",
+      "status": "active"
+    },
+    {
+      "memoryId": "mem_mrbn0o60_01f450_000004",
+      "type": "decision",
+      "createdAt": "2026-07-08T05:28:43.608Z",
+      "status": "active"
+    },
+    {
+      "memoryId": "mem_mrbn0ns3_e5b595_000003",
+      "type": "current_task",
+      "summary": "CLI dev",
+      "createdAt": "2026-07-08T05:28:43.107Z",
+      "status": "active"
+    },
+    {
+      "memoryId": "mem_mrbn0nd5_34e286_000002",
+      "type": "project_rule",
+      "summary": "Don't modify generated",
+      "createdAt": "2026-07-08T05:28:42.569Z",
+      "status": "active"
+    },
+    {
+      "memoryId": "mem_mrbn0mym_d20bdc_000001",
+      "type": "project_rule",
+      "summary": "Use pnpm",
+      "createdAt": "2026-07-08T05:28:42.046Z",
+      "status": "active"
+    },
+    {
+      "memoryId": "mem_mrbn0gd2_08e416_000001",
       "type": "project_rule",
       "summary": "Project coding standards: pnpm, TypeScript strict, vitest, conventional commits",
-      "createdAt": "2026-07-08T01:28:56.265Z",
+      "createdAt": "2026-07-08T05:28:33.494Z",
       "status": "active"
     },
     {
-      "memoryId": "mem_mrbeciwl_7deff7_000015",
+      "memoryId": "mem_mrbmujgg_f5c274_000008",
       "type": "decision",
       "summary": "React 18 + TS",
-      "createdAt": "2026-07-08T01:26:00.117Z",
+      "createdAt": "2026-07-08T05:23:57.568Z",
       "status": "active"
     },
     {
-      "memoryId": "mem_mrbechjg_452cc9_000014",
+      "memoryId": "mem_mrbmui3o_3dced9_000007",
       "type": "project_rule",
       "summary": "API v2 base URL",
-      "createdAt": "2026-07-08T01:25:58.348Z",
-      "status": "active"
-    },
-    {
-      "memoryId": "mem_mrbecbxu_48caeb_000012",
-      "type": "current_task",
-      "summary": "Build CLI",
-      "createdAt": "2026-07-08T01:25:51.090Z",
-      "status": "active"
-    },
-    {
-      "memoryId": "mem_mrbecb1e_10f811_000011",
-      "type": "project_rule",
-      "summary": "TS Strict",
-      "createdAt": "2026-07-08T01:25:49.922Z",
-      "status": "active"
-    },
-    {
-      "memoryId": "mem_mrbec95n_3ddc26_000010",
-      "type": "project_rule",
-      "createdAt": "2026-07-08T01:25:47.483Z",
-      "status": "active"
-    },
-    {
-      "memoryId": "mem_mrbec671_f12e49_000004",
-      "type": "current_task",
-      "createdAt": "2026-07-08T01:25:43.645Z",
-      "status": "active"
-    },
-    {
-      "memoryId": "mem_mrbec670_023598_000002",
-      "type": "project_rule",
-      "createdAt": "2026-07-08T01:25:43.644Z",
-      "status": "active"
-    },
-    {
-      "memoryId": "mem_mrbec670_4922c9_000003",
-      "type": "project_rule",
-      "createdAt": "2026-07-08T01:25:43.644Z",
-      "status": "active"
-    },
-    {
-      "memoryId": "mem_mrbec5wt_766ee9_000001",
-      "type": "project_rule",
-      "createdAt": "2026-07-08T01:25:43.277Z",
+      "createdAt": "2026-07-08T05:23:55.812Z",
       "status": "active"
     }
   ],
@@ -262,5 +267,5 @@
     "dataLocation": "~/.code-context-mcp/code-context.sqlite",
     "noDataUploaded": true
   },
-  "generatedAt": "2026-07-08T02:03:28.537Z"
+  "generatedAt": "2026-07-08T05:31:01.272Z"
 }
