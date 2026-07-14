@@ -90,8 +90,9 @@ function checkNodeVersion(): DoctorCheck {
   };
 }
 
-function checkDbDirWritable(): DoctorCheck {
-  const dir = join(homedir(), ".code-context-mcp");
+export function checkDbDirWritable(
+  dir = join(homedir(), ".code-context-mcp"),
+): DoctorCheck {
 
   try {
     if (!existsSync(dir)) {
@@ -130,13 +131,17 @@ function checkDbDirWritable(): DoctorCheck {
   };
 }
 
-async function checkMigration(): Promise<DoctorCheck> {
+export async function checkMigration(
+  migrate: typeof initAndMigrate = initAndMigrate,
+  getDatabase: typeof getDb = getDb,
+  closeDatabase: typeof closeDb = closeDb,
+): Promise<DoctorCheck> {
   // Use a temp in-memory DB path so we don't touch the real database
   const tmpPath = join(tmpdir(), `code-context-doctor-${randomBytes(4).toString("hex")}.sqlite`);
 
   try {
-    await initAndMigrate(`:memory:`);
-    const db = getDb();
+    await migrate(`:memory:`);
+    const db = getDatabase();
 
     // Verify key tables exist (schema was applied)
     const tables = db.exec(
@@ -146,7 +151,7 @@ async function checkMigration(): Promise<DoctorCheck> {
       ? tables[0]!.values.map((r) => String(r[0]!))
       : [];
 
-    closeDb();
+    closeDatabase();
 
     const required = ["scopes", "compressed_contexts", "original_contents", "memories", "receipts"];
     const missing = required.filter((t) => !tableNames.includes(t));
@@ -241,7 +246,18 @@ async function checkMcpInit(): Promise<DoctorCheck> {
   }
 }
 
-function checkToolMode(): DoctorCheck {
+export function checkToolMode(): DoctorCheck {
+  const rawMode = (process.env["MCP_TOOL_MODE"] ?? "").trim().toLowerCase();
+  if (rawMode && !new Set(["agent", "dev", "test"]).has(rawMode)) {
+    return {
+      name: "tool-mode",
+      label: "MCP_TOOL_MODE parsing",
+      status: "fail",
+      message: `Invalid MCP_TOOL_MODE: ${rawMode}`,
+      detail: "Expected one of: agent, dev, test.",
+    };
+  }
+
   let mode: ToolMode;
   try {
     mode = resolveToolMode();
@@ -336,7 +352,7 @@ export async function runDoctor(): Promise<CliResult> {
   // Check 7: Agent mode tool count (sync)
   checks.push(checkAgentToolCount());
 
-  const allPass = checks.every((c) => c.status !== "fail");
+  const allPass = checks.every((c) => c.status === "pass");
 
   const report: DoctorReport = {
     timestamp: new Date().toISOString(),
@@ -346,6 +362,14 @@ export async function runDoctor(): Promise<CliResult> {
     allPass,
     mcpConfig: buildMcpConfig(),
   };
+
+  if (!allPass) {
+    const failed = checks
+      .filter((check) => check.status !== "pass")
+      .map((check) => `${check.name}: ${check.message}`)
+      .join("; ");
+    return { status: "error", data: report, error: failed || "Doctor checks failed" };
+  }
 
   return ok(report);
 }

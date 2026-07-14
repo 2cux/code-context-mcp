@@ -863,6 +863,12 @@ async function main(): Promise<void> {
       outputResult(result, compactJson);
     }
     process.exit(0);
+  } else if (command === "doctor") {
+    // Doctor failures still carry the complete structured report, including
+    // allPass and every individual check. Keep that contract for --json and
+    // the default doctor output while returning a non-zero process status.
+    outputResult(result, compactJson);
+    process.exit(1);
   } else {
     outputError(result.error ?? "Unknown error");
     process.exit(1);

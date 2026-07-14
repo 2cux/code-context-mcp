@@ -561,7 +561,19 @@ async function checkCliCommandsRunnable() {
       const r = await spawnAndCollect("node", ["dist/cli/index.js", ...cmd.args], {
         timeout: 30000,
       });
-      if (r.ok) {
+      if (cmd.name === "doctor") {
+        // Doctor's exit status is derived from the report. Parse and verify
+        // the semantic contract instead of treating any JSON output as pass.
+        const json = extractJson(r.stdout);
+        if (json && json.allPass === true && r.ok) {
+          details.push(`${cmd.name}: allPass=true`);
+        } else {
+          allOk = false;
+          details.push(
+            `${cmd.name}: expected exit 0 and allPass=true, got exit ${r.code}, report=${JSON.stringify(json)}`,
+          );
+        }
+      } else if (r.ok) {
         // Verify output is valid JSON
         const json = extractJson(r.stdout);
         if (json) {
