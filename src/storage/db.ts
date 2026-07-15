@@ -28,7 +28,7 @@ export async function initDb(dbPath?: string): Promise<Database> {
     _SQL = await initSqlJs();
   }
 
-  const path = dbPath ?? defaultDbPath();
+  const path = dbPath ?? process.env.CODECONTEXT_DB_PATH ?? defaultDbPath();
   _dbPath = path;
 
   const parent = dirname(path);
