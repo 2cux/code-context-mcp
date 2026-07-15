@@ -1,13 +1,50 @@
 {
-  "generatedAt": "2026-07-15T07:28:20.844Z",
-  "generated": "2026-07-15T07:28:20.844Z",
+  "generatedAt": "2026-07-15T10:05:29.556Z",
+  "generated": "2026-07-15T10:05:29.556Z",
+  "gitCommit": "eb4d67a760ee1cd3d01497fb4bd56f4e94c00cfd",
+  "gitDirty": false,
+  "tgzSha256": "db77fee0086e568d3fe79d7d0c92b2467ccd157de223baed3516f23223e0932f",
+  "packageFileCount": 524,
   "git": {
-    "commit": "8a3a0c68a351bbea33ddc1cbeeefe2f768d446f8",
-    "dirty": true
+    "commit": "eb4d67a760ee1cd3d01497fb4bd56f4e94c00cfd",
+    "dirty": false
   },
   "project": "code-context-mcp",
   "version": "1.0.0",
   "verdict": "PASS",
+  "requiredRevalidation": {
+    "typescriptZeroErrors": { "status": "PASS", "evidence": "npx tsc --noEmit exited 0" },
+    "vitestZeroFailures": { "status": "PASS", "passedTests": 1611, "testFiles": 66, "failures": 0 },
+    "compressionQualityGate": { "status": "PASS", "passed": 8, "total": 8 },
+    "memoryRecallQualityGate": { "status": "PASS", "passedTests": 53, "failures": 0 },
+    "fastPathBoundaryGate": { "status": "PASS", "checks": 29, "blockers": 0 },
+    "agentModeTools": {
+      "status": "PASS",
+      "count": 7,
+      "tools": ["current_scope", "compress_context", "retrieve_original", "remember_context", "recall_context", "forget_context", "run_context_flow"]
+    },
+    "freshInstall": { "status": "PASS", "stepsPassed": 11, "stepsFailed": 0 },
+    "mcpCompression": { "status": "PASS", "compressed": true, "tokensSaved": 1817 },
+    "retrieveOriginal": {
+      "status": "PASS",
+      "sha256Match": true,
+      "originalSha256": "fef9fc53e2b97b54d4a83862e7e9b15bc7c79f63687c29352c50c1bca18949ef"
+    },
+    "memoryLifecycle": {
+      "status": "PASS",
+      "saveRecall": "fresh-install MCP stdio business flow passed",
+      "deduplicateReplace": "4 focused test files, 168 tests passed, 0 failures; action=deduplicated and atomic action=replaced covered"
+    },
+    "packedMarkdownLinks": { "status": "PASS", "brokenLinks": 0 },
+    "gitCleanReleaseCandidate": { "status": "PASS", "dirty": false },
+    "releaseArtifact": {
+      "status": "PASS",
+      "path": "C:\\tmp\\codecontext-stable-1784109488\\code-context-mcp-1.0.0.tgz",
+      "sha256": "db77fee0086e568d3fe79d7d0c92b2467ccd157de223baed3516f23223e0932f",
+      "reportMatchesFile": true,
+      "packageFileCount": 524
+    }
+  },
   "summary": {
     "total": 12,
     "pass": 12,
@@ -16,7 +53,7 @@
     "mustPass": 12,
     "mustFail": 0,
     "mustWarning": 0,
-    "totalDurationMs": 407781
+    "totalDurationMs": 421450
   },
   "checks": [
     {
@@ -25,7 +62,7 @@
       "detail": "clean tracked-source build and quality tests passed",
       "category": "reproducibility",
       "severity": "must",
-      "durationMs": 223695
+      "durationMs": 211264
     },
     {
       "check": "2. TypeScript zero errors",
@@ -33,15 +70,15 @@
       "detail": "tsc --noEmit returned zero errors",
       "category": "build",
       "severity": "must",
-      "durationMs": 3626
+      "durationMs": 2740
     },
     {
       "check": "3. Vitest zero failures",
       "status": "pass",
-      "detail": "1596 tests passed, 63 test files, 0 failures",
+      "detail": "1611 tests passed, 66 test files, 0 failures",
       "category": "tests",
       "severity": "must",
-      "durationMs": 138157
+      "durationMs": 143261
     },
     {
       "check": "4. Compression Quality Gate",
@@ -49,7 +86,7 @@
       "detail": "Compression quality: 8/8 passed",
       "category": "quality",
       "severity": "must",
-      "durationMs": 360
+      "durationMs": 548
     },
     {
       "check": "5. Memory Recall Quality Gate",
@@ -57,7 +94,7 @@
       "detail": "1 memory/recall test files, 0 failures",
       "category": "quality",
       "severity": "must",
-      "durationMs": 3157
+      "durationMs": 2935
     },
     {
       "check": "6. Fingerprint migration tests",
@@ -65,7 +102,7 @@
       "detail": "4 fingerprint migration tests passed",
       "category": "migration",
       "severity": "must",
-      "durationMs": 2928
+      "durationMs": 2324
     },
     {
       "check": "7. Fast Path Boundary Gate",
@@ -73,7 +110,7 @@
       "detail": "Fast path boundary gate has 0 blockers (29 checks)",
       "category": "boundary",
       "severity": "must",
-      "durationMs": 6005
+      "durationMs": 5230
     },
     {
       "check": "8. Agent mode = 7 tools",
@@ -81,7 +118,7 @@
       "detail": "AGENT_TOOLS has exactly 7 entries: current_scope, compress_context, retrieve_original, remember_context, recall_context, forget_context, run_context_flow",
       "category": "tool-surface",
       "severity": "must",
-      "durationMs": 1
+      "durationMs": 0
     },
     {
       "check": "8. Dangerous tools not in agent mode",
@@ -94,10 +131,10 @@
     {
       "check": "9. Fresh npm install smoke",
       "status": "pass",
-      "detail": "fresh HOME npm pack/install/CLI/MCP smoke passed",
+      "detail": "fresh HOME install/CLI/MCP smoke passed for release source commit eb4d67a760ee1cd3d01497fb4bd56f4e94c00cfd and tgz db77fee0086e568d3fe79d7d0c92b2467ccd157de223baed3516f23223e0932f",
       "category": "packaging",
       "severity": "must",
-      "durationMs": 24973
+      "durationMs": 48631
     },
     {
       "check": "10. demo / value / doctor runnable",
@@ -105,7 +142,7 @@
       "detail": "doctor: allPass=true; demo: ok; value: ok",
       "category": "cli",
       "severity": "must",
-      "durationMs": 4185
+      "durationMs": 4504
     },
     {
       "check": "11. Version and documentation consistency",
@@ -122,7 +159,7 @@
       "command": "node scripts/release/source-reproducibility.mjs",
       "exitCode": 0,
       "ok": true,
-      "output": "{\n  \"verdict\": \"PASS\",\n  \"trackedFiles\": 429,\n  \"commands\": [\n    [\n      \"initialize temporary git metadata\",\n      \"pass\"\n    ],\n    [\n      \"create temporary git branch\",\n      \"pass\"\n    ],\n    [\n      \"set temporary git remote\",\n      \"pass\"\n    ],\n    [\n      \"create temporary git HEAD\",\n      \"pass\"\n    ],\n    [\n      \"pnpm install --frozen-lockfile\",\n      \"pass\"\n    ],\n    [\n      \"pnpm build\",\n      \"pass\"\n    ],\n    [\n      \"npx vitest run\",\n      \"pass\"\n    ]\n  ]\n}"
+      "output": "{\n  \"verdict\": \"PASS\",\n  \"trackedFiles\": 433,\n  \"commands\": [\n    [\n      \"initialize temporary git metadata\",\n      \"pass\"\n    ],\n    [\n      \"create temporary git branch\",\n      \"pass\"\n    ],\n    [\n      \"set temporary git remote\",\n      \"pass\"\n    ],\n    [\n      \"create temporary git HEAD\",\n      \"pass\"\n    ],\n    [\n      \"pnpm install --frozen-lockfile\",\n      \"pass\"\n    ],\n    [\n      \"pnpm build\",\n      \"pass\"\n    ],\n    [\n      \"npx vitest run\",\n      \"pass\"\n    ]\n  ]\n}"
     },
     {
       "command": "npx tsc --noEmit",
@@ -134,7 +171,7 @@
       "command": "npx vitest run --reporter=json 2>&1",
       "exitCode": 0,
       "ok": true,
-      "output": "{\"numTotalTestSuites\":543,\"numPassedTestSuites\":543,\"numFailedTestSuites\":0,\"numPendingTestSuites\":0,\"numTotalTests\":1624,\"numPassedTests\":1596,\"numFailedTests\":0,\"numPendingTests\":28,\"numTodoTests\":0,\"snapshot\":{\"added\":0,\"failure\":false,\"filesAdded\":0,\"filesRemoved\":0,\"filesRemovedList\":[],\"filesUnmatched\":0,\"filesUpdated\":0,\"matched\":0,\"total\":0,\"unchecked\":0,\"uncheckedKeysByFile\":[],\"unmatched\":0,\"updated\":0,\"didUpdate\":false},\"startTime\":1784100323042,\"success\":true,\"testResults\":[{\"assertionResults\":[{\"ancestorTitles\":[\"scope command\"],\"fullName\":\"scope command returns a valid scopeId fo\n… [output truncated] …\n{\"ancestorTitles\":[\"Quality Gate — Overall Verdict\"],\"fullName\":\"Quality Gate — Overall Verdict all thresholds pass\",\"status\":\"passed\",\"title\":\"all thresholds pass\",\"duration\":0.41719999999622814,\"failureMessages\":[],\"meta\":{}}],\"startTime\":1784100374839,\"endTime\":1784100374876.4172,\"status\":\"passed\",\"message\":\"\",\"name\":\"D:/project/CodeContext/tests/quality/recallQualityGate.test.ts\"}]}\nnpm notice\nnpm notice New minor version of npm available! 11.6.2 -> 11.18.0\nnpm notice Changelog: https://github.com/npm/cli/releases/tag/v11.18.0\nnpm notice To update run: npm install -g npm@11.18.0\nnpm notice"
+      "output": "warning: in the working copy of 'scripts/release/clean-release-gate.mjs', LF will be replaced by CRLF the next time Git touches it\n{\"numTotalTestSuites\":549,\"numPassedTestSuites\":549,\"numFailedTestSuites\":0,\"numPendingTestSuites\":0,\"numTotalTests\":1639,\"numPassedTests\":1611,\"numFailedTests\":0,\"numPendingTests\":28,\"numTodoTests\":0,\"snapshot\":{\"added\":0,\"failure\":false,\"filesAdded\":0,\"filesRemoved\":0,\"filesRemovedList\":[],\"filesUnmatched\":0,\"filesUpdated\":0,\"matched\":0,\"total\":0,\"unchecked\":0,\"uncheckedKeysByFile\":[],\"unmatched\":0,\"updated\":0,\"didUpdate\":false},\"startTime\":1784109723765,\"success\n… [output truncated] …\n},{\"ancestorTitles\":[\"Quality Gate — Overall Verdict\"],\"fullName\":\"Quality Gate — Overall Verdict all thresholds pass\",\"status\":\"passed\",\"title\":\"all thresholds pass\",\"duration\":0.4629999999961001,\"failureMessages\":[],\"meta\":{}}],\"startTime\":1784109770794,\"endTime\":1784109770836.463,\"status\":\"passed\",\"message\":\"\",\"name\":\"D:/project/CodeContext/tests/quality/recallQualityGate.test.ts\"}]}\nnpm notice\nnpm notice New minor version of npm available! 11.6.2 -> 11.18.0\nnpm notice Changelog: https://github.com/npm/cli/releases/tag/v11.18.0\nnpm notice To update run: npm install -g npm@11.18.0\nnpm notice"
     },
     {
       "command": "node scripts/release/compression-quality-check.mjs",
@@ -146,13 +183,13 @@
       "command": "npx vitest run tests/quality/recallQualityGate.test.ts --reporter=json 2>&1",
       "exitCode": 0,
       "ok": true,
-      "output": "{\"numTotalTestSuites\":8,\"numPassedTestSuites\":8,\"numFailedTestSuites\":0,\"numPendingTestSuites\":0,\"numTotalTests\":53,\"numPassedTests\":53,\"numFailedTests\":0,\"numPendingTests\":0,\"numTodoTests\":0,\"snapshot\":{\"added\":0,\"failure\":false,\"filesAdded\":0,\"filesRemoved\":0,\"filesRemovedList\":[],\"filesUnmatched\":0,\"filesUpdated\":0,\"matched\":0,\"total\":0,\"unchecked\":0,\"uncheckedKeysByFile\":[],\"unmatched\":0,\"updated\":0,\"didUpdate\":false},\"startTime\":1784100461698,\"success\":true,\"testResults\":[{\"assertionResults\":[{\"ancestorTitles\":[\"Quality Gate — Recall@1\"],\"fullName\":\"Quality Gate — Recall@1 \\\"project_rule:\n… [output truncated] …\nQuality Gate — Duplicate Result IDs no duplicate memory IDs in any result set\",\"status\":\"passed\",\"title\":\"no duplicate memory IDs in any result set\",\"duration\":10.722099999999955,\"failureMessages\":[],\"meta\":{}},{\"ancestorTitles\":[\"Quality Gate — Overall Verdict\"],\"fullName\":\"Quality Gate — Overall Verdict all thresholds pass\",\"status\":\"passed\",\"title\":\"all thresholds pass\",\"duration\":0.42170000000010077,\"failureMessages\":[],\"meta\":{}}],\"startTime\":1784100462353,\"endTime\":1784100462396.7222,\"status\":\"passed\",\"message\":\"\",\"name\":\"D:/project/CodeContext/tests/quality/recallQualityGate.test.ts\"}]}"
+      "output": "{\"numTotalTestSuites\":8,\"numPassedTestSuites\":8,\"numFailedTestSuites\":0,\"numPendingTestSuites\":0,\"numTotalTests\":53,\"numPassedTests\":53,\"numFailedTests\":0,\"numPendingTests\":0,\"numTodoTests\":0,\"snapshot\":{\"added\":0,\"failure\":false,\"filesAdded\":0,\"filesRemoved\":0,\"filesRemovedList\":[],\"filesUnmatched\":0,\"filesUpdated\":0,\"matched\":0,\"total\":0,\"unchecked\":0,\"uncheckedKeysByFile\":[],\"unmatched\":0,\"updated\":0,\"didUpdate\":false},\"startTime\":1784109867950,\"success\":true,\"testResults\":[{\"assertionResults\":[{\"ancestorTitles\":[\"Quality Gate — Recall@1\"],\"fullName\":\"Quality Gate — Recall@1 \\\"project_rule:\n… [output truncated] …\n\"Quality Gate — Duplicate Result IDs no duplicate memory IDs in any result set\",\"status\":\"passed\",\"title\":\"no duplicate memory IDs in any result set\",\"duration\":17.987699999999904,\"failureMessages\":[],\"meta\":{}},{\"ancestorTitles\":[\"Quality Gate — Overall Verdict\"],\"fullName\":\"Quality Gate — Overall Verdict all thresholds pass\",\"status\":\"passed\",\"title\":\"all thresholds pass\",\"duration\":0.5552000000000135,\"failureMessages\":[],\"meta\":{}}],\"startTime\":1784109868685,\"endTime\":1784109868748.5552,\"status\":\"passed\",\"message\":\"\",\"name\":\"D:/project/CodeContext/tests/quality/recallQualityGate.test.ts\"}]}"
     },
     {
       "command": "npx vitest run tests/memoryFingerprintMigration.test.ts --reporter=json 2>&1",
       "exitCode": 0,
       "ok": true,
-      "output": "{\"numTotalTestSuites\":2,\"numPassedTestSuites\":2,\"numFailedTestSuites\":0,\"numPendingTestSuites\":0,\"numTotalTests\":4,\"numPassedTests\":4,\"numFailedTests\":0,\"numPendingTests\":0,\"numTodoTests\":0,\"snapshot\":{\"added\":0,\"failure\":false,\"filesAdded\":0,\"filesRemoved\":0,\"filesRemovedList\":[],\"filesUnmatched\":0,\"filesUpdated\":0,\"matched\":0,\"total\":0,\"unchecked\":0,\"uncheckedKeysByFile\":[],\"unmatched\":0,\"updated\":0,\"didUpdate\":false},\"startTime\":1784100464709,\"success\":true,\"testResults\":[{\"assertionResults\":[{\"ancestorTitles\":[\"Memory fingerprint migration\"],\"fullName\":\"Memory fingerprint migration upgrade\n… [output truncated] …\n\":\"passed\",\"title\":\"does not overwrite an existing fingerprint\",\"duration\":7.447599999999966,\"failureMessages\":[],\"meta\":{}},{\"ancestorTitles\":[\"Memory fingerprint migration\"],\"fullName\":\"Memory fingerprint migration lets new remember calls deduplicate against upgraded old records\",\"status\":\"passed\",\"title\":\"lets new remember calls deduplicate against upgraded old records\",\"duration\":13.721699999999942,\"failureMessages\":[],\"meta\":{}}],\"startTime\":1784100465252,\"endTime\":1784100465335.7217,\"status\":\"passed\",\"message\":\"\",\"name\":\"D:/project/CodeContext/tests/memoryFingerprintMigration.test.ts\"}]}"
+      "output": "{\"numTotalTestSuites\":2,\"numPassedTestSuites\":2,\"numFailedTestSuites\":0,\"numPendingTestSuites\":0,\"numTotalTests\":4,\"numPassedTests\":4,\"numFailedTests\":0,\"numPendingTests\":0,\"numTodoTests\":0,\"snapshot\":{\"added\":0,\"failure\":false,\"filesAdded\":0,\"filesRemoved\":0,\"filesRemovedList\":[],\"filesUnmatched\":0,\"filesUpdated\":0,\"matched\":0,\"total\":0,\"unchecked\":0,\"uncheckedKeysByFile\":[],\"unmatched\":0,\"updated\":0,\"didUpdate\":false},\"startTime\":1784109870461,\"success\":true,\"testResults\":[{\"assertionResults\":[{\"ancestorTitles\":[\"Memory fingerprint migration\"],\"fullName\":\"Memory fingerprint migration upgrade\n… [output truncated] …\n\":\"passed\",\"title\":\"does not overwrite an existing fingerprint\",\"duration\":10.83929999999998,\"failureMessages\":[],\"meta\":{}},{\"ancestorTitles\":[\"Memory fingerprint migration\"],\"fullName\":\"Memory fingerprint migration lets new remember calls deduplicate against upgraded old records\",\"status\":\"passed\",\"title\":\"lets new remember calls deduplicate against upgraded old records\",\"duration\":11.682199999999966,\"failureMessages\":[],\"meta\":{}}],\"startTime\":1784109870984,\"endTime\":1784109871082.6821,\"status\":\"passed\",\"message\":\"\",\"name\":\"D:/project/CodeContext/tests/memoryFingerprintMigration.test.ts\"}]}"
     },
     {
       "command": "node scripts/release/fast-path-boundary-check.mjs",
@@ -164,37 +201,25 @@
       "command": "node scripts/release/clean-install-smoke.mjs",
       "exitCode": 0,
       "ok": true,
-      "output": "CodeContext MCP - Fresh Install Package Smoke\n\n  Build package artifacts... OK 4080ms\n  npm pack... OK 2751ms\n  Install packed tgz in temporary project... OK 14637ms\n  Isolation preflight: fresh HOME and empty database directory... OK 1ms\n  code-context --version... OK 300ms\n  code-context doctor --json... OK 792ms\n  code-context demo --json... OK 1144ms\n  code-context value --json... OK 483ms\n  code-context-server first startup... OK 651ms\n  Isolation postflight: database created only under fresh HOME... OK 1ms\n\n10 passed, 0 failed"
+      "output": "CodeContext MCP - Fresh Install Package Smoke\n\n  Use release gate tgz... OK 0ms\n  Verify tgz provenance... OK 1ms\n  Install packed tgz in temporary project... OK 44987ms\n  Isolation preflight: fresh HOME and empty database directory... OK 1ms\n  code-context --version... OK 252ms\n  code-context doctor --json... OK 602ms\n  code-context demo --json... OK 1255ms\n  code-context value --json... OK 513ms\n  Packed run_context_flow bypasses HarnessRunner... OK 1ms\n  MCP stdio initialize and real agent business flow... OK 887ms\n  Isolation postflight: database created only under fresh HOME... OK 0ms\n\n11 passed, 0 failed"
     },
     {
       "command": "node dist/cli/index.js doctor",
       "exitCode": 0,
       "ok": true,
-      "output": "{\n  \"timestamp\": \"2026-07-15T07:28:17.327Z\",\n  \"nodeVersion\": \"v24.13.0\",\n  \"platform\": \"win32 x64\",\n  \"checks\": [\n    {\n      \"name\": \"node-version\",\n      \"label\": \"Node version\",\n      \"status\": \"pass\",\n      \"message\": \"v24.13.0 (>= 18.0.0)\"\n    },\n    {\n      \"name\": \"db-dir-writable\",\n      \"label\": \"Database directory writable\",\n      \"status\": \"pass\",\n      \"message\": \"C:\\\\Users\\\\Lenovo\\\\AppData\\\\Local\\\\Temp\\\\cc-stable-cli-FOqAaA\\\\.code-context-mcp\"\n    },\n    {\n      \"name\": \"migration\",\n      \"label\": \"Schema migration\",\n      \"status\": \"pass\",\n      \"message\": \"7 tables (scopes, com\n… [output truncated] …\n\n      \"name\": \"agent-tools\",\n      \"label\": \"Agent mode tool count\",\n      \"status\": \"pass\",\n      \"message\": \"7 tools exposed in agent mode\",\n      \"detail\": \"compress_context, current_scope, forget_context, recall_context, remember_context, retrieve_original, run_context_flow\"\n    }\n  ],\n  \"allPass\": true,\n  \"mcpConfig\": {\n    \"agent\": {\n      \"command\": \"code-context-server\",\n      \"args\": [],\n      \"env\": {\n        \"MCP_TOOL_MODE\": \"agent\"\n      }\n    },\n    \"dev\": {\n      \"command\": \"code-context-server\",\n      \"args\": [],\n      \"env\": {\n        \"MCP_TOOL_MODE\": \"dev\"\n      }\n    }\n  }\n}"
+      "output": "{\n  \"timestamp\": \"2026-07-15T10:05:26.051Z\",\n  \"nodeVersion\": \"v24.13.0\",\n  \"platform\": \"win32 x64\",\n  \"checks\": [\n    {\n      \"name\": \"node-version\",\n      \"label\": \"Node version\",\n      \"status\": \"pass\",\n      \"message\": \"v24.13.0 (>= 18.0.0)\"\n    },\n    {\n      \"name\": \"db-dir-writable\",\n      \"label\": \"Database directory writable\",\n      \"status\": \"pass\",\n      \"message\": \"C:\\\\Users\\\\Lenovo\\\\AppData\\\\Local\\\\Temp\\\\cc-stable-cli-jCsqIC\\\\.code-context-mcp\"\n    },\n    {\n      \"name\": \"migration\",\n      \"label\": \"Schema migration\",\n      \"status\": \"pass\",\n      \"message\": \"7 tables (scopes, com\n… [output truncated] …\n\n      \"name\": \"agent-tools\",\n      \"label\": \"Agent mode tool count\",\n      \"status\": \"pass\",\n      \"message\": \"7 tools exposed in agent mode\",\n      \"detail\": \"compress_context, current_scope, forget_context, recall_context, remember_context, retrieve_original, run_context_flow\"\n    }\n  ],\n  \"allPass\": true,\n  \"mcpConfig\": {\n    \"agent\": {\n      \"command\": \"code-context-server\",\n      \"args\": [],\n      \"env\": {\n        \"MCP_TOOL_MODE\": \"agent\"\n      }\n    },\n    \"dev\": {\n      \"command\": \"code-context-server\",\n      \"args\": [],\n      \"env\": {\n        \"MCP_TOOL_MODE\": \"dev\"\n      }\n    }\n  }\n}"
     },
     {
       "command": "node dist/cli/index.js demo",
       "exitCode": 0,
       "ok": true,
-      "output": "{\n  \"reportPath\": \"D:\\\\project\\\\CodeContext\\\\reports\\\\demo\\\\first-run-value.md\",\n  \"jsonPath\": \"D:\\\\project\\\\CodeContext\\\\reports\\\\demo\\\\first-run-value.json\",\n  \"summary\": {\n    \"compress\": \"5862 tokens saved (86.5% ratio)\",\n    \"remember\": \"saved memory mem_mrlrdfev_2c1ae4_000001\",\n    \"recall\": \"found 1 result(s) for \\\"What package manager does this project use? Which \\\"\",\n    \"retrieve\": \"recovered 16484 chars from original\"\n  }\n}"
+      "output": "{\n  \"reportPath\": \"D:\\\\project\\\\CodeContext\\\\reports\\\\demo\\\\first-run-value.md\",\n  \"jsonPath\": \"D:\\\\project\\\\CodeContext\\\\reports\\\\demo\\\\first-run-value.json\",\n  \"summary\": {\n    \"compress\": \"5862 tokens saved (86.5% ratio)\",\n    \"remember\": \"saved memory mem_mrlwzit0_94a514_000001\",\n    \"recall\": \"found 1 result(s) for \\\"What package manager does this project use? Which \\\"\",\n    \"retrieve\": \"recovered 16484 chars from original\"\n  }\n}"
     },
     {
       "command": "node dist/cli/index.js value",
       "exitCode": 0,
       "ok": true,
-      "output": "{\n  \"scopeId\": \"repo_ce1c6bc9\",\n  \"summary\": {\n    \"totalCompressions\": 1,\n    \"totalEstimatedTokensSaved\": 5862,\n    \"averageCompressionRatio\": 0.8646,\n    \"cacheHits\": 0,\n    \"totalRetrieves\": 0,\n    \"memoriesSaved\": 1,\n    \"memoriesRecalled\": 1,\n    \"memoriesForgotten\": 0,\n    \"recoverableOriginals\": 1,\n    \"lastActivityAt\": \"2026-07-15T07:28:19.637Z\"\n  },\n  \"reportPaths\": {\n    \"markdown\": \"D:\\\\project\\\\CodeContext\\\\reports\\\\usage\\\\value-report.md\",\n    \"json\": \"D:\\\\project\\\\CodeContext\\\\reports\\\\usage\\\\value-report.json\"\n  },\n  \"message\": \"Value report generated. Total tokens saved: 5,862\"\n}"
-    },
-    {
-      "command": "git rev-parse HEAD",
-      "exitCode": 0,
-      "ok": true,
-      "output": "8a3a0c68a351bbea33ddc1cbeeefe2f768d446f8"
-    },
-    {
-      "command": "git status --porcelain",
-      "exitCode": 0,
-      "ok": true,
-      "output": "M artifacts/check-report.json\n M artifacts/check-report.md\n M reports/demo/first-run-value.json\n M reports/demo/first-run-value.md\n M reports/release/fast-path-boundary-check.json\n M reports/release/fast-path-boundary-check.md\n M reports/release/fresh-install-smoke.json\n M reports/release/fresh-install-smoke.md\n M reports/release/source-reproducibility.json\n M reports/release/source-reproducibility.md\n M reports/release/stable-readiness.json\n M reports/release/stable-readiness.md\n M reports/usage/value-report.json\n M reports/usage/value-report.md"
+      "output": "{\n  \"scopeId\": \"repo_ce1c6bc9\",\n  \"summary\": {\n    \"totalCompressions\": 1,\n    \"totalEstimatedTokensSaved\": 5862,\n    \"averageCompressionRatio\": 0.8646,\n    \"cacheHits\": 0,\n    \"totalRetrieves\": 0,\n    \"memoriesSaved\": 1,\n    \"memoriesRecalled\": 1,\n    \"memoriesForgotten\": 0,\n    \"recoverableOriginals\": 1,\n    \"lastActivityAt\": \"2026-07-15T10:05:28.558Z\"\n  },\n  \"reportPaths\": {\n    \"markdown\": \"D:\\\\project\\\\CodeContext\\\\reports\\\\usage\\\\value-report.md\",\n    \"json\": \"D:\\\\project\\\\CodeContext\\\\reports\\\\usage\\\\value-report.json\"\n  },\n  \"message\": \"Value report generated. Total tokens saved: 5,862\"\n}"
     }
   ],
   "subcommandFailures": [],
