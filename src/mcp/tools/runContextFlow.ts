@@ -33,7 +33,7 @@ import { detectContentType } from "../../router/contentRouter.js";
 import { resolveScope } from "../../scope/resolveScope.js";
 import { runStmt } from "../../storage/db.js";
 import { compressSafely } from "../../safety/safetyLayer.js";
-import { registerAllStrategies } from "../../compression/registerStrategies.js";
+import { initializeCompression } from "../../compression/initialize.js";
 import { getStrategy } from "../../compression/compressionEngine.js";
 import type { MemoryType } from "../../memory/types.js";
 
@@ -101,6 +101,9 @@ export async function handleRunContextFlow(
   ctx: ServerContext,
   args: Record<string, unknown>,
 ): Promise<CallToolResult> {
+  // This handler is also invoked directly by adapters, outside server startup.
+  initializeCompression();
+
   const { db, receipts } = ctx;
   const warnings: string[] = [];
   const runId = generateRunId();
@@ -281,13 +284,6 @@ export async function handleRunContextFlow(
     // ------------------------------------------------------------------
 
     if (flow === "compression" || flow === "full") {
-      // Register strategies (idempotent)
-      try {
-        registerAllStrategies();
-      } catch {
-        warnings.push("Failed to register compression strategies — compression may fall back to plain_text.");
-      }
-
       // Auto-detect content type
       let detectedContentType: ContentType;
       let detectedBy: "user" | "auto" = "user";

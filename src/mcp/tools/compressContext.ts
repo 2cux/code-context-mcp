@@ -299,6 +299,7 @@ export async function handleCompressContext(
                 tokensSaved: cached.tokensSaved,
                 compressionRatio: cached.compressionRatio,
                 canRetrieveOriginal: cached.canRetrieveOriginal,
+                failed: cached.failed ?? false,
                 receiptId: cacheReceiptId,
                 warnings: [`cacheHit=true (served from cache, hit #${cached.cacheHitCount + 1})`],
                 cacheHit: true,
@@ -516,6 +517,7 @@ export async function handleCompressContext(
     tokensSaved: output.tokensSaved,
     compressionRatio: output.compressionRatio,
     canRetrieveOriginal: originalSaved,
+    failed: output.failed ?? false,
     receiptId,
     warnings: [...warnings, ...output.warnings],
     detection: detectedBy === "auto"
@@ -523,9 +525,9 @@ export async function handleCompressContext(
       : { method: "user", specifiedType: contentTypeRaw },
   };
 
-  // Include failure info when compression failed
+  // Include the failure reason when compression failed. The boolean itself is
+  // always present so callers can distinguish success from fail-open output.
   if (output.failed) {
-    result.failed = true;
     result.errorReason = output.errorReason;
   }
 

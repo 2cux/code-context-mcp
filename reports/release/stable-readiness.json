@@ -1,31 +1,31 @@
 {
-  "generatedAt": "2026-07-15T06:59:59.946Z",
-  "generated": "2026-07-15T06:59:59.946Z",
+  "generatedAt": "2026-07-15T07:28:20.844Z",
+  "generated": "2026-07-15T07:28:20.844Z",
   "git": {
-    "commit": "bb0868e57e10a0c02c44365f728d4363d9827232",
+    "commit": "8a3a0c68a351bbea33ddc1cbeeefe2f768d446f8",
     "dirty": true
   },
   "project": "code-context-mcp",
   "version": "1.0.0",
-  "verdict": "FAIL",
+  "verdict": "PASS",
   "summary": {
-    "total": 13,
-    "pass": 11,
-    "warning": 1,
-    "fail": 1,
-    "mustPass": 11,
-    "mustFail": 1,
+    "total": 12,
+    "pass": 12,
+    "warning": 0,
+    "fail": 0,
+    "mustPass": 12,
+    "mustFail": 0,
     "mustWarning": 0,
-    "totalDurationMs": 325434
+    "totalDurationMs": 407781
   },
   "checks": [
     {
       "check": "1. Source reproducibility",
-      "status": "fail",
-      "detail": "subprocess exit 1; generated report verdict FAIL; 1 failed subcommand(s): cmd /d /s /c npx vitest run; npm warn Unknown env config \"store-dir\". This will stop working in the next major version of npm.\nX [ERROR] Cannot read directory \"../../../..\": Access is denied.\n\nX [ERROR] Could not resolve \"C:\\\\Users\\\\Lenovo\\\\AppData\\\\Local\\\\Temp\\\\CodeContext-source-repro-1784098476207\\\\vitest.config.ts\"\n\nfailed to load config from C:\\Users\\Lenovo\\AppData\\Local\\Temp\\CodeContext-source-repro-1784098476207\\vitest.config.ts\n\n⎯⎯⎯⎯⎯⎯⎯ Startup Error ⎯⎯⎯⎯⎯⎯⎯⎯\nError: Build failed with 2 errors:\nerror: Cannot read dir",
+      "status": "pass",
+      "detail": "clean tracked-source build and quality tests passed",
       "category": "reproducibility",
       "severity": "must",
-      "durationMs": 34152
+      "durationMs": 223695
     },
     {
       "check": "2. TypeScript zero errors",
@@ -33,7 +33,7 @@
       "detail": "tsc --noEmit returned zero errors",
       "category": "build",
       "severity": "must",
-      "durationMs": 5837
+      "durationMs": 3626
     },
     {
       "check": "3. Vitest zero failures",
@@ -41,7 +41,7 @@
       "detail": "1596 tests passed, 63 test files, 0 failures",
       "category": "tests",
       "severity": "must",
-      "durationMs": 211377
+      "durationMs": 138157
     },
     {
       "check": "4. Compression Quality Gate",
@@ -49,7 +49,7 @@
       "detail": "Compression quality: 8/8 passed",
       "category": "quality",
       "severity": "must",
-      "durationMs": 509
+      "durationMs": 360
     },
     {
       "check": "5. Memory Recall Quality Gate",
@@ -57,7 +57,7 @@
       "detail": "1 memory/recall test files, 0 failures",
       "category": "quality",
       "severity": "must",
-      "durationMs": 3410
+      "durationMs": 3157
     },
     {
       "check": "6. Fingerprint migration tests",
@@ -65,7 +65,7 @@
       "detail": "4 fingerprint migration tests passed",
       "category": "migration",
       "severity": "must",
-      "durationMs": 3795
+      "durationMs": 2928
     },
     {
       "check": "7. Fast Path Boundary Gate",
@@ -73,15 +73,7 @@
       "detail": "Fast path boundary gate has 0 blockers (29 checks)",
       "category": "boundary",
       "severity": "must",
-      "durationMs": 8460
-    },
-    {
-      "check": "7a. Fast Path warnings",
-      "status": "warning",
-      "detail": "vitest: could not execute boundary tests: Command failed: npx vitest run tests/profileBoundary.test.ts tests/fastPathNoHarness.test.ts tests/w",
-      "category": "boundary",
-      "severity": "should",
-      "durationMs": 0
+      "durationMs": 6005
     },
     {
       "check": "8. Agent mode = 7 tools",
@@ -97,7 +89,7 @@
       "detail": "Dangerous tools (delete_original, cleanup_originals) excluded from AGENT_TOOLS",
       "category": "tool-surface",
       "severity": "must",
-      "durationMs": 1
+      "durationMs": 0
     },
     {
       "check": "9. Fresh npm install smoke",
@@ -105,7 +97,7 @@
       "detail": "fresh HOME npm pack/install/CLI/MCP smoke passed",
       "category": "packaging",
       "severity": "must",
-      "durationMs": 51093
+      "durationMs": 24973
     },
     {
       "check": "10. demo / value / doctor runnable",
@@ -113,7 +105,7 @@
       "detail": "doctor: allPass=true; demo: ok; value: ok",
       "category": "cli",
       "severity": "must",
-      "durationMs": 6045
+      "durationMs": 4185
     },
     {
       "check": "11. Version and documentation consistency",
@@ -121,26 +113,16 @@
       "detail": "All sources consistent at v1.0.0",
       "category": "docs",
       "severity": "must",
-      "durationMs": 4
+      "durationMs": 2
     }
   ],
-  "blockingFailures": [
-    {
-      "check": "1. Source reproducibility",
-      "status": "fail",
-      "detail": "subprocess exit 1; generated report verdict FAIL; 1 failed subcommand(s): cmd /d /s /c npx vitest run; npm warn Unknown env config \"store-dir\". This will stop working in the next major version of npm.\nX [ERROR] Cannot read directory \"../../../..\": Access is denied.\n\nX [ERROR] Could not resolve \"C:\\\\Users\\\\Lenovo\\\\AppData\\\\Local\\\\Temp\\\\CodeContext-source-repro-1784098476207\\\\vitest.config.ts\"\n\nfailed to load config from C:\\Users\\Lenovo\\AppData\\Local\\Temp\\CodeContext-source-repro-1784098476207\\vitest.config.ts\n\n⎯⎯⎯⎯⎯⎯⎯ Startup Error ⎯⎯⎯⎯⎯⎯⎯⎯\nError: Build failed with 2 errors:\nerror: Cannot read dir",
-      "category": "reproducibility",
-      "severity": "must",
-      "durationMs": 34152
-    }
-  ],
+  "blockingFailures": [],
   "commandOutputs": [
     {
       "command": "node scripts/release/source-reproducibility.mjs",
-      "exitCode": 1,
-      "ok": false,
-      "output": "{\n  \"verdict\": \"FAIL\",\n  \"trackedFiles\": 425,\n  \"commands\": [\n    [\n      \"initialize temporary git metadata\",\n      \"pass\"\n    ],\n    [\n      \"create temporary git branch\",\n      \"pass\"\n    ],\n    [\n      \"set temporary git remote\",\n      \"pass\"\n    ],\n    [\n      \"create temporary git HEAD\",\n      \"pass\"\n    ],\n    [\n      \"pnpm install --frozen-lockfile\",\n      \"pass\"\n    ],\n    [\n      \"pnpm build\",\n      \"pass\"\n    ],\n    [\n      \"npx vitest run\",\n      \"fail\"\n    ]\n  ]\n}\n\nwarning: unable to access 'C:\\Users\\Lenovo/.config/git/ignore': Permission denied\nwarning: unable to access 'C:\\Users\n… [output truncated] …\nignore': Permission denied\nwarning: unable to access 'C:\\Users\\Lenovo/.config/git/ignore': Permission denied\nwarning: unable to access 'C:\\Users\\Lenovo/.config/git/ignore': Permission denied\nwarning: unable to access 'C:\\Users\\Lenovo/.config/git/ignore': Permission denied\nwarning: unable to access 'C:\\Users\\Lenovo/.config/git/ignore': Permission denied\nwarning: unable to access 'C:\\Users\\Lenovo/.config/git/ignore': Permission denied\nwarning: unable to access 'C:\\Users\\Lenovo/.config/git/ignore': Permission denied\nwarning: unable to access 'C:\\Users\\Lenovo/.config/git/ignore': Permission denied",
-      "errorSummary": "Command failed: node \"D:\\project\\CodeContext\\scripts\\release\\source-reproducibility.mjs\" | \"verdict\": \"FAIL\", | \"fail\""
+      "exitCode": 0,
+      "ok": true,
+      "output": "{\n  \"verdict\": \"PASS\",\n  \"trackedFiles\": 429,\n  \"commands\": [\n    [\n      \"initialize temporary git metadata\",\n      \"pass\"\n    ],\n    [\n      \"create temporary git branch\",\n      \"pass\"\n    ],\n    [\n      \"set temporary git remote\",\n      \"pass\"\n    ],\n    [\n      \"create temporary git HEAD\",\n      \"pass\"\n    ],\n    [\n      \"pnpm install --frozen-lockfile\",\n      \"pass\"\n    ],\n    [\n      \"pnpm build\",\n      \"pass\"\n    ],\n    [\n      \"npx vitest run\",\n      \"pass\"\n    ]\n  ]\n}"
     },
     {
       "command": "npx tsc --noEmit",
@@ -152,7 +134,7 @@
       "command": "npx vitest run --reporter=json 2>&1",
       "exitCode": 0,
       "ok": true,
-      "output": "{\"numTotalTestSuites\":543,\"numPassedTestSuites\":543,\"numFailedTestSuites\":0,\"numPendingTestSuites\":0,\"numTotalTests\":1624,\"numPassedTests\":1596,\"numFailedTests\":0,\"numPendingTests\":28,\"numTodoTests\":0,\"snapshot\":{\"added\":0,\"failure\":false,\"filesAdded\":0,\"filesRemoved\":0,\"filesRemovedList\":[],\"filesUnmatched\":0,\"filesUpdated\":0,\"matched\":0,\"total\":0,\"unchecked\":0,\"uncheckedKeysByFile\":[],\"unmatched\":0,\"updated\":0,\"didUpdate\":false},\"startTime\":1784098517740,\"success\":true,\"testResults\":[{\"assertionResults\":[{\"ancestorTitles\":[\"scope command\"],\"fullName\":\"scope command returns a valid scopeId fo\n… [output truncated] …\n,{\"ancestorTitles\":[\"Quality Gate — Overall Verdict\"],\"fullName\":\"Quality Gate — Overall Verdict all thresholds pass\",\"status\":\"passed\",\"title\":\"all thresholds pass\",\"duration\":0.5565000000060536,\"failureMessages\":[],\"meta\":{}}],\"startTime\":1784098599900,\"endTime\":1784098599948.5564,\"status\":\"passed\",\"message\":\"\",\"name\":\"D:/project/CodeContext/tests/quality/recallQualityGate.test.ts\"}]}\nnpm notice\nnpm notice New minor version of npm available! 11.6.2 -> 11.18.0\nnpm notice Changelog: https://github.com/npm/cli/releases/tag/v11.18.0\nnpm notice To update run: npm install -g npm@11.18.0\nnpm notice"
+      "output": "{\"numTotalTestSuites\":543,\"numPassedTestSuites\":543,\"numFailedTestSuites\":0,\"numPendingTestSuites\":0,\"numTotalTests\":1624,\"numPassedTests\":1596,\"numFailedTests\":0,\"numPendingTests\":28,\"numTodoTests\":0,\"snapshot\":{\"added\":0,\"failure\":false,\"filesAdded\":0,\"filesRemoved\":0,\"filesRemovedList\":[],\"filesUnmatched\":0,\"filesUpdated\":0,\"matched\":0,\"total\":0,\"unchecked\":0,\"uncheckedKeysByFile\":[],\"unmatched\":0,\"updated\":0,\"didUpdate\":false},\"startTime\":1784100323042,\"success\":true,\"testResults\":[{\"assertionResults\":[{\"ancestorTitles\":[\"scope command\"],\"fullName\":\"scope command returns a valid scopeId fo\n… [output truncated] …\n{\"ancestorTitles\":[\"Quality Gate — Overall Verdict\"],\"fullName\":\"Quality Gate — Overall Verdict all thresholds pass\",\"status\":\"passed\",\"title\":\"all thresholds pass\",\"duration\":0.41719999999622814,\"failureMessages\":[],\"meta\":{}}],\"startTime\":1784100374839,\"endTime\":1784100374876.4172,\"status\":\"passed\",\"message\":\"\",\"name\":\"D:/project/CodeContext/tests/quality/recallQualityGate.test.ts\"}]}\nnpm notice\nnpm notice New minor version of npm available! 11.6.2 -> 11.18.0\nnpm notice Changelog: https://github.com/npm/cli/releases/tag/v11.18.0\nnpm notice To update run: npm install -g npm@11.18.0\nnpm notice"
     },
     {
       "command": "node scripts/release/compression-quality-check.mjs",
@@ -164,82 +146,60 @@
       "command": "npx vitest run tests/quality/recallQualityGate.test.ts --reporter=json 2>&1",
       "exitCode": 0,
       "ok": true,
-      "output": "{\"numTotalTestSuites\":8,\"numPassedTestSuites\":8,\"numFailedTestSuites\":0,\"numPendingTestSuites\":0,\"numTotalTests\":53,\"numPassedTests\":53,\"numFailedTests\":0,\"numPendingTests\":0,\"numTodoTests\":0,\"snapshot\":{\"added\":0,\"failure\":false,\"filesAdded\":0,\"filesRemoved\":0,\"filesRemovedList\":[],\"filesUnmatched\":0,\"filesUpdated\":0,\"matched\":0,\"total\":0,\"unchecked\":0,\"uncheckedKeysByFile\":[],\"unmatched\":0,\"updated\":0,\"didUpdate\":false},\"startTime\":1784098729024,\"success\":true,\"testResults\":[{\"assertionResults\":[{\"ancestorTitles\":[\"Quality Gate — Recall@1\"],\"fullName\":\"Quality Gate — Recall@1 \\\"project_rule:\n… [output truncated] …\n\":\"Quality Gate — Duplicate Result IDs no duplicate memory IDs in any result set\",\"status\":\"passed\",\"title\":\"no duplicate memory IDs in any result set\",\"duration\":24.364199999999983,\"failureMessages\":[],\"meta\":{}},{\"ancestorTitles\":[\"Quality Gate — Overall Verdict\"],\"fullName\":\"Quality Gate — Overall Verdict all thresholds pass\",\"status\":\"passed\",\"title\":\"all thresholds pass\",\"duration\":0.657100000000014,\"failureMessages\":[],\"meta\":{}}],\"startTime\":1784098729846,\"endTime\":1784098729946.657,\"status\":\"passed\",\"message\":\"\",\"name\":\"D:/project/CodeContext/tests/quality/recallQualityGate.test.ts\"}]}"
+      "output": "{\"numTotalTestSuites\":8,\"numPassedTestSuites\":8,\"numFailedTestSuites\":0,\"numPendingTestSuites\":0,\"numTotalTests\":53,\"numPassedTests\":53,\"numFailedTests\":0,\"numPendingTests\":0,\"numTodoTests\":0,\"snapshot\":{\"added\":0,\"failure\":false,\"filesAdded\":0,\"filesRemoved\":0,\"filesRemovedList\":[],\"filesUnmatched\":0,\"filesUpdated\":0,\"matched\":0,\"total\":0,\"unchecked\":0,\"uncheckedKeysByFile\":[],\"unmatched\":0,\"updated\":0,\"didUpdate\":false},\"startTime\":1784100461698,\"success\":true,\"testResults\":[{\"assertionResults\":[{\"ancestorTitles\":[\"Quality Gate — Recall@1\"],\"fullName\":\"Quality Gate — Recall@1 \\\"project_rule:\n… [output truncated] …\nQuality Gate — Duplicate Result IDs no duplicate memory IDs in any result set\",\"status\":\"passed\",\"title\":\"no duplicate memory IDs in any result set\",\"duration\":10.722099999999955,\"failureMessages\":[],\"meta\":{}},{\"ancestorTitles\":[\"Quality Gate — Overall Verdict\"],\"fullName\":\"Quality Gate — Overall Verdict all thresholds pass\",\"status\":\"passed\",\"title\":\"all thresholds pass\",\"duration\":0.42170000000010077,\"failureMessages\":[],\"meta\":{}}],\"startTime\":1784100462353,\"endTime\":1784100462396.7222,\"status\":\"passed\",\"message\":\"\",\"name\":\"D:/project/CodeContext/tests/quality/recallQualityGate.test.ts\"}]}"
     },
     {
       "command": "npx vitest run tests/memoryFingerprintMigration.test.ts --reporter=json 2>&1",
       "exitCode": 0,
       "ok": true,
-      "output": "{\"numTotalTestSuites\":2,\"numPassedTestSuites\":2,\"numFailedTestSuites\":0,\"numPendingTestSuites\":0,\"numTotalTests\":4,\"numPassedTests\":4,\"numFailedTests\":0,\"numPendingTests\":0,\"numTodoTests\":0,\"snapshot\":{\"added\":0,\"failure\":false,\"filesAdded\":0,\"filesRemoved\":0,\"filesRemovedList\":[],\"filesUnmatched\":0,\"filesUpdated\":0,\"matched\":0,\"total\":0,\"unchecked\":0,\"uncheckedKeysByFile\":[],\"unmatched\":0,\"updated\":0,\"didUpdate\":false},\"startTime\":1784098732881,\"success\":true,\"testResults\":[{\"assertionResults\":[{\"ancestorTitles\":[\"Memory fingerprint migration\"],\"fullName\":\"Memory fingerprint migration upgrade\n… [output truncated] …\n\":\"passed\",\"title\":\"does not overwrite an existing fingerprint\",\"duration\":13.112700000000018,\"failureMessages\":[],\"meta\":{}},{\"ancestorTitles\":[\"Memory fingerprint migration\"],\"fullName\":\"Memory fingerprint migration lets new remember calls deduplicate against upgraded old records\",\"status\":\"passed\",\"title\":\"lets new remember calls deduplicate against upgraded old records\",\"duration\":17.843000000000075,\"failureMessages\":[],\"meta\":{}}],\"startTime\":1784098733617,\"endTime\":1784098733753.843,\"status\":\"passed\",\"message\":\"\",\"name\":\"D:/project/CodeContext/tests/memoryFingerprintMigration.test.ts\"}]}"
+      "output": "{\"numTotalTestSuites\":2,\"numPassedTestSuites\":2,\"numFailedTestSuites\":0,\"numPendingTestSuites\":0,\"numTotalTests\":4,\"numPassedTests\":4,\"numFailedTests\":0,\"numPendingTests\":0,\"numTodoTests\":0,\"snapshot\":{\"added\":0,\"failure\":false,\"filesAdded\":0,\"filesRemoved\":0,\"filesRemovedList\":[],\"filesUnmatched\":0,\"filesUpdated\":0,\"matched\":0,\"total\":0,\"unchecked\":0,\"uncheckedKeysByFile\":[],\"unmatched\":0,\"updated\":0,\"didUpdate\":false},\"startTime\":1784100464709,\"success\":true,\"testResults\":[{\"assertionResults\":[{\"ancestorTitles\":[\"Memory fingerprint migration\"],\"fullName\":\"Memory fingerprint migration upgrade\n… [output truncated] …\n\":\"passed\",\"title\":\"does not overwrite an existing fingerprint\",\"duration\":7.447599999999966,\"failureMessages\":[],\"meta\":{}},{\"ancestorTitles\":[\"Memory fingerprint migration\"],\"fullName\":\"Memory fingerprint migration lets new remember calls deduplicate against upgraded old records\",\"status\":\"passed\",\"title\":\"lets new remember calls deduplicate against upgraded old records\",\"duration\":13.721699999999942,\"failureMessages\":[],\"meta\":{}}],\"startTime\":1784100465252,\"endTime\":1784100465335.7217,\"status\":\"passed\",\"message\":\"\",\"name\":\"D:/project/CodeContext/tests/memoryFingerprintMigration.test.ts\"}]}"
     },
     {
       "command": "node scripts/release/fast-path-boundary-check.mjs",
       "exitCode": 0,
       "ok": true,
-      "output": "═══════════════════════════════════════════\n  Fast Path Boundary Release Gate\n  Verdict: WARNING\n  Pass: 28  Warning: 1  Fail: 0\n═══════════════════════════════════════════\n  Report: reports\\release\\fast-path-boundary-check.json\n  Report: reports\\release\\fast-path-boundary-check.md\n═══════════════════════════════════════════"
+      "output": "═══════════════════════════════════════════\n  Fast Path Boundary Release Gate\n  Verdict: PASS\n  Pass: 29  Warning: 0  Fail: 0\n═══════════════════════════════════════════\n  Report: reports\\release\\fast-path-boundary-check.json\n  Report: reports\\release\\fast-path-boundary-check.md\n═══════════════════════════════════════════"
     },
     {
       "command": "node scripts/release/clean-install-smoke.mjs",
       "exitCode": 0,
       "ok": true,
-      "output": "CodeContext MCP - Fresh Install Package Smoke\n\n  Build package artifacts... OK 6925ms\n  npm pack... OK 3929ms\n  Install packed tgz in temporary project... OK 36078ms\n  Isolation preflight: fresh HOME and empty database directory... OK 1ms\n  code-context --version... OK 353ms\n  code-context doctor --json... OK 807ms\n  code-context demo --json... OK 1564ms\n  code-context value --json... OK 569ms\n  code-context-server first startup... OK 673ms\n  Isolation postflight: database created only under fresh HOME... OK 0ms\n\n10 passed, 0 failed"
+      "output": "CodeContext MCP - Fresh Install Package Smoke\n\n  Build package artifacts... OK 4080ms\n  npm pack... OK 2751ms\n  Install packed tgz in temporary project... OK 14637ms\n  Isolation preflight: fresh HOME and empty database directory... OK 1ms\n  code-context --version... OK 300ms\n  code-context doctor --json... OK 792ms\n  code-context demo --json... OK 1144ms\n  code-context value --json... OK 483ms\n  code-context-server first startup... OK 651ms\n  Isolation postflight: database created only under fresh HOME... OK 1ms\n\n10 passed, 0 failed"
     },
     {
       "command": "node dist/cli/index.js doctor",
       "exitCode": 0,
       "ok": true,
-      "output": "{\n  \"timestamp\": \"2026-07-15T06:59:54.442Z\",\n  \"nodeVersion\": \"v24.13.0\",\n  \"platform\": \"win32 x64\",\n  \"checks\": [\n    {\n      \"name\": \"node-version\",\n      \"label\": \"Node version\",\n      \"status\": \"pass\",\n      \"message\": \"v24.13.0 (>= 18.0.0)\"\n    },\n    {\n      \"name\": \"db-dir-writable\",\n      \"label\": \"Database directory writable\",\n      \"status\": \"pass\",\n      \"message\": \"C:\\\\Users\\\\Lenovo\\\\AppData\\\\Local\\\\Temp\\\\cc-stable-cli-cSIuu7\\\\.code-context-mcp\"\n    },\n    {\n      \"name\": \"migration\",\n      \"label\": \"Schema migration\",\n      \"status\": \"pass\",\n      \"message\": \"7 tables (scopes, com\n… [output truncated] …\n\n      \"name\": \"agent-tools\",\n      \"label\": \"Agent mode tool count\",\n      \"status\": \"pass\",\n      \"message\": \"7 tools exposed in agent mode\",\n      \"detail\": \"compress_context, current_scope, forget_context, recall_context, remember_context, retrieve_original, run_context_flow\"\n    }\n  ],\n  \"allPass\": true,\n  \"mcpConfig\": {\n    \"agent\": {\n      \"command\": \"code-context-server\",\n      \"args\": [],\n      \"env\": {\n        \"MCP_TOOL_MODE\": \"agent\"\n      }\n    },\n    \"dev\": {\n      \"command\": \"code-context-server\",\n      \"args\": [],\n      \"env\": {\n        \"MCP_TOOL_MODE\": \"dev\"\n      }\n    }\n  }\n}"
+      "output": "{\n  \"timestamp\": \"2026-07-15T07:28:17.327Z\",\n  \"nodeVersion\": \"v24.13.0\",\n  \"platform\": \"win32 x64\",\n  \"checks\": [\n    {\n      \"name\": \"node-version\",\n      \"label\": \"Node version\",\n      \"status\": \"pass\",\n      \"message\": \"v24.13.0 (>= 18.0.0)\"\n    },\n    {\n      \"name\": \"db-dir-writable\",\n      \"label\": \"Database directory writable\",\n      \"status\": \"pass\",\n      \"message\": \"C:\\\\Users\\\\Lenovo\\\\AppData\\\\Local\\\\Temp\\\\cc-stable-cli-FOqAaA\\\\.code-context-mcp\"\n    },\n    {\n      \"name\": \"migration\",\n      \"label\": \"Schema migration\",\n      \"status\": \"pass\",\n      \"message\": \"7 tables (scopes, com\n… [output truncated] …\n\n      \"name\": \"agent-tools\",\n      \"label\": \"Agent mode tool count\",\n      \"status\": \"pass\",\n      \"message\": \"7 tools exposed in agent mode\",\n      \"detail\": \"compress_context, current_scope, forget_context, recall_context, remember_context, retrieve_original, run_context_flow\"\n    }\n  ],\n  \"allPass\": true,\n  \"mcpConfig\": {\n    \"agent\": {\n      \"command\": \"code-context-server\",\n      \"args\": [],\n      \"env\": {\n        \"MCP_TOOL_MODE\": \"agent\"\n      }\n    },\n    \"dev\": {\n      \"command\": \"code-context-server\",\n      \"args\": [],\n      \"env\": {\n        \"MCP_TOOL_MODE\": \"dev\"\n      }\n    }\n  }\n}"
     },
     {
       "command": "node dist/cli/index.js demo",
       "exitCode": 0,
       "ok": true,
-      "output": "{\n  \"reportPath\": \"D:\\\\project\\\\CodeContext\\\\reports\\\\demo\\\\first-run-value.md\",\n  \"jsonPath\": \"D:\\\\project\\\\CodeContext\\\\reports\\\\demo\\\\first-run-value.json\",\n  \"summary\": {\n    \"compress\": \"5862 tokens saved (86.5% ratio)\",\n    \"remember\": \"saved memory mem_mrlqcxx5_59c6da_000001\",\n    \"recall\": \"found 1 result(s) for \\\"What package manager does this project use? Which \\\"\",\n    \"retrieve\": \"recovered 16484 chars from original\"\n  }\n}"
+      "output": "{\n  \"reportPath\": \"D:\\\\project\\\\CodeContext\\\\reports\\\\demo\\\\first-run-value.md\",\n  \"jsonPath\": \"D:\\\\project\\\\CodeContext\\\\reports\\\\demo\\\\first-run-value.json\",\n  \"summary\": {\n    \"compress\": \"5862 tokens saved (86.5% ratio)\",\n    \"remember\": \"saved memory mem_mrlrdfev_2c1ae4_000001\",\n    \"recall\": \"found 1 result(s) for \\\"What package manager does this project use? Which \\\"\",\n    \"retrieve\": \"recovered 16484 chars from original\"\n  }\n}"
     },
     {
       "command": "node dist/cli/index.js value",
       "exitCode": 0,
       "ok": true,
-      "output": "{\n  \"scopeId\": \"repo_ce1c6bc9\",\n  \"summary\": {\n    \"totalCompressions\": 1,\n    \"totalEstimatedTokensSaved\": 5862,\n    \"averageCompressionRatio\": 0.8646,\n    \"cacheHits\": 0,\n    \"totalRetrieves\": 0,\n    \"memoriesSaved\": 1,\n    \"memoriesRecalled\": 1,\n    \"memoriesForgotten\": 0,\n    \"recoverableOriginals\": 1,\n    \"lastActivityAt\": \"2026-07-15T06:59:57.924Z\"\n  },\n  \"reportPaths\": {\n    \"markdown\": \"D:\\\\project\\\\CodeContext\\\\reports\\\\usage\\\\value-report.md\",\n    \"json\": \"D:\\\\project\\\\CodeContext\\\\reports\\\\usage\\\\value-report.json\"\n  },\n  \"message\": \"Value report generated. Total tokens saved: 5,862\"\n}"
+      "output": "{\n  \"scopeId\": \"repo_ce1c6bc9\",\n  \"summary\": {\n    \"totalCompressions\": 1,\n    \"totalEstimatedTokensSaved\": 5862,\n    \"averageCompressionRatio\": 0.8646,\n    \"cacheHits\": 0,\n    \"totalRetrieves\": 0,\n    \"memoriesSaved\": 1,\n    \"memoriesRecalled\": 1,\n    \"memoriesForgotten\": 0,\n    \"recoverableOriginals\": 1,\n    \"lastActivityAt\": \"2026-07-15T07:28:19.637Z\"\n  },\n  \"reportPaths\": {\n    \"markdown\": \"D:\\\\project\\\\CodeContext\\\\reports\\\\usage\\\\value-report.md\",\n    \"json\": \"D:\\\\project\\\\CodeContext\\\\reports\\\\usage\\\\value-report.json\"\n  },\n  \"message\": \"Value report generated. Total tokens saved: 5,862\"\n}"
     },
     {
       "command": "git rev-parse HEAD",
       "exitCode": 0,
       "ok": true,
-      "output": "bb0868e57e10a0c02c44365f728d4363d9827232"
+      "output": "8a3a0c68a351bbea33ddc1cbeeefe2f768d446f8"
     },
     {
       "command": "git status --porcelain",
       "exitCode": 0,
       "ok": true,
-      "output": "M artifacts/check-report.json\n M artifacts/check-report.md\nA  examples/first-run/sample-error.log\n M reports/release/fast-path-boundary-check.json\n M reports/release/fast-path-boundary-check.md\n M reports/release/fresh-install-smoke.json\n M reports/release/fresh-install-smoke.md\n M reports/release/source-reproducibility.json\n M reports/release/source-reproducibility.md\n M reports/release/stable-readiness.json\n M reports/release/stable-readiness.md\n M scripts/release/source-reproducibility.mjs\n M scripts/release/stable-readiness-check.mjs\n M vitest.config.ts\n?? reports/demo/\n?? reports/usage/"
+      "output": "M artifacts/check-report.json\n M artifacts/check-report.md\n M reports/demo/first-run-value.json\n M reports/demo/first-run-value.md\n M reports/release/fast-path-boundary-check.json\n M reports/release/fast-path-boundary-check.md\n M reports/release/fresh-install-smoke.json\n M reports/release/fresh-install-smoke.md\n M reports/release/source-reproducibility.json\n M reports/release/source-reproducibility.md\n M reports/release/stable-readiness.json\n M reports/release/stable-readiness.md\n M reports/usage/value-report.json\n M reports/usage/value-report.md"
     }
   ],
-  "subcommandFailures": [
-    {
-      "check": "direct subcommand",
-      "command": "node scripts/release/source-reproducibility.mjs",
-      "exitCode": 1,
-      "errorSummary": "Command failed: node \"D:\\project\\CodeContext\\scripts\\release\\source-reproducibility.mjs\" | \"verdict\": \"FAIL\", | \"fail\""
-    },
-    {
-      "check": "1. Source reproducibility",
-      "command": "cmd /d /s /c npx vitest run",
-      "exitCode": 1,
-      "errorSummary": "X [ERROR] Cannot read directory \"../../../..\": Access is denied. | X [ERROR] Could not resolve \"C:\\\\Users\\\\Lenovo\\\\AppData\\\\Local\\\\Temp\\\\CodeContext-source-repro-1784098476207\\\\vitest.config.ts\" | failed to load config from C:\\Users\\Lenovo\\AppData\\Local\\Temp\\CodeContext-source-repro-1784098476207\\vitest.config.ts | ⎯⎯⎯⎯⎯⎯⎯ Startup Error ⎯⎯⎯⎯⎯⎯⎯⎯ | Error: Build failed with 2 errors: | error: Cannot read directory \"../../../..\": Access is denied. | error: Could not resolve \"C:\\\\Users\\\\Lenovo\\\\AppData\\\\Local\\\\Temp\\\\CodeContext-source-repro-1784098476207\\\\vitest.config.ts\""
-    }
-  ],
+  "subcommandFailures": [],
   "testFailures": [],
-  "fastPathWarnings": [
-    {
-      "check": "7a. Fast Path warnings",
-      "status": "warning",
-      "detail": "vitest: could not execute boundary tests: Command failed: npx vitest run tests/profileBoundary.test.ts tests/fastPathNoHarness.test.ts tests/w",
-      "category": "boundary",
-      "severity": "should",
-      "durationMs": 0
-    }
-  ],
+  "fastPathWarnings": [],
   "verdictRules": {
     "pass": "All MUST checks pass. Ready for stable release.",
     "warning": "All MUST checks pass but one or more SHOULD checks are warnings. Review before release.",

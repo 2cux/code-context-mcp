@@ -22,7 +22,7 @@ import { OriginalStore } from "../originals/originalStore.js";
 import { getTokenStats } from "../stats/tokenStats.js";
 import { resolveScope, toScopeRecord } from "../scope/resolveScope.js";
 import { runStmt } from "../storage/db.js";
-import { registerAllStrategies } from "../compression/registerStrategies.js";
+import { initializeCompression } from "../compression/initialize.js";
 import { detectContentType } from "../router/contentRouter.js";
 import { compressSafely } from "../safety/safetyLayer.js";
 import { contentHash } from "../utils/hash.js";
@@ -65,6 +65,7 @@ function fail(message: string): CliResult {
 
 async function initDb(): Promise<{ ok: true; db: ReturnType<typeof getDb> } | { ok: false; error: string }> {
   try {
+    initializeCompression();
     await initAndMigrate();
     const db = getDb();
     return { ok: true, db };
@@ -255,9 +256,6 @@ export async function runCompress(filePath: string, opts: CompressOpts): Promise
     const db = init.db;
     const scope = resolveScope();
     ensureScopeRecord(db);
-
-    // Register all compression strategies
-    registerAllStrategies();
 
     const compressedStore = new CompressedStore(db);
     const originalStore = new OriginalStore(db);

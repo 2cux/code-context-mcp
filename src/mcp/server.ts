@@ -17,6 +17,7 @@ import { TOOL_DEFINITIONS } from "./toolSchemas.js";
 import { createToolHandlers } from "./toolRegistry.js";
 import { resolveToolMode, isToolAllowed, describeMode } from "./toolMode.js";
 import { registerAllFlows } from "../harness/register.js";
+import { initializeCompression } from "../compression/initialize.js";
 import { listResources, readResource } from "./resourceHandlers.js";
 import { listPrompts, getPrompt } from "./promptHandlers.js";
 
@@ -26,6 +27,9 @@ export interface ServerContext {
 }
 
 export async function startServer(): Promise<void> {
+  // Initialize the shared compression runtime before any handler is created.
+  initializeCompression();
+
   // Initialize SQLite
   await initAndMigrate();
   const db = getDb();

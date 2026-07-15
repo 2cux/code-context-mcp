@@ -107,6 +107,12 @@ export interface StrategyResult {
 
 const strategyRegistry = new Map<ContentType, CompressionStrategy>();
 
+/** Types that intentionally use the generic plain-text strategy. */
+const PLAIN_TEXT_FALLBACK_TYPES: ReadonlySet<ContentType> = new Set([
+  "file_summary",
+  "unknown",
+]);
+
 /**
  * Register a compression strategy for a content type.
  * Overwrites any previously registered strategy for the same type.
@@ -236,14 +242,25 @@ export async function compress(
     return fallback;
   }
 
-  // Resolve strategy: use registered strategy, or fall back to plain_text
+  // Resolve strategy. Only types explicitly designed to use the generic
+  // strategy may fall back to plain_text. A missing strategy for a concrete
+  // supported type is an initialization failure and must fail open rather
+  // than being reported as a successful compression.
   let strategy = strategyRegistry.get(contentType);
   let fallbackUsed = false;
 
-  if (!strategy) {
-    // Fall back to plain_text for unknown/unregistered types
+  if (!strategy && PLAIN_TEXT_FALLBACK_TYPES.has(contentType)) {
     strategy = strategyRegistry.get("plain_text");
     fallbackUsed = true;
+  }
+
+  if (!strategy && !PLAIN_TEXT_FALLBACK_TYPES.has(contentType)) {
+    const output = buildFallbackOutput(input, tokensBefore);
+    output.errorReason = `Compression strategy not registered for content type: ${contentType}`;
+    output.warnings = [
+      `Compression failed open because strategy "${contentType}" is not registered.`,
+    ];
+    return output;
   }
 
   // If even plain_text is missing, fail open immediately

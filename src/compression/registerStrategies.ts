@@ -2,7 +2,7 @@
  * Strategy registration module.
  *
  * Registers all available compression strategies with the engine's
- * strategy registry. Call `registerAllStrategies()` once during
+ * strategy registry. Call `registerAllStrategies()` during
  * initialization before using the compression engine.
  */
 
@@ -20,8 +20,9 @@ import { conversationHistoryStrategy } from "./strategies/conversationHistory.js
 /**
  * Register all available compression strategies.
  *
- * Must be called once before using `compress()`.
- * Idempotent — calling it again overwrites the same entries.
+ * Must be called before using `compress()`.
+ * Idempotent: the registry is keyed by content type, so repeated calls leave
+ * exactly the same strategy bindings and never create duplicate entries.
  */
 export function registerAllStrategies(): void {
   registerStrategy("test_output", testOutputStrategy);
