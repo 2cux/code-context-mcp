@@ -1,7 +1,7 @@
 # Post-RC Feedback Loop
 
-> **Status**: RC feedback mechanism — no code changes in this document.
-> **Current RC**: v1.0.0-rc (package.json) / v0.3.0-rc (release checklist)
+> **Status**: Historical RC feedback process retained for reference.
+> **Historical RC**: v0.3.0-rc. The current stable release is v1.0.0.
 
 ## 1. Feedback Collection
 
@@ -79,11 +79,11 @@ Severity Assessment
 | Gate | Criteria | Current Status |
 |---|---|---|
 | G1 — Type Safety | `tsc --noEmit` zero errors | ✅ Pass |
-| G2 — Test Suite | `vitest run` zero failures (non-perf) | ✅ 1285 tests, 0 failures |
+| G2 — Test Suite | `vitest run` zero failures (non-perf) | ✅ Passed at RC sign-off |
 | G3 — Standard Perf | `PERF_TEST=1` all standard tests pass | ✅ Pass |
 | G4 — Agent Mode | 7 tools, no dangerous tools exposed | ✅ Verified |
-| G5 — Tool Security | ListTools + CallTool enforcement passes | ✅ 60 regression tests |
-| G6 — Clean Install | `clean-install-smoke.mjs` 9/9 passes | ✅ Pass |
+| G5 — Tool Security | ListTools + CallTool enforcement passes | ✅ Passed at RC sign-off |
+| G6 — Clean Install | `clean-install-smoke.mjs` passes | ✅ Pass |
 | G7 — Package Integrity | `npm pack --dry-run` excludes local data | ✅ Pass |
 | G8 — Docs Sync | README, CHANGELOG, release notes consistent | ✅ Pass |
 | G9 — Zero RC-Blockers | No open issues labeled `rc-blocker` | ⬜ Pending external feedback |

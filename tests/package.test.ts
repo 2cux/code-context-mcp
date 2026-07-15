@@ -1,5 +1,5 @@
 import { execFileSync, execSync, spawn, type ChildProcessWithoutNullStreams } from "node:child_process";
-import { existsSync, mkdtempSync, readFileSync, rmSync } from "node:fs";
+import { existsSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import initSqlJs from "sql.js";
@@ -63,14 +63,27 @@ describe("release package", () => {
   });
 
   it("includes dist/storage/schema.sql in npm pack dry-run output", () => {
-    const output = run(npm, ["pack", "--dry-run", "--json"]);
-    const packed = JSON.parse(output) as Array<{
+    const output = run(npm, ["pack", "--dry-run", "--json", "--silent"]);
+    const jsonStart = output.lastIndexOf("\n[");
+    const packed = JSON.parse(jsonStart >= 0 ? output.slice(jsonStart + 1) : output) as Array<{
       files: Array<{ path: string }>;
     }>;
 
     expect(
       packed[0]?.files.some((file) => file.path === "dist/storage/schema.sql"),
     ).toBe(true);
+  });
+
+  it("fails the packed Markdown check when a relative target is missing", () => {
+    const fixture = mkdtempSync(join(tmpdir(), "code-context-packed-links-"));
+    tempHomes.push(fixture);
+    writeFileSync(join(fixture, "README.md"), "[missing](./missing.md)\n", "utf8");
+
+    expect(() => run(node, [
+      join(root, "scripts", "release", "check-packed-markdown-links.mjs"),
+      "--directory",
+      fixture,
+    ])).toThrow();
   });
 
   it("initializes a fresh home database from the packaged dist server", async () => {

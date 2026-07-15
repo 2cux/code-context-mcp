@@ -4,7 +4,7 @@
 [![License: MIT](https://img.shields.io/badge/license-MIT-yellow)](./LICENSE)
 [![Node.js](https://img.shields.io/badge/node-%3E%3D18-green)](https://nodejs.org)
 [![MCP](https://img.shields.io/badge/MCP-compatible-purple)](https://modelcontextprotocol.io)
-[![Tests](https://img.shields.io/badge/tests-~1600%20passing-brightgreen)](./tests)
+[![Tests](https://img.shields.io/badge/tests-automated-brightgreen)](https://github.com/2cux/code-context-mcp/tree/main/tests)
 
 > **v1.0.0** — Context Compression + Project Memory, dual-core.
 
@@ -363,7 +363,7 @@ Every operation leaves an audit trail. For a complete walkthrough, see [DEMO.md]
 | [agent-resource-usage.md](./examples/agent-resource-usage.md) | Example: agent using MCP resources |
 | [PERFORMANCE.md](./docs/PERFORMANCE.md) | Performance guide: test tiers, memory guard, thresholds |
 | [HARNESS.md](./docs/14-harness.md) | Harness framework — flows, runner, adapters |
-| [USABILITY.md](./reports/usability/agent-usability-report.md) | Agent usability evaluation — 3-mode comparison |
+| [USABILITY.md](https://github.com/2cux/code-context-mcp/blob/main/reports/usability/agent-usability-report.md) | Agent usability evaluation — 3-mode comparison |
 | [DATA_MODEL.md](./DATA_MODEL.md) | Data models, record types, SQLite schema |
 | [ARCHITECTURE.md](./ARCHITECTURE.md) | Architecture, module responsibilities, data flows |
 | [SECURITY.md](./SECURITY.md) | Security model, data directory, privacy, encryption |
@@ -392,7 +392,7 @@ PRD documents are in [`docs/`](./docs/INDEX.md).
 ```bash
 pnpm install        # Install dependencies
 pnpm build          # Build TypeScript
-pnpm test           # Run tests (~1600 tests)
+pnpm test           # Run the current test suite
 pnpm test:watch     # Watch mode
 pnpm lint           # ESLint
 pnpm format         # Prettier
@@ -406,14 +406,14 @@ CodeContext uses a **Harness** — a unified business closed-loop execution and 
 
 ### Test Architecture
 
-| Layer | Location | Tests | Adapter | Purpose |
-|-------|----------|-------|---------|---------|
-| **Core Unit** | `tests/harness/*.test.ts` | ~220 | — | types, registry, runner, state store, artifact store, reporter, check, validate, checkEngine, mockAdapters |
-| **Flow Integration** | `tests/harness/*Flow.test.ts` | ~45 | real + mock | 7 business-capability closed loops |
-| **MCP Tools** | `tests/harness/mcpHarness.test.ts` | 26 | mock + **real** | smoke + real adapter for harness MCP tools |
-| **CLI** | `tests/cli.test.ts` + `tests/harness/cliHarness.test.ts` | 73 | mock | CLI command smoke + integration |
-| **Regression** | `tests/phase*.test.ts` | ~600 | real in-memory DB | compression, memory, profile, acceptance |
-| **Schema** | `tests/mcpSchema.test.ts` | 37 | — | MCP tool schema validation |
+| Layer | Location | Adapter | Purpose |
+|-------|----------|---------|---------|
+| **Core Unit** | `tests/harness/*.test.ts` | — | types, registry, runner, state store, artifact store, reporter, check, validate, checkEngine, mockAdapters |
+| **Flow Integration** | `tests/harness/*Flow.test.ts` | real + mock | business-capability closed loops |
+| **MCP Tools** | `tests/harness/mcpHarness.test.ts` | mock + **real** | smoke + real adapter for harness MCP tools |
+| **CLI** | `tests/cli.test.ts` + `tests/harness/cliHarness.test.ts` | mock | CLI command smoke + integration |
+| **Regression** | `tests/phase*.test.ts` | real in-memory DB | compression, memory, profile, acceptance |
+| **Schema** | `tests/mcpSchema.test.ts` | — | MCP tool schema validation |
 
 ### Adapter Strategy
 
@@ -442,7 +442,7 @@ The real `McpAdapter` supports 4 harness MCP tools backed by in-memory SQLite:
 pnpm test
 ```
 
-Expected: **58 test files, ~1600 tests, all passing.** (Performance tests run separately with `PERF_TEST=1`)
+The command discovers the current test files automatically and must finish with zero failures. Performance tests run separately with `PERF_TEST=1`.
 
 ---
 

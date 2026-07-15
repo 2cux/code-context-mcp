@@ -14,6 +14,8 @@ import { queryOne } from "../storage/db.js";
 import { MemoryService } from "../memory/memoryService.js";
 import { CompressedStore } from "../compressed/compressedStore.js";
 import { getTokenStats } from "../stats/tokenStats.js";
+import { TOOL_MAP } from "./toolSchemas.js";
+import { getAllowedTools } from "./toolMode.js";
 
 export interface PromptContext {
   db: Database;
@@ -165,15 +167,35 @@ function buildProjectContextBrief(db: Database): string {
   lines.push("");
 
   lines.push("## Available Tools");
-  lines.push("- `current_scope()` — show current repository scope");
-  lines.push("- `compress_context(content, type)` — compress long content");
-  lines.push("- `retrieve_original(ccrId)` — expand compressed context");
-  lines.push("- `remember_context(type, content, summary)` — save project facts");
-  lines.push("- `recall_context(query)` — search project memory");
-  lines.push("- `forget_context(memoryId)` — remove outdated memory");
-  lines.push("- `run_context_flow(flowType, payload)` — unified compression + memory flow");
+  lines.push(...buildAgentToolGuidance());
   lines.push("");
   lines.push("All operations are scoped to this repository.");
 
   return lines.join("\n");
+}
+
+/**
+ * Build concise agent guidance from the same definitions exposed by MCP.
+ *
+ * Most entries show only required, non-scope inputs so the brief stays terse;
+ * scopeId is already printed near the top of the prompt. The unified flow is
+ * the exception: its complete top-level schema is useful for choosing which
+ * parts of the flow to run, so all of its parameters are shown.
+ */
+function buildAgentToolGuidance(): string[] {
+  return [...getAllowedTools("agent")].map((toolName) => {
+    const tool = TOOL_MAP[toolName];
+    if (!tool) {
+      throw new Error(`Agent tool is missing an MCP schema: ${toolName}`);
+    }
+
+    const properties = Object.keys(tool.inputSchema.properties ?? {});
+    const required = new Set(tool.inputSchema.required ?? []);
+    const parameterNames = toolName === "run_context_flow"
+      ? properties
+      : properties.filter((name) => name !== "scopeId" && required.has(name));
+    const summary = tool.description?.split(/\.\s/)[0] ?? "MCP tool";
+
+    return `- \`${tool.name}(${parameterNames.join(", ")})\` — ${summary}`;
+  });
 }

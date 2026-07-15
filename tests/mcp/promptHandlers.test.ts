@@ -8,6 +8,8 @@ import { runMigrations } from "../../src/storage/migrations.js";
 import { listPrompts, getPrompt } from "../../src/mcp/promptHandlers.js";
 import { MemoryService } from "../../src/memory/memoryService.js";
 import { resolveScope } from "../../src/scope/resolveScope.js";
+import { TOOL_MAP } from "../../src/mcp/toolSchemas.js";
+import { getAllowedTools } from "../../src/mcp/toolMode.js";
 
 describe("promptHandlers", () => {
   let db: Database;
@@ -123,6 +125,58 @@ describe("promptHandlers", () => {
       const toolsSection = text.split("## Available Tools")[1]?.split("##")[0] ?? "";
       const toolLines = toolsSection.split("\n").filter(line => line.trim().startsWith("-"));
       expect(toolLines).toHaveLength(7);
+    });
+
+    it("should derive every guidance tool and parameter from the real MCP schemas", () => {
+      const result = getPrompt("project_context_brief", { db });
+      const text = result.messages[0]!.content.text;
+      const toolsSection = text.split("## Available Tools")[1]?.split("##")[0] ?? "";
+      const toolLines = toolsSection.split("\n").filter(line => line.trim().startsWith("-"));
+      const signaturePattern = /^- `([a-z_]+)\(([^)]*)\)`/;
+
+      expect(toolLines).toHaveLength(getAllowedTools("agent").size);
+
+      for (const line of toolLines) {
+        const match = line.match(signaturePattern);
+        expect(match, `invalid guidance signature: ${line}`).not.toBeNull();
+
+        const toolName = match![1]!;
+        const parameterNames = match![2]
+          ? match![2]!.split(", ").filter(Boolean)
+          : [];
+        const schema = TOOL_MAP[toolName];
+
+        expect(getAllowedTools("agent").has(toolName)).toBe(true);
+        expect(schema, `missing schema for ${toolName}`).toBeDefined();
+
+        const schemaParameterNames = Object.keys(schema!.inputSchema.properties ?? {});
+        for (const parameterName of parameterNames) {
+          expect(
+            schemaParameterNames,
+            `${toolName}.${parameterName} is absent from its MCP schema`,
+          ).toContain(parameterName);
+        }
+      }
+
+      expect(toolsSection).toContain("`retrieve_original(originalRef)`");
+      expect(toolsSection).toContain(
+        "`run_context_flow(flow, scopeId, goal, content, contentType, query, options)`",
+      );
+    });
+
+    it("should not expose dev-only, harness, or dangerous tools in guidance", () => {
+      const result = getPrompt("project_context_brief", { db });
+      const text = result.messages[0]!.content.text;
+      const toolsSection = text.split("## Available Tools")[1]?.split("##")[0] ?? "";
+      const agentTools = getAllowedTools("agent");
+
+      for (const toolName of Object.keys(TOOL_MAP)) {
+        if (!agentTools.has(toolName)) {
+          expect(toolsSection).not.toContain(`\`${toolName}(`);
+        }
+      }
+
+      expect(toolsSection.toLowerCase()).not.toContain("harness");
     });
   });
 });

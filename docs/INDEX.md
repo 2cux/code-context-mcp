@@ -5,7 +5,7 @@
 > - `v0.2.0-beta` — Context Compression + Project Memory
 > - `v0.1.0-alpha` — Context Compression only
 >
-> Stable release: 18 MCP tools across agent (7) / dev (18) / test (18) modes. ~1600 tests passing. CLI with `doctor`, `demo`, `value`, and 20+ commands.
+> Stable release: 18 MCP tools across agent (7) / dev (18) / test (18) modes. The current automated test suite is required to pass with zero failures. CLI includes `doctor`, `demo`, and `value`.
 
 > 本文档索引了 `docs/` 下所有 PRD 分篇文件，每篇对应原 PRD.md 的若干连续章节。
 

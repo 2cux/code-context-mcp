@@ -1,7 +1,7 @@
 # Release Checklist
 
-> Generated: 2026-06-16  
-> Based on CodeContext MCP v1.0.0 current implementation state
+> Archived: 2026-06-14
+> Historical checklist for the CodeContext MCP v1.0.0 stable release
 
 ---
 
@@ -15,8 +15,8 @@
 
 ### Test Suite
 
-- [x] `npx vitest run` — zero failures (41 test files, 1,225+ tests)
-- [x] `PERF_TEST=1 npx vitest run tests/performance/` — standard perf tests pass (8 tests, <2s)
+- [x] `npx vitest run` — discovered test suite has zero failures
+- [x] `PERF_TEST=1 npx vitest run tests/performance/` — standard performance tests pass
 - [x] `PERF_TEST=1 PERF_TEST_EXTREME=1` — extreme perf documented (needs >16GB RAM)
 
 ### MCP Tool Surface
@@ -73,6 +73,17 @@
 ## Verification Command
 
 ```bash
-# Full verification
-npx tsc --noEmit && npx vitest run && echo "PERF_TEST=1 npx vitest run tests/performance/" && echo "All checks passed"
+# Traceable clean release gate (requires a clean git working tree)
+pnpm release:gate
 ```
+
+The gate captures the current commit, builds and runs all checks in a detached
+temporary worktree, creates one final npm tgz, and uses that exact tgz for the
+fresh-install MCP functional smoke. Its JSON/Markdown reports record the git
+dirty state before and after the run, commit, tgz SHA-256, package file count,
+and generation time. The command prints the temporary output directory; it
+does not write generated reports or artifacts into the caller working tree.
+
+A PASS is valid only when the stable gate and fresh-install smoke refer to the
+same commit and tgz, and the caller working tree remains clean and on the same
+commit after the run. The gate never creates a tag and never runs `npm publish`.

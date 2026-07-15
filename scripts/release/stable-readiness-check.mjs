@@ -1152,11 +1152,32 @@ async function checkNpmPackSmoke() {
       fail(checkName, "Script not found: " + smokeScript, category, severity);
       return;
     }
+    const smokeReportPath = "reports/release/fresh-install-smoke.json";
+    const previousReportState = captureReportState(smokeReportPath);
+    const reportStartedAt = Date.now();
     const smoke = runNodeScript(smokeScript, [], { timeout: 600000 });
-    if (smoke.exitCode === 0) {
-      pass(checkName, "fresh HOME npm pack/install/CLI/MCP smoke passed", category, severity);
+    const smokeReport = readFreshJsonReport(smokeReportPath, reportStartedAt, previousReportState);
+    const expectedCommit = process.env.CODECONTEXT_RELEASE_COMMIT;
+    const expectedTgzSha256 = process.env.CODECONTEXT_RELEASE_TGZ_SHA256;
+    const provenanceMatches = (!expectedCommit || smokeReport?.gitCommit === expectedCommit) &&
+      (!expectedTgzSha256 || smokeReport?.tgzSha256 === expectedTgzSha256) &&
+      smokeReport?.gitDirty === false &&
+      Number.isInteger(smokeReport?.packageFileCount) &&
+      smokeReport.packageFileCount > 0;
+    if (smoke.exitCode === 0 && smokeReport && provenanceMatches) {
+      pass(
+        checkName,
+        `fresh HOME install/CLI/MCP smoke passed for commit ${smokeReport.gitCommit} and tgz ${smokeReport.tgzSha256}`,
+        category,
+        severity,
+      );
     } else {
-      fail(checkName, "fresh npm install smoke failed (exit " + smoke.exitCode + ")", category, severity);
+      fail(
+        checkName,
+        `fresh npm install smoke/provenance failed (exit ${smoke.exitCode}, report=${Boolean(smokeReport)}, provenance=${provenanceMatches})`,
+        category,
+        severity,
+      );
     }
     return;
     // Step 1: Ensure dist exists
@@ -1410,6 +1431,33 @@ async function checkVersionConsistency() {
       issues.push(`CHANGELOG latest [${changelogVersion}] ≠ package.json ${pkgVersion}`);
     }
 
+    const releaseNotes = readFile("RELEASE_NOTES.md");
+    if (!releaseNotes.includes(`v${pkgVersion}`)) {
+      issues.push(`RELEASE_NOTES does not reference v${pkgVersion}`);
+    }
+
+    const docsIndex = readFile("docs/INDEX.md");
+    if (!docsIndex.includes(`v${pkgVersion}`) || !docsIndex.includes("current, stable")) {
+      issues.push(`docs/INDEX.md does not mark v${pkgVersion} as current stable`);
+    }
+
+    const rcFeedback = readFile("docs/POST_RC_FEEDBACK.md");
+    if (/Current RC/i.test(rcFeedback)) {
+      issues.push("docs/POST_RC_FEEDBACK.md still labels an RC as current");
+    }
+
+    const datedEntries = [...changelog.matchAll(/##\s*\[([^\]]+)\]\s*[—-]\s*(\d{4}-\d{2}-\d{2})/g)];
+    const stableEntry = datedEntries.find((entry) => entry[1] === pkgVersion);
+    const rcEntries = datedEntries.filter((entry) => /-rc(?:\.|$)/i.test(entry[1]));
+    if (stableEntry) {
+      const stableDate = Date.parse(stableEntry[2]);
+      for (const rcEntry of rcEntries) {
+        if (Date.parse(rcEntry[2]) > stableDate) {
+          issues.push(`CHANGELOG RC ${rcEntry[1]} date ${rcEntry[2]} is later than stable ${stableEntry[2]}`);
+        }
+      }
+    }
+
     // Check MCP server version in doctor.ts
     const doctorSrc = readFile("src/cli/doctor.ts");
     const doctorVersionMatch = doctorSrc.match(/version:\s*"([^"]+)"/);
@@ -1435,6 +1483,12 @@ async function checkVersionConsistency() {
 // ---------------------------------------------------------------------------
 
 function getGitMetadata() {
+  if (process.env.CODECONTEXT_RELEASE_COMMIT) {
+    return {
+      commit: process.env.CODECONTEXT_RELEASE_COMMIT,
+      dirty: process.env.CODECONTEXT_RELEASE_GIT_DIRTY === "true",
+    };
+  }
   const commit = run("git rev-parse HEAD", { timeout: 15000 });
   const dirty = run("git status --porcelain", { timeout: 15000 });
   return {
@@ -1461,9 +1515,16 @@ function buildJsonReport(verdict, startTime) {
     }));
   const subcommandFailures = [...directCommandFailures, ...nestedCommandFailures];
 
+  const generatedAt = new Date().toISOString();
   return {
-    generatedAt: new Date().toISOString(),
-    generated: new Date().toISOString(),
+    generatedAt,
+    generated: generatedAt,
+    gitCommit: git.commit,
+    gitDirty: git.dirty,
+    tgzSha256: process.env.CODECONTEXT_RELEASE_TGZ_SHA256 || null,
+    packageFileCount: process.env.CODECONTEXT_RELEASE_PACKAGE_FILE_COUNT
+      ? Number(process.env.CODECONTEXT_RELEASE_PACKAGE_FILE_COUNT)
+      : null,
     git,
     project: "code-context-mcp",
     version: (() => {
@@ -1527,6 +1588,8 @@ function buildMarkdownReport(report) {
   lines.push(`**GeneratedAt**: ${report.generatedAt}`);
   lines.push(`**Git commit**: ${report.git.commit}`);
   lines.push(`**Git dirty**: ${report.git.dirty}`);
+  lines.push(`**tgz SHA-256**: ${report.tgzSha256 ?? "not supplied"}`);
+  lines.push(`**Package file count**: ${report.packageFileCount ?? "not supplied"}`);
   lines.push(`**Project**: ${report.project} v${report.version}`);
   lines.push("");
   lines.push(`## Verdict: **${report.verdict}** ${statusIcon[report.verdict.toLowerCase()] || (report.verdict === "PASS" ? "✅" : "❌")}`);

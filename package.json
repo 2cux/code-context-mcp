@@ -11,10 +11,17 @@
   },
   "files": [
     "dist/",
+    "scripts/release/check-packed-markdown-links.mjs",
     "docs/",
     "examples/",
     "README.md",
     "CHANGELOG.md",
+    "RELEASE_NOTES.md",
+    "ARCHITECTURE.md",
+    "DATA_MODEL.md",
+    "DEMO.md",
+    "MCP_TOOLS.md",
+    "SECURITY.md",
     "CLAUDE.md",
     "LICENSE"
   ],
@@ -34,7 +41,10 @@
     "clean": "node -e \"require('fs').rmSync('dist', { recursive: true, force: true })\"",
     "prebuild": "npm run clean",
     "prepublishOnly": "npm run build && npm test",
-    "quality:reports": "node scripts/quality/run-quality-reports.cjs"
+    "postpack": "node scripts/release/check-packed-markdown-links.mjs",
+    "check:packed-links": "node scripts/release/check-packed-markdown-links.mjs",
+    "quality:reports": "node scripts/quality/run-quality-reports.cjs",
+    "release:gate": "node scripts/release/clean-release-gate.mjs"
   },
   "keywords": [
     "mcp",

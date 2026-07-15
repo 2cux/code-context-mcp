@@ -2,7 +2,7 @@
 
 > **基线日期**: 2026-06-17
 > **状态**: 已确认，已固化
-> **上一阶段**: [reports/architecture/fast-path-baseline.md](../reports/architecture/fast-path-baseline.md)
+> **上一阶段**: [reports/architecture/fast-path-baseline.md](https://github.com/2cux/code-context-mcp/blob/main/reports/architecture/fast-path-baseline.md)
 
 ---
 

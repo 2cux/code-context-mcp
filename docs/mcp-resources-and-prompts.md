@@ -206,9 +206,9 @@ src/mcp/server.ts              (register resource/prompt handlers)
 ### Tests Added
 
 ```
-tests/mcp/resourceHandlers.test.ts    (4 tests)
-tests/mcp/promptHandlers.test.ts      (4 tests)
-tests/mcp/serverIntegration.test.ts   (6 tests)
+tests/mcp/resourceHandlers.test.ts
+tests/mcp/promptHandlers.test.ts
+tests/mcp/serverIntegration.test.ts
 ```
 
 ---
@@ -224,13 +224,13 @@ npx tsc --noEmit
 ### Tests
 ```bash
 npx vitest run
-# ✅ 1432 passed (all tests)
+# Expected: the discovered test suite completes with zero failures
 ```
 
 ### Agent Fast Path Test
 ```bash
 npx vitest run tests/mcp/serverIntegration.test.ts
-# ✅ 6 passed
+# Expected: zero failures
 ```
 
 ---

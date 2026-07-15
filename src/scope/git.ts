@@ -1,4 +1,4 @@
-import { execSync } from "node:child_process";
+import { execFileSync } from "node:child_process";
 
 /**
  * Minimal git helpers — all errors are caught and return null.
@@ -11,24 +11,30 @@ export interface GitInfo {
   branch: string | null;
 }
 
-function exec(cmd: string, cwd: string): string | null {
+function exec(args: string[], cwd: string): string | null {
   try {
-    return execSync(cmd, { cwd, encoding: "utf-8", timeout: 3000 }).trim();
+    return execFileSync("git", args, {
+      cwd,
+      encoding: "utf-8",
+      timeout: 3000,
+      stdio: ["ignore", "pipe", "ignore"],
+      windowsHide: true,
+    }).trim();
   } catch {
     return null;
   }
 }
 
 export function getGitRoot(cwd: string): string | null {
-  return exec("git rev-parse --show-toplevel", cwd);
+  return exec(["rev-parse", "--show-toplevel"], cwd);
 }
 
 export function getGitRemote(cwd: string): string | null {
-  return exec("git remote get-url origin", cwd);
+  return exec(["remote", "get-url", "origin"], cwd);
 }
 
 export function getGitBranch(cwd: string): string | null {
-  return exec("git rev-parse --abbrev-ref HEAD", cwd);
+  return exec(["rev-parse", "--abbrev-ref", "HEAD"], cwd);
 }
 
 export function resolveGitInfo(cwd: string): GitInfo | null {

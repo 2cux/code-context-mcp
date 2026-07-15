@@ -15,7 +15,7 @@ Set via `MCP_TOOL_MODE` env var.
 ```bash
 # Type-check and run tests
 pnpm test
-# Expected: 58 test files, ~1600 tests, zero failures
+# Expected: the discovered test suite completes with zero failures
 
 # Run installation health checks
 code-context doctor
