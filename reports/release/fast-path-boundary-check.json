@@ -1,10 +1,10 @@
 {
-  "generated": "2026-07-08T05:30:57.972Z",
-  "verdict": "pass",
+  "generated": "2026-07-15T06:59:02.350Z",
+  "verdict": "warning",
   "summary": {
     "total": 29,
-    "pass": 29,
-    "warning": 0,
+    "pass": 28,
+    "warning": 1,
     "fail": 0
   },
   "checks": [
@@ -149,9 +149,9 @@
       "detail": "4 files"
     },
     {
-      "check": "vitest: boundary tests completed",
-      "status": "pass",
-      "detail": ""
+      "check": "vitest: could not execute boundary tests",
+      "status": "warning",
+      "detail": "Command failed: npx vitest run tests/profileBoundary.test.ts tests/fastPathNoHarness.test.ts tests/w"
     }
   ],
   "verdictRules": {

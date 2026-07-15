@@ -1,63 +1,97 @@
 {
-  "generated": "2026-07-08T02:33:07.310Z",
-  "environment": {
-    "node": "v24.13.0",
-    "platform": "win32",
-    "arch": "x64",
-    "cpus": 22,
-    "totalMemoryMb": 32373
+  "generatedAt": "2026-07-15T06:54:34.966Z",
+  "verdict": "FAIL",
+  "failure": {
+    "file": "vitest.config.ts / failing test output",
+    "command": "cmd /d /s /c npx vitest run",
+    "reason": "npm warn Unknown env config \"store-dir\". This will stop working in the next major version of npm.\nX [ERROR] Cannot read directory \"../../../..\": Access is denied.\n\nX [ERROR] Could not resolve \"C:\\\\Users\\\\Lenovo\\\\AppData\\\\Local\\\\Temp\\\\CodeContext-source-repro-1784098476207\\\\vitest.config.ts\"\n\n\u001b[31mfailed to load config from C:\\Users\\Lenovo\\AppData\\Local\\Temp\\CodeContext-source-repro-1784098476207\\vitest.config.ts\u001b[39m\n\n\u001b[31m⎯⎯⎯⎯⎯⎯⎯\u001b[1m\u001b[7m Startup Error \u001b[27m\u001b[22m⎯⎯⎯⎯⎯⎯⎯⎯\u001b[39m\nError: Build failed with 2 errors:\nerror: Cannot read directory \"../../../..\": Access is denied.\nerror: Could not resolve \"C:\\\\Users\\\\Lenovo\\\\AppData\\\\Local\\\\Temp\\\\CodeContext-source-repro-1784098476207\\\\vitest.config.ts\"\n    at failureErrorWithLog (C:\\Users\\Lenovo\\AppData\\Local\\Temp\\CodeContext-source-repro-1784098476207\\node_modules\\.pnpm\\esbuild@0.21.5\\node_modules\\esbuild\\lib\\main.js:1472:15)\n    at C:\\Users\\Lenovo\\AppData\\Local\\Temp\\CodeContext-source-repro-1784098476207\\node_modules\\.pnpm\\esbuild@0.21.5\\node"
+  },
+  "failureDiagnosis": {
+    "file": "examples/first-run/sample-error.log",
+    "command": "npx vitest run",
+    "reason": "The demo-required sample existed locally but was absent from git ls-files, so clean tracked-source tests could not run the demo flow."
   },
   "repository": {
-    "trackedFiles": 409,
-    "tempDir": "C:\\Users\\Lenovo\\AppData\\Local\\Temp\\codecontext-clean-1783477976731"
+    "trackedFiles": 425,
+    "requiredTracked": true,
+    "missing": [],
+    "untracked": [],
+    "tempDir": "C:\\Users\\Lenovo\\AppData\\Local\\Temp\\CodeContext-source-repro-1784098476207"
   },
-  "summary": {
-    "total": 5,
-    "passed": 5,
-    "failed": 0,
-    "skipped": 0,
-    "totalMs": 10681,
-    "reproducible": true
+  "isolation": true,
+  "environment": {
+    "node": "v24.13.0",
+    "platform": "win32 x64",
+    "cpus": 22,
+    "memoryMb": 32373
   },
-  "steps": [
+  "commands": [
     {
-      "name": "Verify required source dirs are Git-tracked",
-      "status": "ok",
-      "durationMs": 101,
-      "detail": "2 dirs present (src/memory/: 7 files, fixtures/quality-eval/memory/: 2 files)",
-      "error": null
+      "name": "initialize temporary git metadata",
+      "command": "git init -q",
+      "cwd": "C:\\Users\\Lenovo\\AppData\\Local\\Temp\\CodeContext-source-repro-1784098476207",
+      "exitCode": 0,
+      "status": "pass",
+      "durationMs": 197,
+      "output": ""
     },
     {
-      "name": "Copy git ls-files to temp directory",
-      "status": "ok",
-      "durationMs": 1612,
-      "detail": "409/409 files copied to C:\\Users\\Lenovo\\AppData\\Local\\Temp\\codecontext-clean-1783477976731",
-      "error": null
+      "name": "create temporary git branch",
+      "command": "git checkout -q -b main",
+      "cwd": "C:\\Users\\Lenovo\\AppData\\Local\\Temp\\CodeContext-source-repro-1784098476207",
+      "exitCode": 0,
+      "status": "pass",
+      "durationMs": 131,
+      "output": ""
+    },
+    {
+      "name": "set temporary git remote",
+      "command": "git remote add origin https://github.com/2cux/code-context-mcp",
+      "cwd": "C:\\Users\\Lenovo\\AppData\\Local\\Temp\\CodeContext-source-repro-1784098476207",
+      "exitCode": 0,
+      "status": "pass",
+      "durationMs": 153,
+      "output": ""
+    },
+    {
+      "name": "create temporary git HEAD",
+      "command": "git commit --allow-empty -m reproducibility metadata",
+      "cwd": "C:\\Users\\Lenovo\\AppData\\Local\\Temp\\CodeContext-source-repro-1784098476207",
+      "exitCode": 0,
+      "status": "pass",
+      "durationMs": 255,
+      "output": "[main (root-commit) 7839b1e] reproducibility metadata"
     },
     {
       "name": "pnpm install --frozen-lockfile",
-      "status": "ok",
-      "durationMs": 2807,
-      "detail": "dependencies installed",
-      "error": null
+      "command": "cmd /d /s /c pnpm install --frozen-lockfile",
+      "cwd": "C:\\Users\\Lenovo\\AppData\\Local\\Temp\\CodeContext-source-repro-1784098476207",
+      "exitCode": 0,
+      "status": "pass",
+      "durationMs": 17397,
+      "output": "Lockfile is up to date, resolution step is skipped\nProgress: resolved 1, reused 0, downloaded 0, added 0\nPackages: +282\n++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\nProgress: resolved 282, reused 0, downloaded 0, added 0\nProgress: resolved 282, reused 0, downloaded 27, added 6\nProgress: resolved 282, reused 0, downloaded 78, added 35\nProgress: resolved 282, reused 0, downloaded 113, added 71\nProgress: resolved 282, reused 0, downloaded 150, added 83\nProgress: resolved 282, reused 0, downloaded 181, added 92\nProgress: resolved 282, reused 0, downloaded 200, added 98\nProgress: resolved 282, reused 0, downloaded 240, added 110\nProgress: resolved 282, reused 0, downloaded 259, added 168\nProgress: resolved 282, reused 0, downloaded 265, added 204\nProgress: resolved 282, reused 0, downloaded 271, added 240\nProgress: resolved 282, reused 0, downloaded 273, added 271\nProgress: resolved 282, reused 0, downloaded 279, added 274\nProgress: resolved 282, reused 0, downloaded 281, added 279\nProgress: resolved 282, reused 0, downloaded 282, added 282, done\n.../esbuild@0.21.5/node_modules/esbuild postinstall$ node install.js\n.../esbuild@0.21.5/node_modules/esbuild postinstall: Done\n\ndependencies:\n+ @modelcontextprotocol/sdk 1.29.0\n+ sql.js 1.14.1\n+ tiktoken 1.0.22\n\ndevDependencies:\n+ @types/node 22.19.20\n+ @types/sql.js 1.4.11\n+ @typescript-eslint/eslint-plugin 8.61.0\n+ @typescript-eslint/parser 8.61.0\n+ @vitest/coverage-v8 2.1.9\n+ eslint 9.39.4\n+ prettier 3.8.3\n+ typescript 5.9.3\n+ vitest 2.1.9\n\nDone in 17s using pnpm v10.26.0"
     },
     {
-      "name": "Build (tsc)",
-      "status": "ok",
-      "durationMs": 3180,
-      "detail": "dist/index.js created",
-      "error": null
+      "name": "pnpm build",
+      "command": "cmd /d /s /c pnpm build",
+      "cwd": "C:\\Users\\Lenovo\\AppData\\Local\\Temp\\CodeContext-source-repro-1784098476207",
+      "exitCode": 0,
+      "status": "pass",
+      "durationMs": 8093,
+      "output": "> code-context-mcp@1.0.0 prebuild C:\\Users\\Lenovo\\AppData\\Local\\Temp\\CodeContext-source-repro-1784098476207\n> npm run clean\n\n\n> code-context-mcp@1.0.0 clean\n> node -e \"require('fs').rmSync('dist', { recursive: true, force: true })\"\n\n\n> code-context-mcp@1.0.0 build C:\\Users\\Lenovo\\AppData\\Local\\Temp\\CodeContext-source-repro-1784098476207\n> tsc && node scripts/copy-schema.mjs"
     },
     {
-      "name": "npx vitest run tests/quality",
-      "status": "ok",
-      "durationMs": 2979,
-      "detail": "3 passed (3) | 97 passed (97)",
-      "error": null
+      "name": "npx vitest run",
+      "command": "cmd /d /s /c npx vitest run",
+      "cwd": "C:\\Users\\Lenovo\\AppData\\Local\\Temp\\CodeContext-source-repro-1784098476207",
+      "exitCode": 1,
+      "status": "fail",
+      "durationMs": 2874,
+      "output": "npm warn Unknown env config \"store-dir\". This will stop working in the next major version of npm.\nX [ERROR] Cannot read directory \"../../../..\": Access is denied.\n\nX [ERROR] Could not resolve \"C:\\\\Users\\\\Lenovo\\\\AppData\\\\Local\\\\Temp\\\\CodeContext-source-repro-1784098476207\\\\vitest.config.ts\"\n\n\u001b[31mfailed to load config from C:\\Users\\Lenovo\\AppData\\Local\\Temp\\CodeContext-source-repro-1784098476207\\vitest.config.ts\u001b[39m\n\n\u001b[31m⎯⎯⎯⎯⎯⎯⎯\u001b[1m\u001b[7m Startup Error \u001b[27m\u001b[22m⎯⎯⎯⎯⎯⎯⎯⎯\u001b[39m\nError: Build failed with 2 errors:\nerror: Cannot read directory \"../../../..\": Access is denied.\nerror: Could not resolve \"C:\\\\Users\\\\Lenovo\\\\AppData\\\\Local\\\\Temp\\\\CodeContext-source-repro-1784098476207\\\\vitest.config.ts\"\n    at failureErrorWithLog (C:\\Users\\Lenovo\\AppData\\Local\\Temp\\CodeContext-source-repro-1784098476207\\node_modules\\.pnpm\\esbuild@0.21.5\\node_modules\\esbuild\\lib\\main.js:1472:15)\n    at C:\\Users\\Lenovo\\AppData\\Local\\Temp\\CodeContext-source-repro-1784098476207\\node_modules\\.pnpm\\esbuild@0.21.5\\node_modules\\esbuild\\lib\\main.js:945:25\n    at runOnEndCallbacks (C:\\Users\\Lenovo\\AppData\\Local\\Temp\\CodeContext-source-repro-1784098476207\\node_modules\\.pnpm\\esbuild@0.21.5\\node_modules\\esbuild\\lib\\main.js:1315:45)\n    at buildResponseToResult (C:\\Users\\Lenovo\\AppData\\Local\\Temp\\CodeContext-source-repro-1784098476207\\node_modules\\.pnpm\\esbuild@0.21.5\\node_modules\\esbuild\\lib\\main.js:943:7)\n    at C:\\Users\\Lenovo\\AppData\\Local\\Temp\\CodeContext-source-repro-1784098476207\\node_modules\\.pnpm\\esbuild@0.21.5\\node_modules\\esbuild\\lib\\main.js:970:16\n    at responseCallbacks.<computed> (C:\\Users\\Lenovo\\AppData\\Local\\Temp\\CodeContext-source-repro-1784098476207\\node_modules\\.pnpm\\esbuild@0.21.5\\node_modules\\esbuild\\lib\\main.js:622:9)\n    at handleIncomingPacket (C:\\Users\\Lenovo\\AppData\\Local\\Temp\\CodeContext-source-repro-1784098476207\\node_modules\\.pnpm\\esbuild@0.21.5\\node_modules\\esbuild\\lib\\main.js:677:12)\n    at Socket.readFromStdout (C:\\Users\\Lenovo\\AppData\\Local\\Temp\\CodeContext-source-repro-1784098476207\\node_modules\\.pnpm\\esbuild@0.21.5\\node_modules\\esbuild\\lib\\main.js:600:7)\n    at Socket.emit (node:events:508:28)\n    at addChunk (node:internal/streams/readable:559:12) {\n  errors: [Getter/Setter],\n  warnings: [Getter/Setter]\n}"
     }
   ],
-  "testOutput": {
-    "truncated": false,
-    "text": "\n\u001b[1m\u001b[7m\u001b[36m RUN \u001b[39m\u001b[27m\u001b[22m \u001b[36mv2.1.9 \u001b[39m\u001b[90mC:/Users/Lenovo/AppData/Local/Temp/codecontext-clean-1783477976731\u001b[39m\n\n \u001b[32m✓\u001b[39m tests/quality/memoryQuality.test.ts \u001b[2m(\u001b[22m\u001b[2m18 tests\u001b[22m\u001b[2m)\u001b[22m\u001b[90m 75\u001b[2mms\u001b[22m\u001b[39m\n\u001b[90mstdout\u001b[2m | tests/quality/recallQualityGate.test.ts\u001b[2m > \u001b[22m\u001b[2mQuality Gate — Recall@1\u001b[2m > \u001b[22m\u001b[2mRecall@1 aggregate\n\u001b[22m\u001b[39m\n  Recall@1: 20/20 = 100.0%\n  Recall@3 (precision set): 20/20 = 100.0%\n\n\u001b[90mstdout\u001b[2m | tests/quality/recallQualityGate.test.ts\u001b[2m > \u001b[22m\u001b[2mQuality Gate — Recall@3\u001b[2m > \u001b[22m\u001b[2mRecall@3 aggregate\n\u001b[22m\u001b[39m\n  Recall@3: 10/10 = 100.0%\n\n\u001b[90mstdout\u001b[2m | tests/quality/recallQualityGate.test.ts\u001b[2m > \u001b[22m\u001b[2mQuality Gate — False Recall Rate\u001b[2m > \u001b[22m\u001b[2mFalse recall aggregate\n\u001b[22m\u001b[39m\n  False recall rate: 0/5 = 0.0%\n\n\u001b[90mstdout\u001b[2m | tests/quality/recallQualityGate.test.ts\u001b[2m > \u001b[22m\u001b[2mQuality Gate — Cross-Scope Leakage\u001b[2m > \u001b[22m\u001b[2mCross-scope aggregate\n\u001b[22m\u001b[39m\n  Cross-scope leakage: 0/5 queries leaked, 0 total leaked results\n\n\u001b[90mstdout\u001b[2m | tests/quality/recallQualityGate.test.ts\u001b[2m > \u001b[22m\u001b[2mQuality Gate — Non-Active Memory Leakage\u001b[2m > \u001b[22m\u001b[2mNon-active leakage aggregate\n\u001b[22m\u001b[39m\n  Non-active leak: 0/5 targeted queries leaked, 0 unique leaked IDs\n\n\u001b[90mstdout\u001b[2m | tests/quality/recallQualityGate.test.ts\u001b[2m > \u001b[22m\u001b[2mQuality Gate — Overall Verdict\u001b[2m > \u001b[22m\u001b[2mall thresholds pass\n\u001b[22m\u001b[39m\n======================================================================\n  MEMORY RECALL QUALITY GATE — VERDICT\n======================================================================\n  Scorer config: base=0.2, weight=0.8, decay=60d, boost=0.5\n\n  Recall@1:        100.0%  ✓ (target ≥ 80%)\n  Recall@3:        100.0%  ✓ (target ≥ 95%)\n  Cross-scope:     0 hits  ✓ (target = 0)\n  Non-active leak: 0 IDs   ✓ (target = 0)\n  Duplicate IDs:   0 sets  (informational)\n======================================================================\n  OVERALL:         ✓ PASS\n======================================================================\n\n\n \u001b[32m✓\u001b[39m tests/quality/recallQualityGate.test.ts \u001b[2m(\u001b[22m\u001b[2m53 tests\u001b[22m\u001b[2m)\u001b[22m\u001b[90m 129\u001b[2mms\u001b[22m\u001b[39m\n\u001b[90mstderr\u001b[2m | tests/quality/compressionQuality.test.ts\u001b[2m > \u001b[22m\u001b[2mCompression Quality — code.ts\u001b[2m > \u001b[22m\u001b[2mrecords key fact retention\n\u001b[22m\u001b[39m  [code.ts] Missing facts: Luhn, processing_error, invalid_amount, src/services/paymentService.ts\n\n\u001b[90mstderr\u001b[2m | tests/quality/compressionQuality.test.ts\u001b[2m > \u001b[22m\u001b[2mCompression Quality — conversationHistory.txt\u001b[2m > \u001b[22m\u001b[2mrecords key fact retention\n\u001b[22m\u001b[39m  [conversationHistory.txt] Missing facts: 5 requests, 60 seconds, Retry-After\n\n\u001b[90mstderr\u001b[2m | tests/quality/compressionQuality.test.ts\u001b[2m > \u001b[22m\u001b[2mCompression Quality — testOutput.txt\u001b[2m > \u001b[22m\u001b[2mrecords key fact retention\n\u001b[22m\u001b[39m  [testOutput.txt] Missing facts: tests/functional/listEmpty.test.tsx, should clear cookie on logout, should apply bulk discount correctly, should render empty state message, AssertionError, TypeError, 3 failed, 12 passed\n\n\u001b[90mstderr\u001b[2m | tests/quality/compressionQuality.test.ts\u001b[2m > \u001b[22m\u001b[2mCompression Quality — markdown.md\u001b[2m > \u001b[22m\u001b[2mrecords key fact retention\n\u001b[22m\u001b[39m  [markdown.md] Missing facts: Context Compression, Project Memory, Scope Isolation, Content Router, Compression Engine, Memory Service, SQLite, compress_context, retrieve_original, remember_context, recall_context, MAX_TOKENS\n\n\u001b[90mstderr\u001b[2m | tests/quality/compressionQuality.test.ts\u001b[2m > \u001b[22m\u001b[2mCompression Quality — ragChunk.json\u001b[2m > \u001b[22m\u001b[2mrecords key fact retention\n\u001b[22m\u001b[39m  [ragChunk.json] Missing facts: JWT, RS256, HTTP-only cookie, Redis, docs/auth/architecture.md, Token Management\n\n\u001b[90mstdout\u001b[2m | tests/quality/compressionQuality.test.ts\u001b[2m > \u001b[22m\u001b[2mCompression Quality — Overall Baseline\u001b[2m > \u001b[22m\u001b[2mreports average retention rate\n\u001b[22m\u001b[39m  Average key fact retention: 57.9%\n\n\u001b[90mstdout\u001b[2m | tests/quality/compressionQuality.test.ts\u001b[2m > \u001b[22m\u001b[2mCompression Quality — Overall Baseline\u001b[2m > \u001b[22m\u001b[2mreports average token savings\n\u001b[22m\u001b[39m  Average token savings: 56.0%\n\n \u001b[32m✓\u001b[39m tests/quality/compressionQuality.test.ts \u001b[2m(\u001b[22m\u001b[2m26 tests\u001b[22m\u001b[2m)\u001b[22m\u001b[90m 155\u001b[2mms\u001b[22m\u001b[39m\n\n\u001b[2m Test Files \u001b[22m \u001b[1m\u001b[32m3 passed\u001b[39m\u001b[22m\u001b[90m (3)\u001b[39m\n\u001b[2m      Tests \u001b[22m \u001b[1m\u001b[32m97 passed\u001b[39m\u001b[22m\u001b[90m (97)\u001b[39m\n\u001b[2m   Start at \u001b[22m 10:33:05\n\u001b[2m   Duration \u001b[22m 1.39s\u001b[2m (transform 294ms, setup 0ms, collect 669ms, tests 358ms, environment 0ms, prepare 539ms)\u001b[22m\n\n\n"
+  "tests": {
+    "command": "cmd /d /s /c npx vitest run",
+    "exitCode": 1
   }
 }

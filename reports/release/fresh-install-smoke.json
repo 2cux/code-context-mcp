@@ -1,5 +1,5 @@
 {
-  "generated": "2026-07-14T09:04:58.054Z",
+  "generated": "2026-07-15T06:59:53.453Z",
   "environment": {
     "node": "v24.13.0",
     "platform": "win32",
@@ -9,11 +9,11 @@
     "developerHome": "C:\\Users\\Lenovo"
   },
   "freshInstall": {
-    "tempRoot": "C:\\Users\\Lenovo\\AppData\\Local\\Temp\\code-context-fresh-smoke-Bc8CDt",
-    "installRoot": "C:\\Users\\Lenovo\\AppData\\Local\\Temp\\code-context-fresh-smoke-Bc8CDt\\install",
-    "freshHome": "C:\\Users\\Lenovo\\AppData\\Local\\Temp\\code-context-fresh-smoke-Bc8CDt\\fresh-home",
-    "dbDir": "C:\\Users\\Lenovo\\AppData\\Local\\Temp\\code-context-fresh-smoke-Bc8CDt\\fresh-home\\.code-context-mcp",
-    "tgzPath": "C:\\Users\\Lenovo\\AppData\\Local\\Temp\\code-context-fresh-smoke-Bc8CDt\\code-context-mcp-1.0.0.tgz",
+    "tempRoot": "C:\\Users\\Lenovo\\AppData\\Local\\Temp\\code-context-fresh-smoke-6U45uw",
+    "installRoot": "C:\\Users\\Lenovo\\AppData\\Local\\Temp\\code-context-fresh-smoke-6U45uw\\install",
+    "freshHome": "C:\\Users\\Lenovo\\AppData\\Local\\Temp\\code-context-fresh-smoke-6U45uw\\fresh-home",
+    "dbDir": "C:\\Users\\Lenovo\\AppData\\Local\\Temp\\code-context-fresh-smoke-6U45uw\\fresh-home\\.code-context-mcp",
+    "tgzPath": "C:\\Users\\Lenovo\\AppData\\Local\\Temp\\code-context-fresh-smoke-6U45uw\\code-context-mcp-1.0.0.tgz",
     "packageName": "code-context-mcp"
   },
   "summary": {
@@ -21,69 +21,69 @@
     "passed": 10,
     "failed": 0,
     "skipped": 0,
-    "totalMs": 26697
+    "totalMs": 50912
   },
   "steps": [
     {
       "name": "Build package artifacts",
       "status": "ok",
-      "durationMs": 3362,
+      "durationMs": 6925,
       "detail": "dist/index.js created",
       "error": null
     },
     {
       "name": "npm pack",
       "status": "ok",
-      "durationMs": 1712,
+      "durationMs": 3929,
       "detail": "code-context-mcp-1.0.0.tgz (513 files)",
       "error": null
     },
     {
       "name": "Install packed tgz in temporary project",
       "status": "ok",
-      "durationMs": 19031,
-      "detail": "installed code-context-mcp-1.0.0.tgz into C:\\Users\\Lenovo\\AppData\\Local\\Temp\\code-context-fresh-smoke-Bc8CDt\\install",
+      "durationMs": 36078,
+      "detail": "installed code-context-mcp-1.0.0.tgz into C:\\Users\\Lenovo\\AppData\\Local\\Temp\\code-context-fresh-smoke-6U45uw\\install",
       "error": null
     },
     {
       "name": "Isolation preflight: fresh HOME and empty database directory",
       "status": "ok",
-      "durationMs": 0,
-      "detail": "developer DB exists but is isolated; fresh HOME=C:\\Users\\Lenovo\\AppData\\Local\\Temp\\code-context-fresh-smoke-Bc8CDt\\fresh-home",
+      "durationMs": 1,
+      "detail": "developer DB exists but is isolated; fresh HOME=C:\\Users\\Lenovo\\AppData\\Local\\Temp\\code-context-fresh-smoke-6U45uw\\fresh-home",
       "error": null
     },
     {
       "name": "code-context --version",
       "status": "ok",
-      "durationMs": 229,
+      "durationMs": 353,
       "detail": "version 1.0.0",
       "error": null
     },
     {
       "name": "code-context doctor --json",
       "status": "ok",
-      "durationMs": 532,
+      "durationMs": 807,
       "detail": "7 checks passed",
       "error": null
     },
     {
       "name": "code-context demo --json",
       "status": "ok",
-      "durationMs": 1022,
-      "detail": "reports: C:\\Users\\Lenovo\\AppData\\Local\\Temp\\code-context-fresh-smoke-Bc8CDt\\install\\reports\\demo\\first-run-value.md, C:\\Users\\Lenovo\\AppData\\Local\\Temp\\code-context-fresh-smoke-Bc8CDt\\install\\reports\\demo\\first-run-value.json",
+      "durationMs": 1564,
+      "detail": "reports: C:\\Users\\Lenovo\\AppData\\Local\\Temp\\code-context-fresh-smoke-6U45uw\\install\\reports\\demo\\first-run-value.md, C:\\Users\\Lenovo\\AppData\\Local\\Temp\\code-context-fresh-smoke-6U45uw\\install\\reports\\demo\\first-run-value.json",
       "error": null
     },
     {
       "name": "code-context value --json",
       "status": "ok",
-      "durationMs": 387,
+      "durationMs": 569,
       "detail": "tokens saved: 5862",
       "error": null
     },
     {
       "name": "code-context-server first startup",
       "status": "ok",
-      "durationMs": 413,
+      "durationMs": 673,
       "detail": "server responded with 7 agent tools",
       "error": null
     },
@@ -91,7 +91,7 @@
       "name": "Isolation postflight: database created only under fresh HOME",
       "status": "ok",
       "durationMs": 0,
-      "detail": "fresh database: C:\\Users\\Lenovo\\AppData\\Local\\Temp\\code-context-fresh-smoke-Bc8CDt\\fresh-home\\.code-context-mcp\\code-context.sqlite",
+      "detail": "fresh database: C:\\Users\\Lenovo\\AppData\\Local\\Temp\\code-context-fresh-smoke-6U45uw\\fresh-home\\.code-context-mcp\\code-context.sqlite",
       "error": null
     }
   ]

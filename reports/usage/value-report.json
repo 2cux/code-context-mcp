@@ -1,0 +1,74 @@
+{
+  "summary": {
+    "totalCompressions": 1,
+    "totalEstimatedTokensSaved": 5862,
+    "averageCompressionRatio": 0.8646,
+    "cacheHits": 0,
+    "totalRetrieves": 0,
+    "memoriesSaved": 1,
+    "memoriesRecalled": 1,
+    "memoriesForgotten": 0,
+    "recoverableOriginals": 1,
+    "lastActivityAt": "2026-07-15T06:59:57.924Z"
+  },
+  "retrievalTrust": {
+    "originalsStored": 1,
+    "originalsRetrieved": 0,
+    "localOnlyNote": "All originals stored locally. No data uploaded to cloud."
+  },
+  "topSavings": [
+    {
+      "ccrId": "ccr_mrlqcx6i_d82117_000001",
+      "contentType": "log",
+      "tokensBefore": 6780,
+      "tokensAfter": 918,
+      "tokensSaved": 5862,
+      "compressionRatio": 0.8646,
+      "createdAt": "2026-07-15T06:59:55.770Z",
+      "summary": "Log compressed: 12 priority lines kept, 163 INFO/DEBUG folded"
+    }
+  ],
+  "agentUsefulness": {
+    "recentRecalledMemories": [
+      {
+        "memoryId": "mem_mrlqcxx5_59c6da_000001",
+        "type": "project_rule",
+        "summary": "Project coding standards: pnpm, TypeScript strict, vitest, conventional commits",
+        "recalledAt": "2026-07-15T06:59:57.924Z"
+      }
+    ],
+    "mostUsefulProjectRules": [
+      {
+        "memoryId": "mem_mrlqcxx5_59c6da_000001",
+        "content": "# Project Rules\n\n## Package Manager\nThis project uses **pnpm** as its package manager. Never use npm or yarn.\nRun `pnpm install` to install dependencies and `pnpm run build` to compile.\n\n## Code Style\n- Use TypeScript strict mode for all new files.\n- Prefer `interface` over `type` for object shapes.\n- Use explicit return types on public functions.\n- Naming: camelCase for variables, PascalCase for classes/components.\n\n## Testing\n- Every new feature must include unit tests using vitest.\n- Test files live in `tests/` and mirror the `src/` structure.\n- Run `pnpm test` before pushing any commit.\n\n## Error Handling\n- Never swallow errors silently. Always log with context.\n- Use structured error types, not plain strings.\n- Compression failures must return original content (fail-open).\n\n## Git\n- Use conventional commits: `feat:`, `fix:`, `chore:`, `docs:`, `test:`.\n- Branch naming: `feature/description`, `fix/description`.\n- Always squash before merging to main.\n",
+        "recallCount": 1,
+        "lastRecalledAt": "2026-07-15T06:59:57.924Z"
+      }
+    ],
+    "suggestedNextCommand": "code-context retrieve <originalRef>  # Verify originals are recoverable"
+  },
+  "topCompressions": [
+    {
+      "ccrId": "ccr_mrlqcx6i_d82117_000001",
+      "contentType": "log",
+      "tokensSaved": 5862,
+      "compressionRatio": 0.8646,
+      "createdAt": "2026-07-15T06:59:55.770Z",
+      "summary": "Log compressed: 12 priority lines kept, 163 INFO/DEBUG folded"
+    }
+  ],
+  "recentMemories": [
+    {
+      "memoryId": "mem_mrlqcxx5_59c6da_000001",
+      "type": "project_rule",
+      "summary": "Project coding standards: pnpm, TypeScript strict, vitest, conventional commits",
+      "createdAt": "2026-07-15T06:59:56.729Z",
+      "status": "active"
+    }
+  ],
+  "localFirstNote": {
+    "dataLocation": "~/.code-context-mcp/code-context.sqlite",
+    "noDataUploaded": true
+  },
+  "generatedAt": "2026-07-15T06:59:59.451Z"
+}

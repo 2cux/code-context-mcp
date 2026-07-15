@@ -1,13 +1,13 @@
 # Fast Path Boundary Release Gate
 
-**Generated**: 2026-07-08T05:30:57.972Z
+**Generated**: 2026-07-15T06:59:02.350Z
 
-## Verdict: **PASS** ✅
+## Verdict: **WARNING** ⚠️
 
 | Status | Count |
 |---|---|
-| ✅ Pass | 29 |
-| ⚠️ Warning | 0 |
+| ✅ Pass | 28 |
+| ⚠️ Warning | 1 |
 | ❌ Fail | 0 |
 | **Total** | **29** |
 
@@ -58,8 +58,8 @@
 | docs: do/don't rules documented | ✅ pass |  |
 | fixtures: all 12 required fixtures present | ✅ pass | 12 files |
 | tests: all 4 boundary test files present | ✅ pass | 4 files |
-| vitest: boundary tests completed | ✅ pass |  |
+| vitest: could not execute boundary tests | ⚠️ warning | Command failed: npx vitest run tests/profileBoundary.test.ts tests/fastPathNo... |
 
-## ✅ Ready for Release
+## ⚠️ Review Before Release
 
-All checks pass. Fast path boundary is intact.
+Review all ⚠️ warning checks. Warnings do not block release but should be understood.

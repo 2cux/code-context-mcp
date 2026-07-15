@@ -48,6 +48,7 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.resolve(__dirname, "../..");
 const REPORTS_DIR = path.join(ROOT, "reports", "release");
 const SRC = path.join(ROOT, "src");
+const STABLE_RUN_STARTED_AT = performance.now();
 
 // ---------------------------------------------------------------------------
 // Result types
@@ -57,11 +58,14 @@ const SRC = path.join(ROOT, "src");
 
 /** @type {CheckResult[]} */
 const checks = [];
-/** @type {Array<{command: string, exitCode: number, ok: boolean, output: string}>} */
+/** @type {Array<{command: string, exitCode: number, ok: boolean, output: string, errorSummary?: string}>} */
 const commandOutputs = [];
 
-/** @type {Array<{file: string, testName: string, assertion: string, error: string}>} */
-let vitestFailures = [];
+/** @type {Array<{check: string, command: string, exitCode: number, errorSummary: string}>} */
+const nestedCommandFailures = [];
+
+/** @type {Array<{file: string, testName: string, assertion: string, error: string, source?: string}>} */
+const vitestFailures = [];
 
 /**
  * @param {string} check
@@ -116,19 +120,106 @@ function isolatedHomeEnv(prefix) {
   };
 }
 
+function stripAnsi(text = "") {
+  return String(text).replace(/\x1b\[[0-?]*[ -\/]*[@-~]/g, "");
+}
+
 function summarizeOutput(stdout = "", stderr = "") {
-  const text = `${stdout}\n${stderr}`.replace(/\x1b\[[0-?]*[ -\/]*[@-~]/g, "").trim();
+  const text = stripAnsi(`${stdout}\n${stderr}`).trim();
   if (text.length <= 1200) return text;
   return `${text.slice(0, 600)}\n… [output truncated] …\n${text.slice(-600)}`;
 }
 
+function summarizeError(result) {
+  const exitCode = result.exitCode ?? result.code ?? 1;
+  const text = stripAnsi([
+    result.stderr || "",
+    result.error || "",
+    result.stdout || "",
+  ].filter(Boolean).join("\n")).trim();
+
+  if (!text) return `Command exited with code ${exitCode} without diagnostic output`;
+
+  const lines = text
+    .split(/\r?\n/)
+    .map((line) => line.trim())
+    .filter(Boolean);
+  const diagnosticLines = lines.filter((line) =>
+    /(?:\bFAIL\b|\bfailed\b|\berror\b|exception|timed?\s*out|assertion|expected|received|exit(?:ed)?\s+(?:code\s+)?\d+)/i.test(line),
+  );
+  const selected = diagnosticLines.length > 0 ? diagnosticLines : lines.slice(-8);
+  const unique = [...new Set(selected)].slice(0, 12).join(" | ");
+  const summary = unique || `Command exited with code ${exitCode}`;
+  return summary.length <= 1200 ? summary : `${summary.slice(0, 1197)}...`;
+}
+
 function recordCommand(command, result) {
-  commandOutputs.push({
+  const entry = {
     command,
     exitCode: result.exitCode ?? result.code ?? (result.ok ? 0 : 1),
     ok: Boolean(result.ok),
     output: summarizeOutput(result.stdout, result.stderr || result.error || ""),
+  };
+  if (!entry.ok || entry.exitCode !== 0) {
+    entry.errorSummary = summarizeError(result);
+  }
+  commandOutputs.push(entry);
+}
+
+function recordNestedCommandFailure(check, command, exitCode, output) {
+  const normalizedExitCode = Number.isInteger(exitCode) ? exitCode : 1;
+  const errorSummary = summarizeError({
+    ok: false,
+    exitCode: normalizedExitCode,
+    stdout: output || "",
+    stderr: "",
   });
+  const key = `${check}\u0000${command}\u0000${normalizedExitCode}\u0000${errorSummary}`;
+  const exists = nestedCommandFailures.some((failure) =>
+    `${failure.check}\u0000${failure.command}\u0000${failure.exitCode}\u0000${failure.errorSummary}` === key,
+  );
+  if (!exists) {
+    nestedCommandFailures.push({
+      check,
+      command,
+      exitCode: normalizedExitCode,
+      errorSummary,
+    });
+  }
+}
+
+function captureReportState(relativePath) {
+  const absolutePath = path.join(ROOT, relativePath);
+  try {
+    return {
+      content: fs.readFileSync(absolutePath, "utf-8"),
+    };
+  } catch {
+    return null;
+  }
+}
+
+function readFreshJsonReport(relativePath, startedAt, previousState = null) {
+  const absolutePath = path.join(ROOT, relativePath);
+  try {
+    const stat = fs.statSync(absolutePath);
+    // Generated child reports are removed immediately before the child runs;
+    // this small tolerance only covers timestamp rounding on the same volume.
+    if (stat.mtimeMs < startedAt - 100) return null;
+    const content = fs.readFileSync(absolutePath, "utf-8");
+    if (previousState && content === previousState.content) {
+      return null;
+    }
+    const report = JSON.parse(content);
+    const generated = report?.generatedAt || report?.generated;
+    if (generated) {
+      const generatedMs = Date.parse(generated);
+      if (!Number.isFinite(generatedMs) || generatedMs < startedAt - 100) return null;
+    }
+    return report;
+  } catch {
+    return null;
+  }
 }
 
 /**
@@ -287,19 +378,72 @@ function extractJson(text) {
   return extractLastJson(text);
 }
 
-function collectVitestFailures(json) {
+function addVitestFailure(failure) {
+  const normalized = {
+    file: failure.file || "unknown",
+    testName: failure.testName || "Test suite failed before assertions ran",
+    assertion: failure.assertion || "",
+    error: stripAnsi(failure.error || "No failure message was reported").slice(0, 2000),
+    ...(failure.source ? { source: failure.source } : {}),
+  };
+  const key = `${normalized.file}\u0000${normalized.testName}\u0000${normalized.error}`;
+  const exists = vitestFailures.some((item) =>
+    `${item.file}\u0000${item.testName}\u0000${item.error}` === key,
+  );
+  if (!exists) vitestFailures.push(normalized);
+}
+
+function collectVitestFailures(json, source = "vitest") {
   if (!json?.testResults) return;
   for (const tr of json.testResults) {
+    let failedAssertions = 0;
     for (const ar of tr.assertionResults || []) {
       if (ar.status === "failed") {
-        vitestFailures.push({
+        failedAssertions++;
+        addVitestFailure({
           file: tr.name || "unknown",
           testName: ar.fullName || [...(ar.ancestorTitles || []), ar.title].join(" > "),
           assertion: ar.title || "",
-          error: (ar.failureMessages || []).join("\n").slice(0, 1000),
+          error: (ar.failureMessages || []).join("\n") || tr.message || "Assertion failed without a message",
+          source,
         });
       }
     }
+    if (tr.status === "failed" && failedAssertions === 0) {
+      addVitestFailure({
+        file: tr.name || "unknown",
+        testName: "Test suite failed before assertions ran",
+        assertion: "",
+        error: tr.message || tr.failureMessage || "Test suite reported a failed status without assertion details",
+        source,
+      });
+    }
+  }
+}
+
+function collectVitestFailuresFromText(text, source = "vitest") {
+  const lines = stripAnsi(text).split(/\r?\n/);
+  for (let index = 0; index < lines.length; index++) {
+    const match = lines[index].match(/^\s*FAIL\s+(.+?)(?:\s+>\s+(.+))?\s*$/);
+    if (!match) continue;
+
+    // The non-greedy file match can stop too early when a test hierarchy is
+    // present, so split the complete tail explicitly.
+    const tail = lines[index].replace(/^\s*FAIL\s+/, "").trim();
+    const parts = tail.split(/\s+>\s+/);
+    const file = parts.shift() || "unknown";
+    const testName = parts.join(" > ") || "Test suite failed before assertions ran";
+    const nearbyError = lines
+      .slice(index + 1, index + 10)
+      .map((line) => line.trim())
+      .find((line) => /^(?:AssertionError|TypeError|ReferenceError|SyntaxError|Error):?\s*/.test(line));
+    addVitestFailure({
+      file,
+      testName,
+      assertion: parts.at(-1) || "",
+      error: nearbyError || "Failure name extracted from Vitest output; see the subcommand error summary",
+      source,
+    });
   }
 }
 
@@ -316,15 +460,21 @@ function collectVitestFailures(json) {
  */
 async function timed(checkName, category, severity, fn) {
   const t0 = performance.now();
+  const firstResultIndex = checks.length;
   try {
     await fn();
   } catch (err) {
     fail(checkName, err.message, category, severity);
   }
-  // Update the last check's duration
-  const last = checks[checks.length - 1];
-  if (last && last.check === checkName) {
-    last.durationMs = Math.round(performance.now() - t0);
+  const durationMs = Math.round(performance.now() - t0);
+  const newResults = checks.slice(firstResultIndex);
+  if (newResults.length === 0) {
+    fail(checkName, "Check completed without recording a result", category, severity);
+    checks[checks.length - 1].durationMs = durationMs;
+    return;
+  }
+  for (const result of newResults) {
+    if (result.check === checkName) result.durationMs = durationMs;
   }
 }
 
@@ -343,12 +493,121 @@ async function checkSourceReproducibility() {
       fail(checkName, `Script not found: ${scriptPath}`, category, severity);
       return;
     }
+    const sourceReportPath = "reports/release/source-reproducibility.json";
+    const previousReportState = captureReportState(sourceReportPath);
+    const reportStartedAt = Date.now();
     const r = runNodeScript(scriptPath, [], { timeout: 600000 });
-    if (r.exitCode === 0) {
-      pass(checkName, "clean tracked-source build and quality tests passed", category, severity);
-    } else {
-      fail(checkName, `source reproducibility failed (exit ${r.exitCode})`, category, severity);
+    const sourceReport = readFreshJsonReport(
+      sourceReportPath,
+      reportStartedAt,
+      previousReportState,
+    );
+
+    const usesStructuredCommands = Array.isArray(sourceReport?.commands);
+    const usesLegacySteps = !usesStructuredCommands && Array.isArray(sourceReport?.steps);
+    const reportCommands = usesStructuredCommands
+      ? sourceReport.commands
+      : usesLegacySteps
+        ? sourceReport.steps
+        : [];
+    const failedCommands = reportCommands.filter((command) => {
+      const status = String(command?.status || "").toLowerCase();
+      return ["fail", "failed", "error"].includes(status) ||
+        command?.ok === false ||
+        Number(command?.exitCode || 0) !== 0;
+    });
+    for (const command of failedCommands) {
+      const commandName = command.command || command.name || "unknown source reproducibility subcommand";
+      const output = command.output || command.error || command.detail || "";
+      const exitCode = Number.isInteger(command.exitCode) ? command.exitCode : 1;
+      recordNestedCommandFailure(checkName, commandName, exitCode, output);
+      collectVitestFailuresFromText(output, `${checkName}: ${commandName}`);
     }
+
+    const reportVerdict = String(sourceReport?.verdict || "").toUpperCase();
+    const legacyReproducible = sourceReport?.summary?.reproducible;
+    const hasExplicitVerdict = Object.prototype.hasOwnProperty.call(sourceReport || {}, "verdict");
+    const hasRecognizedVerdict = hasExplicitVerdict
+      ? ["PASS", "FAIL"].includes(reportVerdict)
+      : typeof legacyReproducible === "boolean";
+    const commandEvidenceValid = usesStructuredCommands
+      ? reportCommands.length > 0 && reportCommands.every((command) =>
+        typeof command?.command === "string" &&
+          ["pass", "fail"].includes(String(command?.status || "").toLowerCase()) &&
+          Number.isInteger(command?.exitCode),
+      )
+      : usesLegacySteps && reportCommands.length > 0 && reportCommands.every((step) =>
+        typeof step?.name === "string" &&
+          ["ok", "fail", "skip"].includes(String(step?.status || "").toLowerCase()),
+      );
+    const inventoryEvidenceValid = usesStructuredCommands
+      ? typeof sourceReport?.repository?.requiredTracked === "boolean" &&
+        Array.isArray(sourceReport?.repository?.missing) &&
+        Array.isArray(sourceReport?.repository?.untracked)
+      : usesLegacySteps;
+    const reportSchemaValid =
+      sourceReport !== null &&
+      hasRecognizedVerdict &&
+      commandEvidenceValid &&
+      inventoryEvidenceValid &&
+      sourceReport?.repository &&
+      typeof sourceReport.repository === "object";
+    const missingTracked = Array.isArray(sourceReport?.repository?.missing)
+      ? sourceReport.repository.missing
+      : [];
+    const untrackedRequired = Array.isArray(sourceReport?.repository?.untracked)
+      ? sourceReport.repository.untracked
+      : [];
+    const inventoryFailure =
+      sourceReport?.repository?.requiredTracked === false ||
+      missingTracked.length > 0 ||
+      untrackedRequired.length > 0;
+    const semanticFailure =
+      !reportSchemaValid ||
+      reportVerdict === "FAIL" ||
+      legacyReproducible === false ||
+      Number(sourceReport?.summary?.failed || 0) > 0 ||
+      failedCommands.length > 0 ||
+      inventoryFailure;
+    const commandFailure = !r.ok || r.exitCode !== 0;
+    const missingFreshReport = sourceReport === null;
+
+    if (commandFailure || semanticFailure || missingFreshReport) {
+      const details = [];
+      if (commandFailure) details.push(`subprocess exit ${r.exitCode}`);
+      if (reportVerdict) details.push(`generated report verdict ${reportVerdict}`);
+      if (failedCommands.length > 0) {
+        details.push(`${failedCommands.length} failed subcommand(s): ${failedCommands
+          .map((command) => command.command || command.name || "unknown")
+          .join(", ")}`);
+      }
+      const reportedReason = sourceReport?.failure?.reason || sourceReport?.failure?.detail;
+      if (reportedReason) details.push(stripAnsi(String(reportedReason)).slice(0, 500));
+      if (missingFreshReport) details.push("fresh source reproducibility report missing or invalid");
+      else if (!reportSchemaValid) details.push("source reproducibility report schema/verdict is invalid");
+      if (missingTracked.length > 0) {
+        details.push(`missing tracked files: ${missingTracked.join(", ")}`);
+      }
+      if (untrackedRequired.length > 0) {
+        details.push(`untracked required files: ${untrackedRequired.join(", ")}`);
+      }
+      if (sourceReport?.repository?.requiredTracked === false && missingTracked.length === 0 && untrackedRequired.length === 0) {
+        details.push("required tracked-file inventory check failed");
+      }
+      if (details.length === 0) details.push(summarizeError(r));
+      if (semanticFailure && failedCommands.length === 0) {
+        recordNestedCommandFailure(
+          checkName,
+          "source reproducibility semantic report",
+          1,
+          details.join("; "),
+        );
+      }
+      fail(checkName, details.join("; "), category, severity);
+      return;
+    }
+
+    pass(checkName, "clean tracked-source build and quality tests passed", category, severity);
   });
 }
 
@@ -387,50 +646,75 @@ async function checkVitest() {
       env: isolatedHomeEnv("cc-stable-vitest-"),
     });
 
-    // vitest writes JSON to stdout
-    const json = extractJson(r.stdout);
-    if (json) {
-      const failed = json.numFailedTests || 0;
-      const passed = json.numPassedTests || 0;
-      const total = json.numTotalTests || 0;
-      // numTotalTestSuites counts describe blocks; count unique test file names instead
-      const testFiles = json.testResults ? new Set(json.testResults.map((tr) => tr.name)).size : (json.numTotalTestSuites || 0);
-
-      // Extract failure details for the report
-      vitestFailures = [];
-      if (json.testResults) {
-        for (const tr of json.testResults) {
-          if (tr.status === "failed" || (tr.assertionResults || []).some((a) => a.status === "failed")) {
-            for (const ar of tr.assertionResults || []) {
-              if (ar.status === "failed") {
-                vitestFailures.push({
-                  file: tr.name,
-                  testName: ar.fullName || (ar.ancestorTitles || []).concat(ar.title).join(" > "),
-                  assertion: ar.title || "",
-                  error: (ar.failureMessages || []).join("\n").slice(0, 500),
-                });
-              }
-            }
-          }
-        }
-      }
-
-      if (failed === 0) {
-        pass(checkName, `${passed} tests passed, ${testFiles} test files, 0 failures`, category, severity);
-      } else {
-        const detail = `${failed} failures out of ${total} tests, ${testFiles} test files`;
-        fail(checkName, detail, category, severity);
-      }
-    } else if (r.exitCode === 0) {
-      // Fallback: check text output
-      if ((r.stdout + r.stderr).includes("Tests") && !(r.stdout + r.stderr).includes("FAIL")) {
-        pass(checkName, "All tests passed (text mode detection)", category, severity);
-      } else {
-        warn(checkName, "Could not parse vitest JSON output, but exit code was 0 — check manually", category, severity);
-      }
-    } else {
-      fail(checkName, `Vitest exited with code ${r.exitCode}: ${(r.stderr + r.stdout).slice(0, 300)}`, category, severity);
+    const output = `${r.stdout || ""}\n${r.stderr || ""}`;
+    const json = extractJson(output);
+    if (!json) {
+      collectVitestFailuresFromText(output, checkName);
+      fail(
+        checkName,
+        `Vitest result JSON missing or invalid (exit ${r.exitCode}); ${summarizeError(r)}`,
+        category,
+        severity,
+      );
+      return;
     }
+
+    const failedTests = Number(json.numFailedTests || 0);
+    const failedSuites = Number(json.numFailedTestSuites || 0);
+    const passed = Number(json.numPassedTests || 0);
+    const total = Number(json.numTotalTests || 0);
+    const failedResults = (json.testResults || []).filter((tr) =>
+      tr.status === "failed" || (tr.assertionResults || []).some((assertion) => assertion.status === "failed"),
+    );
+    // numTotalTestSuites counts nested suites in some Vitest versions; use
+    // unique result file names for the human-readable file count.
+    const testFiles = json.testResults
+      ? new Set(json.testResults.map((tr) => tr.name)).size
+      : Number(json.numTotalTestSuites || 0);
+
+    const failureCountBeforeCollect = vitestFailures.length;
+    collectVitestFailures(json, checkName);
+
+    const commandFailed = !r.ok || r.exitCode !== 0;
+    const jsonFailed = json.success === false;
+    const hasReportedFailures = failedTests > 0 || failedSuites > 0 || failedResults.length > 0;
+    const noTestsExecuted = total === 0 || testFiles === 0;
+    if (commandFailed || jsonFailed || hasReportedFailures || noTestsExecuted) {
+      if (vitestFailures.length === failureCountBeforeCollect) {
+        addVitestFailure({
+          file: "unknown",
+          testName: failedSuites > 0
+            ? `${failedSuites} Vitest suite(s) failed without per-suite details`
+            : noTestsExecuted
+              ? "Full Vitest run completed without executing tests"
+              : "Vitest process failed before test results were reported",
+          assertion: "",
+          error: summarizeError(r),
+          source: checkName,
+        });
+      }
+      fail(
+        checkName,
+        `exit ${r.exitCode}; success=${String(json.success)}; ${failedTests} failed test(s), ` +
+          `${failedSuites} failed suite(s), ${failedResults.length} failed file result(s), ` +
+          `${total} total test(s) across ${testFiles} file(s)`,
+        category,
+        severity,
+      );
+      return;
+    }
+
+    if (json.success !== true) {
+      fail(
+        checkName,
+        `Vitest did not report success=true (received ${String(json.success)}) despite exit ${r.exitCode}`,
+        category,
+        severity,
+      );
+      return;
+    }
+
+    pass(checkName, `${passed} tests passed, ${testFiles} test files, 0 failures`, category, severity);
   });
 }
 
@@ -476,9 +760,17 @@ async function checkMemoryRecallQuality() {
   const severity = "must";
 
   await timed(checkName, category, severity, async () => {
+    const recallFile = path.join(SRC, "memory", "recallContext.ts");
+    const memoryServiceFile = path.join(SRC, "memory", "memoryService.ts");
+    if (!fs.existsSync(recallFile) && !fs.existsSync(memoryServiceFile)) {
+      fail(checkName, "Memory recall source files missing", category, severity);
+      return;
+    }
+
     // Run the dedicated quality gate. The full Vitest run is a separate MUST check.
     const r = run("npx vitest run tests/quality/recallQualityGate.test.ts --reporter=json 2>&1", { timeout: 180000 });
-    const json = extractJson(r.stdout);
+    const output = `${r.stdout || ""}\n${r.stderr || ""}`;
+    const json = extractJson(output);
 
     // Count memory-related test failures
     if (json && json.testResults) {
@@ -491,29 +783,35 @@ async function checkMemoryRecallQuality() {
         const fileFails = (tr.assertionResults || []).filter((a) => a.status === "failed").length;
         return sum + fileFails;
       }, 0);
+      const failedResults = memoryTestFiles.filter((tr) => tr.status === "failed").length;
+      collectVitestFailures(json, checkName);
 
-      if (failures === 0) {
+      if (
+        r.exitCode === 0 &&
+        json.success === true &&
+        failures === 0 &&
+        failedResults === 0 &&
+        Number(json.numFailedTestSuites || 0) === 0 &&
+        memoryTestFiles.length > 0
+      ) {
         pass(checkName, `${memoryTestFiles.length} memory/recall test files, 0 failures`, category, severity);
       } else {
-        fail(checkName, `${failures} failures in memory/recall test files`, category, severity);
+        fail(
+          checkName,
+          `Memory/recall gate failed (exit ${r.exitCode}, success=${String(json.success)}, ` +
+            `${failures} failed assertion(s), ${failedResults} failed file result(s))`,
+          category,
+          severity,
+        );
       }
     } else {
-      // Fallback: run focused recall tests
-      const focused = run("npx vitest run tests/quality/recallQualityGate.test.ts --reporter=verbose 2>&1", { timeout: 180000 });
-      if (focused.exitCode === 0 && !focused.stdout.includes("FAIL")) {
-        pass(checkName, "Memory/recall focused tests pass", category, severity);
-      } else if (focused.exitCode !== 0) {
-        fail(checkName, `Memory/recall tests have failures`, category, severity);
-      } else {
-        warn(checkName, "Could not isolate memory recall results — check full vitest run", category, severity);
-      }
-    }
-
-    // Also verify memory recall source implementation exists
-    const recallFile = path.join(SRC, "memory", "recallContext.ts");
-    const memoryServiceFile = path.join(SRC, "memory", "memoryService.ts");
-    if (!fs.existsSync(recallFile) && !fs.existsSync(memoryServiceFile)) {
-      fail(checkName, "Memory recall source files missing", category, severity);
+      collectVitestFailuresFromText(output, checkName);
+      fail(
+        checkName,
+        `Memory/recall Vitest JSON missing or invalid (exit ${r.exitCode}); ${summarizeError(r)}`,
+        category,
+        severity,
+      );
     }
   });
 }
@@ -534,14 +832,51 @@ async function checkFingerprintMigration() {
       return;
     }
     const r = run("npx vitest run tests/memoryFingerprintMigration.test.ts --reporter=json 2>&1", { timeout: 180000 });
-    const json = extractJson(r.stdout);
-    const failed = json?.numFailedTests ?? (r.exitCode === 0 ? 0 : 1);
-    const passed = json?.numPassedTests ?? 0;
-    if (r.exitCode === 0 && failed === 0) {
+    const output = `${r.stdout || ""}\n${r.stderr || ""}`;
+    const json = extractJson(output);
+    if (!json) {
+      collectVitestFailuresFromText(output, checkName);
+      fail(
+        checkName,
+        `Fingerprint migration Vitest JSON missing or invalid (exit ${r.exitCode}); ${summarizeError(r)}`,
+        category,
+        severity,
+      );
+      return;
+    }
+
+    const failed = Number(json.numFailedTests || 0);
+    const failedSuites = Number(json.numFailedTestSuites || 0);
+    const passed = Number(json.numPassedTests || 0);
+    const failedResults = (json.testResults || []).filter((tr) => tr.status === "failed").length;
+    const failureCountBeforeCollect = vitestFailures.length;
+    collectVitestFailures(json, checkName);
+    if (
+      r.exitCode === 0 &&
+      json.success === true &&
+      failed === 0 &&
+      failedSuites === 0 &&
+      failedResults === 0 &&
+      passed > 0
+    ) {
       pass(checkName, `${passed} fingerprint migration tests passed`, category, severity);
     } else {
-      fail(checkName, `fingerprint migration tests failed: ${failed} failure(s)`, category, severity);
-      collectVitestFailures(json);
+      if (vitestFailures.length === failureCountBeforeCollect) {
+        addVitestFailure({
+          file: testFile,
+          testName: "Fingerprint migration suite failed without assertion details",
+          assertion: "",
+          error: summarizeError(r),
+          source: checkName,
+        });
+      }
+      fail(
+        checkName,
+        `Fingerprint migration tests failed (exit ${r.exitCode}, success=${String(json.success)}, ` +
+          `${failed} failed test(s), ${failedSuites} failed suite(s), ${failedResults} failed result(s))`,
+        category,
+        severity,
+      );
     }
   });
 }
@@ -562,11 +897,95 @@ async function checkFastPathBoundary() {
       return;
     }
 
+    const fastPathReportPath = "reports/release/fast-path-boundary-check.json";
+    const previousReportState = captureReportState(fastPathReportPath);
+    const reportStartedAt = Date.now();
     const r = runNodeScript(scriptPath, [], { timeout: 120000 });
-    if (r.exitCode === 0) {
-      pass(checkName, "Fast path boundary gate passed", category, severity);
+    const fastPathReport = readFreshJsonReport(
+      fastPathReportPath,
+      reportStartedAt,
+      previousReportState,
+    );
+    const reportChecks = Array.isArray(fastPathReport?.checks) ? fastPathReport.checks : [];
+    const failedChecks = reportChecks.filter((check) =>
+      ["fail", "failed", "error"].includes(String(check?.status || "").toLowerCase()),
+    );
+    const warningChecks = reportChecks.filter((check) =>
+      String(check?.status || "").toLowerCase() === "warning",
+    );
+    const reportVerdict = String(fastPathReport?.verdict || "").toLowerCase();
+    const validStatuses = new Set(["pass", "warning", "fail"]);
+    const allCheckStatusesValid = reportChecks.every((check) =>
+      validStatuses.has(String(check?.status || "").toLowerCase()),
+    );
+    const summaryCountsMatch =
+      Number(fastPathReport?.summary?.total) === reportChecks.length &&
+      Number(fastPathReport?.summary?.pass) === reportChecks.filter((check) => String(check?.status).toLowerCase() === "pass").length &&
+      Number(fastPathReport?.summary?.warning) === warningChecks.length &&
+      Number(fastPathReport?.summary?.fail) === failedChecks.length;
+    const reportSchemaValid =
+      fastPathReport !== null &&
+      ["pass", "warning", "fail"].includes(reportVerdict) &&
+      Array.isArray(fastPathReport?.checks) &&
+      reportChecks.length > 0 &&
+      allCheckStatusesValid &&
+      fastPathReport?.summary &&
+      typeof fastPathReport.summary === "object" &&
+      summaryCountsMatch;
+    const hasBlocker =
+      !r.ok ||
+      r.exitCode !== 0 ||
+      !reportSchemaValid ||
+      reportVerdict === "fail" ||
+      Number(fastPathReport?.summary?.fail || 0) > 0 ||
+      failedChecks.length > 0;
+
+    if (hasBlocker) {
+      const details = [];
+      if (r.exitCode !== 0) details.push(`subprocess exit ${r.exitCode}`);
+      if (fastPathReport === null) details.push("fresh fast-path report missing or invalid");
+      else if (!reportSchemaValid) details.push("fast-path report schema/verdict is invalid");
+      if (reportVerdict) details.push(`generated report verdict ${reportVerdict.toUpperCase()}`);
+      if (failedChecks.length > 0) {
+        details.push(failedChecks
+          .map((check) => `${check.check}: ${check.detail || "failed"}`)
+          .join("; "));
+        for (const check of failedChecks) {
+          recordNestedCommandFailure(
+            checkName,
+            `fast-path check: ${check.check || "unknown"}`,
+            1,
+            check.detail || "Fast-path check failed without diagnostic detail",
+          );
+        }
+      }
+      if (r.exitCode === 0 && failedChecks.length === 0) {
+        recordNestedCommandFailure(
+          checkName,
+          "fast-path semantic report",
+          1,
+          details.join("; ") || "Fast-path report declared a blocking result",
+        );
+      }
+      fail(checkName, details.join("; ") || summarizeError(r), category, severity);
     } else {
-      fail(checkName, `Fast path boundary gate FAILED (exit ${r.exitCode}): ${(r.stdout + r.stderr).slice(0, 300)}`, category, severity);
+      pass(
+        checkName,
+        `Fast path boundary gate has 0 blockers (${reportChecks.length} checks)`,
+        category,
+        severity,
+      );
+    }
+
+    const reportHasWarning =
+      reportVerdict === "warning" ||
+      Number(fastPathReport?.summary?.warning || 0) > 0 ||
+      warningChecks.length > 0;
+    if (reportHasWarning) {
+      const warningDetail = warningChecks.length > 0
+        ? warningChecks.map((check) => `${check.check}: ${check.detail || "warning"}`).join("; ")
+        : `Fast-path report verdict ${reportVerdict.toUpperCase()} with ${fastPathReport?.summary?.warning || 0} warning(s)`;
+      warn("7a. Fast Path warnings", warningDetail, category, "should");
     }
   });
 }
@@ -1025,15 +1444,27 @@ function getGitMetadata() {
 }
 
 function buildJsonReport(verdict, startTime) {
+  // getGitMetadata records its commands, so collect it before deriving command
+  // failures and total duration for the final report.
+  const git = getGitMetadata();
   const totalMs = Math.round(performance.now() - startTime);
 
   const mustChecks = checks.filter((c) => c.severity === "must");
-  const shouldChecks = checks.filter((c) => c.severity === "should");
+  const blockingFailures = mustChecks.filter((c) => c.status === "fail");
+  const directCommandFailures = commandOutputs
+    .filter((command) => !command.ok || command.exitCode !== 0)
+    .map((command) => ({
+      check: "direct subcommand",
+      command: command.command,
+      exitCode: command.exitCode,
+      errorSummary: command.errorSummary || command.output || `Command exited with code ${command.exitCode}`,
+    }));
+  const subcommandFailures = [...directCommandFailures, ...nestedCommandFailures];
 
   return {
     generatedAt: new Date().toISOString(),
     generated: new Date().toISOString(),
-    git: getGitMetadata(),
+    git,
     project: "code-context-mcp",
     version: (() => {
       try { return readJson("package.json").version; } catch { return "unknown"; }
@@ -1050,8 +1481,11 @@ function buildJsonReport(verdict, startTime) {
       totalDurationMs: totalMs,
     },
     checks,
+    blockingFailures,
     commandOutputs,
-    testFailures: vitestFailures.length > 0 ? vitestFailures : undefined,
+    subcommandFailures,
+    testFailures: vitestFailures,
+    fastPathWarnings: checks.filter((c) => c.check === "7a. Fast Path warnings"),
     verdictRules: {
       pass: "All MUST checks pass. Ready for stable release.",
       warning: "All MUST checks pass but one or more SHOULD checks are warnings. Review before release.",
@@ -1084,6 +1518,9 @@ function buildJsonReport(verdict, startTime) {
 function buildMarkdownReport(report) {
   const lines = [];
   const statusIcon = { pass: "✅", warning: "⚠️", fail: "❌" };
+  const markdownCell = (value) => String(value ?? "")
+    .replace(/\r?\n/g, " // ")
+    .replace(/\|/g, "\\|");
 
   lines.push("# CodeContext Stable Release Gate");
   lines.push("");
@@ -1104,8 +1541,20 @@ function buildMarkdownReport(report) {
   lines.push(`| **Total** | **${report.summary.total}** |`);
   lines.push(`| MUST pass | ${report.summary.mustPass} |`);
   lines.push(`| MUST fail | ${report.summary.mustFail} |`);
+  lines.push(`| Release blockers | ${report.blockingFailures.length} |`);
   lines.push(`| Total duration | ${(report.summary.totalDurationMs / 1000).toFixed(1)}s |`);
   lines.push("");
+
+  if (report.blockingFailures.length > 0) {
+    lines.push("## ❌ Release Blockers");
+    lines.push("");
+    lines.push("| MUST check | Category | Detail |");
+    lines.push("|---|---|---|");
+    for (const blocker of report.blockingFailures) {
+      lines.push(`| ${markdownCell(blocker.check)} | ${markdownCell(blocker.category)} | ${markdownCell(blocker.detail)} |`);
+    }
+    lines.push("");
+  }
 
   // Verdict rules
   lines.push("## Verdict Rules");
@@ -1133,13 +1582,13 @@ function buildMarkdownReport(report) {
     lines.push(`### ${cat}`);
     lines.push("");
     lines.push("| # | Check | Status | Severity | Duration | Detail |");
-    lines.push("|---|---|---|---:|---:|");
+    lines.push("|---|---|---|---|---:|---|");
     let idx = 1;
     for (const c of catChecks) {
       const icon = statusIcon[c.status] || "?";
       const severity = c.severity === "must" ? "🔴 MUST" : "🟡 SHOULD";
       const detail = c.detail.length > 100 ? c.detail.slice(0, 97) + "..." : c.detail;
-      lines.push(`| ${idx} | ${c.check} | ${icon} ${c.status} | ${severity} | ${c.durationMs}ms | ${detail} |`);
+      lines.push(`| ${idx} | ${markdownCell(c.check)} | ${icon} ${c.status} | ${severity} | ${c.durationMs}ms | ${markdownCell(detail)} |`);
       idx++;
     }
     lines.push("");
@@ -1149,29 +1598,45 @@ function buildMarkdownReport(report) {
   if (report.testFailures && report.testFailures.length > 0) {
     lines.push("## ❌ Test Failure Details");
     lines.push("");
-    lines.push(`| # | Test File | Test Name | Assertion | Error |`);
-    lines.push("|---|---:|---|---:|---|");
+    lines.push(`| # | Test File | Test Name | Assertion | Source | Error |`);
+    lines.push("|---|---|---|---|---|---|");
     report.testFailures.forEach((f, i) => {
       const errorSnippet = f.error.replace(/\n/g, " // ").slice(0, 150);
-      const testName = f.testName.length > 60 ? f.testName.slice(0, 57) + "..." : f.testName;
       const fileShort = f.file.replace(/\\/g, "/").split("/").slice(-2).join("/");
-      lines.push(`| ${i + 1} | \`${fileShort}\` | ${testName} | ${f.assertion} | ${errorSnippet} |`);
+      lines.push(
+        `| ${i + 1} | \`${markdownCell(fileShort)}\` | ${markdownCell(f.testName)} | ` +
+          `${markdownCell(f.assertion)} | ${markdownCell(f.source || "vitest")} | ${markdownCell(errorSnippet)} |`,
+      );
     });
     lines.push("");
   }
 
- // Detailed check results (for failures)
+  // Detailed check results (for failures)
   lines.push("## Subcommand Output Summaries");
   lines.push("");
   lines.push("| Command | Exit | Status | Output summary |");
   lines.push("|---|---:|---|---|");
   for (const command of report.commandOutputs) {
-    const output = (command.output || "").replace(/\r?\n/g, " ").replace(/\|/g, "\\|");
-    lines.push(`| ${command.command} | ${command.exitCode} | ${command.ok ? "PASS" : "FAIL"} | ${output.slice(0, 240)} |`);
+    const output = markdownCell(command.output || "");
+    lines.push(`| ${markdownCell(command.command)} | ${command.exitCode} | ${command.ok ? "PASS" : "FAIL"} | ${output.slice(0, 240)} |`);
   }
   lines.push("");
 
- const failedChecks = report.checks.filter((c) => c.status === "fail");
+  if (report.subcommandFailures.length > 0) {
+    lines.push("## ❌ Failed Subcommand Error Summaries");
+    lines.push("");
+    lines.push("| Check | Command | Exit | Error summary |");
+    lines.push("|---|---|---:|---|");
+    for (const failure of report.subcommandFailures) {
+      lines.push(
+        `| ${markdownCell(failure.check)} | ${markdownCell(failure.command)} | ${failure.exitCode} | ` +
+          `${markdownCell(failure.errorSummary)} |`,
+      );
+    }
+    lines.push("");
+  }
+
+  const failedChecks = report.checks.filter((c) => c.status === "fail");
   if (failedChecks.length > 0) {
     lines.push("## ❌ Failed Checks (Detail)");
     lines.push("");
@@ -1239,12 +1704,40 @@ function buildMarkdownReport(report) {
   return lines.join("\n");
 }
 
+function writeStableReports(report) {
+  // Build both serializations before touching either destination so a render
+  // error cannot leave a new JSON report beside an old Markdown report.
+  const json = JSON.stringify(report, null, 2);
+  const markdown = buildMarkdownReport(report);
+  fs.mkdirSync(REPORTS_DIR, { recursive: true });
+  fs.writeFileSync(path.join(REPORTS_DIR, "stable-readiness.json"), json, "utf-8");
+  fs.writeFileSync(path.join(REPORTS_DIR, "stable-readiness.md"), markdown, "utf-8");
+}
+
+function writeInProgressReport() {
+  const checkCount = checks.length;
+  const commandCount = commandOutputs.length;
+  fail(
+    "0. Stable readiness execution",
+    "Readiness checks are still running; this marker will be replaced by the final report",
+    "internal",
+    "must",
+  );
+  try {
+    writeStableReports(buildJsonReport("FAIL", STABLE_RUN_STARTED_AT));
+  } finally {
+    checks.length = checkCount;
+    commandOutputs.length = commandCount;
+  }
+}
+
 // ---------------------------------------------------------------------------
 // Main
 // ---------------------------------------------------------------------------
 
 async function main() {
-  const t0 = performance.now();
+  const t0 = STABLE_RUN_STARTED_AT;
+  writeInProgressReport();
 
   console.log("═══════════════════════════════════════════");
   console.log("  CodeContext Stable Release Gate");
@@ -1277,15 +1770,7 @@ async function main() {
   // Generate report
   const verdict = finalVerdict();
   const report = buildJsonReport(verdict, t0);
-
-  fs.mkdirSync(REPORTS_DIR, { recursive: true });
-
-  const jsonPath = path.join(REPORTS_DIR, "stable-readiness.json");
-  fs.writeFileSync(jsonPath, JSON.stringify(report, null, 2), "utf-8");
-
-  const md = buildMarkdownReport(report);
-  const mdPath = path.join(REPORTS_DIR, "stable-readiness.md");
-  fs.writeFileSync(mdPath, md, "utf-8");
+  writeStableReports(report);
 
   // Print summary
   console.log("");
@@ -1311,6 +1796,15 @@ async function main() {
 }
 
 main().catch((err) => {
-  console.error("Stable readiness check crashed:", err);
+  const detail = stripAnsi(err?.stack || err?.message || String(err)).slice(0, 2000);
+  console.error("Stable readiness check crashed:", detail);
+  fail("0. Stable readiness execution", detail, "internal", "must");
+  try {
+    writeStableReports(buildJsonReport("FAIL", STABLE_RUN_STARTED_AT));
+    console.error("Crash report: reports/release/stable-readiness.json");
+    console.error("Crash report: reports/release/stable-readiness.md");
+  } catch (reportError) {
+    console.error("Could not write stable readiness crash report:", reportError);
+  }
   process.exit(2);
 });

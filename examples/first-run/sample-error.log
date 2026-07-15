@@ -1,0 +1,198 @@
+[2026-07-04 09:12:31.421] ERROR  api-gateway  POST /api/orders failed — 500 Internal Server Error
+[2026-07-04 09:12:31.422] ERROR  api-gateway  Error: Cannot read properties of undefined (reading items)
+    at OrderService.calculateTotal (src/services/orderService.ts:142:31)
+    at OrderController.createOrder (src/controllers/orderController.ts:87:18)
+    at processTicksAndRejections (node:internal/process/task_queues:95:5)
+[2026-07-04 09:12:31.423] WARN   api-gateway  reqId=req_8f3a2c  userId=usr_1142  duration=342ms  status=500
+
+[2026-07-04 09:12:31.001] INFO   api-gateway  GET /api/health — 200 OK (3ms)
+[2026-07-04 09:12:32.002] INFO   api-gateway  GET /api/health — 200 OK (4ms)
+[2026-07-04 09:12:33.003] INFO   api-gateway  GET /api/health — 200 OK (5ms)
+[2026-07-04 09:12:33.003] DEBUG  api-gateway  reqId=req_a0003  middleware=auth,ratelimit  handler=healthCheck
+[2026-07-04 09:12:34.004] INFO   api-gateway  GET /api/health — 200 OK (6ms)
+[2026-07-04 09:12:35.005] INFO   api-gateway  GET /api/health — 200 OK (2ms)
+[2026-07-04 09:12:36.006] INFO   api-gateway  GET /api/health — 200 OK (3ms)
+[2026-07-04 09:12:36.006] DEBUG  api-gateway  reqId=req_a0006  middleware=auth,ratelimit  handler=healthCheck
+[2026-07-04 09:12:37.007] INFO   api-gateway  GET /api/health — 200 OK (4ms)
+[2026-07-04 09:12:38.008] INFO   api-gateway  GET /api/health — 200 OK (5ms)
+[2026-07-04 09:12:39.009] INFO   api-gateway  GET /api/health — 200 OK (6ms)
+[2026-07-04 09:12:39.009] DEBUG  api-gateway  reqId=req_a0009  middleware=auth,ratelimit  handler=healthCheck
+[2026-07-04 09:12:30.010] INFO   api-gateway  GET /api/health — 200 OK (2ms)
+[2026-07-04 09:12:31.011] INFO   api-gateway  GET /api/health — 200 OK (3ms)
+[2026-07-04 09:12:32.012] INFO   api-gateway  GET /api/health — 200 OK (4ms)
+[2026-07-04 09:12:32.012] DEBUG  api-gateway  reqId=req_a0012  middleware=auth,ratelimit  handler=healthCheck
+[2026-07-04 09:12:33.013] INFO   api-gateway  GET /api/health — 200 OK (5ms)
+[2026-07-04 09:12:34.014] INFO   api-gateway  GET /api/health — 200 OK (6ms)
+[2026-07-04 09:12:35.015] INFO   api-gateway  GET /api/health — 200 OK (2ms)
+[2026-07-04 09:12:35.015] DEBUG  api-gateway  reqId=req_a0015  middleware=auth,ratelimit  handler=healthCheck
+[2026-07-04 09:12:36.016] INFO   api-gateway  GET /api/health — 200 OK (3ms)
+[2026-07-04 09:12:37.017] INFO   api-gateway  GET /api/health — 200 OK (4ms)
+[2026-07-04 09:12:38.018] INFO   api-gateway  GET /api/health — 200 OK (5ms)
+[2026-07-04 09:12:38.018] DEBUG  api-gateway  reqId=req_a0018  middleware=auth,ratelimit  handler=healthCheck
+[2026-07-04 09:12:39.019] INFO   api-gateway  GET /api/health — 200 OK (6ms)
+[2026-07-04 09:12:30.020] INFO   api-gateway  GET /api/health — 200 OK (2ms)
+[2026-07-04 09:12:30.020] INFO   api-gateway  Heartbeat check passed — pool=20, active=0, idle=20
+[2026-07-04 09:12:31.021] INFO   api-gateway  GET /api/health — 200 OK (3ms)
+[2026-07-04 09:12:31.021] DEBUG  api-gateway  reqId=req_a0021  middleware=auth,ratelimit  handler=healthCheck
+[2026-07-04 09:12:32.022] INFO   api-gateway  GET /api/health — 200 OK (4ms)
+[2026-07-04 09:12:33.023] INFO   api-gateway  GET /api/health — 200 OK (5ms)
+[2026-07-04 09:12:34.024] INFO   api-gateway  GET /api/health — 200 OK (6ms)
+[2026-07-04 09:12:34.024] DEBUG  api-gateway  reqId=req_a0024  middleware=auth,ratelimit  handler=healthCheck
+[2026-07-04 09:12:35.025] INFO   api-gateway  GET /api/health — 200 OK (2ms)
+[2026-07-04 09:12:36.026] INFO   api-gateway  GET /api/health — 200 OK (3ms)
+[2026-07-04 09:12:37.027] INFO   api-gateway  GET /api/health — 200 OK (4ms)
+[2026-07-04 09:12:37.027] DEBUG  api-gateway  reqId=req_a0027  middleware=auth,ratelimit  handler=healthCheck
+[2026-07-04 09:12:38.028] INFO   api-gateway  GET /api/health — 200 OK (5ms)
+[2026-07-04 09:12:39.029] INFO   api-gateway  GET /api/health — 200 OK (6ms)
+[2026-07-04 09:12:30.030] INFO   api-gateway  GET /api/health — 200 OK (2ms)
+[2026-07-04 09:12:30.030] DEBUG  api-gateway  reqId=req_a0030  middleware=auth,ratelimit  handler=healthCheck
+[2026-07-04 09:12:31.031] INFO   api-gateway  GET /api/health — 200 OK (3ms)
+[2026-07-04 09:12:32.032] INFO   api-gateway  GET /api/health — 200 OK (4ms)
+[2026-07-04 09:12:33.033] INFO   api-gateway  GET /api/health — 200 OK (5ms)
+[2026-07-04 09:12:33.033] DEBUG  api-gateway  reqId=req_a0033  middleware=auth,ratelimit  handler=healthCheck
+[2026-07-04 09:12:34.034] INFO   api-gateway  GET /api/health — 200 OK (6ms)
+[2026-07-04 09:12:35.035] INFO   api-gateway  GET /api/health — 200 OK (2ms)
+[2026-07-04 09:12:36.036] INFO   api-gateway  GET /api/health — 200 OK (3ms)
+[2026-07-04 09:12:36.036] DEBUG  api-gateway  reqId=req_a0036  middleware=auth,ratelimit  handler=healthCheck
+[2026-07-04 09:12:37.037] INFO   api-gateway  GET /api/health — 200 OK (4ms)
+[2026-07-04 09:12:38.038] INFO   api-gateway  GET /api/health — 200 OK (5ms)
+[2026-07-04 09:12:39.039] INFO   api-gateway  GET /api/health — 200 OK (6ms)
+[2026-07-04 09:12:39.039] DEBUG  api-gateway  reqId=req_a0039  middleware=auth,ratelimit  handler=healthCheck
+[2026-07-04 09:12:30.040] INFO   api-gateway  GET /api/health — 200 OK (2ms)
+[2026-07-04 09:12:30.040] INFO   api-gateway  Heartbeat check passed — pool=20, active=0, idle=20
+[2026-07-04 09:12:31.041] INFO   api-gateway  GET /api/health — 200 OK (3ms)
+[2026-07-04 09:12:32.042] INFO   api-gateway  GET /api/health — 200 OK (4ms)
+[2026-07-04 09:12:32.042] DEBUG  api-gateway  reqId=req_a0042  middleware=auth,ratelimit  handler=healthCheck
+[2026-07-04 09:12:33.043] INFO   api-gateway  GET /api/health — 200 OK (5ms)
+[2026-07-04 09:12:34.044] INFO   api-gateway  GET /api/health — 200 OK (6ms)
+[2026-07-04 09:12:35.045] INFO   api-gateway  GET /api/health — 200 OK (2ms)
+[2026-07-04 09:12:35.045] DEBUG  api-gateway  reqId=req_a0045  middleware=auth,ratelimit  handler=healthCheck
+[2026-07-04 09:12:36.046] INFO   api-gateway  GET /api/health — 200 OK (3ms)
+[2026-07-04 09:12:37.047] INFO   api-gateway  GET /api/health — 200 OK (4ms)
+[2026-07-04 09:12:38.048] INFO   api-gateway  GET /api/health — 200 OK (5ms)
+[2026-07-04 09:12:38.048] DEBUG  api-gateway  reqId=req_a0048  middleware=auth,ratelimit  handler=healthCheck
+[2026-07-04 09:12:39.049] INFO   api-gateway  GET /api/health — 200 OK (6ms)
+[2026-07-04 09:12:30.050] INFO   api-gateway  GET /api/health — 200 OK (2ms)
+[2026-07-04 09:12:31.051] INFO   api-gateway  GET /api/health — 200 OK (3ms)
+[2026-07-04 09:12:31.051] DEBUG  api-gateway  reqId=req_a0051  middleware=auth,ratelimit  handler=healthCheck
+[2026-07-04 09:12:32.052] INFO   api-gateway  GET /api/health — 200 OK (4ms)
+[2026-07-04 09:12:33.053] INFO   api-gateway  GET /api/health — 200 OK (5ms)
+[2026-07-04 09:12:34.054] INFO   api-gateway  GET /api/health — 200 OK (6ms)
+[2026-07-04 09:12:34.054] DEBUG  api-gateway  reqId=req_a0054  middleware=auth,ratelimit  handler=healthCheck
+[2026-07-04 09:12:35.055] INFO   api-gateway  GET /api/health — 200 OK (2ms)
+[2026-07-04 09:12:36.056] INFO   api-gateway  GET /api/health — 200 OK (3ms)
+[2026-07-04 09:12:37.057] INFO   api-gateway  GET /api/health — 200 OK (4ms)
+[2026-07-04 09:12:37.057] DEBUG  api-gateway  reqId=req_a0057  middleware=auth,ratelimit  handler=healthCheck
+[2026-07-04 09:12:38.058] INFO   api-gateway  GET /api/health — 200 OK (5ms)
+[2026-07-04 09:12:39.059] INFO   api-gateway  GET /api/health — 200 OK (6ms)
+[2026-07-04 09:12:30.060] INFO   api-gateway  GET /api/health — 200 OK (2ms)
+[2026-07-04 09:12:30.060] DEBUG  api-gateway  reqId=req_a0060  middleware=auth,ratelimit  handler=healthCheck
+[2026-07-04 09:12:30.060] INFO   api-gateway  Heartbeat check passed — pool=20, active=0, idle=20
+[2026-07-04 09:12:31.061] INFO   api-gateway  GET /api/health — 200 OK (3ms)
+[2026-07-04 09:12:32.062] INFO   api-gateway  GET /api/health — 200 OK (4ms)
+[2026-07-04 09:12:33.063] INFO   api-gateway  GET /api/health — 200 OK (5ms)
+[2026-07-04 09:12:33.063] DEBUG  api-gateway  reqId=req_a0063  middleware=auth,ratelimit  handler=healthCheck
+[2026-07-04 09:12:34.064] INFO   api-gateway  GET /api/health — 200 OK (6ms)
+[2026-07-04 09:12:35.065] INFO   api-gateway  GET /api/health — 200 OK (2ms)
+[2026-07-04 09:12:36.066] INFO   api-gateway  GET /api/health — 200 OK (3ms)
+[2026-07-04 09:12:36.066] DEBUG  api-gateway  reqId=req_a0066  middleware=auth,ratelimit  handler=healthCheck
+[2026-07-04 09:12:37.067] INFO   api-gateway  GET /api/health — 200 OK (4ms)
+[2026-07-04 09:12:38.068] INFO   api-gateway  GET /api/health — 200 OK (5ms)
+[2026-07-04 09:12:39.069] INFO   api-gateway  GET /api/health — 200 OK (6ms)
+[2026-07-04 09:12:39.069] DEBUG  api-gateway  reqId=req_a0069  middleware=auth,ratelimit  handler=healthCheck
+[2026-07-04 09:12:30.070] INFO   api-gateway  GET /api/health — 200 OK (2ms)
+[2026-07-04 09:12:31.071] INFO   api-gateway  GET /api/health — 200 OK (3ms)
+[2026-07-04 09:12:32.072] INFO   api-gateway  GET /api/health — 200 OK (4ms)
+[2026-07-04 09:12:32.072] DEBUG  api-gateway  reqId=req_a0072  middleware=auth,ratelimit  handler=healthCheck
+[2026-07-04 09:12:33.073] INFO   api-gateway  GET /api/health — 200 OK (5ms)
+[2026-07-04 09:12:34.074] INFO   api-gateway  GET /api/health — 200 OK (6ms)
+[2026-07-04 09:12:35.075] INFO   api-gateway  GET /api/health — 200 OK (2ms)
+[2026-07-04 09:12:35.075] DEBUG  api-gateway  reqId=req_a0075  middleware=auth,ratelimit  handler=healthCheck
+[2026-07-04 09:12:36.076] INFO   api-gateway  GET /api/health — 200 OK (3ms)
+[2026-07-04 09:12:37.077] INFO   api-gateway  GET /api/health — 200 OK (4ms)
+[2026-07-04 09:12:38.078] INFO   api-gateway  GET /api/health — 200 OK (5ms)
+[2026-07-04 09:12:38.078] DEBUG  api-gateway  reqId=req_a0078  middleware=auth,ratelimit  handler=healthCheck
+[2026-07-04 09:12:39.079] INFO   api-gateway  GET /api/health — 200 OK (6ms)
+[2026-07-04 09:12:30.080] INFO   api-gateway  GET /api/health — 200 OK (2ms)
+[2026-07-04 09:12:30.080] INFO   api-gateway  Heartbeat check passed — pool=20, active=0, idle=20
+[2026-07-04 09:12:31.081] INFO   api-gateway  GET /api/health — 200 OK (3ms)
+[2026-07-04 09:12:31.081] DEBUG  api-gateway  reqId=req_a0081  middleware=auth,ratelimit  handler=healthCheck
+[2026-07-04 09:12:32.082] INFO   api-gateway  GET /api/health — 200 OK (4ms)
+[2026-07-04 09:12:33.083] INFO   api-gateway  GET /api/health — 200 OK (5ms)
+[2026-07-04 09:12:34.084] INFO   api-gateway  GET /api/health — 200 OK (6ms)
+[2026-07-04 09:12:34.084] DEBUG  api-gateway  reqId=req_a0084  middleware=auth,ratelimit  handler=healthCheck
+[2026-07-04 09:12:35.085] INFO   api-gateway  GET /api/health — 200 OK (2ms)
+[2026-07-04 09:12:36.086] INFO   api-gateway  GET /api/health — 200 OK (3ms)
+[2026-07-04 09:12:37.087] INFO   api-gateway  GET /api/health — 200 OK (4ms)
+[2026-07-04 09:12:37.087] DEBUG  api-gateway  reqId=req_a0087  middleware=auth,ratelimit  handler=healthCheck
+[2026-07-04 09:12:38.088] INFO   api-gateway  GET /api/health — 200 OK (5ms)
+[2026-07-04 09:12:39.089] INFO   api-gateway  GET /api/health — 200 OK (6ms)
+[2026-07-04 09:12:30.090] INFO   api-gateway  GET /api/health — 200 OK (2ms)
+[2026-07-04 09:12:30.090] DEBUG  api-gateway  reqId=req_a0090  middleware=auth,ratelimit  handler=healthCheck
+[2026-07-04 09:12:31.091] INFO   api-gateway  GET /api/health — 200 OK (3ms)
+[2026-07-04 09:12:32.092] INFO   api-gateway  GET /api/health — 200 OK (4ms)
+[2026-07-04 09:12:33.093] INFO   api-gateway  GET /api/health — 200 OK (5ms)
+[2026-07-04 09:12:33.093] DEBUG  api-gateway  reqId=req_a0093  middleware=auth,ratelimit  handler=healthCheck
+[2026-07-04 09:12:34.094] INFO   api-gateway  GET /api/health — 200 OK (6ms)
+[2026-07-04 09:12:35.095] INFO   api-gateway  GET /api/health — 200 OK (2ms)
+[2026-07-04 09:12:36.096] INFO   api-gateway  GET /api/health — 200 OK (3ms)
+[2026-07-04 09:12:36.096] DEBUG  api-gateway  reqId=req_a0096  middleware=auth,ratelimit  handler=healthCheck
+[2026-07-04 09:12:37.097] INFO   api-gateway  GET /api/health — 200 OK (4ms)
+[2026-07-04 09:12:38.098] INFO   api-gateway  GET /api/health — 200 OK (5ms)
+[2026-07-04 09:12:39.099] INFO   api-gateway  GET /api/health — 200 OK (6ms)
+[2026-07-04 09:12:39.099] DEBUG  api-gateway  reqId=req_a0099  middleware=auth,ratelimit  handler=healthCheck
+[2026-07-04 09:12:30.100] INFO   api-gateway  GET /api/health — 200 OK (2ms)
+[2026-07-04 09:12:30.100] INFO   api-gateway  Heartbeat check passed — pool=20, active=0, idle=20
+[2026-07-04 09:12:31.101] INFO   api-gateway  GET /api/health — 200 OK (3ms)
+[2026-07-04 09:12:32.102] INFO   api-gateway  GET /api/health — 200 OK (4ms)
+[2026-07-04 09:12:32.102] DEBUG  api-gateway  reqId=req_a0102  middleware=auth,ratelimit  handler=healthCheck
+[2026-07-04 09:12:33.103] INFO   api-gateway  GET /api/health — 200 OK (5ms)
+[2026-07-04 09:12:34.104] INFO   api-gateway  GET /api/health — 200 OK (6ms)
+[2026-07-04 09:12:35.105] INFO   api-gateway  GET /api/health — 200 OK (2ms)
+[2026-07-04 09:12:35.105] DEBUG  api-gateway  reqId=req_a0105  middleware=auth,ratelimit  handler=healthCheck
+[2026-07-04 09:12:36.106] INFO   api-gateway  GET /api/health — 200 OK (3ms)
+[2026-07-04 09:12:37.107] INFO   api-gateway  GET /api/health — 200 OK (4ms)
+[2026-07-04 09:12:38.108] INFO   api-gateway  GET /api/health — 200 OK (5ms)
+[2026-07-04 09:12:38.108] DEBUG  api-gateway  reqId=req_a0108  middleware=auth,ratelimit  handler=healthCheck
+[2026-07-04 09:12:39.109] INFO   api-gateway  GET /api/health — 200 OK (6ms)
+[2026-07-04 09:12:30.110] INFO   api-gateway  GET /api/health — 200 OK (2ms)
+[2026-07-04 09:12:31.111] INFO   api-gateway  GET /api/health — 200 OK (3ms)
+[2026-07-04 09:12:31.111] DEBUG  api-gateway  reqId=req_a0111  middleware=auth,ratelimit  handler=healthCheck
+[2026-07-04 09:12:32.112] INFO   api-gateway  GET /api/health — 200 OK (4ms)
+[2026-07-04 09:12:33.113] INFO   api-gateway  GET /api/health — 200 OK (5ms)
+[2026-07-04 09:12:34.114] INFO   api-gateway  GET /api/health — 200 OK (6ms)
+[2026-07-04 09:12:34.114] DEBUG  api-gateway  reqId=req_a0114  middleware=auth,ratelimit  handler=healthCheck
+[2026-07-04 09:12:35.115] INFO   api-gateway  GET /api/health — 200 OK (2ms)
+[2026-07-04 09:12:36.116] INFO   api-gateway  GET /api/health — 200 OK (3ms)
+[2026-07-04 09:12:37.117] INFO   api-gateway  GET /api/health — 200 OK (4ms)
+[2026-07-04 09:12:37.117] DEBUG  api-gateway  reqId=req_a0117  middleware=auth,ratelimit  handler=healthCheck
+[2026-07-04 09:12:38.118] INFO   api-gateway  GET /api/health — 200 OK (5ms)
+[2026-07-04 09:12:39.119] INFO   api-gateway  GET /api/health — 200 OK (6ms)
+[2026-07-04 09:12:30.120] INFO   api-gateway  GET /api/health — 200 OK (2ms)
+[2026-07-04 09:12:30.120] DEBUG  api-gateway  reqId=req_a0120  middleware=auth,ratelimit  handler=healthCheck
+[2026-07-04 09:12:30.120] INFO   api-gateway  Heartbeat check passed — pool=20, active=0, idle=20
+
+[2026-07-04 09:12:33.720] ERROR  api-gateway  GET /api/products/search?q=wireless — 504 Gateway Timeout
+[2026-07-04 09:12:33.721] ERROR  api-gateway  Timeout waiting for catalog-svc after 5000ms
+    at HttpClient.request (src/infra/httpClient.ts:56:15)
+    at CatalogClient.search (src/clients/catalogClient.ts:34:12)
+    at ProductController.search (src/controllers/productController.ts:156:22)
+[2026-07-04 09:12:33.722] WARN   api-gateway  reqId=req_2b7f9d  userId=usr_5521  duration=5031ms  status=504
+
+[2026-07-04 09:12:34.001] ERROR  worker  DatabaseError: connection pool exhausted (active=20, idle=0, waiting=5)
+    at Pool.getConnection (src/db/pool.ts:78:13)
+    at UserRepository.findById (src/db/repositories/userRepository.ts:45:19)
+    at AuthService.verifyToken (src/services/authService.ts:112:28)
+[2026-07-04 09:12:34.002] FATAL  worker  Worker process exiting due to unrecoverable database error
+
+[2026-07-04 09:12:35.210] ERROR  api-gateway  POST /api/orders failed — 500 Internal Server Error
+    OrderService.calculateTotal src/services/orderService.ts:142
+    OrderController.createOrder src/controllers/orderController.ts:87
+[2026-07-04 09:12:35.211] WARN   api-gateway  reqId=req_c1e8a4  userId=usr_1142  duration=298ms  status=500
+
+[2026-07-04 09:12:36.000] ERROR  payment-svc  POST /api/payments/refund failed — 422 Unprocessable Entity
+[2026-07-04 09:12:36.001] ERROR  payment-svc  ValidationError: transactionId is required for refunds
+    at RefundValidator.validate (src/validators/refundValidator.ts:23:9)
+    at PaymentController.refund (src/controllers/paymentController.ts:201:12)
+
+[2026-07-04 09:12:36.500] INFO   notification-svc  Email sent to user usr_1142 — template: order-failed
