@@ -87,6 +87,8 @@ When running from a source checkout, use `node dist/index.js` with the same `MCP
 
 ## CLI Usage
 
+The commands in this section run through the `code-context` CLI; they are not MCP tool names. In particular, `code-context stats`, `code-context profile`, and `code-context receipts` have no same-named standalone MCP tools. MCP clients receive profile data through `recall_context`; statistics and receipt listing remain CLI operations.
+
 ```bash
 # Run installation health checks
 code-context doctor

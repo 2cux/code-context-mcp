@@ -2,6 +2,8 @@
 
 Complete reference for all 18 MCP tools. Every tool is scope-isolated and generates audit receipts.
 
+> **CLI boundary:** `code-context stats`, `code-context profile`, and `code-context receipts` are CLI commands, not MCP tools. There are no callable MCP tools named `get_stats`, `get_profile`, or `list_receipts`. MCP clients can receive repository profile data through `recall_context`; statistics and receipt listing are CLI-only operations.
+
 ---
 
 ## Table of Contents
@@ -76,7 +78,7 @@ Compress content to reduce token consumption. Automatically detects content type
 
 | Field | Type | Required | Default | Description |
 |---|---|---|---|---|
-| `scopeId` | `string` | * | auto-resolved | Scope id from `current_scope`. Auto-resolved when omitted. |
+| `scopeId` | `string` | No | auto-resolved | Scope id from `current_scope`. Auto-resolved when omitted. |
 | `content` | `string` | **Yes** | — | The raw content to compress. |
 | `contentType` | `string` | No | `"unknown"` | Content type hint. Auto-detected when `"unknown"` or omitted. |
 | `strategy` | `string` | No | `"conservative"` | `"conservative"` or `"auto"`. |
@@ -150,7 +152,7 @@ Retrieve original (uncompressed) content by `originalRef`. Supports offset/limit
 
 | Field | Type | Required | Default | Description |
 |---|---|---|---|---|
-| `scopeId` | `string` | * | auto-resolved | Scope id from `current_scope`. |
+| `scopeId` | `string` | No | auto-resolved | Scope id from `current_scope`. Auto-resolved when omitted. |
 | `originalRef` | `string` | **Yes** | — | The `originalRef` returned by `compress_context`. |
 | `offset` | `number` | No | `0` | Character offset for pagination. |
 | `limit` | `number` | No | `10000` | Max characters to return. |
@@ -644,7 +646,7 @@ Retrieve the full state of a previous harness run by runId. Returns checkpoint r
 
 ### Scope Auto-Resolution
 
-When `scopeId` is omitted, the tool auto-resolves it using `current_scope` logic:
+When a tool documents `scopeId` as optional, omitting it auto-resolves the scope using `current_scope` logic:
 1. Detect git root and remote
 2. Hash `gitRemote + gitRoot` (preferred) or `gitRoot` or `cwd`
 3. Persist the scope record (best-effort, never blocks)

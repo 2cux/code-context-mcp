@@ -23,7 +23,8 @@ export const TOOL_DEFINITIONS: Tool[] = [
         scopeId: {
           type: "string",
           description:
-            "The scopeId from current_scope (required). " +
+            "The scopeId from current_scope. " +
+            "When omitted, the scope is auto-resolved from the current directory. " +
             "Used for scope isolation and persistence.",
         },
         content: {
@@ -70,7 +71,7 @@ export const TOOL_DEFINITIONS: Tool[] = [
             "Optional metadata (source, command, filePath, etc.).",
         },
       },
-      required: ["scopeId", "content"],
+      required: ["content"],
     },
   },
   {
@@ -79,8 +80,8 @@ export const TOOL_DEFINITIONS: Tool[] = [
       "Resolve the current project scope. " +
       "Returns a stable scopeId for the current repository " +
       "(prefers git remote + git root). " +
-      "This scopeId is required by all other tools to isolate " +
-      "compression, memory, and receipts per repository.",
+      "Tools use this scopeId to isolate compression, memory, and receipts " +
+      "per repository; tools that support auto-resolution may omit it.",
     inputSchema: {
       type: "object" as const,
       properties: {
@@ -108,7 +109,8 @@ export const TOOL_DEFINITIONS: Tool[] = [
         scopeId: {
           type: "string",
           description:
-            "The scopeId from current_scope (required). " +
+            "The scopeId from current_scope. " +
+            "When omitted, the scope is auto-resolved from the current directory. " +
             "Only originals within this scope can be retrieved.",
         },
         originalRef: {
@@ -129,7 +131,7 @@ export const TOOL_DEFINITIONS: Tool[] = [
             "Use with offset for pagination.",
         },
       },
-      required: ["scopeId", "originalRef"],
+      required: ["originalRef"],
     },
   },
   {

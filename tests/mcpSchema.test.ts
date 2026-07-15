@@ -165,9 +165,9 @@ describe("Required Fields", () => {
 
   it("per-tool required field verification", () => {
     const expected: Record<string, string[]> = {
-      compress_context: ["scopeId", "content"],
+      compress_context: ["content"],
       current_scope: [],
-      retrieve_original: ["scopeId", "originalRef"],
+      retrieve_original: ["originalRef"],
       delete_original: ["scopeId", "originalRef"],
       cleanup_originals: ["scopeId"],
       list_compressions: ["scopeId"],
@@ -221,6 +221,11 @@ describe("Tool-Specific Schema Checks", () => {
       expect(tool.inputSchema.properties!["content"].type).toBe("string");
     });
 
+    it("has optional scopeId because the handler auto-resolves it", () => {
+      expect(tool.inputSchema.properties!["scopeId"].type).toBe("string");
+      expect(tool.inputSchema.required ?? []).not.toContain("scopeId");
+    });
+
     it("has optional boolean fields", () => {
       expect(tool.inputSchema.properties!["keepOriginal"].type).toBe("boolean");
     });
@@ -252,8 +257,8 @@ describe("Tool-Specific Schema Checks", () => {
   describe("retrieve_original", () => {
     const tool = TOOL_MAP["retrieve_original"]!;
 
-    it("has required scopeId and originalRef", () => {
-      expect(tool.inputSchema.required).toContain("scopeId");
+    it("has optional scopeId and required originalRef", () => {
+      expect(tool.inputSchema.required ?? []).not.toContain("scopeId");
       expect(tool.inputSchema.required).toContain("originalRef");
     });
 

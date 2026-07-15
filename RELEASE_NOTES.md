@@ -10,6 +10,18 @@
 
 Set via `MCP_TOOL_MODE` env var.
 
+## MCP Tools vs CLI Commands
+
+The following are CLI commands, not MCP tools:
+
+| Capability | CLI command | MCP access |
+|---|---|---|
+| Token and compression statistics | `code-context stats` | No standalone MCP tool |
+| Repository profile | `code-context profile` | Profile data is included by `recall_context` |
+| Audit receipt listing | `code-context receipts` | No standalone MCP tool |
+
+The historical names `get_stats`, `get_profile`, and `list_receipts` are not callable MCP tools in v1.0.0.
+
 ## Verification
 
 ```bash

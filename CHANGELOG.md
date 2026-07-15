@@ -16,7 +16,7 @@ First stable release after alpha, beta, and release-candidate cycles. Core featu
 - `list_compressions` — List recent compression records
 - `delete_original` / `cleanup_originals` — Manage stored originals
 - `current_scope` — Resolve and report current repository scope
-- `get_stats` — View token savings and compression statistics
+- CLI command `code-context stats` — View token savings and compression statistics (not an MCP tool)
 - Automatic content type detection via ContentRouter (8 detectors)
 
 #### Project Memory
@@ -24,12 +24,12 @@ First stable release after alpha, beta, and release-candidate cycles. Core featu
 - `recall_context` — Search and retrieve relevant memories via SQLite FTS
 - `forget_context` — Soft-forget, supersede, expire, or hard-delete memories
 - `list_context` — List memories with type and status filters
-- `get_profile` — View repo profile (static + dynamic layers)
+- CLI command `code-context profile` — View repo profile (static + dynamic layers); MCP clients receive profile data through `recall_context`
 
 #### Safety & Audit
 - Fail-open: if compression fails, original content is returned
 - Timeout, size limit, and chunking for large inputs
-- Receipt trail for all major operations via `list_receipts`
+- Receipt trail for all major operations; inspect it with the CLI command `code-context receipts` (not an MCP tool)
 - Repository-scoped isolation via git remote + root hash
 
 ### Technical
@@ -81,7 +81,7 @@ RC hardening phase after alpha (v0.1.0) and beta (v0.2.0). This entry is retaine
 - Repo profile with `static` and `dynamic` layers
 - Memory lifecycle: active, superseded, forgotten, expired
 - SQLite FTS for memory recall
-- `list_receipts` for audit trail
+- Audit receipt listing, documented at the time as `list_receipts`. This historical name was never part of the current MCP tool surface; use the CLI command `code-context receipts`.
 - Memory source reference tracking
 
 ## [0.1.0-alpha] — 2025-04

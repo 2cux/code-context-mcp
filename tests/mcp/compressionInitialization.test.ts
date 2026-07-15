@@ -83,6 +83,50 @@ describe("shared compression initialization", () => {
     expect(retrieved.content).toBe(content);
   });
 
+  it("accepts omitted and explicit scopeId for compression and retrieval", async () => {
+    initializeCompression();
+    const handlers = createToolHandlers({ db, receipts: new ReceiptService(db) });
+    const content = longTestOutput();
+
+    const autoScopedCompression = parseToolResult(await handlers.compress_context!({
+      content,
+      contentType: "test_output",
+      keepOriginal: true,
+      maxTokens: 180,
+    }));
+
+    expect(typeof autoScopedCompression.scopeId).toBe("string");
+    expect(typeof autoScopedCompression.originalRef).toBe("string");
+
+    const autoScopedRetrieval = parseToolResult(await handlers.retrieve_original!({
+      originalRef: autoScopedCompression.originalRef,
+      limit: content.length,
+    }));
+    expect(autoScopedRetrieval.content).toBe(content);
+    expect(autoScopedRetrieval.scopeAutoResolved).toBe(true);
+
+    const explicitScopeId = autoScopedCompression.scopeId as string;
+    const explicitContent = `${content}\nexplicit-scope-call`;
+    const explicitCompression = parseToolResult(await handlers.compress_context!({
+      scopeId: explicitScopeId,
+      content: explicitContent,
+      contentType: "test_output",
+      keepOriginal: true,
+      maxTokens: 180,
+    }));
+
+    expect(explicitCompression.scopeId).toBe(explicitScopeId);
+    expect(explicitCompression.scopeAutoResolved).toBeUndefined();
+
+    const explicitRetrieval = parseToolResult(await handlers.retrieve_original!({
+      scopeId: explicitScopeId,
+      originalRef: explicitCompression.originalRef,
+      limit: explicitContent.length,
+    }));
+    expect(explicitRetrieval.content).toBe(explicitContent);
+    expect(explicitRetrieval.scopeAutoResolved).toBeUndefined();
+  });
+
   it("keeps the agent MCP surface at exactly seven tools", () => {
     expect([...getAllowedTools("agent")].sort()).toEqual([
       "compress_context",

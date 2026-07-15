@@ -150,14 +150,20 @@ describe("promptHandlers", () => {
         expect(schema, `missing schema for ${toolName}`).toBeDefined();
 
         const schemaParameterNames = Object.keys(schema!.inputSchema.properties ?? {});
-        for (const parameterName of parameterNames) {
-          expect(
-            schemaParameterNames,
-            `${toolName}.${parameterName} is absent from its MCP schema`,
-          ).toContain(parameterName);
-        }
+        const requiredParameterNames = new Set(schema!.inputSchema.required ?? []);
+        const expectedParameterNames = toolName === "run_context_flow"
+          ? schemaParameterNames
+          : schemaParameterNames.filter(
+              (parameterName) => parameterName !== "scopeId" && requiredParameterNames.has(parameterName),
+            );
+
+        expect(
+          parameterNames,
+          `${toolName} prompt signature differs from its MCP schema`,
+        ).toEqual(expectedParameterNames);
       }
 
+      expect(toolsSection).toContain("`compress_context(content)`");
       expect(toolsSection).toContain("`retrieve_original(originalRef)`");
       expect(toolsSection).toContain(
         "`run_context_flow(flow, scopeId, goal, content, contentType, query, options)`",
