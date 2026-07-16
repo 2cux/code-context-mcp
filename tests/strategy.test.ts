@@ -492,6 +492,7 @@ describe("14.6 Markdown Compressor", () => {
       expect(result.failed).toBeFalsy();
       expect(result.tokensAfter).toBeLessThanOrEqual(220);
       expect(result.compressedContent).toMatch(/Rollback Strategy/i);
+      expect(result.compressedContent.match(/Rollback Strategy/gi)).toHaveLength(1);
       expect(result.compressedContent).toContain("kubectl rollout undo deployment/api");
       expect(result.compressedContent).toContain("/api/v1/releases/rollback");
       expect(result.compressedContent).toMatch(/Component 1.*×120|Component 1.*120/s);

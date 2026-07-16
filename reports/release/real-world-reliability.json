@@ -1,0 +1,105 @@
+{
+  "gate": "Real-World Reliability Gate",
+  "schemaVersion": 1,
+  "generatedAt": "2026-07-16T06:26:36.460Z",
+  "verdict": "PASS",
+  "severity": "P0",
+  "summary": {
+    "total": 8,
+    "passed": 8,
+    "failed": 0,
+    "totalDurationMs": 14257
+  },
+  "checks": [
+    {
+      "id": "RWR-P0-001",
+      "title": "Maven BUILD FAILURE must not be reported as PASSED",
+      "file": "tests/testOutputMaven.test.ts",
+      "test": "never reports PASSED when a multi-module summary contains BUILD FAILURE",
+      "severity": "P0",
+      "status": "PASS",
+      "exitCode": 0,
+      "durationMs": 1986,
+      "command": "vitest run tests/testOutputMaven.test.ts -t \"never reports PASSED when a multi-module summary contains BUILD FAILURE\""
+    },
+    {
+      "id": "RWR-P0-002",
+      "title": "Consecutive full-flow runs must not hit UNIQUE constraints",
+      "file": "tests/phase11-runContextFlow.test.ts",
+      "test": "runs full flow twice without UNIQUE constraint warnings",
+      "severity": "P0",
+      "status": "PASS",
+      "exitCode": 0,
+      "durationMs": 1714,
+      "command": "vitest run tests/phase11-runContextFlow.test.ts -t \"runs full flow twice without UNIQUE constraint warnings\""
+    },
+    {
+      "id": "RWR-P0-003",
+      "title": "Flow output must not contain ccr:undefined",
+      "file": "tests/phase11-runContextFlow.test.ts",
+      "test": "skips CCR-dependent memory when CCR persistence fails",
+      "severity": "P0",
+      "status": "PASS",
+      "exitCode": 0,
+      "durationMs": 1805,
+      "command": "vitest run tests/phase11-runContextFlow.test.ts -t \"skips CCR-dependent memory when CCR persistence fails\""
+    },
+    {
+      "id": "RWR-P0-004",
+      "title": "A failed child step must make the top-level status partial or failed",
+      "file": "tests/phase11-runContextFlow.test.ts",
+      "test": "skips CCR-dependent memory when CCR persistence fails",
+      "severity": "P0",
+      "status": "PASS",
+      "exitCode": 0,
+      "durationMs": 1993,
+      "command": "vitest run tests/phase11-runContextFlow.test.ts -t \"skips CCR-dependent memory when CCR persistence fails\""
+    },
+    {
+      "id": "RWR-P0-005",
+      "title": "Unverified summaries must not be written to memory automatically",
+      "file": "tests/phase11-runContextFlow.test.ts",
+      "test": "skips auto-memory when verificationStatus is UNKNOWN",
+      "severity": "P0",
+      "status": "PASS",
+      "exitCode": 0,
+      "durationMs": 1993,
+      "command": "vitest run tests/phase11-runContextFlow.test.ts -t \"skips auto-memory when verificationStatus is UNKNOWN\""
+    },
+    {
+      "id": "RWR-P0-006",
+      "title": "Markdown compression must preserve the unique rollback strategy",
+      "file": "tests/strategy.test.ts",
+      "test": "keeps a tail rollback strategy after many repeated components",
+      "severity": "P0",
+      "status": "PASS",
+      "exitCode": 0,
+      "durationMs": 1576,
+      "command": "vitest run tests/strategy.test.ts -t \"keeps a tail rollback strategy after many repeated components\""
+    },
+    {
+      "id": "RWR-P0-007",
+      "title": "Chinese queries must recall English technical memory",
+      "file": "tests/queryExpansion.test.ts",
+      "test": "recalls the timeout scenario and returns match metadata",
+      "severity": "P0",
+      "status": "PASS",
+      "exitCode": 0,
+      "durationMs": 1589,
+      "command": "vitest run tests/queryExpansion.test.ts -t \"recalls the timeout scenario and returns match metadata\""
+    },
+    {
+      "id": "RWR-P0-008",
+      "title": "hard_delete response must match database state",
+      "file": "tests/phase8-forgetContext.test.ts",
+      "test": "permanently removes the memory record",
+      "severity": "P0",
+      "status": "PASS",
+      "exitCode": 0,
+      "durationMs": 1599,
+      "command": "vitest run tests/phase8-forgetContext.test.ts -t \"permanently removes the memory record\""
+    }
+  ],
+  "blockingFailures": [],
+  "releasePolicy": "Any P0 failure blocks the Stable Release Gate."
+}

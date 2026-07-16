@@ -6,8 +6,9 @@
  * Meta-gate that orchestrates all release-quality checks and produces
  * a single verdict: pass (all MUST checks pass) or fail (any MUST check fails).
  *
- * Checks (11 categories):
+ * Checks (12 categories):
  *   1. Source reproducibility          [MUST]  clean tracked-source build + quality tests
+ *  P0. Real-World Reliability Gate     [MUST]  eight production reliability contracts
  *   2. TypeScript                      [MUST]  tsc --noEmit
  *   3. Vitest                          [MUST]  vitest run (all test files)
  *   4. Compression Quality Gate        [MUST]  compression-quality-check.mjs
@@ -608,6 +609,75 @@ async function checkSourceReproducibility() {
     }
 
     pass(checkName, "clean tracked-source build and quality tests passed", category, severity);
+  });
+}
+
+// ---------------------------------------------------------------------------
+// P0: Real-World Reliability Gate
+// ---------------------------------------------------------------------------
+
+async function checkRealWorldReliability() {
+  const checkName = "P0. Real-World Reliability Gate";
+  const category = "real-world-reliability";
+  const severity = "must";
+
+  await timed(checkName, category, severity, async () => {
+    const scriptPath = "scripts/release/real-world-reliability.mjs";
+    const reportPath = "reports/release/real-world-reliability.json";
+    if (!fileExists(scriptPath)) {
+      fail(checkName, `Script not found: ${scriptPath}`, category, severity);
+      return;
+    }
+
+    const previousReportState = captureReportState(reportPath);
+    const reportStartedAt = Date.now();
+    const result = runNodeScript(scriptPath, [], { timeout: 600000 });
+    const gateReport = readFreshJsonReport(
+      reportPath,
+      reportStartedAt,
+      previousReportState,
+    );
+    const expectedIds = Array.from(
+      { length: 8 },
+      (_, index) => `RWR-P0-${String(index + 1).padStart(3, "0")}`,
+    );
+    const reportChecks = Array.isArray(gateReport?.checks) ? gateReport.checks : [];
+    const actualIds = reportChecks.map((check) => check?.id);
+    const schemaValid =
+      gateReport?.gate === "Real-World Reliability Gate" &&
+      gateReport?.severity === "P0" &&
+      gateReport?.verdict &&
+      reportChecks.length === expectedIds.length &&
+      expectedIds.every((id) => actualIds.includes(id)) &&
+      reportChecks.every((check) =>
+        check?.severity === "P0" && ["PASS", "FAIL"].includes(check?.status),
+      ) &&
+      Number(gateReport?.summary?.total) === expectedIds.length &&
+      Number(gateReport?.summary?.failed) === reportChecks.filter((check) => check.status === "FAIL").length;
+
+    const failedP0 = reportChecks.filter((check) => check?.status === "FAIL");
+    for (const check of failedP0) {
+      recordNestedCommandFailure(
+        checkName,
+        check.command || check.id || "unknown P0 reliability contract",
+        Number.isInteger(check.exitCode) ? check.exitCode : 1,
+        check.error || check.output || check.title || "P0 reliability contract failed",
+      );
+    }
+
+    if (!result.ok || !schemaValid || gateReport?.verdict !== "PASS" || failedP0.length > 0) {
+      const details = [
+        !result.ok ? `gate command exited ${result.exitCode}` : null,
+        !gateReport ? "fresh JSON report missing" : null,
+        gateReport && !schemaValid ? "report schema or P0 inventory invalid" : null,
+        failedP0.length > 0 ? `${failedP0.length} P0 contract(s) failed` : null,
+        gateReport && gateReport.verdict !== "PASS" ? `report verdict ${gateReport.verdict}` : null,
+      ].filter(Boolean);
+      fail(checkName, details.join("; ") || "P0 reliability gate failed", category, severity);
+      return;
+    }
+
+    pass(checkName, "8/8 P0 real-world reliability contracts passed", category, severity);
   });
 }
 
@@ -1554,6 +1624,7 @@ function buildJsonReport(verdict, startTime) {
       categories: {
         must: [
           "Source reproducibility",
+          "Real-World Reliability Gate (8 P0 contracts)",
           "TypeScript zero errors",
           "Vitest zero failures (all test files)",
           "Compression Quality Gate pass",
@@ -1809,6 +1880,7 @@ async function main() {
 
  // Run all checks sequentially so output is readable
   await checkSourceReproducibility(); // 1
+  await checkRealWorldReliability();  // P0
  await checkTypeScript();             // 1
   await checkVitest();                 // 3
   await checkCompressionQuality();     // 4

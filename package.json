@@ -44,6 +44,7 @@
     "postpack": "node scripts/release/check-packed-markdown-links.mjs",
     "check:packed-links": "node scripts/release/check-packed-markdown-links.mjs",
     "quality:reports": "node scripts/quality/run-quality-reports.cjs",
+    "release:real-world": "node scripts/release/real-world-reliability.mjs",
     "release:gate": "node scripts/release/clean-release-gate.mjs"
   },
   "keywords": [

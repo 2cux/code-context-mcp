@@ -479,6 +479,30 @@ describe("run_context_flow Tool Handler", () => {
   // ==========================================================================
 
   describe("Full Flow", () => {
+    it("runs full flow twice without UNIQUE constraint warnings", async () => {
+      const request = {
+        flow: "full",
+        content: `${SAMPLE_LONG_CONTENT}\nsequential-full-flow-reliability`,
+        contentType: "test_output",
+        scopeId: SCOPE_ID,
+        query: "auth failure",
+        memorySummary: {
+          facts: ["Three test cases failed."],
+          verificationStatus: "VERIFIED",
+        },
+      };
+
+      const first = parseToolText(await handleRunContextFlow(ctx, request));
+      const second = parseToolText(await handleRunContextFlow(ctx, request));
+      const output = JSON.stringify([first, second]);
+
+      expect(first.status).toBe("ok");
+      expect(second.status).toBe("ok");
+      expect(second.ccrId).toBe(first.ccrId);
+      expect(output).not.toContain("UNIQUE constraint");
+      expect(output).not.toContain("ccr:undefined");
+    });
+
     it("skips auto-memory when verificationStatus is UNKNOWN", async () => {
       const data = parseToolText(
         await handleRunContextFlow(ctx, {
