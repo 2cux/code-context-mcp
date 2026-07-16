@@ -170,6 +170,12 @@ export class MemoryFtsIndex {
     }
   }
 
+  /** Remove an FTS row and propagate errors for transactional callers. */
+  deleteStrict(memoryId: string): void {
+    if (!this.ftsAvailable) return;
+    runStmt(this.db, `DELETE FROM memories_fts WHERE id = ?`, [memoryId]);
+  }
+
   // ==========================================================================
   // 17.3.5 — BM25 search (or LIKE fallback)
   // ==========================================================================

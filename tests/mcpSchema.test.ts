@@ -240,6 +240,11 @@ describe("Tool-Specific Schema Checks", () => {
     it("has optional metadata field (object)", () => {
       expect(tool.inputSchema.properties!["metadata"].type).toBe("object");
     });
+
+    it("has an optional goal relevance hint", () => {
+      expect(tool.inputSchema.properties!["goal"].type).toBe("string");
+      expect(tool.inputSchema.required ?? []).not.toContain("goal");
+    });
   });
 
   describe("current_scope", () => {

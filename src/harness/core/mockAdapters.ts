@@ -318,6 +318,8 @@ export async function createMockCodeContextAdapter(): Promise<CodeContextAdapter
           confidence: 0.8,
           rank: i + 1,
           canExpand: false,
+          matchMethod: "original" as const,
+          matchedTerms: [],
         })),
         total: createdMemoryIds.length,
       };

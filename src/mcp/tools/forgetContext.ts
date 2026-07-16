@@ -234,9 +234,16 @@ export async function handleForgetContext(
     const response: Record<string, unknown> = {
       memoryId: result.memoryId,
       previousStatus: result.previousStatus,
-      newStatus: result.newStatus,
       receiptId: result.receiptId,
     };
+
+    if (result.action === "hard_deleted") {
+      response.action = result.action;
+      response.deleted = result.deleted;
+      response.profileFactsDeleted = result.profileFactsDeleted;
+    } else {
+      response.newStatus = result.newStatus;
+    }
 
     if (result.supersededBy) {
       response.supersededBy = result.supersededBy;

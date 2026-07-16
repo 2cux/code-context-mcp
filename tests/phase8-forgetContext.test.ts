@@ -309,7 +309,10 @@ describe("forget_context Tool Handler", () => {
 
       expect(data.memoryId).toBe(mem.memoryId);
       expect(data.previousStatus).toBe("active");
-      // hard_delete returns "forgotten" as pseudo-status
+      expect(data.action).toBe("hard_deleted");
+      expect(data.deleted).toBe(true);
+      expect(data.profileFactsDeleted).toBe(0);
+      expect(data).not.toHaveProperty("newStatus");
       expect(data.receiptId).toMatch(/^rcp_/);
 
       // Verify memory is gone — recall should not find it
@@ -338,11 +341,13 @@ describe("forget_context Tool Handler", () => {
       expect(pfBefore.length).toBeGreaterThanOrEqual(1);
 
       // Hard delete
-      await handleForgetContext(ctx, {
+      const result = await handleForgetContext(ctx, {
         id: mem.memoryId,
         mode: "hard_delete",
         scopeId: SCOPE_ID,
       });
+      const data = parseToolText(result);
+      expect(data.profileFactsDeleted).toBe(pfBefore.length);
 
       // Profile fact should be gone
       const pfAfter = queryAll(
@@ -351,6 +356,49 @@ describe("forget_context Tool Handler", () => {
         [mem.memoryId],
       );
       expect(pfAfter.length).toBe(0);
+    });
+
+    it("rolls back memory, FTS, profile facts, and receipt when a delete step fails", async () => {
+      const mem = await seedMemory({
+        content: "Atomic hard-delete rollback sentinel.",
+        type: "project_rule",
+        profileTarget: "static",
+      });
+      const memoryId = mem.memoryId as string;
+      const hasFts = queryAll(
+        db,
+        "SELECT name FROM sqlite_master WHERE name = 'memories_fts'",
+      ).length > 0;
+      const ftsBefore = hasFts
+        ? queryAll(db, "SELECT * FROM memories_fts WHERE id = ?", [memoryId]).length
+        : 0;
+
+      runStmt(
+        db,
+        `CREATE TRIGGER fail_memory_hard_delete
+         BEFORE DELETE ON memories
+         WHEN OLD.id = '${memoryId}'
+         BEGIN SELECT RAISE(ABORT, 'forced hard-delete failure'); END`,
+      );
+
+      const result = await handleForgetContext(ctx, {
+        id: memoryId,
+        mode: "hard_delete",
+        scopeId: SCOPE_ID,
+      });
+      runStmt(db, "DROP TRIGGER fail_memory_hard_delete");
+
+      expect(isError(result)).toBe(true);
+      expect(queryAll(db, "SELECT * FROM memories WHERE id = ?", [memoryId])).toHaveLength(1);
+      expect(queryAll(db, "SELECT * FROM profile_facts WHERE source_memory_id = ?", [memoryId])).toHaveLength(1);
+      if (hasFts) {
+        expect(queryAll(db, "SELECT * FROM memories_fts WHERE id = ?", [memoryId])).toHaveLength(ftsBefore);
+      }
+      expect(queryAll(
+        db,
+        "SELECT * FROM receipts WHERE operation = 'forget' AND memory_ids LIKE ?",
+        [`%${memoryId}%`],
+      )).toHaveLength(0);
     });
   });
 

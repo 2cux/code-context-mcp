@@ -56,6 +56,11 @@ export const TOOL_DEFINITIONS: Tool[] = [
           type: "number",
           description: "Target max output tokens (default 2000).",
         },
+        goal: {
+          type: "string",
+          description:
+            "Optional task goal used to rank relevant Markdown sections.",
+        },
         timeoutMs: {
           type: "number",
           description: "Compression timeout in milliseconds (default 5000).",
@@ -67,8 +72,7 @@ export const TOOL_DEFINITIONS: Tool[] = [
         },
         metadata: {
           type: "object",
-          description:
-            "Optional metadata (source, command, filePath, etc.).",
+          description: "Optional metadata (source, command, filePath, etc.).",
         },
       },
       required: ["content"],
@@ -204,7 +208,8 @@ export const TOOL_DEFINITIONS: Tool[] = [
         },
         limit: {
           type: "number",
-          description: "Maximum number of records to return (1-100, default 20).",
+          description:
+            "Maximum number of records to return (1-100, default 20).",
         },
         offset: {
           type: "number",
@@ -285,8 +290,7 @@ export const TOOL_DEFINITIONS: Tool[] = [
         tags: {
           type: "array",
           items: { type: "string" },
-          description:
-            "Optional tags for categorization and filtering.",
+          description: "Optional tags for categorization and filtering.",
         },
         ccrId: {
           type: "string",
@@ -368,7 +372,8 @@ export const TOOL_DEFINITIONS: Tool[] = [
         },
         limit: {
           type: "number",
-          description: "Maximum number of memories to return (1-50, default 10).",
+          description:
+            "Maximum number of memories to return (1-50, default 10).",
         },
         includeProfile: {
           type: "boolean",
@@ -554,7 +559,8 @@ export const TOOL_DEFINITIONS: Tool[] = [
         },
         limit: {
           type: "number",
-          description: "Maximum number of records to return (1-100, default 50).",
+          description:
+            "Maximum number of records to return (1-100, default 50).",
         },
         offset: {
           type: "number",
@@ -610,7 +616,8 @@ export const TOOL_DEFINITIONS: Tool[] = [
         },
         limit: {
           type: "number",
-          description: "Maximum number of records to return (1-100, default 20).",
+          description:
+            "Maximum number of records to return (1-100, default 20).",
         },
         offset: {
           type: "number",
@@ -796,6 +803,29 @@ export const TOOL_DEFINITIONS: Tool[] = [
             "Search query for recall. Used in memory and full flows. " +
             "Optional — when omitted, recall is skipped.",
         },
+        memorySummary: {
+          type: "object",
+          description:
+            "Structured summary used by the conservative full-flow memory gate. " +
+            "UNKNOWN or contradictory summaries are never persisted.",
+          properties: {
+            facts: {
+              type: "array",
+              items: { type: "string" },
+              description: "Claims directly supported by the supplied content.",
+            },
+            inferences: {
+              type: "array",
+              items: { type: "string" },
+              description: "Interpretations kept separate from verified facts.",
+            },
+            verificationStatus: {
+              type: "string",
+              enum: ["VERIFIED", "UNVERIFIED", "UNKNOWN", "CONTRADICTORY"],
+              description: "VERIFIED, UNVERIFIED, UNKNOWN, or CONTRADICTORY.",
+            },
+          },
+        },
         options: {
           type: "object",
           description:
@@ -817,6 +847,12 @@ export const TOOL_DEFINITIONS: Tool[] = [
               description:
                 "Save the compressed result as a project memory. " +
                 "Default: false for compression flow, true for full flow.",
+            },
+            requireVerifiedSummary: {
+              type: "boolean",
+              description:
+                "Require verificationStatus=VERIFIED before full-flow auto-memory. " +
+                "Default: true. UNKNOWN and contradictory summaries are always rejected.",
             },
             maxTokens: {
               type: "number",

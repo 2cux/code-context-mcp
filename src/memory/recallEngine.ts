@@ -18,6 +18,10 @@ import {
   DEFAULT_SCORER_CONFIG,
   type RecallScorerConfig,
 } from "./recallScorer.js";
+import {
+  expandTechnicalQuery,
+  findMatchedTerms,
+} from "./queryExpansion.js";
 
 // ---------------------------------------------------------------------------
 // Types
@@ -51,6 +55,10 @@ export interface EnhancedSearchResult {
   rank: number;
   /** Whether the original content is retrievable via compressed_contexts. */
   canExpand: boolean;
+  /** Whether this memory matched the original query, its expansion, or both. */
+  matchMethod: "original" | "expanded" | "original+expanded";
+  /** Query terms that actually occur in the memory content or summary. */
+  matchedTerms: string[];
 }
 
 export interface RecallSearchResult {
@@ -97,13 +105,51 @@ export class RecallEngine {
     const config = params.scorerConfig ?? DEFAULT_SCORER_CONFIG;
     const now = Date.now();
 
-    const rawResults = this.ftsIndex.search({
+    const searchOptions = {
       scopeId: params.scopeId,
       query: params.query,
       types: params.types,
       status: params.status,
       limit: params.limit ?? 10,
-    });
+    };
+    const originalResults = this.ftsIndex.search(searchOptions);
+    let expansion: ReturnType<typeof expandTechnicalQuery> | undefined;
+    let expandedResults: FtsSearchResult[] = [];
+
+    // Expansion is strictly additive. Any expansion or expanded-search error
+    // leaves the existing BM25/LIKE result set untouched.
+    try {
+      expansion = expandTechnicalQuery(params.query);
+      if (
+        expansion.expandedQuery &&
+        expansion.expandedQuery.toLocaleLowerCase() !== params.query.trim().toLocaleLowerCase()
+      ) {
+        expandedResults = this.ftsIndex.search({
+          ...searchOptions,
+          query: expansion.expandedQuery,
+        });
+      }
+    } catch {
+      expansion = undefined;
+      expandedResults = [];
+    }
+
+    const merged = new Map<
+      string,
+      FtsSearchResult & { original: boolean; expanded: boolean }
+    >();
+    for (const result of originalResults) {
+      merged.set(result.memory.id, { ...result, original: true, expanded: false });
+    }
+    for (const result of expandedResults) {
+      const existing = merged.get(result.memory.id);
+      if (existing) {
+        existing.expanded = true;
+      } else {
+        merged.set(result.memory.id, { ...result, original: false, expanded: true });
+      }
+    }
+    const rawResults = [...merged.values()];
 
     if (rawResults.length === 0) return [];
 
@@ -136,16 +182,33 @@ export class RecallEngine {
         finalScore: scored.finalScore,
         rank: 0, // assigned after sort
         canExpand: canExpandSet.has(r.memory.id),
+        matchMethod: r.original
+          ? r.expanded
+            ? "original+expanded" as const
+            : "original" as const
+          : "expanded" as const,
+        matchedTerms: findMatchedTerms(
+          r.memory.content,
+          r.memory.summary,
+          r.original && r.expanded
+            ? [...(expansion?.originalTerms ?? []), ...(expansion?.expandedTerms ?? [])]
+            : r.expanded
+              ? expansion?.expandedTerms ?? []
+              : expansion?.originalTerms.length
+                ? expansion.originalTerms
+                : params.query.split(/\s+/).filter(Boolean),
+        ),
       };
     });
 
     // Sort by finalScore descending, then assign ranks
     enhanced.sort((a, b) => b.finalScore - a.finalScore);
-    enhanced.forEach((r, idx) => {
+    const limited = enhanced.slice(0, params.limit ?? 10);
+    limited.forEach((r, idx) => {
       r.rank = idx + 1;
     });
 
-    return enhanced;
+    return limited;
   }
 
   /**

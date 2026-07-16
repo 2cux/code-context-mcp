@@ -84,6 +84,8 @@ export interface RecallResultItem {
   confidence: number;
   rank: number;
   canExpand: boolean;
+  matchMethod: "original" | "expanded" | "original+expanded";
+  matchedTerms: string[];
 }
 
 /** Result from runRecallContext. */
@@ -96,7 +98,10 @@ export interface RecallResult {
 export interface ForgetResult {
   memoryId: string;
   previousStatus: MemoryStatus;
-  newStatus: MemoryStatus;
+  newStatus?: MemoryStatus;
+  action?: "hard_deleted";
+  deleted?: true;
+  profileFactsDeleted?: number;
   supersededBy?: string;
   receiptId: string;
 }
@@ -531,6 +536,8 @@ export function createCodeContextAdapter(db: Database): CodeContextAdapter {
           confidence: r.memory.confidence,
           rank: r.rank,
           canExpand: r.canExpand,
+          matchMethod: r.matchMethod,
+          matchedTerms: r.matchedTerms,
         })),
         total: results.length,
       };
@@ -563,9 +570,14 @@ export function createCodeContextAdapter(db: Database): CodeContextAdapter {
       return {
         memoryId: result.memoryId,
         previousStatus: result.previousStatus,
-        newStatus: result.newStatus,
-        supersededBy: result.supersededBy,
         receiptId: result.receiptId,
+        ...(result.action === "hard_deleted"
+          ? {
+              action: result.action,
+              deleted: result.deleted,
+              profileFactsDeleted: result.profileFactsDeleted,
+            }
+          : { newStatus: result.newStatus, supersededBy: result.supersededBy }),
       };
     },
 

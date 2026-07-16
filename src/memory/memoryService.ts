@@ -30,6 +30,7 @@ import type {
   ListMemorySortField,
   SortOrder,
   RememberResult,
+  ForgetResult,
 } from "./types.js";
 
 // ---------------------------------------------------------------------------
@@ -490,53 +491,62 @@ export class MemoryService {
     mode: ForgetMode;
     reason?: string;
     supersededBy?: string;
-  }): {
-    memoryId: string;
-    previousStatus: MemoryStatus;
-    newStatus: MemoryStatus;
-    supersededBy?: string;
-    receiptId: string;
-  } | null {
+  }): ForgetResult | null {
     const existing = this._getRaw(params.id, params.scopeId);
     if (!existing) return null;
 
     const previousStatus = existing.status;
 
     if (params.mode === "hard_delete") {
-      // Sync to FTS before delete
-      if (this.ftsIndex) {
-        this.ftsIndex.delete(params.id);
+      const profileFactCount = queryOne(
+        this.db,
+        `SELECT COUNT(*) AS count FROM profile_facts
+         WHERE source_memory_id = ? AND scope_id = ?`,
+        [params.id, params.scopeId],
+      );
+      const profileFactsDeleted = Number(profileFactCount?.["count"] ?? 0);
+
+      let transactionStarted = false;
+      try {
+        runStmt(this.db, "BEGIN TRANSACTION");
+        transactionStarted = true;
+
+        // All destructive writes share this transaction. Strict FTS deletion
+        // propagates failures so a later rollback restores every deleted row.
+        this.ftsIndex?.deleteStrict(params.id);
+        runStmt(
+          this.db,
+          `DELETE FROM profile_facts WHERE source_memory_id = ? AND scope_id = ?`,
+          [params.id, params.scopeId],
+        );
+        runStmt(
+          this.db,
+          `DELETE FROM memories WHERE id = ? AND scope_id = ?`,
+          [params.id, params.scopeId],
+        );
+
+        const receipt = this.receipts.create({
+          operation: "forget",
+          scopeId: params.scopeId,
+          memoryIds: [params.id],
+          errorReason: params.reason ?? undefined,
+        });
+
+        runStmt(this.db, "COMMIT");
+        return {
+          action: "hard_deleted",
+          memoryId: params.id,
+          previousStatus,
+          deleted: true,
+          profileFactsDeleted,
+          receiptId: receipt.id,
+        };
+      } catch (err) {
+        if (transactionStarted) {
+          try { runStmt(this.db, "ROLLBACK"); } catch { /* best effort */ }
+        }
+        throw err;
       }
-
-      // Clean up profile_facts FIRST (FK references memories)
-      runStmt(
-        this.db,
-        `DELETE FROM profile_facts WHERE source_memory_id = ? AND scope_id = ?`,
-        [params.id, params.scopeId],
-      );
-
-      // Hard delete — remove from memories table
-      runStmt(
-        this.db,
-        `DELETE FROM memories WHERE id = ? AND scope_id = ?`,
-        [params.id, params.scopeId],
-      );
-
-      const receipt = this.receipts.create({
-        operation: "forget",
-        scopeId: params.scopeId,
-        memoryIds: [params.id],
-        errorReason: params.reason ?? undefined,
-      });
-
-      // Return with "deleted" as a pseudo-status for the receipt
-      return {
-        memoryId: params.id,
-        previousStatus,
-        newStatus: "forgotten" as MemoryStatus, // semantically deleted
-        supersededBy: undefined,
-        receiptId: receipt.id,
-      };
     }
 
     // Soft modes — map mode to target status

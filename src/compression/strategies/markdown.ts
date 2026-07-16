@@ -1,37 +1,63 @@
 /**
- * Markdown Compressor — Phase 4 (Full Implementation)
+ * Markdown compression with priority-aware budgeting.
  *
- * Preserves: headings, key paragraphs, list structure, code block summaries,
- * source refs.
- * Folds: repeated descriptions, low-relevance paragraphs, long examples.
+ * The compressor treats a heading and its body as one semantic section. This
+ * keeps important tail sections recoverable and prevents repeated component
+ * headings (or a generated table of contents) from consuming the whole budget.
  */
 
-import type { CompressionStrategy, StrategyResult } from "../compressionEngine.js";
+import type {
+  CompressionStrategy,
+  StrategyContext,
+  StrategyResult,
+} from "../compressionEngine.js";
 import { countTokens, tokenAwareTruncate } from "../../utils/tokenCount.js";
 
 export const markdownStrategy: CompressionStrategy = {
   name: "markdown",
-  version: "1.0.0",
+  version: "2.0.0",
   compress: compressMarkdown,
 };
 
-// ---------------------------------------------------------------------------
-// Patterns
-// ---------------------------------------------------------------------------
-
 const HEADING_RE = /^(#{1,6})\s+(.+)$/;
-const CODE_FENCE_RE = /^```(\w*)/;
-const LIST_ITEM_RE = /^\s*[-*+]\s+|^\s*\d+[.)]\s+/;
-const LINK_RE = /\[([^\]]+)\]\(([^)]+)\)/g;
-const KEY_SIGNALS = /\b(?:error|fail|warn|critical|important|note|caution|warning|deprecated|breaking change|security)\b/i;
+const PRIORITY_RE = /\b(?:rollback|critical|warning|security|failure|readiness|required)\b/i;
+const STRUCTURED_SIGNAL_RE = new RegExp(
+  [
+    "(?:^|\\s)(?:GET|POST|PUT|PATCH|DELETE|HEAD|OPTIONS)\\s+\\/\\S+",
+    "\\/(?:api|v\\d+)(?:\\/[A-Za-z0-9._~!$&'()*+,;=:@%-]+)+",
+    "\\b\\d+(?:\\.\\d+)?\\s*(?:ms|s|sec(?:onds?)?|m|min(?:utes?)?|h|hours?|kb|mb|gb|%|retries?|requests?|tokens?|bytes?)\\b",
+    "(?:<=|>=|<|>|=)\\s*\\d+(?:\\.\\d+)?",
+    "(?:^|\\s)(?:npm|pnpm|yarn|npx|node|git|docker|kubectl|mvn|gradle|cargo|python|pip|go)\\s+[^\\n]+",
+    "(?:^|\\s)(?:[A-Z][A-Z0-9_]{2,}|[a-z][A-Za-z0-9]*(?:\\.[A-Za-z0-9_-]+)+)\\s*[:=]",
+    "`(?:[A-Z][A-Z0-9_]{2,}|[a-z][a-z0-9_]*(?:[._-][a-z0-9_]+)+)`",
+  ].join("|"),
+  "i",
+);
 
-// ---------------------------------------------------------------------------
-// Export (backward-compatible)
-// ---------------------------------------------------------------------------
+interface MarkdownSection {
+  heading: string;
+  title: string;
+  level: number;
+  body: string[];
+  index: number;
+  endIndex: number;
+  key: string;
+  priority: boolean;
+  structuredLines: string[];
+  score: number;
+}
+
+interface RepeatedGroup {
+  key: string;
+  title: string;
+  sections: MarkdownSection[];
+  score: number;
+}
 
 export function compressMarkdown(
   content: string,
   maxTokens: number,
+  context: StrategyContext = {},
 ): StrategyResult {
   const warnings: string[] = [];
   const tokens = countTokens(content);
@@ -39,347 +65,264 @@ export function compressMarkdown(
   if (!content || content.trim().length === 0) {
     return { compressedContent: content, warnings, summary: "Empty markdown content" };
   }
-
   if (tokens <= maxTokens) {
     return { compressedContent: content, warnings, summary: "Markdown fits within token budget" };
   }
 
   try {
-    const sections = splitIntoSections(content);
-    const extracted = extractMarkdownInfo(sections);
+    const sections = parseSections(content, context.goal);
+    const grouped = groupSections(sections);
+    const repeatedKeys = new Set(grouped.repeated.map((group) => group.key));
+    const prioritySections = sections
+      .filter((section) => section.priority && !repeatedKeys.has(section.key))
+      .sort(compareSections);
+    const uniqueSections = sections
+      .filter((section) => !section.priority && !repeatedKeys.has(section.key))
+      .sort(compareSections);
+    const repeatedGroups = grouped.repeated.sort((a, b) => b.score - a.score);
+    const priorityRepeated = repeatedGroups.filter((group) => group.score >= 1_000);
+    const ordinaryRepeated = repeatedGroups.filter((group) => group.score < 1_000);
 
-    const parts = buildCompressedOutput(extracted, sections);
+    const result = buildBudgetedOutput(
+      prioritySections,
+      priorityRepeated,
+      uniqueSections,
+      ordinaryRepeated,
+      maxTokens,
+    );
 
-    let result = parts.join("\n");
-    let resultTokens = countTokens(result);
-
-    if (resultTokens <= maxTokens) {
-      return {
-        compressedContent: result,
-        warnings,
-        summary: `Markdown compressed: ${extracted.headings.length} headings, ${extracted.foldedSections} sections folded`,
-      };
+    if (repeatedGroups.length > 0) {
+      warnings.push(
+        `Merged ${repeatedGroups.reduce((sum, group) => sum + group.sections.length, 0)} repeated sections into ${repeatedGroups.length} range summaries`,
+      );
     }
-
-    // Trim code blocks and low-priority paragraphs
-    result = trimMarkdownOutput(extracted, sections, maxTokens);
-    warnings.push("Trimmed markdown to fit token budget");
+    if (countTokens(result) >= maxTokens) {
+      warnings.push("Trimmed markdown to fit token budget");
+    }
 
     return {
       compressedContent: result,
       warnings,
-      summary: "Markdown compressed and trimmed",
+      summary:
+        `Markdown compressed: ${prioritySections.length + priorityRepeated.length} priority, ` +
+        `${uniqueSections.length} unique, ${repeatedGroups.length} repeated ranges`,
     };
   } catch {
-    return truncateFallback(content, maxTokens, warnings);
+    warnings.push("Markdown compression fell back to truncation");
+    return {
+      compressedContent: tokenAwareTruncate(content, maxTokens),
+      warnings,
+      summary: "Truncated markdown (fallback)",
+    };
   }
 }
 
-// ---------------------------------------------------------------------------
-// Section splitting
-// ---------------------------------------------------------------------------
+function parseSections(content: string, goal?: string): MarkdownSection[] {
+  const lines = content.replace(/\r\n?/g, "\n").split("\n");
+  const sections: MarkdownSection[] = [];
+  let currentTitle = "Document introduction";
+  let currentHeading = "# Document introduction";
+  let currentLevel = 1;
+  let currentStart = 0;
+  let body: string[] = [];
+  let inFence = false;
 
-interface Section {
-  type: "heading" | "paragraph" | "code" | "list" | "blank";
-  content: string;
-  headingLevel?: number;
-  headingText?: string;
-  codeLang?: string;
-  lineCount?: number;
-  score: number;
-  index: number;
-}
-
-function splitIntoSections(content: string): Section[] {
-  const normalized = content.replace(/\r\n/g, "\n").replace(/\r/g, "\n");
-  const lines = normalized.split("\n");
-  const sections: Section[] = [];
-
-  let i = 0;
-  while (i < lines.length) {
-    const line = lines[i]!;
-
-    // Blank line
-    if (line.trim() === "") {
-      sections.push({ type: "blank", content: "", score: 0, index: i });
-      i++;
-      continue;
-    }
-
-    // Heading
-    const headingMatch = HEADING_RE.exec(line);
-    if (headingMatch) {
-      sections.push({
-        type: "heading",
-        content: line,
-        headingLevel: headingMatch[1]!.length,
-        headingText: headingMatch[2]!.trim(),
-        score: 50 - headingMatch[1]!.length * 5, // Higher level = higher score
-        index: i,
-      });
-      i++;
-      continue;
-    }
-
-    // Code fence
-    const fenceMatch = CODE_FENCE_RE.exec(line);
-    if (fenceMatch) {
-      const codeLang = fenceMatch[1] || "";
-      const codeLines: string[] = [line];
-      i++;
-      while (i < lines.length && !/^```/.test(lines[i]!)) {
-        codeLines.push(lines[i]!);
-        i++;
-      }
-      if (i < lines.length) {
-        codeLines.push(lines[i]!); // closing fence
-        i++;
-      }
-      const codeContent = codeLines.join("\n");
-      sections.push({
-        type: "code",
-        content: codeContent,
-        codeLang,
-        lineCount: codeLines.length - 2, // exclude fences
-        score: codeLines.length > 30 ? 5 : 20, // Long code blocks lower priority
-        index: sections.length,
-      });
-      continue;
-    }
-
-    // List item or paragraph — consume until blank line or next heading/fence
-    const blockLines: string[] = [line];
-    const isList = LIST_ITEM_RE.test(line);
-    i++;
-    while (
-      i < lines.length &&
-      lines[i]!.trim() !== "" &&
-      !HEADING_RE.test(lines[i]!) &&
-      !/^```/.test(lines[i]!)
-    ) {
-      blockLines.push(lines[i]!);
-      i++;
-    }
-
-    const blockContent = blockLines.join("\n");
+  const flush = (endIndex: number): void => {
+    const meaningful = body.some((line) => line.trim().length > 0);
+    if (!meaningful && currentTitle === "Document introduction") return;
+    const bodyText = body.join("\n");
+    const priority = PRIORITY_RE.test(`${currentTitle}\n${bodyText}`);
+    const structuredLines = pickStructuredLines(body);
     sections.push({
-      type: isList ? "list" : "paragraph",
-      content: blockContent,
-      score: scoreParagraph(blockContent, sections.length),
-      index: sections.length,
+      heading: currentHeading,
+      title: currentTitle,
+      level: currentLevel,
+      body: [...body],
+      index: currentStart,
+      endIndex,
+      key: normalizeTitle(currentTitle),
+      priority,
+      structuredLines,
+      score: scoreSection(currentTitle, bodyText, structuredLines, priority, goal),
     });
-  }
+  };
 
+  for (let index = 0; index < lines.length; index++) {
+    const line = lines[index]!;
+    if (/^```/.test(line.trim())) inFence = !inFence;
+    const match = !inFence ? HEADING_RE.exec(line) : null;
+    if (!match) {
+      body.push(line);
+      continue;
+    }
+
+    flush(index - 1);
+    currentHeading = line;
+    currentTitle = match[2]!.trim();
+    currentLevel = match[1]!.length;
+    currentStart = index;
+    body = [];
+  }
+  flush(lines.length - 1);
   return sections;
 }
 
-function scoreParagraph(content: string, _position: number): number {
-  let score = 10;
+function normalizeTitle(title: string): string {
+  return title
+    .toLowerCase()
+    .replace(/`/g, "")
+    .replace(/\b(component|module|package|service)\s*[#:]?\s*\d+\b/g, "$1")
+    .replace(/\d+/g, "#")
+    .replace(/[^a-z0-9\u4e00-\u9fff#]+/g, " ")
+    .trim();
+}
 
-  // Key signals boost
-  if (KEY_SIGNALS.test(content)) score += 20;
+function pickStructuredLines(lines: string[]): string[] {
+  const picked: string[] = [];
+  for (const line of lines) {
+    const trimmed = line.trim();
+    const informativeListItem = /^(?:[-*+]\s+|\d+[.)]\s+)/.test(trimmed);
+    if (
+      !trimmed ||
+      (!PRIORITY_RE.test(trimmed) && !STRUCTURED_SIGNAL_RE.test(trimmed) && !informativeListItem)
+    ) continue;
+    if (!picked.includes(trimmed)) picked.push(trimmed);
+    if (picked.length >= 8) break;
+  }
+  return picked;
+}
 
-  // Links boost (reference value)
-  const linkCount = (content.match(LINK_RE) ?? []).length;
-  score += Math.min(linkCount * 5, 15);
+function goalTerms(goal?: string): string[] {
+  if (!goal) return [];
+  return Array.from(
+    new Set(goal.toLowerCase().match(/[a-z0-9_./-]{3,}|[\u4e00-\u9fff]{2,}/g) ?? []),
+  );
+}
 
-  // Length: medium paragraphs preferred
-  const len = content.length;
-  if (len >= 40 && len <= 500) score += 10;
-  if (len > 2000) score -= 10;
-  if (len < 30) score -= 5;
-
-  // Lists get a small boost
-  if (LIST_ITEM_RE.test(content)) score += 5;
-
+function scoreSection(
+  title: string,
+  body: string,
+  structuredLines: string[],
+  priority: boolean,
+  goal?: string,
+): number {
+  let score = priority ? 1_000 : 20;
+  if (/\brollback\b/i.test(title)) score += 250;
+  score += Math.min(
+    structuredLines.reduce(
+      (sum, line) => sum + (STRUCTURED_SIGNAL_RE.test(line) ? 50 : 15),
+      0,
+    ),
+    240,
+  );
+  if (/\b(?:required|security|critical|failure|readiness|warning)\b/i.test(title)) score += 100;
+  const haystack = `${title}\n${body}`.toLowerCase();
+  score += goalTerms(goal).filter((term) => haystack.includes(term)).length * 120;
   return score;
 }
 
-// ---------------------------------------------------------------------------
-// Extraction
-// ---------------------------------------------------------------------------
-
-interface ExtractedMarkdownInfo {
-  headings: Section[];
-  keyParagraphs: Section[];
-  codeBlocks: Section[];
-  listSections: Section[];
-  foldedSections: number;
-}
-
-function extractMarkdownInfo(sections: Section[]): ExtractedMarkdownInfo {
-  const info: ExtractedMarkdownInfo = {
-    headings: [],
-    keyParagraphs: [],
-    codeBlocks: [],
-    listSections: [],
-    foldedSections: 0,
+function groupSections(sections: MarkdownSection[]): { repeated: RepeatedGroup[] } {
+  const byKey = new Map<string, MarkdownSection[]>();
+  for (const section of sections) {
+    const group = byKey.get(section.key) ?? [];
+    group.push(section);
+    byKey.set(section.key, group);
+  }
+  return {
+    repeated: Array.from(byKey.entries())
+      .filter(([, matches]) => matches.length > 1)
+      .map(([key, matches]) => {
+        const representative = [...matches].sort(compareSections)[0]!;
+        return {
+          key,
+          title: representative.title,
+          sections: matches,
+          score: representative.score,
+        };
+      }),
   };
-
-  // Headings: keep all
-  info.headings = sections.filter((s) => s.type === "heading");
-
-  // Code blocks
-  info.codeBlocks = sections.filter((s) => s.type === "code");
-
-  // Score all non-heading, non-code sections
-  const contentSections = sections.filter(
-    (s) => s.type === "paragraph" || s.type === "list",
-  );
-
-  // Sort by score descending
-  const sorted = [...contentSections].sort((a, b) => b.score - a.score);
-
-  // Keep top-scored paragraphs up to a reasonable count
-  const maxKeep = Math.max(10, Math.floor(contentSections.length * 0.6));
-  const keepSet = new Set(sorted.slice(0, maxKeep).map((s) => s.index));
-
-  for (const section of contentSections) {
-    if (keepSet.has(section.index)) {
-      if (section.type === "list") {
-        info.listSections.push(section);
-      } else {
-        info.keyParagraphs.push(section);
-      }
-    } else {
-      info.foldedSections++;
-    }
-  }
-
-  return info;
 }
 
-// ---------------------------------------------------------------------------
-// Output Building
-// ---------------------------------------------------------------------------
-
-function buildCompressedOutput(
-  extracted: ExtractedMarkdownInfo,
-  allSections: Section[],
-): string[] {
-  const parts: string[] = [];
-
-  parts.push("## Markdown Summary");
-  parts.push("");
-
-  // Table of contents (heading tree)
-  if (extracted.headings.length > 0) {
-    parts.push("### Table of Contents");
-    parts.push("");
-    for (const h of extracted.headings.slice(0, 30)) {
-      const indent = "  ".repeat(Math.max(0, (h.headingLevel ?? 2) - 1));
-      parts.push(`${indent}- ${h.headingText ?? h.content}`);
-    }
-    parts.push("");
-  }
-
-  // Key paragraphs
-  const keyParagraphs = allSections
-    .filter((s) => extracted.keyParagraphs.some((kp) => kp.index === s.index))
-    .sort((a, b) => a.index - b.index);
-
-  if (keyParagraphs.length > 0) {
-    parts.push("### Key Content");
-    parts.push("");
-    for (const para of keyParagraphs.slice(0, 20)) {
-      if (para.content.length <= 500) {
-        parts.push(para.content);
-      } else {
-        parts.push(para.content.slice(0, 400) + `\n\n*... (${para.content.length - 400} more chars)*`);
-      }
-      parts.push("");
-    }
-  }
-
-  // Lists
-  const listSections = allSections
-    .filter((s) => extracted.listSections.some((ls) => ls.index === s.index))
-    .sort((a, b) => a.index - b.index);
-
-  if (listSections.length > 0) {
-    parts.push("### Lists");
-    parts.push("");
-    for (const list of listSections.slice(0, 10)) {
-      parts.push(list.content);
-      parts.push("");
-    }
-  }
-
-  // Code block summaries
-  if (extracted.codeBlocks.length > 0) {
-    parts.push("### Code Blocks");
-    parts.push("");
-    for (const cb of extracted.codeBlocks.slice(0, 10)) {
-      const lang = cb.codeLang || "text";
-      const lines = cb.content.split("\n");
-      const codeLines = lines.slice(1, -1); // Exclude fences
-      const preview = codeLines.slice(0, 3).join("\n");
-      parts.push(`- **\`${lang}\`** (${cb.lineCount ?? codeLines.length} lines)`);
-      if (preview.trim()) {
-        parts.push("  ```" + lang);
-        for (const l of codeLines.slice(0, 3)) {
-          parts.push(`  ${l}`);
-        }
-        if (codeLines.length > 3) {
-          parts.push(`  ... (${codeLines.length - 3} more lines)`);
-        }
-        parts.push("  ```");
-      }
-      parts.push("");
-    }
-  }
-
-  // Folded count
-  if (extracted.foldedSections > 0) {
-    parts.push(`- **Sections Folded:** ${extracted.foldedSections}`);
-  }
-
-  return parts;
+function compareSections(a: MarkdownSection, b: MarkdownSection): number {
+  return b.score - a.score || a.index - b.index;
 }
 
-// ---------------------------------------------------------------------------
-// Trimming
-// ---------------------------------------------------------------------------
-
-function trimMarkdownOutput(
-  extracted: ExtractedMarkdownInfo,
-  _allSections: Section[],
+function buildBudgetedOutput(
+  priority: MarkdownSection[],
+  priorityRepeated: RepeatedGroup[],
+  unique: MarkdownSection[],
+  repeated: RepeatedGroup[],
   maxTokens: number,
 ): string {
-  // Try progressively shorter outputs
-  const variants: ExtractedMarkdownInfo[] = [
-    extracted,
-    { ...extracted, keyParagraphs: extracted.keyParagraphs.slice(0, 10), codeBlocks: extracted.codeBlocks.slice(0, 5) },
-    { ...extracted, keyParagraphs: extracted.keyParagraphs.slice(0, 5), codeBlocks: [], listSections: [] },
-    { ...extracted, keyParagraphs: [], codeBlocks: [], listSections: [], headings: extracted.headings.slice(0, 10) },
-  ];
+  const header = "## Markdown Summary\n";
+  if (maxTokens <= countTokens(header) + 8) return tokenAwareTruncate(header, maxTokens);
 
-  for (const variant of variants) {
-    const md = buildCompressedOutput(variant, []).join("\n");
-    if (countTokens(md) <= maxTokens) return md;
+  const parts: string[] = [header];
+  // This pool is intentionally filled before any unique or repeated-directory
+  // content. It guarantees that a tail rollback/readiness section has budget.
+  const priorityLimit = Math.max(24, Math.floor(maxTokens * 0.48));
+  if (priority.length > 0 || priorityRepeated.length > 0) {
+    appendLine(parts, "### Priority Sections", maxTokens);
+    const priorityCount = priority.length + priorityRepeated.length;
+    const perSection = Math.max(18, Math.floor(priorityLimit / priorityCount));
+    for (const section of priority) {
+      appendCard(parts, renderSection(section, perSection), maxTokens);
+    }
+    for (const group of priorityRepeated) {
+      appendCard(parts, renderRepeatedGroup(group), maxTokens);
+    }
   }
 
-  return tokenAwareTruncate(
-    buildCompressedOutput(variants[variants.length - 1]!, []).join("\n"),
-    maxTokens,
-  );
+  if (unique.length > 0) {
+    appendLine(parts, "### Unique Sections", maxTokens);
+    for (const section of unique) {
+      const remaining = maxTokens - countTokens(parts.join("\n"));
+      if (remaining < 18) break;
+      appendCard(parts, renderSection(section, Math.min(90, remaining)), maxTokens);
+    }
+  }
+
+  if (repeated.length > 0) {
+    appendLine(parts, "### Repeated Section Ranges", maxTokens);
+    for (const group of repeated) {
+      if (!appendCard(parts, renderRepeatedGroup(group), maxTokens)) break;
+    }
+  }
+
+  return parts.join("\n").trimEnd();
 }
 
-// ---------------------------------------------------------------------------
-// Fallback
-// ---------------------------------------------------------------------------
-
-function truncateFallback(
-  content: string,
-  maxTokens: number,
-  warnings: string[],
-): StrategyResult {
-  let result = tokenAwareTruncate(content, maxTokens);
-  warnings.push("Markdown compression fell back to truncation");
-  return {
-    compressedContent: result,
-    warnings,
-    summary: "Truncated markdown (fallback)",
-  };
+function renderRepeatedGroup(group: RepeatedGroup): string {
+  const first = group.sections[0]!;
+  const last = group.sections[group.sections.length - 1]!;
+  const signals = Array.from(
+    new Set(group.sections.flatMap((section) => section.structuredLines)),
+  ).slice(0, 3);
+  return [
+    `- **${group.title}** ×${group.sections.length} (source lines ${first.index + 1}–${last.endIndex + 1})`,
+    ...signals.map((line) => `  - ${line}`),
+  ].join("\n");
 }
 
+function renderSection(section: MarkdownSection, budget: number): string {
+  const heading = `${"#".repeat(Math.min(section.level + 1, 6))} ${section.title}`;
+  const bodyLines = section.body.filter((line) => line.trim().length > 0);
+  const selected = Array.from(new Set([
+    ...section.structuredLines,
+    ...bodyLines.slice(0, section.priority ? 4 : 2),
+  ])).slice(0, section.priority ? 8 : 4);
+  const card = [heading, ...selected].join("\n");
+  return countTokens(card) <= budget ? card : tokenAwareTruncate(card, budget);
+}
+
+function appendLine(parts: string[], line: string, maxTokens: number): boolean {
+  return appendCard(parts, line, maxTokens);
+}
+
+function appendCard(parts: string[], card: string, maxTokens: number): boolean {
+  if (!card.trim()) return false;
+  const candidate = [...parts, card, ""].join("\n");
+  if (countTokens(candidate) > maxTokens) return false;
+  parts.push(card, "");
+  return true;
+}

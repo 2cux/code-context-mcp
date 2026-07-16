@@ -36,6 +36,8 @@ export interface CompressionInput {
   content: string;
   contentType: ContentType;
   metadata?: Record<string, unknown>;
+  /** Optional task goal used by strategies as a relevance signal. */
+  goal?: string;
   /** Strategy mode: "conservative" (default) or "auto" */
   strategy?: string;
   keepOriginal: boolean;
@@ -92,7 +94,12 @@ export interface CompressionStrategy {
    * MUST NOT throw — throw safety is handled by the engine's failOpen
    * wrapper, but strategies should still avoid throwing where possible.
    */
-  compress(content: string, maxTokens: number): StrategyResult;
+  compress(content: string, maxTokens: number, context?: StrategyContext): StrategyResult;
+}
+
+export interface StrategyContext {
+  goal?: string;
+  metadata?: Record<string, unknown>;
 }
 
 export interface StrategyResult {
@@ -280,7 +287,10 @@ export async function compress(
   // Wrap compression in timeout + failOpen
   const compressionPromise = failOpen(
     async () => {
-      const strategyResult = strategy!.compress(input.content, maxTokens);
+      const strategyResult = strategy!.compress(input.content, maxTokens, {
+        goal: input.goal,
+        metadata: input.metadata,
+      });
 
       const tokensAfter = countTokens(strategyResult.compressedContent);
       const tokensSaved = Math.max(0, tokensBefore - tokensAfter);

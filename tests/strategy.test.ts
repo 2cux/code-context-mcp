@@ -458,6 +458,60 @@ describe("14.6 Markdown Compressor", () => {
       const result = await compress(input("markdown", repeatedMd, { maxTokens: 200 }));
       expect(result.failed).toBeFalsy();
     });
+
+    it("merges repeated priority sections instead of listing every heading", async () => {
+      const repeatedRequired = Array.from(
+        { length: 40 },
+        (_, index) => `## Required Component ${index + 1}\n\nRequired security check for this component.`,
+      ).join("\n\n");
+
+      const result = await compress(input("markdown", repeatedRequired, { maxTokens: 160 }));
+
+      expect(result.compressedContent).toMatch(/Required Component 1.*(?:×|x)40/s);
+      expect(result.compressedContent.match(/Required Component/g)?.length).toBe(1);
+    });
+
+    it("keeps a tail rollback strategy after many repeated components", async () => {
+      const components = Array.from(
+        { length: 120 },
+        (_, index) =>
+          `## Component ${index + 1}\n\nReusable component description with ordinary implementation notes.`,
+      ).join("\n\n");
+      const markdown = [
+        "# Release Guide",
+        components,
+        "## Rollback Strategy",
+        "Rollback is required when the failure rate is >= 5% for 10 minutes.",
+        "- Command: `kubectl rollout undo deployment/api`",
+        "- API: `POST /api/v1/releases/rollback`",
+        "- Config: `release.rollback.enabled=true`",
+      ].join("\n\n");
+
+      const result = await compress(input("markdown", markdown, { maxTokens: 220 }));
+
+      expect(result.failed).toBeFalsy();
+      expect(result.tokensAfter).toBeLessThanOrEqual(220);
+      expect(result.compressedContent).toMatch(/Rollback Strategy/i);
+      expect(result.compressedContent).toContain("kubectl rollout undo deployment/api");
+      expect(result.compressedContent).toContain("/api/v1/releases/rollback");
+      expect(result.compressedContent).toMatch(/Component 1.*×120|Component 1.*120/s);
+    });
+
+    it("uses an optional goal to rank otherwise equal unique sections", async () => {
+      const markdown = Array.from(
+        { length: 20 },
+        (_, index) =>
+          `## Topic ${index + 1}\n\nOrdinary notes for area ${index + 1}. ` +
+          (index === 17 ? "Investigate session cache eviction behavior." : "Routine details."),
+      ).join("\n\n");
+
+      const result = await compress({
+        ...input("markdown", markdown, { maxTokens: 90 }),
+        goal: "investigate session cache eviction",
+      });
+
+      expect(result.compressedContent).toMatch(/Topic 18|session cache eviction/i);
+    });
   });
 
   describe("Fixture test", () => {

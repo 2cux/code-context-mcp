@@ -1,0 +1,30 @@
+[INFO] Scanning for projects...
+[INFO] ---------------------< com.example:sample-app >-----------------------
+[INFO] Building sample-app 1.0.0-SNAPSHOT
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO]
+[INFO] --- maven-surefire-plugin:3.5.2:test (default-test) @ sample-app ---
+[INFO] Using auto detected provider org.apache.maven.surefire.junitplatform.JUnitPlatformProvider
+[INFO] Running com.example.app.HealthControllerTest
+[INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.118 s -- in com.example.app.HealthControllerTest
+[INFO] Running com.example.app.PaymentServiceTest
+[ERROR] Tests run: 7, Failures: 1, Errors: 0, Skipped: 0, Time elapsed: 0.203 s <<< FAILURE! -- in com.example.app.PaymentServiceTest
+[ERROR] com.example.app.PaymentServiceTest.rejectsExpiredCard -- Time elapsed: 0.011 s <<< FAILURE!
+[ERROR] org.opentest4j.AssertionFailedError: expected: <DECLINED> but was: <APPROVED>
+[ERROR]     at com.example.app.PaymentServiceTest.rejectsExpiredCard(PaymentServiceTest.java:87)
+[INFO]
+[INFO] Results:
+[INFO]
+[ERROR] Failures:
+[ERROR]   PaymentServiceTest.rejectsExpiredCard:87 expected: <DECLINED> but was: <APPROVED>
+[INFO]
+[ERROR] Tests run: 11, Failures: 1, Errors: 0, Skipped: 0
+[INFO]
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD FAILURE
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  2.411 s
+[INFO] Finished at: 2026-07-15T10:44:03+08:00
+[INFO] ------------------------------------------------------------------------
+[ERROR] Failed to execute goal org.apache.maven.plugins:maven-surefire-plugin:3.5.2:test (default-test) on project sample-app: There are test failures.
+

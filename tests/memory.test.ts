@@ -657,6 +657,10 @@ describe("Memory Data Layer", () => {
       });
       expect(result).not.toBeNull();
       expect(result!.previousStatus).toBe("active");
+      expect(result!.action).toBe("hard_deleted");
+      expect(result!.deleted).toBe(true);
+      expect(result!.profileFactsDeleted).toBe(0);
+      expect(result!.newStatus).toBeUndefined();
 
       const record = service.get(memoryId, SCOPE_A);
       expect(record).toBeNull();
@@ -676,7 +680,12 @@ describe("Memory Data Layer", () => {
       expect(Number(pfRow?.["cnt"] ?? 0)).toBeGreaterThanOrEqual(1);
 
       // Hard delete
-      service.forget({ id: memoryId, scopeId: SCOPE_A, mode: "hard_delete" });
+      const result = service.forget({
+        id: memoryId,
+        scopeId: SCOPE_A,
+        mode: "hard_delete",
+      });
+      expect(result!.profileFactsDeleted).toBe(Number(pfRow?.["cnt"] ?? 0));
 
       // Profile fact should be cleaned up
       const pfAfter = queryOne(

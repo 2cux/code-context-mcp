@@ -21,6 +21,30 @@ export type MemoryStatus = "active" | "superseded" | "forgotten" | "expired";
 
 export type ForgetMode = "soft_forget" | "supersede" | "expire" | "hard_delete";
 
+export interface ForgetStatusResult {
+  action?: never;
+  memoryId: string;
+  previousStatus: MemoryStatus;
+  newStatus: MemoryStatus;
+  deleted?: never;
+  profileFactsDeleted?: never;
+  supersededBy?: string;
+  receiptId: string;
+}
+
+export interface ForgetHardDeleteResult {
+  action: "hard_deleted";
+  memoryId: string;
+  previousStatus: MemoryStatus;
+  newStatus?: never;
+  deleted: true;
+  profileFactsDeleted: number;
+  supersededBy?: never;
+  receiptId: string;
+}
+
+export type ForgetResult = ForgetStatusResult | ForgetHardDeleteResult;
+
 export interface MemoryRecord {
   id: string;
   scopeId: string;
@@ -135,7 +159,12 @@ export interface RecallResult {
     static: ProfileFact[];
     dynamic: ProfileFact[];
   };
-  memories: (MemoryRecord & { score: number; canExpand: boolean })[];
+  memories: (MemoryRecord & {
+    score: number;
+    canExpand: boolean;
+    matchMethod: "original" | "expanded" | "original+expanded";
+    matchedTerms: string[];
+  })[];
   relatedCompressedContexts: {
     ccrId: string;
     summary?: string;

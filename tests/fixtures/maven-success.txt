@@ -1,0 +1,23 @@
+[INFO] Scanning for projects...
+[INFO] ---------------------< com.example:sample-app >-----------------------
+[INFO] Building sample-app 1.0.0-SNAPSHOT
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO]
+[INFO] --- maven-surefire-plugin:3.5.2:test (default-test) @ sample-app ---
+[INFO] Using auto detected provider org.apache.maven.surefire.junitplatform.JUnitPlatformProvider
+[INFO] Running com.example.app.HealthControllerTest
+[INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.118 s -- in com.example.app.HealthControllerTest
+[INFO] Running com.example.app.PaymentServiceTest
+[INFO] Tests run: 7, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.203 s -- in com.example.app.PaymentServiceTest
+[INFO]
+[INFO] Results:
+[INFO]
+[INFO] Tests run: 11, Failures: 0, Errors: 0, Skipped: 0
+[INFO]
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  2.102 s
+[INFO] Finished at: 2026-07-15T10:45:27+08:00
+[INFO] ------------------------------------------------------------------------
+

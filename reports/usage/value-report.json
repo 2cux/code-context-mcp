@@ -1,0 +1,277 @@
+{
+  "summary": {
+    "totalCompressions": 180,
+    "totalEstimatedTokensSaved": 369306,
+    "averageCompressionRatio": 0.30261,
+    "cacheHits": 149,
+    "totalRetrieves": 86,
+    "memoriesSaved": 307,
+    "memoriesRecalled": 214,
+    "memoriesForgotten": 62,
+    "recoverableOriginals": 3,
+    "lastActivityAt": "2026-07-15T11:51:14.628Z"
+  },
+  "retrievalTrust": {
+    "originalsStored": 3,
+    "originalsRetrieved": 11,
+    "latestRetrieveProof": {
+      "originalRef": "orig_mrm0plcp_541dc8_000001",
+      "retrievedAt": "2026-07-15T11:49:50.408Z",
+      "ccrId": ""
+    },
+    "localOnlyNote": "All originals stored locally. No data uploaded to cloud."
+  },
+  "topSavings": [
+    {
+      "ccrId": "ccr_mrkdqzkk_305e0e_000001",
+      "contentType": "log",
+      "tokensBefore": 6780,
+      "tokensAfter": 918,
+      "tokensSaved": 5862,
+      "compressionRatio": 0.8646,
+      "createdAt": "2026-07-14T08:19:10.868Z",
+      "summary": "Log compressed: 12 priority lines kept, 163 INFO/DEBUG folded"
+    },
+    {
+      "ccrId": "ccr_mrkdqwiu_3e2471_000001",
+      "contentType": "log",
+      "tokensBefore": 17,
+      "tokensAfter": 17,
+      "tokensSaved": 0,
+      "compressionRatio": 0,
+      "createdAt": "2026-07-14T08:19:06.918Z",
+      "summary": "Log fits within token budget"
+    },
+    {
+      "ccrId": "ccr_mrkgm51d_25a143_000001",
+      "contentType": "command_output",
+      "tokensBefore": 291,
+      "tokensAfter": 291,
+      "tokensSaved": 0,
+      "compressionRatio": 0,
+      "createdAt": "2026-07-14T09:39:23.521Z",
+      "summary": "Command output fits within token budget"
+    },
+    {
+      "ccrId": "ccr_mrkgm5n3_e821ac_000002",
+      "contentType": "code",
+      "tokensBefore": 886,
+      "tokensAfter": 886,
+      "tokensSaved": 0,
+      "compressionRatio": 0,
+      "createdAt": "2026-07-14T09:39:24.303Z",
+      "summary": "Code fits within token budget"
+    },
+    {
+      "ccrId": "ccr_mrkgm67i_861c23_000003",
+      "contentType": "command_output",
+      "tokensBefore": 291,
+      "tokensAfter": 291,
+      "tokensSaved": 0,
+      "compressionRatio": 0,
+      "createdAt": "2026-07-14T09:39:25.038Z",
+      "summary": "Command output fits within token budget"
+    }
+  ],
+  "agentUsefulness": {
+    "recentRecalledMemories": [
+      {
+        "memoryId": "mem_mrkdr008_7a27c8_000001",
+        "type": "project_rule",
+        "summary": "Project coding standards: pnpm, TypeScript strict, vitest, conventional commits",
+        "recalledAt": "2026-07-15T11:51:13.673Z"
+      },
+      {
+        "memoryId": "mem_mrkgmdev_3bd76f_000004",
+        "type": "decision",
+        "recalledAt": "2026-07-15T11:51:13.673Z"
+      },
+      {
+        "memoryId": "mem_mrkdr008_7a27c8_000001",
+        "type": "project_rule",
+        "summary": "Project coding standards: pnpm, TypeScript strict, vitest, conventional commits",
+        "recalledAt": "2026-07-15T11:51:13.194Z"
+      },
+      {
+        "memoryId": "mem_mrkgmdev_3bd76f_000004",
+        "type": "decision",
+        "recalledAt": "2026-07-15T11:51:13.194Z"
+      },
+      {
+        "memoryId": "mem_mrkdr008_7a27c8_000001",
+        "type": "project_rule",
+        "summary": "Project coding standards: pnpm, TypeScript strict, vitest, conventional commits",
+        "recalledAt": "2026-07-15T11:50:57.036Z"
+      },
+      {
+        "memoryId": "mem_mrkgmc34_737e21_000001",
+        "type": "project_rule",
+        "summary": "Use pnpm",
+        "recalledAt": "2026-07-15T11:50:57.036Z"
+      },
+      {
+        "memoryId": "mem_mrkdr008_7a27c8_000001",
+        "type": "project_rule",
+        "summary": "Project coding standards: pnpm, TypeScript strict, vitest, conventional commits",
+        "recalledAt": "2026-07-15T11:50:54.480Z"
+      },
+      {
+        "memoryId": "mem_mrkgmc34_737e21_000001",
+        "type": "project_rule",
+        "summary": "Use pnpm",
+        "recalledAt": "2026-07-15T11:50:54.480Z"
+      },
+      {
+        "memoryId": "mem_mrkdr008_7a27c8_000001",
+        "type": "project_rule",
+        "summary": "Project coding standards: pnpm, TypeScript strict, vitest, conventional commits",
+        "recalledAt": "2026-07-15T11:50:52.082Z"
+      },
+      {
+        "memoryId": "mem_mrkgmc34_737e21_000001",
+        "type": "project_rule",
+        "summary": "Use pnpm",
+        "recalledAt": "2026-07-15T11:50:52.082Z"
+      }
+    ],
+    "mostUsefulProjectRules": [
+      {
+        "memoryId": "mem_mrkdr008_7a27c8_000001",
+        "content": "# Project Rules\n\n## Package Manager\nThis project uses **pnpm** as its package manager. Never use npm or yarn.\nRun `pnpm install` to install dependencies and `pnpm run build` to compile.\n\n## Code Style\n- Use TypeScript strict mode for all new files.\n- Prefer `interface` over `type` for object shapes.\n- Use explicit return types on public functions.\n- Naming: camelCase for variables, PascalCase for classes/components.\n\n## Testing\n- Every new feature must include unit tests using vitest.\n- Test files live in `tests/` and mirror the `src/` structure.\n- Run `pnpm test` before pushing any commit.\n\n## Error Handling\n- Never swallow errors silently. Always log with context.\n- Use structured error types, not plain strings.\n- Compression failures must return original content (fail-open).\n\n## Git\n- Use conventional commits: `feat:`, `fix:`, `chore:`, `docs:`, `test:`.\n- Branch naming: `feature/description`, `fix/description`.\n- Always squash before merging to main.\n",
+        "recallCount": 152,
+        "lastRecalledAt": "2026-07-15T11:51:13.673Z"
+      },
+      {
+        "memoryId": "mem_mrkgmc34_737e21_000001",
+        "content": "Use pnpm as the package manager.",
+        "recallCount": 60,
+        "lastRecalledAt": "2026-07-15T11:50:57.036Z"
+      },
+      {
+        "memoryId": "mem_mrkdqgus_84cc0b_000004",
+        "content": "Use TypeScript strict mode.",
+        "recallCount": 60,
+        "lastRecalledAt": "2026-07-15T11:50:02.652Z"
+      }
+    ],
+    "suggestedNextCommand": "code-context stats  # Review token savings over time"
+  },
+  "topCompressions": [
+    {
+      "ccrId": "ccr_mrkdqzkk_305e0e_000001",
+      "contentType": "log",
+      "tokensSaved": 5862,
+      "compressionRatio": 0.8646,
+      "createdAt": "2026-07-14T08:19:10.868Z",
+      "summary": "Log compressed: 12 priority lines kept, 163 INFO/DEBUG folded"
+    },
+    {
+      "ccrId": "ccr_mrkdqwiu_3e2471_000001",
+      "contentType": "log",
+      "tokensSaved": 0,
+      "compressionRatio": 0,
+      "createdAt": "2026-07-14T08:19:06.918Z",
+      "summary": "Log fits within token budget"
+    },
+    {
+      "ccrId": "ccr_mrkgm51d_25a143_000001",
+      "contentType": "command_output",
+      "tokensSaved": 0,
+      "compressionRatio": 0,
+      "createdAt": "2026-07-14T09:39:23.521Z",
+      "summary": "Command output fits within token budget"
+    },
+    {
+      "ccrId": "ccr_mrkgm5n3_e821ac_000002",
+      "contentType": "code",
+      "tokensSaved": 0,
+      "compressionRatio": 0,
+      "createdAt": "2026-07-14T09:39:24.303Z",
+      "summary": "Code fits within token budget"
+    },
+    {
+      "ccrId": "ccr_mrkgm67i_861c23_000003",
+      "contentType": "command_output",
+      "tokensSaved": 0,
+      "compressionRatio": 0,
+      "createdAt": "2026-07-14T09:39:25.038Z",
+      "summary": "Command output fits within token budget"
+    }
+  ],
+  "recentMemories": [
+    {
+      "memoryId": "mem_mrkgmg49_455968_000007",
+      "type": "bug",
+      "summary": "Login bug",
+      "createdAt": "2026-07-14T09:39:37.881Z",
+      "status": "active"
+    },
+    {
+      "memoryId": "mem_mrkgmfo1_2212eb_000006",
+      "type": "project_rule",
+      "summary": "ESLint config",
+      "createdAt": "2026-07-14T09:39:37.297Z",
+      "status": "active"
+    },
+    {
+      "memoryId": "mem_mrkgmeap_f58f4b_000005",
+      "type": "project_rule",
+      "summary": "TypeScript strict mode",
+      "createdAt": "2026-07-14T09:39:35.521Z",
+      "status": "active"
+    },
+    {
+      "memoryId": "mem_mrkgmdev_3bd76f_000004",
+      "type": "decision",
+      "createdAt": "2026-07-14T09:39:34.375Z",
+      "status": "active"
+    },
+    {
+      "memoryId": "mem_mrkgmcz6_4326bb_000003",
+      "type": "current_task",
+      "summary": "CLI dev",
+      "createdAt": "2026-07-14T09:39:33.810Z",
+      "status": "active"
+    },
+    {
+      "memoryId": "mem_mrkgmciv_6367c5_000002",
+      "type": "project_rule",
+      "summary": "Don't modify generated",
+      "createdAt": "2026-07-14T09:39:33.223Z",
+      "status": "active"
+    },
+    {
+      "memoryId": "mem_mrkgmc34_737e21_000001",
+      "type": "project_rule",
+      "summary": "Use pnpm",
+      "createdAt": "2026-07-14T09:39:32.656Z",
+      "status": "active"
+    },
+    {
+      "memoryId": "mem_mrkdr008_7a27c8_000001",
+      "type": "project_rule",
+      "summary": "Project coding standards: pnpm, TypeScript strict, vitest, conventional commits",
+      "createdAt": "2026-07-14T08:19:11.432Z",
+      "status": "active"
+    },
+    {
+      "memoryId": "mem_mrkdqq0y_37add1_000008",
+      "type": "decision",
+      "summary": "React 18 + TS",
+      "createdAt": "2026-07-14T08:18:58.498Z",
+      "status": "active"
+    },
+    {
+      "memoryId": "mem_mrkdqokj_32c307_000007",
+      "type": "project_rule",
+      "summary": "API v2 base URL",
+      "createdAt": "2026-07-14T08:18:56.611Z",
+      "status": "active"
+    }
+  ],
+  "localFirstNote": {
+    "dataLocation": "~/.code-context-mcp/code-context.sqlite",
+    "noDataUploaded": true
+  },
+  "generatedAt": "2026-07-15T11:53:30.386Z"
+}

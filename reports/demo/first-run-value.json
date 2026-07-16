@@ -9,25 +9,25 @@
       "tokensAfter": 918,
       "tokensSaved": 5862,
       "compressionRatio": 0.8646,
-      "originalRef": "orig_mrls826t_fec8e1_000001",
-      "ccrId": "ccr_mrls826s_a0e55c_000001"
+      "originalRef": "orig_mrm0qo6x_ef2af9_000001",
+      "ccrId": "ccr_mrkdqzkk_305e0e_000001"
     },
     "remember": {
       "success": true,
-      "memoryId": "mem_mrls82qi_549dd5_000001",
+      "memoryId": "mem_mrkdr008_7a27c8_000001",
       "type": "project_rule",
       "contentSizeBytes": 969
     },
     "recall": {
       "success": true,
       "query": "What package manager does this project use? Which testing framework is required?",
-      "resultCount": 1,
+      "resultCount": 2,
       "topMatchSummary": "Project coding standards: pnpm, TypeScript strict, vitest, conventional commits",
-      "topMatchScore": 8.3412
+      "topMatchScore": 8.2885
     },
     "retrieve": {
       "success": true,
-      "originalRef": "orig_mrls826t_fec8e1_000001",
+      "originalRef": "orig_mrm0qo6x_ef2af9_000001",
       "contentPreview": "[2026-07-04 09:12:31.421] ERROR  api-gateway  POST /api/orders failed — 500 Internal Server Error\n[2026-07-04 09:12:31.422] ERROR  api-gateway  Error: Cannot read properties of undefined (reading items)\n    at OrderService.calculateTotal (src/services/orderService.ts:142:31)\n    at OrderController.c...",
       "fullLength": 16484,
       "originalSizeBytes": 16746,

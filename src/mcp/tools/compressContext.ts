@@ -182,6 +182,7 @@ export async function handleCompressContext(
   }
 
   const keepOriginal = args.keepOriginal !== false; // default true
+  const goal = typeof args.goal === "string" ? args.goal.trim() : "";
   const maxTokens = typeof args.maxTokens === "number" ? args.maxTokens : 2000;
   const timeoutMs = typeof args.timeoutMs === "number" ? args.timeoutMs : 5000;
   const maxInputBytes =
@@ -216,8 +217,9 @@ export async function handleCompressContext(
   }
   const strategyVersion = resolvedStrategy?.version ?? "";
 
+  const cacheInputHash = goal ? contentHash(`${content}\n\0goal:${goal}`) : inputHash;
   const cacheKey = canCache(strategyVersion)
-    ? computeCacheKey(scopeId, inputHash, effectiveContentType, strategyVersion, maxTokens, keepOriginal)
+    ? computeCacheKey(scopeId, cacheInputHash, effectiveContentType, strategyVersion, maxTokens, keepOriginal)
     : "";
 
   // Check for an existing cached result
@@ -327,6 +329,7 @@ export async function handleCompressContext(
     keepOriginal,
     maxTokens,
     timeoutMs,
+    goal: goal || undefined,
     metadata,
   };
 

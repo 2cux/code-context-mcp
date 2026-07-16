@@ -540,7 +540,10 @@ Unified agent-facing entry point. Wraps compression, memory, and recall into a s
 | `content` | `string` | * | — | Required for compression/full flows. |
 | `contentType` | `string` | No | auto-detected | Content type hint. |
 | `query` | `string` | No | — | Search query for recall step. |
-| `options` | `object` | No | — | `{ keepOriginal, includeRecall, saveMemory, maxTokens }` |
+| `memorySummary` | `object` | No | `UNKNOWN` | `{ facts, inferences, verificationStatus }` for conservative full-flow memory admission. |
+| `options` | `object` | No | — | `{ keepOriginal, includeRecall, saveMemory, requireVerifiedSummary, maxTokens }` |
+
+`full` flow auto-memory is conservative. `UNKNOWN` or contradictory summaries and failed CCR persistence are skipped. With `requireVerifiedSummary` (default `true`), only `VERIFIED` summaries are admitted. Test, build, and security-scan outputs persist only `facts` plus a retrievable `originalRef`; `inferences` are excluded. A rejected admission returns `memory.status = "skipped"` with a reason. These checks are deterministic and do not use LLM validation, embeddings, or automatic contradiction reasoning.
 
 **Output (full flow):**
 

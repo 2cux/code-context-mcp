@@ -965,9 +965,15 @@ export async function runForget(opts: ForgetOpts): Promise<CliResult> {
     return ok({
       memoryId: result.memoryId,
       previousStatus: result.previousStatus,
-      newStatus: result.newStatus,
       receiptId: result.receiptId,
-      ...(result.supersededBy ? { supersededBy: result.supersededBy } : {}),
+      ...(result.action === "hard_deleted" ? {
+        action: result.action,
+        deleted: result.deleted,
+        profileFactsDeleted: result.profileFactsDeleted,
+      } : { newStatus: result.newStatus }),
+      ...(result.supersededBy
+        ? { supersededBy: result.supersededBy }
+        : {}),
       ...(opts.reason ? { reason: opts.reason } : {}),
     });
   } catch (err) {
@@ -1144,6 +1150,8 @@ export async function runRecall(query: string, opts: RecallOpts): Promise<CliRes
         finalScore: r.finalScore,
         rank: r.rank,
         canExpand: r.canExpand,
+        matchMethod: r.matchMethod,
+        matchedTerms: r.matchedTerms,
         createdAt: r.memory.createdAt,
       })),
       ...(profile ? { profile } : {}),

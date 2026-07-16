@@ -45,6 +45,15 @@ interface TestOutputSummary {
   lastLines: string[];
 }
 
+type TestStatus = "FAILED" | "PASSED" | "UNKNOWN";
+
+interface SurefireSummary {
+  tests: number;
+  failures: number;
+  errors: number;
+  skipped: number;
+}
+
 // ---------------------------------------------------------------------------
 // Patterns
 // ---------------------------------------------------------------------------
@@ -61,10 +70,13 @@ const TEST_NAME_LINE = /^\s*(?:×|✗|✘|✓)\s+(.+)$/;
 const ASSERTION_ERROR = /AssertionError[: ]\s*(.+)/i;
 const EXPECTED_LINE = /Expected[: ]\s*(.+)/i;
 const RECEIVED_LINE = /Received[: ]\s*(.+)/i;
-const EXIT_CODE_PATTERN = /exit\s*code[: ]?\s*(\d+)/i;
 const STACK_FILE_LINE = /^\s*(?:at |❯ |→ )?(.+?):(\d+)(?::(\d+))?/;
 const COMMAND_LINE = /^\s*[>$]\s+(.+)/;
 const INTERNAL_FRAMES = /node_modules|node:internal|\(internal\)/;
+const ANSI_ESCAPE = /[\u001B\u009B](?:\[[0-?]*[ -/]*[@-~]|\][^\u0007]*(?:\u0007|\u001B\\))/g;
+const SUREFIRE_SUMMARY = /Tests run:\s*(\d+)\s*,\s*Failures:\s*(\d+)\s*,\s*Errors:\s*(\d+)\s*,\s*Skipped:\s*(\d+)/gi;
+const MAVEN_FAILURE = /(?:BUILD FAILURE|<<<\s+(?:FAILURE|ERROR)!)/i;
+const EXPLICIT_SUCCESS = /(?:BUILD SUCCESS|Tests? (?:all )?passed|All tests passed|\bSUCCESSFUL\b)/i;
 
 // ---------------------------------------------------------------------------
 // Export (backward-compatible)
@@ -116,12 +128,13 @@ export function compressTestOutput(
 // ---------------------------------------------------------------------------
 
 function extractSummary(content: string): TestOutputSummary {
-  const lines = content.split("\n");
+  const normalizedContent = normalizeTestOutput(content);
+  const lines = normalizedContent.split("\n");
 
   // Detect framework
   let framework = "unknown";
   for (const [name, pattern] of Object.entries(FRAMEWORK_PATTERNS)) {
-    if (pattern.test(content)) {
+    if (pattern.test(normalizedContent)) {
       framework = name;
       break;
     }
@@ -138,35 +151,18 @@ function extractSummary(content: string): TestOutputSummary {
   }
   // Also try finding a command after framework name
   if (!command) {
-    const runMatch = content.match(/(?:RUN|run|Running)\s+(.+)/);
+    const runMatch = normalizedContent.match(/(?:RUN|run|Running)\s+(.+)/);
     if (runMatch) command = runMatch[1]!.trim();
   }
 
   // Extract failed tests
-  const failedTests = extractFailedTests(lines, content);
+  const failedTests = extractFailedTests(lines, normalizedContent);
 
   // Detect exit code
-  let exitCode = "";
-  const ecMatch = EXIT_CODE_PATTERN.exec(content);
-  if (ecMatch) exitCode = ecMatch[1]!;
-  // Also try patterns like "ELIFECYCLE … exit code N"
-  if (!exitCode) {
-    const ec2 = content.match(/failed with exit code (\d+)/i);
-    if (ec2) exitCode = ec2[1]!;
-  }
+  const exitCode = extractLastExitCode(normalizedContent);
 
   // Overall status
-  const status = failedTests.length > 0 ? "FAILED" : "PASSED";
-  // Detect partial failures
-  const passedMatch = content.match(/(\d+)\s+passed/i);
-  const failedMatch = content.match(/(\d+)\s+failed/i);
-  if (passedMatch && failedMatch) {
-    const passed = parseInt(passedMatch[1]!, 10);
-    const failed = parseInt(failedMatch[1]!, 10);
-    if (failed > 0 && passed > 0) {
-      // Status already set to FAILED
-    }
-  }
+  const status = determineTestStatus(normalizedContent, exitCode, failedTests.length);
 
   // Key error from first failure
   const firstFailure = failedTests[0];
@@ -198,6 +194,67 @@ function extractSummary(content: string): TestOutputSummary {
     exitCode,
     lastLines,
   };
+}
+
+function normalizeTestOutput(content: string): string {
+  return content
+    .replace(ANSI_ESCAPE, "")
+    .replace(/\r\n?/g, "\n");
+}
+
+function extractLastExitCode(content: string): string {
+  const patterns = [
+    /\bexit\s*code\s*[:=]?\s*(-?\d+)/gi,
+    /\bexitCode\s*[:=]\s*(-?\d+)/gi,
+  ];
+  let lastMatch: { index: number; value: string } | undefined;
+
+  for (const pattern of patterns) {
+    for (const match of content.matchAll(pattern)) {
+      if (!lastMatch || match.index > lastMatch.index) {
+        lastMatch = { index: match.index, value: match[1]! };
+      }
+    }
+  }
+
+  return lastMatch?.value ?? "";
+}
+
+function extractLastSurefireSummary(content: string): SurefireSummary | undefined {
+  let last: SurefireSummary | undefined;
+  for (const match of content.matchAll(SUREFIRE_SUMMARY)) {
+    last = {
+      tests: Number(match[1]),
+      failures: Number(match[2]),
+      errors: Number(match[3]),
+      skipped: Number(match[4]),
+    };
+  }
+  return last;
+}
+
+function determineTestStatus(
+  content: string,
+  exitCode: string,
+  extractedFailureCount: number,
+): TestStatus {
+  // Failure evidence is deliberately evaluated before every success signal.
+  if (exitCode !== "" && Number(exitCode) !== 0) return "FAILED";
+  if (MAVEN_FAILURE.test(content)) return "FAILED";
+
+  const lastSummary = extractLastSurefireSummary(content);
+  if (lastSummary?.errors && lastSummary.errors > 0) return "FAILED";
+  if (lastSummary?.failures && lastSummary.failures > 0) return "FAILED";
+
+  // Preserve failure detection for non-Maven runners handled by this strategy.
+  if (extractedFailureCount > 0) return "FAILED";
+
+  if (EXPLICIT_SUCCESS.test(content)) return "PASSED";
+  if (lastSummary && lastSummary.failures === 0 && lastSummary.errors === 0) {
+    return "PASSED";
+  }
+
+  return "UNKNOWN";
 }
 
 function extractFailedTests(lines: string[], fullContent: string): FailedTest[] {
@@ -513,4 +570,3 @@ function truncateFallback(
     summary: "Truncated test output (fallback)",
   };
 }
-

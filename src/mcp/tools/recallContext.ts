@@ -293,6 +293,8 @@ export async function handleRecallContext(
       ...r.memory,
       score: r.finalScore,
       canExpand: r.canExpand,
+      matchMethod: r.matchMethod,
+      matchedTerms: r.matchedTerms,
     }));
 
     memoryIds = memories.map((m) => m.id);
@@ -441,6 +443,8 @@ export async function handleRecallContext(
       status: m.status,
       score: m.score,
       canExpand: m.canExpand,
+      matchMethod: m.matchMethod,
+      matchedTerms: m.matchedTerms,
       createdAt: m.createdAt,
       updatedAt: m.updatedAt,
       tags: m.tags,
